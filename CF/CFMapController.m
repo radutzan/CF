@@ -214,7 +214,7 @@
             coordinate.latitude = [[stopData objectForKey:@"latitude"] doubleValue];
             coordinate.longitude = [[stopData objectForKey:@"longitude"] doubleValue];
             
-            CFStop *stop = [CFStop stopWithCoordinate:coordinate code:[stopData objectForKey:@"codigo"] name:[stopData objectForKey:@"nombre"] services:[stopData objectForKey:@"services"]];
+            CFStop *stop = [CFStop stopWithCoordinate:coordinate code:[stopData objectForKey:@"codigo"] name:[stopData objectForKey:@"nombre"] services:[stopData objectForKey:@"recorridos"]];
             [self.stops addObject:stop];
         }
         

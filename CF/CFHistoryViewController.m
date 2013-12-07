@@ -59,6 +59,9 @@
     static NSString *CellIdentifier = @"Cell";
     CFStopCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
+    NSInteger index = [self.mutableHistoryArray count] - indexPath.row - 1;
+    NSDictionary *stopDictionary = [self.mutableHistoryArray objectAtIndex:index];
+    
     if (cell == nil)
         cell = [[CFStopCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     
@@ -66,24 +69,24 @@
     cell.backgroundColor = [UIColor clearColor];
     cell.contentView.frame = CGRectMake(cell.contentView.frame.origin.x, cell.contentView.frame.origin.y, cell.contentView.bounds.size.width, 52.0);
     
-    cell.codeLabel.text = [[self.mutableHistoryArray objectAtIndex:indexPath.row] objectForKey:@"codigo"];
+    cell.codeLabel.text = [stopDictionary objectForKey:@"codigo"];
     
-    NSString *street = [[self.mutableHistoryArray objectAtIndex:indexPath.row] objectForKey:@"calle"];
-    NSString *intersection = [[self.mutableHistoryArray objectAtIndex:indexPath.row] objectForKey:@"interseccion"];
+    NSString *street = [stopDictionary objectForKey:@"calle"];
+    NSString *intersection = [stopDictionary objectForKey:@"interseccion"];
     
     cell.nameLabel.text = street;
     
     if (intersection)
         cell.nameLabel.text = [NSString stringWithFormat:@"%@\n%@ %@", street, @"and", intersection];
     
-    NSInteger number = [[[self.mutableHistoryArray objectAtIndex:indexPath.row] objectForKey:@"numero"] integerValue];
+    NSInteger number = [[stopDictionary objectForKey:@"numero"] integerValue];
     
     if (number > 0) {
         cell.numberLabel.hidden = NO;
         cell.numberLabel.text = [NSString stringWithFormat:@"%d", number];
     }
     
-    BOOL isMetro = [[[self.mutableHistoryArray objectAtIndex:indexPath.row] objectForKey:@"metro"] boolValue];
+    BOOL isMetro = [[stopDictionary objectForKey:@"metro"] boolValue];
     
     if (isMetro)
         cell.metroBadge.hidden = NO;
