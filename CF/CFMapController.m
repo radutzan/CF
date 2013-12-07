@@ -79,16 +79,11 @@
 
 - (void)clearStopAnnotations
 {
-    id userLocation = [self.mapView userLocation];
-    
-    NSMutableArray *pins = [[NSMutableArray alloc] initWithArray:[self.mapView annotations]];
-    
-    if (userLocation)
-        [pins removeObject:userLocation];
+    NSMutableArray *pins = [NSMutableArray new];
     
     for (id annotation in [self.mapView annotations]) {
-        if (![annotation isKindOfClass:[CFStop class]])
-            [pins removeObject:annotation];
+        if ([annotation isKindOfClass:[CFStop class]] || [annotation isKindOfClass:[CFBipSpot class]])
+            [pins addObject:annotation];
     }
     
     [self.mapView removeAnnotations:pins];
@@ -406,6 +401,8 @@
         }
     }];
 }
+
+@end
 
 #pragma mark - Custom pin thing
 
