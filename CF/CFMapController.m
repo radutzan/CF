@@ -7,8 +7,10 @@
 //
 
 #import "CFMapController.h"
+#import "NSDictionary+NSNullUtility.h"
 #import "CFSapoClient.h"
 #import "CFStop.h"
+#import "CFBipSpot.h"
 
 #import <OLGhostAlertView/OLGhostAlertView.h>
 #import "CFStopSignView.h"
@@ -19,6 +21,7 @@
 @property (nonatomic, strong) OLGhostAlertView *zoomWarning;
 
 @property (nonatomic, strong) NSMutableSet *stops;
+@property (nonatomic, strong) NSMutableSet *bipSpots;
 @property (assign) CFStop *selectedStop;
 @property (nonatomic) BOOL showZoomWarning;
 @property (nonatomic, strong) CLLocationManager *locationManager;
@@ -32,6 +35,8 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.stops = [NSMutableSet new];
+        self.bipSpots = [NSMutableSet new];
+        
         self.mapView = [[MKMapView alloc] initWithFrame:self.bounds];
         self.mapView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
         self.mapView.delegate = self;
@@ -198,6 +203,7 @@
         self.showZoomWarning = NO;
     }
     
+    [self placeBipAnnotationsInRegion:region withRadius:radio];
     [self placeStopAnnotationsInRegion:region withRadius:radio];
 }
 
@@ -226,11 +232,43 @@
     }];
 }
 
+- (void)placeBipAnnotationsInRegion:(MKCoordinateRegion)region withRadius:(float)radius
+{
+    [[CFSapoClient sharedClient] bipSpotsAroundCoordinate:region.center radius:radius handler:^(NSError *error, id result) {
+        if (error || [result count] == 0) {
+            NSLog(@"%@", error);
+            return;
+        }
+        
+        for (NSDictionary *spotData in result) {
+            CLLocationCoordinate2D coordinate;
+            coordinate.latitude = [[spotData objectForKey:@"lat"] doubleValue];
+            coordinate.longitude = [[spotData objectForKey:@"long"] doubleValue];
+            
+            NSString *name;
+            
+            if ([spotData objectForKeyNotNull:@"nombre"])
+                name = [[spotData objectForKeyNotNull:@"nombre"] capitalizedString];
+            
+            if ([[spotData objectForKeyNotNull:@"tipo"] isEqualToString:@"Centro Bip"])
+                name = @"Centro Bip";
+            
+            CFBipSpot *spot = [CFBipSpot bipSpotWithCoordinate:coordinate title:name subtitle:[[spotData objectForKey:@"direccion"] capitalizedString]];
+            [self.bipSpots addObject:spot];
+        }
+        
+        NSArray *spotsArray = [self.bipSpots allObjects];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.mapView addAnnotations:spotsArray];
+        });
+    }];
+}
+
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
 {
-    static NSString *identifier = @"BusStop";
-    
     if ([annotation isKindOfClass:[CFStop class]]) {
+        static NSString *identifier = @"BusStop";
         MKAnnotationView *stopPin = [mapView dequeueReusableAnnotationViewWithIdentifier:identifier];
         
         if (!stopPin) {
@@ -243,6 +281,23 @@
         }
         
         return stopPin;
+        
+    }
+    
+    if ([annotation isKindOfClass:[CFBipSpot class]]) {
+        static NSString *identifier = @"BipSpot";
+        MKAnnotationView *spotPin = [mapView dequeueReusableAnnotationViewWithIdentifier:identifier];
+        
+        if (!spotPin) {
+            spotPin = [[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:identifier];
+            [spotPin setCanShowCallout:YES];
+            [spotPin setImage:[UIImage imageNamed:@"pin-bip"]];
+            
+        } else {
+            [spotPin setAnnotation:annotation];
+        }
+        
+        return spotPin;
     }
     
     return nil;
@@ -351,8 +406,6 @@
         }
     }];
 }
-
-@end
 
 #pragma mark - Custom pin thing
 
