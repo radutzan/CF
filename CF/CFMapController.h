@@ -22,6 +22,7 @@
 - (void)performSearchWithString:(NSString *)searchString;
 - (void)showDarkOverlay;
 - (void)hideDarkOverlay;
+- (void)goToNearestBipSpot;
 
 @property (nonatomic, strong) MKMapView *mapView;
 @property (nonatomic, weak) id<CFMapControllerDelegate> delegate;

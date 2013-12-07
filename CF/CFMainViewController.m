@@ -287,7 +287,7 @@
         searchBar.placeholder = @"Lugares o dirección";
         searchBar.delegate = self;
         
-        UIBarButtonItem *bipButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCamera target:self action:nil];
+        UIBarButtonItem *bipButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCamera target:self.mapController action:@selector(goToNearestBipSpot)];
         MKUserTrackingBarButtonItem *tracky = [[MKUserTrackingBarButtonItem alloc] initWithMapView:self.mapController.mapView];
         
         UINavigationItem *navItem = [UINavigationItem new];

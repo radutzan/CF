@@ -151,6 +151,107 @@
     [self hideDarkOverlay];
 }
 
+#pragma mark - Cuantofaltism
+
+- (void)placeStopAnnotationsInRegion:(MKCoordinateRegion)region withRadius:(float)radius
+{
+    [[CFSapoClient sharedClient] busStopsAroundCoordinate:region.center radius:radius handler:^(NSError *error, id result) {
+        if (error || [result count] == 0) {
+            NSLog(@"%@", error);
+            return;
+        }
+        
+        for (NSDictionary *stopData in result) {
+            CLLocationCoordinate2D coordinate;
+            coordinate.latitude = [[stopData objectForKey:@"latitude"] doubleValue];
+            coordinate.longitude = [[stopData objectForKey:@"longitude"] doubleValue];
+            
+            CFStop *stop = [CFStop stopWithCoordinate:coordinate code:[stopData objectForKey:@"codigo"] name:[stopData objectForKey:@"nombre"] services:[stopData objectForKey:@"recorridos"]];
+            [self.stops addObject:stop];
+        }
+        
+        NSArray *stopsArray = [self.stops allObjects];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.mapView addAnnotations:stopsArray];
+        });
+    }];
+}
+
+- (void)placeBipAnnotationsInRegion:(MKCoordinateRegion)region withRadius:(float)radius
+{
+    [[CFSapoClient sharedClient] bipSpotsAroundCoordinate:region.center radius:radius handler:^(NSError *error, id result) {
+        if (error || [result count] == 0) {
+            NSLog(@"%@", error);
+            return;
+        }
+        
+        for (NSDictionary *spotDictionary in result) {
+            CFBipSpot *spot = [self bipSpotFromDictionary:spotDictionary];
+            [self.bipSpots addObject:spot];
+        }
+        
+        NSArray *spotsArray = [self.bipSpots allObjects];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.mapView addAnnotations:spotsArray];
+        });
+    }];
+}
+
+- (void)goToNearestBipSpot
+{
+    self.mapView.userTrackingMode = MKUserTrackingModeNone;
+    
+    CLLocationDistance distance = DBL_MAX;
+    CFBipSpot *nearestSpot = nil;
+    
+    for (CFBipSpot *spot in self.bipSpots) {
+        CLLocation *spotLocation = [[CLLocation alloc] initWithLatitude:spot.coordinate.latitude longitude:spot.coordinate.longitude];
+        CLLocationDistance DistancetoPoint = [self.mapView.userLocation.location distanceFromLocation:spotLocation];
+        
+        if (distance > DistancetoPoint) {
+            distance = DistancetoPoint;
+            nearestSpot = spot;
+        }
+    }
+    
+    if (distance <= 1000) {
+        [self.mapView setCenterCoordinate:nearestSpot.coordinate animated:YES];
+        [self.mapView selectAnnotation:nearestSpot animated:YES];
+    } else {
+        [[CFSapoClient sharedClient] bipSpotsAroundCoordinate:self.mapView.centerCoordinate radius:0 handler:^(NSError *error, id result) {
+            NSDictionary *spotDictionary = [result objectAtIndex:0];
+            
+            CFBipSpot *spot = [self bipSpotFromDictionary:spotDictionary];
+            
+            [self.bipSpots addObject:spot];
+            [self.mapView addAnnotation:spot];
+            [self.mapView setCenterCoordinate:spot.coordinate animated:YES];
+            [self.mapView selectAnnotation:spot animated:YES];
+        }];
+    }
+}
+
+- (CFBipSpot *)bipSpotFromDictionary:(NSDictionary *)dictionary
+{
+    CLLocationCoordinate2D coordinate;
+    coordinate.latitude = [[dictionary objectForKeyNotNull:@"lat"] doubleValue];
+    coordinate.longitude = [[dictionary objectForKeyNotNull:@"long"] doubleValue];
+    
+    NSString *name;
+    
+    if ([dictionary objectForKeyNotNull:@"nombre"])
+        name = [[dictionary objectForKeyNotNull:@"nombre"] capitalizedString];
+    
+    if ([[dictionary objectForKeyNotNull:@"tipo"] isEqualToString:@"Centro Bip"])
+        name = @"Centro Bip";
+    
+    CFBipSpot *spot = [CFBipSpot bipSpotWithCoordinate:coordinate title:name subtitle:[[dictionary objectForKeyNotNull:@"direccion"] capitalizedString]];
+    
+    return spot;
+}
+
 #pragma mark - CLLocationManagerDelegate
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
@@ -200,64 +301,6 @@
     
     [self placeBipAnnotationsInRegion:region withRadius:radio];
     [self placeStopAnnotationsInRegion:region withRadius:radio];
-}
-
-- (void)placeStopAnnotationsInRegion:(MKCoordinateRegion)region withRadius:(float)radius
-{
-    [[CFSapoClient sharedClient] busStopsAroundCoordinate:region.center radius:radius handler:^(NSError *error, id result) {
-        if (error || [result count] == 0) {
-            NSLog(@"%@", error);
-            return;
-        }
-        
-        for (NSDictionary *stopData in result) {
-            CLLocationCoordinate2D coordinate;
-            coordinate.latitude = [[stopData objectForKey:@"latitude"] doubleValue];
-            coordinate.longitude = [[stopData objectForKey:@"longitude"] doubleValue];
-            
-            CFStop *stop = [CFStop stopWithCoordinate:coordinate code:[stopData objectForKey:@"codigo"] name:[stopData objectForKey:@"nombre"] services:[stopData objectForKey:@"recorridos"]];
-            [self.stops addObject:stop];
-        }
-        
-        NSArray *stopsArray = [self.stops allObjects];
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.mapView addAnnotations:stopsArray];
-        });
-    }];
-}
-
-- (void)placeBipAnnotationsInRegion:(MKCoordinateRegion)region withRadius:(float)radius
-{
-    [[CFSapoClient sharedClient] bipSpotsAroundCoordinate:region.center radius:radius handler:^(NSError *error, id result) {
-        if (error || [result count] == 0) {
-            NSLog(@"%@", error);
-            return;
-        }
-        
-        for (NSDictionary *spotData in result) {
-            CLLocationCoordinate2D coordinate;
-            coordinate.latitude = [[spotData objectForKey:@"lat"] doubleValue];
-            coordinate.longitude = [[spotData objectForKey:@"long"] doubleValue];
-            
-            NSString *name;
-            
-            if ([spotData objectForKeyNotNull:@"nombre"])
-                name = [[spotData objectForKeyNotNull:@"nombre"] capitalizedString];
-            
-            if ([[spotData objectForKeyNotNull:@"tipo"] isEqualToString:@"Centro Bip"])
-                name = @"Centro Bip";
-            
-            CFBipSpot *spot = [CFBipSpot bipSpotWithCoordinate:coordinate title:name subtitle:[[spotData objectForKey:@"direccion"] capitalizedString]];
-            [self.bipSpots addObject:spot];
-        }
-        
-        NSArray *spotsArray = [self.bipSpots allObjects];
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.mapView addAnnotations:spotsArray];
-        });
-    }];
 }
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
