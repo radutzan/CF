@@ -10,6 +10,12 @@
 #import "CFStop.h"
 #import "OLTextField.h"
 
+@protocol CFStopSignViewDelegate <NSObject>
+
+- (void)stopSignView:(UIView *)signView didEditFavoriteNameWithString:(NSString *)string;
+
+@end
+
 @interface CFStopSignView : UIView
 
 @property (nonatomic, strong) CFStop *stop;
@@ -21,5 +27,7 @@
 // by default, userInteractionEnabled = NO to prevent name editing
 @property (nonatomic, strong) UIView *favoriteContentView;
 @property (nonatomic, strong) OLTextField *favoriteNameField;
+
+@property (nonatomic, weak) id<CFStopSignViewDelegate> delegate;
 
 @end

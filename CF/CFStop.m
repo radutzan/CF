@@ -151,24 +151,37 @@ static NSRegularExpression *regexMetroSinNumero;
 
 - (void)setFavoriteWithName:(NSString *)favoriteName
 {
-    self.favoriteName = favoriteName;
     self.favorite = YES;
+    self.favoriteName = favoriteName;
 }
 
 - (void)setFavoriteName:(NSString *)favoriteName
 {
-    _favoriteName = favoriteName;
-    
     NSMutableArray *mutableFavoritesArray = [[CFStop favoritesArray] mutableCopy];
     
-    if (self.favorite) {
+    if (self.isFavorite) {
         for (NSDictionary *stop in mutableFavoritesArray) {
-            if ([[stop objectForKey:@"codigo"] isEqualToString:self.code])
-                [stop setValue:favoriteName forKey:@"favoriteName"];
+            if ([[stop objectForKey:@"codigo"] isEqualToString:self.code]) {
+                NSMutableDictionary *mutableStop = [stop mutableCopy];
+                [mutableFavoritesArray removeObject:stop];
+                [mutableStop setValue:favoriteName forKey:@"favoriteName"];
+                [mutableFavoritesArray addObject:mutableStop];
+            }
         }
         
         [CFStop saveFavoritesWithArray:mutableFavoritesArray];
     }
+}
+
+- (NSString *)favoriteName
+{
+    if (self.isFavorite) {
+        for (NSDictionary *stop in [CFStop favoritesArray]) {
+            if ([[stop objectForKey:@"codigo"] isEqualToString:self.code])
+                return [stop objectForKey:@"favoriteName"];
+        }
+    }
+    return nil;
 }
 
 - (void)setFavorite:(BOOL)favorite

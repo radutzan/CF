@@ -14,7 +14,7 @@
 #define LABEL_FONT_SIZE 15.0f
 #define HORIZONTAL_MARGIN 9.0f
 
-@interface CFStopSignView ()
+@interface CFStopSignView () <UITextFieldDelegate>
 
 @property (nonatomic) CGFloat verticallyCenteredLabelY;
 @property (nonatomic) CGFloat horizontalMarginWithPictogram;
@@ -54,6 +54,7 @@
         
         _favoriteContentView = [[UIView alloc] initWithFrame:CGRectMake(HORIZONTAL_MARGIN + _horizontalMarginWithPictogram, 0, _contentViewWidth - _horizontalMarginWithPictogram, self.bounds.size.height)];
         _favoriteContentView.hidden = YES;
+        _favoriteContentView.userInteractionEnabled = NO;
         [self addSubview:_favoriteContentView];
         
         [self initRegularContentView];
@@ -131,13 +132,15 @@
     _favoriteNameField = [[OLTextField alloc] initWithFrame:CGRectMake(0, 10.0, _favoriteContentView.bounds.size.width, 20.0)];
     _favoriteNameField.placeholder = NSLocalizedString(@"NAME_YOUR_FAVORITE", nil);
     _favoriteNameField.textColor = [UIColor whiteColor];
-    _favoriteNameField.placeholderTextColor = [UIColor colorWithWhite:1 alpha:0.4];
+    _favoriteNameField.placeholderTextColor = [UIColor colorWithWhite:1 alpha:0.3];
     _favoriteNameField.font = [UIFont systemFontOfSize:19.0];
-//    _favoriteNameField.backgroundColor = [UIColor blueColor];
+    _favoriteNameField.returnKeyType = UIReturnKeyDone;
+    _favoriteNameField.keyboardAppearance = UIKeyboardAppearanceDark;
+    _favoriteNameField.delegate = self;
     [_favoriteContentView addSubview:_favoriteNameField];
     
     _stopFullNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 32.0, _favoriteContentView.bounds.size.width, 12.0)];
-    _stopFullNameLabel.font = [UIFont boldSystemFontOfSize:13.0];
+    _stopFullNameLabel.font = [UIFont boldSystemFontOfSize:11.0];
     _stopFullNameLabel.textColor = [UIColor colorWithWhite:1 alpha:0.6];
     [_favoriteContentView addSubview:_stopFullNameLabel];
 }
@@ -172,6 +175,7 @@
         self.favoriteContentView.hidden = YES;
     }
     
+    if (stop.favoriteName) self.favoriteNameField.text = stop.favoriteName;
     self.stopFullNameLabel.text = stop.name;
     
     // epic reset
@@ -247,6 +251,18 @@
     self.favoriteContentView.frame = CGRectMake(self.favoriteContentView.frame.origin.x, self.favoriteContentView.frame.origin.y, contentViewWidth, self.favoriteContentView.frame.size.height);
     
 //    [self setNeedsLayout];
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    [self.delegate stopSignView:self didEditFavoriteNameWithString:textField.text];
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [textField endEditing:YES];
+    
+    return NO;
 }
 
 @end

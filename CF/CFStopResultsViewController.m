@@ -11,7 +11,7 @@
 #import "CFStopSignView.h"
 #import "UINavigationBar+CustomHeight.h"
 
-@interface CFStopResultsViewController ()
+@interface CFStopResultsViewController () <CFStopSignViewDelegate>
 
 @property (nonatomic, strong) CFStopSignView *stopInfoView;
 @property (nonatomic, strong) UIButton *favoriteButton;
@@ -46,7 +46,9 @@
     UIView *earFuck = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 270, 44.0)];
     
     self.stopInfoView = [[CFStopSignView alloc] initWithFrame:CGRectMake(-25.0, -11.0, 280.0, 52.0)];
+    self.stopInfoView.delegate = self;
     self.stopInfoView.stopCodeLabel.hidden = YES;
+    self.stopInfoView.favoriteContentView.userInteractionEnabled = YES;
     [earFuck addSubview:self.stopInfoView];
     self.navigationItem.titleView = earFuck;
     
@@ -136,9 +138,13 @@
     }
 }
 
+- (void)stopSignView:(UIView *)signView didEditFavoriteNameWithString:(NSString *)string
+{
+    [self.stop setFavoriteName:string];
+}
+
 - (void)updateHistory
 {
-    NSLog(@"updating history: %@", self.stop.code);
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSArray *history = [defaults arrayForKey:@"history"];
     

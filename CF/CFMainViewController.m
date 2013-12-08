@@ -242,7 +242,7 @@
     else {
         self.contentView.frame = CGRectMake(0, 140.0, self.view.bounds.size.width, self.view.bounds.size.height - 140.0);
         
-        [self selectTabButton:self.codeButton];
+        [self tabButtonTapped:self.codeButton];
     }
 }
 
@@ -264,6 +264,14 @@
         self.historyPlaceholder.hidden = NO;
     else
         self.historyPlaceholder.hidden = YES;
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    if (self.isMovingToParentViewController == YES)
+        [self tabButtonTapped:self.codeButton];
 }
 
 #pragma mark - Map mode switching
@@ -451,8 +459,6 @@
 - (void)pushStopResultsWithStopCode:(NSString *)stopCode
 {
     [self.view endEditing:YES];
-    
-    NSLog(@"consultando: %@", stopCode);
     
     CFStopResultsViewController *stopResultsVC = [[CFStopResultsViewController alloc] initWithStyle:UITableViewStylePlain];
     stopResultsVC.stopCode = stopCode;

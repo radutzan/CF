@@ -124,6 +124,7 @@
 - (void)stopCalloutTapped
 {
     [self.delegate mapControllerDidSelectStop:self.selectedStop.code];
+    [self.mapView deselectAnnotation:self.selectedStop animated:NO];
 }
 
 - (void)showDarkOverlay
@@ -157,7 +158,7 @@
 {
     [[CFSapoClient sharedClient] busStopsAroundCoordinate:region.center radius:radius handler:^(NSError *error, id result) {
         if (error || [result count] == 0) {
-            NSLog(@"%@", error);
+            NSLog(@"bus stops error: %@", error);
             return;
         }
         
@@ -182,7 +183,7 @@
 {
     [[CFSapoClient sharedClient] bipSpotsAroundCoordinate:region.center radius:radius handler:^(NSError *error, id result) {
         if (error || [result count] == 0) {
-            NSLog(@"%@", error);
+            NSLog(@"bip spots error: %@", error);
             return;
         }
         
@@ -267,7 +268,7 @@
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
 {
-    NSLog(@"%@", error);
+    NSLog(@"location manager failure: %@", error);
 }
 
 #pragma mark - MKMapViewDelegate
@@ -306,20 +307,37 @@
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
 {
     if ([annotation isKindOfClass:[CFStop class]]) {
-        static NSString *identifier = @"BusStop";
-        MKAnnotationView *stopPin = [mapView dequeueReusableAnnotationViewWithIdentifier:identifier];
-        
-        if (!stopPin) {
-            stopPin = [[CustomPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:identifier];
-            [stopPin setCanShowCallout:NO];
-            [stopPin setImage:[UIImage imageNamed:@"pin-stop"]];
+        CFStop *stopAnnotation = (CFStop *)annotation;
+        if (stopAnnotation.isFavorite) {
+            static NSString *identifier = @"FavoriteBusStop";
+            MKAnnotationView *favPin = [mapView dequeueReusableAnnotationViewWithIdentifier:identifier];
+            
+            if (!favPin) {
+                favPin = [[CustomPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:identifier];
+                [favPin setCanShowCallout:NO];
+                [favPin setImage:[UIImage imageNamed:@"pin-favorite"]];
+                
+            } else {
+                [favPin setAnnotation:annotation];
+            }
+            
+            return favPin;
             
         } else {
-            [stopPin setAnnotation:annotation];
+            static NSString *identifier = @"BusStop";
+            MKAnnotationView *stopPin = [mapView dequeueReusableAnnotationViewWithIdentifier:identifier];
+            
+            if (!stopPin) {
+                stopPin = [[CustomPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:identifier];
+                [stopPin setCanShowCallout:NO];
+                [stopPin setImage:[UIImage imageNamed:@"pin-stop"]];
+                
+            } else {
+                [stopPin setAnnotation:annotation];
+            }
+            
+            return stopPin;
         }
-        
-        return stopPin;
-        
     }
     
     if ([annotation isKindOfClass:[CFBipSpot class]]) {

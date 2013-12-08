@@ -14,7 +14,7 @@
 "NO_INFO" = "Sin información";
 
 "MAP_SEARCHFIELD_PLACEHOLDER" = "Lugares o dirección";
-"FAVORITES_PLACEHOLDER_TITLE" = "No tienes Favoritos";
+"FAVORITES_PLACEHOLDER_TITLE" = "No tienes favoritos";
 "FAVORITES_PLACEHOLDER_MESSAGE" = "Puedes agregar favoritos tocando la estrella que aparece cuando consultas un paradero.";
 "HISTORY_PLACEHOLDER_TITLE" = "Sin Historial";
 "HISTORY_PLACEHOLDER_MESSAGE" = "Tu historial se guardará automáticamente a medida que consultes paraderos.";
