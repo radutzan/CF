@@ -9,11 +9,10 @@
 #import "CFStopResultsViewController.h"
 #import "CFSapoClient.h"
 #import "CFStopSignView.h"
-#import "CFStopNavigationBar.h"
+#import "UINavigationBar+CustomHeight.h"
 
 @interface CFStopResultsViewController ()
 
-@property (nonatomic, strong) CFStopNavigationBar *customNavBar;
 @property (nonatomic, strong) CFStopSignView *stopInfoView;
 @property (nonatomic, strong) UIButton *favoriteButton;
 @property (nonatomic, strong) NSMutableArray *estimation;
@@ -31,6 +30,7 @@
         _refreshing = YES;
         
         self.tableView.separatorInset = UIEdgeInsetsZero;
+        self.tableView.separatorColor = [UIColor colorWithWhite:1 alpha:0.3];
     }
     return self;
 }
@@ -43,14 +43,20 @@
     self.refreshControl = [UIRefreshControl new];
     [self.refreshControl addTarget:self action:@selector(performStopRequest) forControlEvents:UIControlEventValueChanged];
     
-    UIView *earFuck = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 44.0)];
-//    earFuck.backgroundColor = [UIColor purpleColor];
+    UIView *earFuck = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 270, 44.0)];
     
-    self.stopInfoView = [[CFStopSignView alloc] initWithFrame:CGRectMake(-25.0, 0.0, 280.0, 44.0)];
-//    self.stopInfoView.backgroundColor = [UIColor greenColor];
+    self.stopInfoView = [[CFStopSignView alloc] initWithFrame:CGRectMake(-25.0, -11.0, 280.0, 52.0)];
     self.stopInfoView.stopCodeLabel.hidden = YES;
     [earFuck addSubview:self.stopInfoView];
     self.navigationItem.titleView = earFuck;
+    
+    self.favoriteButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    self.favoriteButton.frame = CGRectMake(earFuck.bounds.size.width - 38.0, -5.0, 42.0, 42.0);
+    self.favoriteButton.enabled = NO;
+    [self.favoriteButton setImage:[UIImage imageNamed:@"button-favorites"] forState:UIControlStateNormal];
+    [self.favoriteButton setImage:[UIImage imageNamed:@"button-favorites-selected"] forState:UIControlStateSelected];
+    [self.favoriteButton addTarget:self action:@selector(favButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+    [earFuck addSubview:self.favoriteButton];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -61,22 +67,99 @@
     self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
     self.title = @"Calmao…";
     
-    self.favoriteButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    self.favoriteButton.frame = CGRectMake(0, 0, 42, 42);
-    [self.favoriteButton setImage:[UIImage imageNamed:@"button-favorites"] forState:UIControlStateNormal];
-    [self.favoriteButton setImage:[UIImage imageNamed:@"button-favorites-selected"] forState:UIControlStateSelected];
-    [self.favoriteButton addTarget:self action:@selector(favButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-    
-//    UIBarButtonItem *favoriteItem = [[UIBarButtonItem alloc] initWithCustomView:self.favoriteButton];
-//    self.navigationItem.rightBarButtonItem = favoriteItem;
-    
     if (self.refreshing) {
         [self.refreshControl beginRefreshing];
         [UIView animateWithDuration:0.2 animations:^{
-            self.tableView.contentOffset = CGPointMake(0, -124.0);
+            self.tableView.contentOffset = CGPointMake(0, -134.0);
         }];
     }
 }
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    for (UIView *subview in self.navigationController.navigationBar.subviews) {
+        if ([subview isKindOfClass:NSClassFromString(@"_UINavigationBarBackIndicatorView")]) {
+            CGPoint center = subview.center;
+            center.y = 27.25f;
+            [UIView animateWithDuration:0.1 animations:^{
+                subview.center = center;
+            }];
+        }
+    }
+    
+    [self.navigationController setNavigationBarHidden:NO];
+}
+
+#pragma mark - Favorites and history
+
+- (void)favButtonTapped:(UIButton *)sender
+{
+    CGFloat animationDuration = 0.25;
+    
+    sender.selected = !sender.selected;
+    if (self.stop.isFavorite) {
+        self.stop.favorite = NO;
+        
+        [UIView animateWithDuration:(animationDuration / 2) animations:^{
+            self.stopInfoView.favoriteContentView.alpha = 0;
+        } completion:^(BOOL finished) {
+            self.stopInfoView.favoriteContentView.hidden = YES;
+            self.stopInfoView.contentView.hidden = NO;
+            
+            [UIView animateWithDuration:animationDuration animations:^{
+                self.stopInfoView.contentView.alpha = 1;
+            } completion:nil];
+        }];
+    } else {
+        self.stop.favorite = YES;
+        
+        [UIView animateWithDuration:(animationDuration / 2) animations:^{
+            self.stopInfoView.contentView.alpha = 0;
+        } completion:^(BOOL finished) {
+            self.stopInfoView.contentView.hidden = YES;
+            self.stopInfoView.favoriteContentView.hidden = NO;
+            
+            [UIView animateWithDuration:animationDuration animations:^{
+                self.stopInfoView.favoriteContentView.alpha = 1;
+            } completion:nil];
+        }];
+    }
+    
+    BOOL didKillImageView = NO;
+    for (UIView *view in sender.subviews) {
+        if ([view isKindOfClass:[UIImageView class]] && !didKillImageView) {
+            view.hidden = YES;
+            didKillImageView = YES;
+        }
+    }
+}
+
+- (void)updateHistory
+{
+    NSLog(@"updating history: %@", self.stop.code);
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSArray *history = [defaults arrayForKey:@"history"];
+    
+    if (!history) {
+        history = [NSArray new];
+    }
+    
+    NSMutableArray *mutableHistory = [history mutableCopy];
+    
+    for (NSDictionary *stop in history) {
+        if ([[stop objectForKey:@"codigo"] isEqualToString:self.stop.code])
+            [mutableHistory removeObject:stop];
+    }
+    
+    [mutableHistory addObject:[self.stop asDictionary]];
+    
+    [defaults setObject:mutableHistory forKey:@"history"];
+    [defaults synchronize];
+}
+
+#pragma mark - Stop logic
 
 - (void)setStopCode:(NSString *)stopCode
 {
@@ -107,21 +190,22 @@
     self.title = @"";
     
     self.stopInfoView.stop = stop;
-    
+    self.favoriteButton.enabled = YES;
     if (stop.isFavorite) self.favoriteButton.selected = YES;
     
     [self.estimation removeAllObjects];
     [self.tableView reloadData];
     [self updateHistory];
     [self performStopRequest];
-    self.refreshing = YES;
     [self.refreshControl beginRefreshing];
 }
 
 - (void)performStopRequest
 {
+    self.refreshing = YES;
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     [self.estimation removeAllObjects];
+    [self.tableView reloadData];
     
     [[CFSapoClient sharedClient] estimateAtBusStop:self.stop.code
                                           services:nil
@@ -136,53 +220,14 @@
                                                        [self.estimation addObject:dict];
                                                    }
                                                    
+                                                   self.refreshing = NO;
                                                    [self.tableView reloadData];
                                                    [self.refreshControl endRefreshing];
-                                                   self.refreshing = NO;
                                                    
                                                } else if (error) {
                                                    NSLog(@"Consulta falló. Error: %@", error.description);
                                                }
                                            }];
-}
-
-- (void)favButtonTapped:(UIButton *)sender
-{
-    sender.selected = !sender.selected;
-    if (self.stop.isFavorite) {
-//        self.stop.favorite = NO;
-        
-//        self.headerView.favoriteContentView.hidden = YES;
-//        self.headerView.contentView.hidden = NO;
-    } else {
-//        self.stop.favorite = YES;
-        
-//        self.headerView.favoriteContentView.hidden = NO;
-//        self.headerView.contentView.hidden = YES;
-    }
-}
-
-- (void)updateHistory
-{
-    NSLog(@"updating history: %@", self.stop.code);
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSArray *history = [defaults arrayForKey:@"history"];
-    
-    if (!history) {
-        history = [NSArray new];
-    }
-    
-    NSMutableArray *mutableHistory = [history mutableCopy];
-    
-    for (NSDictionary *stop in history) {
-        if ([[stop objectForKey:@"codigo"] isEqualToString:self.stop.code])
-            [mutableHistory removeObject:stop];
-    }
-    
-    [mutableHistory addObject:[self.stop asDictionary]];
-    
-    [defaults setObject:mutableHistory forKey:@"history"];
-    [defaults synchronize];
 }
 
 #pragma mark - Table view data source
@@ -194,7 +239,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [self.estimation count];
+    return [self.stop.services count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -207,25 +252,33 @@
     
     cell.backgroundColor = [UIColor clearColor];
     
-    cell.textLabel.text = [[self.estimation objectAtIndex:indexPath.row] objectForKey:@"recorrido"];
+    cell.textLabel.text = [[self.stop.services objectAtIndex:indexPath.row] objectForKey:@"name"];
     cell.textLabel.textColor = [UIColor whiteColor];
     cell.textLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:25.0];
     
-    CGFloat distance = [[[self.estimation objectAtIndex:indexPath.row] objectForKey:@"distancia"] integerValue];
-    NSString *distanceString;
-    NSString *unit = @"m";
+    if (!self.refreshing) cell.detailTextLabel.text = NSLocalizedString(@"NO_INFO", nil);
     
-    if (distance >= 1000) {
-        unit = @"km";
-        distance = distance / 1000;
-        distanceString = [NSString stringWithFormat:@"%.2f", distance];
-    } else {
-        unit = @"m";
-        distanceString = [NSString stringWithFormat:@"%.0f", distance];
+    if ([self.estimation count] == 0 || indexPath.row >= [self.estimation count]) return cell;
+    
+    for (NSDictionary *estimation in self.estimation) {
+        if ([[estimation objectForKey:@"recorrido"] isEqualToString:cell.textLabel.text]) {
+            CGFloat distance = [[estimation objectForKey:@"distancia"] integerValue];
+            NSString *distanceString;
+            NSString *unit = @"m";
+            
+            if (distance >= 1000) {
+                unit = @"km";
+                distance = distance / 1000;
+                distanceString = [NSString stringWithFormat:@"%.2f", distance];
+            } else {
+                unit = @"m";
+                distanceString = [NSString stringWithFormat:@"%.0f", distance];
+            }
+            
+            cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ %@", distanceString, unit];
+            cell.detailTextLabel.textColor = [UIColor whiteColor];
+        }
     }
-    
-    cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ %@", distanceString, unit];
-    cell.detailTextLabel.textColor = [UIColor whiteColor];
     
     return cell;
 }
@@ -238,6 +291,40 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return 52.0;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 20.0;
+}
+
+- (float)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    return 0.01f;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    UIView *headerView = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 20.0)];
+    
+    UILabel *service = [[UILabel alloc] initWithFrame:CGRectMake(15.0, 0, 100.0, 20.0)];
+    service.text = NSLocalizedString(@"SERVICE", nil);
+    service.font = [UIFont systemFontOfSize:13.0];
+    [headerView addSubview:service];
+    
+    UILabel *estimate = [[UILabel alloc] initWithFrame:CGRectMake(15.0, 0, 290.0, 20.0)];
+    estimate.text = NSLocalizedString(@"ESTIMATION", nil);
+    estimate.font = [UIFont systemFontOfSize:13.0];
+    estimate.textAlignment = NSTextAlignmentCenter;
+    [headerView addSubview:estimate];
+    
+    UILabel *distance = [[UILabel alloc] initWithFrame:CGRectMake(205.0, 0, 100.0, 20.0)];
+    distance.text = NSLocalizedString(@"DISTANCE", nil);
+    distance.font = [UIFont systemFontOfSize:13.0];
+    distance.textAlignment = NSTextAlignmentRight;
+    [headerView addSubview:distance];
+    
+    return headerView;
 }
 
 @end

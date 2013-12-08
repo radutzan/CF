@@ -6,4 +6,24 @@
   Copyright (c) 2013 Onda. All rights reserved.
 */
 
+"ENTER_STOP_CODE" = "Enter the\nStop Code";
 "AND_BUS_STOP" = "and";
+"SERVICE" = "servicio";
+"ESTIMATION" = "estimación";
+"DISTANCE" = "distancia";
+"NO_INFO" = "Sin información";
+
+"MAP_SEARCHFIELD_PLACEHOLDER" = "Lugares o dirección";
+"FAVORITES_PLACEHOLDER_TITLE" = "No Favorites";
+"FAVORITES_PLACEHOLDER_MESSAGE" = "You can add a stop to Favorites by tapping the star on the results table.";
+"HISTORY_PLACEHOLDER_TITLE" = "No history";
+"HISTORY_PLACEHOLDER_MESSAGE" = "Your History will automatically appear here after you check your first stop.";
+
+"NAME_YOUR_FAVORITE" = "Name this favorite";
+
+"HELP" = "Help";
+"ABOUT" = "About";
+"SEND_FEEDBACK" = "Send Feedback";
+"SHARE_THIS_APP" = "Share Cuánto Falta";
+"FOLLOW_US_TWITTER" = "Follow us on Twitter";
+"RATE_ON_APP_STORE" = "Rate on the App Store";

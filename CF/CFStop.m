@@ -149,13 +149,6 @@ static NSRegularExpression *regexMetroSinNumero;
     [defaults synchronize];
 }
 
-- (NSMutableArray *)mutableFavoritesArray
-{
-    NSMutableArray *mutableArray = [[CFStop favoritesArray] mutableCopy];
-    
-    return mutableArray;
-}
-
 - (void)setFavoriteWithName:(NSString *)favoriteName
 {
     self.favoriteName = favoriteName;
@@ -166,18 +159,21 @@ static NSRegularExpression *regexMetroSinNumero;
 {
     _favoriteName = favoriteName;
     
+    NSMutableArray *mutableFavoritesArray = [[CFStop favoritesArray] mutableCopy];
+    
     if (self.favorite) {
-        for (NSDictionary *stop in self.mutableFavoritesArray) {
+        for (NSDictionary *stop in mutableFavoritesArray) {
             if ([[stop objectForKey:@"codigo"] isEqualToString:self.code])
                 [stop setValue:favoriteName forKey:@"favoriteName"];
         }
         
-        [CFStop saveFavoritesWithArray:self.mutableFavoritesArray];
+        [CFStop saveFavoritesWithArray:mutableFavoritesArray];
     }
 }
 
 - (void)setFavorite:(BOOL)favorite
 {
+    NSMutableArray *mutableFavoritesArray = [[CFStop favoritesArray] mutableCopy];
     
     if (favorite) {
         BOOL added = NO;
@@ -189,14 +185,18 @@ static NSRegularExpression *regexMetroSinNumero;
         }
         
         if (!added) {
-            [self.mutableFavoritesArray addObject:[self asDictionary]];
+            [mutableFavoritesArray addObject:[self asDictionary]];
         }
-        
     } else {
-        [self.mutableFavoritesArray removeObject:[self asDictionary]];
+        for (NSDictionary *stop in [CFStop favoritesArray]) {
+            NSString *checkedStopCode = [stop objectForKey:@"codigo"];
+            
+            if ([checkedStopCode isEqualToString:self.code]) [mutableFavoritesArray removeObject:stop];
+        }
     }
     
-    [CFStop saveFavoritesWithArray:self.mutableFavoritesArray];
+    NSArray *favoritesToWrite = [mutableFavoritesArray copy];
+    [CFStop saveFavoritesWithArray:favoritesToWrite];
 }
 
 - (BOOL)isFavorite

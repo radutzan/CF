@@ -63,17 +63,17 @@
     }
     
     if (indexPath.row == 0 && indexPath.section == 0) {
-        cell.textLabel.text = @"Help";
+        cell.textLabel.text = NSLocalizedString(@"HELP", nil);
     } else if (indexPath.row == 1 && indexPath.section == 0) {
-        cell.textLabel.text = @"About";
+        cell.textLabel.text = NSLocalizedString(@"ABOUT", nil);
     } else if (indexPath.row == 2 && indexPath.section == 0) {
-        cell.textLabel.text = @"Send Feedback";
+        cell.textLabel.text = NSLocalizedString(@"SEND_FEEDBACK", nil);
     } else if (indexPath.row == 0 && indexPath.section == 1) {
-        cell.textLabel.text = @"Share Cuánto Falta";
+        cell.textLabel.text = NSLocalizedString(@"SHARE_THIS_APP", nil);
     } else if (indexPath.row == 1 && indexPath.section == 1) {
-        cell.textLabel.text = @"Follow us on Twitter";
+        cell.textLabel.text = NSLocalizedString(@"FOLLOW_US_TWITTER", nil);
     } else if (indexPath.row == 2 && indexPath.section == 1) {
-        cell.textLabel.text = @"Rate on the App Store";
+        cell.textLabel.text = NSLocalizedString(@"RATE_ON_APP_STORE", nil);
     }
     
     return cell;

@@ -17,6 +17,7 @@
 		7C42641A184AF3E300A8968F /* CFFavoriteCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C426419184AF3E300A8968F /* CFFavoriteCell.m */; };
 		7C42642D184BF57500A8968F /* UINavigationBar+CustomHeight.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C42642C184BF57500A8968F /* UINavigationBar+CustomHeight.m */; };
 		7C5FD9CE184F8B140099FEE2 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7C5FD9CC184F8B140099FEE2 /* Localizable.strings */; };
+		7C7A15D61853EBF0002EE4C5 /* OLTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C7A15D51853EBF0002EE4C5 /* OLTextField.m */; };
 		7C8F63C9184E9D7400EDD2AB /* CFStopNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C8F63C8184E9D7400EDD2AB /* CFStopNavigationBar.m */; };
 		7C9A0F691852E9C60018ED1F /* NSDictionary+NSNullUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C9A0F681852E9C60018ED1F /* NSDictionary+NSNullUtility.m */; };
 		7CAFA3381842A206005A06BC /* placeholder-favorites@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CAFA3361842A206005A06BC /* placeholder-favorites@2x.png */; };
@@ -96,6 +97,8 @@
 		7C5FD9CF184F8B5F0099FEE2 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		7C5FD9D0184F8B5F0099FEE2 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		7C5FD9D1184F8B5F0099FEE2 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		7C7A15D41853EBF0002EE4C5 /* OLTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLTextField.h; sourceTree = "<group>"; };
+		7C7A15D51853EBF0002EE4C5 /* OLTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLTextField.m; sourceTree = "<group>"; };
 		7C8F63C7184E9D7400EDD2AB /* CFStopNavigationBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFStopNavigationBar.h; sourceTree = "<group>"; };
 		7C8F63C8184E9D7400EDD2AB /* CFStopNavigationBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFStopNavigationBar.m; sourceTree = "<group>"; };
 		7C9A0F671852E9C60018ED1F /* NSDictionary+NSNullUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+NSNullUtility.h"; sourceTree = "<group>"; };
@@ -321,6 +324,8 @@
 				7CFF7E801838288C006230CE /* SMCalloutView.m */,
 				7C42642B184BF57500A8968F /* UINavigationBar+CustomHeight.h */,
 				7C42642C184BF57500A8968F /* UINavigationBar+CustomHeight.m */,
+				7C7A15D41853EBF0002EE4C5 /* OLTextField.h */,
+				7C7A15D51853EBF0002EE4C5 /* OLTextField.m */,
 				7CFF7EBD1838700F006230CE /* CFStopSignView.h */,
 				7CFF7EBE1838700F006230CE /* CFStopSignView.m */,
 				7C8F63C7184E9D7400EDD2AB /* CFStopNavigationBar.h */,
@@ -540,6 +545,7 @@
 				7CFF7E5118381645006230CE /* main.m in Sources */,
 				7CFF7E9D18382B1B006230CE /* NSString+Digest.m in Sources */,
 				7CFF7E5518381645006230CE /* CFAppDelegate.m in Sources */,
+				7C7A15D61853EBF0002EE4C5 /* OLTextField.m in Sources */,
 				7CFF7EC618387735006230CE /* CFStopResultsViewController.m in Sources */,
 				7C8F63C9184E9D7400EDD2AB /* CFStopNavigationBar.m in Sources */,
 				7C10B96F183ADD200086B650 /* CFFavoritesViewController.m in Sources */,

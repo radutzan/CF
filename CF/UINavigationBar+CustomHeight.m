@@ -10,10 +10,10 @@
 
 @implementation UINavigationBar (CustomHeight)
 
-//- (CGSize)sizeThatFits:(CGSize)size
-//{
-//    CGSize newSize = CGSizeMake(self.frame.size.width, 72.0);
-//    return newSize;
-//}
+- (CGSize)sizeThatFits:(CGSize)size
+{
+    CGSize newSize = CGSizeMake(self.frame.size.width, 54.0);
+    return newSize;
+}
 
 @end

@@ -21,9 +21,6 @@
 {
     self = [super initWithStyle:style];
     if (self) {
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        _favoritesArray = [defaults arrayForKey:@"favorites"];
-        _mutableFavoritesArray = [_favoritesArray mutableCopy];
     }
     return self;
 }
@@ -31,6 +28,21 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+}
+
+- (NSArray *)favoritesArray
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSArray *favsArray = [defaults arrayForKey:@"favorites"];
+    
+    return favsArray;
+}
+
+- (NSMutableArray *)mutableFavoritesArray
+{
+    NSMutableArray *mutableFavorites = [self.favoritesArray mutableCopy];
+    
+    return mutableFavorites;
 }
 
 #pragma mark - Table view data source
@@ -43,9 +55,39 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
+    CFStopCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
-    // Configure the cell...
+    NSInteger index = [self.mutableFavoritesArray count] - indexPath.row - 1;
+    NSDictionary *stopDictionary = [self.mutableFavoritesArray objectAtIndex:index];
+    
+    if (cell == nil)
+        cell = [[CFStopCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+    
+    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    cell.backgroundColor = [UIColor clearColor];
+    cell.contentView.frame = CGRectMake(cell.contentView.frame.origin.x, cell.contentView.frame.origin.y, cell.contentView.bounds.size.width, 52.0);
+    
+    cell.codeLabel.text = [stopDictionary objectForKey:@"codigo"];
+    
+    NSString *street = [stopDictionary objectForKey:@"calle"];
+    NSString *intersection = [stopDictionary objectForKey:@"interseccion"];
+    
+    cell.nameLabel.text = street;
+    
+    if (intersection)
+        cell.nameLabel.text = [NSString stringWithFormat:@"%@\n%@ %@", street, @"and", intersection];
+    
+    NSInteger number = [[stopDictionary objectForKey:@"numero"] integerValue];
+    
+    if (number > 0) {
+        cell.numberLabel.hidden = NO;
+        cell.numberLabel.text = [NSString stringWithFormat:@"%d", number];
+    }
+    
+    BOOL isMetro = [[stopDictionary objectForKey:@"metro"] boolValue];
+    
+    if (isMetro)
+        cell.metroBadge.hidden = NO;
     
     return cell;
 }

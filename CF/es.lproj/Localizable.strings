@@ -6,4 +6,24 @@
   Copyright (c) 2013 Onda. All rights reserved.
  */
 
+"ENTER_STOP_CODE" = "Ingresa\nel código\nde Parada";
 "AND_BUS_STOP" = "con";
+"SERVICE" = "servicio";
+"ESTIMATION" = "estimación";
+"DISTANCE" = "distancia";
+"NO_INFO" = "Sin información";
+
+"MAP_SEARCHFIELD_PLACEHOLDER" = "Lugares o dirección";
+"FAVORITES_PLACEHOLDER_TITLE" = "No tienes Favoritos";
+"FAVORITES_PLACEHOLDER_MESSAGE" = "Puedes agregar favoritos tocando la estrella que aparece cuando consultas un paradero.";
+"HISTORY_PLACEHOLDER_TITLE" = "Sin Historial";
+"HISTORY_PLACEHOLDER_MESSAGE" = "Tu historial se guardará automáticamente a medida que consultes paraderos.";
+
+"NAME_YOUR_FAVORITE" = "Pónle nombre";
+
+"HELP" = "Ayuda";
+"ABOUT" = "Acerca";
+"SEND_FEEDBACK" = "Envíanos comentarios";
+"SHARE_THIS_APP" = "Comparte Cuánto Falta";
+"FOLLOW_US_TWITTER" = "Síguenos en Twitter";
+"RATE_ON_APP_STORE" = "Evalúa en la App Store";

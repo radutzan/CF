@@ -24,7 +24,7 @@
         
         UILabel *enterStopCodeLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, -5.0, 215.0, 170.0)];
         enterStopCodeLabel.font = [UIFont fontWithName:@"HelveticaNeue-Thin" size:46.0];
-        enterStopCodeLabel.text = @"Ingresa\nel código\nde Parada";
+        enterStopCodeLabel.text = NSLocalizedString(@"ENTER_STOP_CODE", nil);
         enterStopCodeLabel.numberOfLines = 3;
         enterStopCodeLabel.textColor = [UIColor colorWithWhite:0 alpha:0.7];
         [containerView addSubview:enterStopCodeLabel];

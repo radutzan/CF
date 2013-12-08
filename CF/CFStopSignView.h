@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "CFStop.h"
+#import "OLTextField.h"
 
 @interface CFStopSignView : UIView
 
@@ -15,9 +16,10 @@
 @property (nonatomic, strong) UILabel *stopCodeLabel;
 @property (nonatomic, strong) UIView *accessoryView;
 @property (nonatomic, strong) UIView *contentView;
-@property (nonatomic, strong) UIView *favoriteContentView;
+@property (nonatomic, strong) UIImageView *busPictogram;
 
-// favorite view
-@property (nonatomic, strong) UITextField *favoriteNameField;
+// by default, userInteractionEnabled = NO to prevent name editing
+@property (nonatomic, strong) UIView *favoriteContentView;
+@property (nonatomic, strong) OLTextField *favoriteNameField;
 
 @end

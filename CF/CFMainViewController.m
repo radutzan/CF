@@ -191,14 +191,14 @@
     [self.favoritesPlaceholder addSubview:favoritesPlaceholderImage];
     
     UILabel *favoritesPlaceholderTitle = [[UILabel alloc] initWithFrame:CGRectMake(0, favoritesPlaceholderImage.frame.origin.y + favoritesPlaceholderImage.bounds.size.height + verticalMargin, self.favoritesPlaceholder.bounds.size.width, 25)];
-    favoritesPlaceholderTitle.text = @"No Favorites";
+    favoritesPlaceholderTitle.text = NSLocalizedString(@"FAVORITES_PLACEHOLDER_TITLE", nil);
     favoritesPlaceholderTitle.textAlignment = NSTextAlignmentCenter;
     favoritesPlaceholderTitle.font = [UIFont boldSystemFontOfSize:17.0];
     favoritesPlaceholderTitle.textColor = [UIColor colorWithWhite:0 alpha:0.4];
     [self.favoritesPlaceholder addSubview:favoritesPlaceholderTitle];
     
     UILabel *favoritesPlaceholderMessage = [[UILabel alloc] initWithFrame:CGRectMake(50, favoritesPlaceholderTitle.frame.origin.y + favoritesPlaceholderTitle.bounds.size.height + verticalMargin / 2, self.favoritesPlaceholder.bounds.size.width - 100, 60)];
-    favoritesPlaceholderMessage.text = @"You can add a stop to Favorites by tapping the star on the results table.";
+    favoritesPlaceholderMessage.text = NSLocalizedString(@"FAVORITES_PLACEHOLDER_MESSAGE", nil);
     favoritesPlaceholderMessage.numberOfLines = 3;
     favoritesPlaceholderMessage.textAlignment = NSTextAlignmentCenter;
     favoritesPlaceholderMessage.font = [UIFont systemFontOfSize:15.0];
@@ -216,14 +216,14 @@
     [self.historyPlaceholder addSubview:historyPlaceholderImage];
     
     UILabel *historyPlaceholderTitle = [[UILabel alloc] initWithFrame:CGRectMake(0, historyPlaceholderImage.frame.origin.y + historyPlaceholderImage.bounds.size.height + verticalMargin, self.historyPlaceholder.bounds.size.width, 25)];
-    historyPlaceholderTitle.text = @"No history";
+    historyPlaceholderTitle.text = NSLocalizedString(@"HISTORY_PLACEHOLDER_TITLE", nil);
     historyPlaceholderTitle.textAlignment = NSTextAlignmentCenter;
     historyPlaceholderTitle.font = [UIFont boldSystemFontOfSize:17.0];
     historyPlaceholderTitle.textColor = [UIColor colorWithWhite:0 alpha:0.4];
     [self.historyPlaceholder addSubview:historyPlaceholderTitle];
     
     UILabel *historyPlaceholderMessage = [[UILabel alloc] initWithFrame:CGRectMake(50, historyPlaceholderTitle.frame.origin.y + historyPlaceholderTitle.bounds.size.height + verticalMargin / 2, self.historyPlaceholder.bounds.size.width - 100, 60)];
-    historyPlaceholderMessage.text = @"Your History will automatically appear here after you check your first stop.";
+    historyPlaceholderMessage.text = NSLocalizedString(@"HISTORY_PLACEHOLDER_MESSAGE", nil);
     historyPlaceholderMessage.numberOfLines = 3;
     historyPlaceholderMessage.textAlignment = NSTextAlignmentCenter;
     historyPlaceholderMessage.font = [UIFont systemFontOfSize:15.0];
@@ -284,7 +284,7 @@
         
         UISearchBar *searchBar = [UISearchBar new];
         searchBar.searchBarStyle = UISearchBarStyleMinimal;
-        searchBar.placeholder = @"Lugares o dirección";
+        searchBar.placeholder = NSLocalizedString(@"MAP_SEARCHFIELD_PLACEHOLDER", nil);
         searchBar.delegate = self;
         
         UIBarButtonItem *bipButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCamera target:self.mapController action:@selector(goToNearestBipSpot)];
@@ -454,7 +454,7 @@
     
     NSLog(@"consultando: %@", stopCode);
     
-    CFStopResultsViewController *stopResultsVC = [[CFStopResultsViewController alloc] initWithStyle:UITableViewStyleGrouped];
+    CFStopResultsViewController *stopResultsVC = [[CFStopResultsViewController alloc] initWithStyle:UITableViewStylePlain];
     stopResultsVC.stopCode = stopCode;
     
     [self.navigationController pushViewController:stopResultsVC animated:YES];
