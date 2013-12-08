@@ -7,7 +7,6 @@
 //
 
 #import "CFAppDelegate.h"
-#import "CFMainViewController.h"
 
 @implementation CFAppDelegate
 
@@ -16,7 +15,7 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
     self.window.backgroundColor = [UIColor whiteColor];
-    self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:[CFMainViewController new]];
+    self.window.rootViewController = [[CFNavigationController alloc] initWithNavigationBarClass:[CFNavigationBar class] toolbarClass:nil];
     self.window.tintColor = [UIColor colorWithHue:130.0/360.0 saturation:0.9 brightness:0.9 alpha:1];
     [self.window makeKeyAndVisible];
     return YES;

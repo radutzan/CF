@@ -18,9 +18,13 @@
 "FAVORITES_PLACEHOLDER_MESSAGE" = "Puedes agregar favoritos tocando la estrella que aparece cuando consultas un paradero.";
 "HISTORY_PLACEHOLDER_TITLE" = "Sin Historial";
 "HISTORY_PLACEHOLDER_MESSAGE" = "Tu historial se guardará automáticamente a medida que consultes paraderos.";
+"CLEAR_ALL_HISTORY" = "Borrar Historial";
 
 "NAME_YOUR_FAVORITE" = "Pónle nombre";
 "NAMELESS_FAVORITE" = "Favorito sin nombre";
+
+"CANCEL" = "Cancelar";
+"BUY" = "Comprar";
 
 "HELP" = "Ayuda";
 "ABOUT" = "Acerca";

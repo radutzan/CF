@@ -7,6 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "CFNavigationController.h"
+#import "CFNavigationBar.h"
 
 @interface CFAppDelegate : UIResponder <UIApplicationDelegate>
 

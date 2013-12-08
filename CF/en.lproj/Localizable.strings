@@ -15,12 +15,16 @@
 
 "MAP_SEARCHFIELD_PLACEHOLDER" = "Places or address";
 "FAVORITES_PLACEHOLDER_TITLE" = "No Favorites";
-"FAVORITES_PLACEHOLDER_MESSAGE" = "You can add a stop to Favorites by tapping the star on the results table.";
+"FAVORITES_PLACEHOLDER_MESSAGE" = "You can add a stop to Favorites by tapping the star on the stop results list.";
 "HISTORY_PLACEHOLDER_TITLE" = "No history";
 "HISTORY_PLACEHOLDER_MESSAGE" = "Your History will automatically appear here after you check your first stop.";
+"CLEAR_ALL_HISTORY" = "Clear All History";
 
 "NAME_YOUR_FAVORITE" = "Name this favorite";
 "NAMELESS_FAVORITE" = "No name";
+
+"CANCEL" = "Cancel";
+"BUY" = "Buy";
 
 "HELP" = "Help";
 "ABOUT" = "About";

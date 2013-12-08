@@ -9,8 +9,9 @@
 #import "CFMoreViewController.h"
 #import "CFMoreContentViewController.h"
 #import "UIDevice+hardware.h"
+#import <OLGhostAlertView/OLGhostAlertView.h>
 
-@interface CFMoreViewController ()
+@interface CFMoreViewController () <UIWebViewDelegate>
 
 @end
 
@@ -90,8 +91,9 @@
     
     if (indexPath.section == 0) {
         webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, 320, self.navigationController.view.frame.size.height)];
-        webView.backgroundColor = [UIColor whiteColor];
+        webView.backgroundColor = [UIColor colorWithRed:0.94 green:0.94 blue:0.96 alpha:1.0];
         webView.opaque = NO;
+        webView.delegate = self;
         
         controller.view = webView;
     }
@@ -101,20 +103,24 @@
         NSData *help = [NSData dataWithContentsOfFile:helpPath];
         
         [webView loadData:help MIMEType:@"text/html" textEncodingName:@"UTF-8" baseURL:baseURL];
+        
         controller.title = NSLocalizedString(@"HELP", nil);
         [self.navigationController pushViewController:controller animated:YES];
         
     } else if (indexPath.section == 0 && indexPath.row == 1) {
-        NSString *aboutPath = [[NSBundle mainBundle] pathForResource:@"help" ofType:@"html"];
-        NSData *about = [NSData dataWithContentsOfFile:aboutPath];
+        NSString *aboutPath = [[NSBundle mainBundle] pathForResource:@"about" ofType:@"html"];
+        NSString *aboutString = [NSString stringWithContentsOfFile:aboutPath encoding:NSStringEncodingConversionAllowLossy error:nil];
+        NSString *finalString = [NSString stringWithFormat:aboutString, [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"], [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]];
         
-        [webView loadData:about MIMEType:@"text/html" textEncodingName:@"UTF-8" baseURL:baseURL];
+        [webView loadHTMLString:finalString baseURL:baseURL];
+        
         controller.title = NSLocalizedString(@"ABOUT", nil);
         [self.navigationController pushViewController:controller animated:YES];
         
     } else if (indexPath.section == 0 && indexPath.row == 2) {
         NSString *appVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
         NSString *contactURL = [@"http://api.cuantofalta.mobi" stringByAppendingFormat:@"/contact?local=%@&UDID=NULL&osver=%@&appver=%@&device=%@", [[NSLocale preferredLanguages] objectAtIndex:0], [[UIDevice currentDevice] systemVersion], appVersion, [UIDevice platform]];
+        
         NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:contactURL]];
         [webView loadRequest:request];
         
@@ -132,7 +138,7 @@
         
     } else if (indexPath.section == 1 && indexPath.row == 1) {
         NSURL *URL = nil;
-        NSArray *schemes = [NSArray arrayWithObjects:@"tweetbot:///follow/@%@?callback_url=cuantofalta://success", @"twitter:@%@", @"http://twitter.com/%@", nil];
+        NSArray *schemes = [NSArray arrayWithObjects:@"tweetbot:///follow/%@?callback_url=cuantofalta://success", @"twitter:@%@", @"http://twitter.com/%@", nil];
         
         for (NSString *uri in schemes) {
             URL = [NSURL URLWithString:[NSString stringWithFormat:uri, @"cuantofaltapp"]];
@@ -149,6 +155,36 @@
     }
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+}
+
+#pragma mark - WebView Delegate
+
+- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
+{
+    if (navigationType == UIWebViewNavigationTypeLinkClicked) {
+        if ([[request.URL host] isEqualToString:@"twitter.com"]) {
+            NSURL *URL = nil;
+            NSArray *schemes = [NSArray arrayWithObjects:@"tweetbot:///user_profile/%@", @"twitter:@%@", @"http://twitter.com/%@", nil];
+            
+            for (NSString *uri in schemes) {
+                URL = [NSURL URLWithString:[NSString stringWithFormat:uri, [request.URL lastPathComponent]]];
+                if ([[UIApplication sharedApplication] canOpenURL:URL]) {
+                    break;
+                }
+            }
+            
+            [[UIApplication sharedApplication] openURL:URL];
+            
+            return NO;
+        }
+        
+        if ([[UIApplication sharedApplication] canOpenURL:[request URL]]) {
+            [[UIApplication sharedApplication] openURL:[request URL]];
+        }
+        return NO;
+    }
+    
+    return YES;
 }
 
 @end

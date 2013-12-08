@@ -9,7 +9,7 @@
 #import "CFStopResultsViewController.h"
 #import "CFSapoClient.h"
 #import "CFStopSignView.h"
-#import "UINavigationBar+CustomHeight.h"
+#import "CFNavigationController.h"
 
 @interface CFStopResultsViewController () <CFStopSignViewDelegate>
 
@@ -29,6 +29,8 @@
         _estimation = [NSMutableArray new];
         _refreshing = YES;
         
+        self.title = @"Stop Results";
+        
         self.tableView.separatorInset = UIEdgeInsetsZero;
         self.tableView.separatorColor = [UIColor colorWithWhite:1 alpha:0.3];
     }
@@ -40,6 +42,7 @@
     [super viewDidLoad];
     
     self.view.backgroundColor = [UIColor blackColor];
+    
     self.refreshControl = [UIRefreshControl new];
     [self.refreshControl addTarget:self action:@selector(performStopRequest) forControlEvents:UIControlEventValueChanged];
     
@@ -65,9 +68,8 @@
 {
     [super viewWillAppear:animated];
     
-    [self.navigationController setNavigationBarHidden:NO animated:YES];
     self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
-    self.title = @"Calmao…";
+    [self.navigationController setNavigationBarHidden:NO animated:YES];
     
     if (self.refreshing) {
         [self.refreshControl beginRefreshing];
@@ -80,16 +82,6 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    
-    for (UIView *subview in self.navigationController.navigationBar.subviews) {
-        if ([subview isKindOfClass:NSClassFromString(@"_UINavigationBarBackIndicatorView")]) {
-            CGPoint center = subview.center;
-            center.y = 27.25f;
-            [UIView animateWithDuration:0.1 animations:^{
-                subview.center = center;
-            }];
-        }
-    }
     
     [self.navigationController setNavigationBarHidden:NO];
 }

@@ -21,10 +21,7 @@
 @property (nonatomic) CGFloat contentViewWidth;
 
 // regular view
-@property (nonatomic, strong) UIView *containerView;
-@property (nonatomic, strong) UILabel *stopNameSingleLineLabel;
-@property (nonatomic, strong) UILabel *stopNameTopLabel;
-@property (nonatomic, strong) UILabel *stopNameBottomLabel;
+@property (nonatomic, strong) UILabel *stopNameLabel;
 @property (nonatomic, strong) UILabel *stopNumberLabel;
 @property (nonatomic, strong) UIImageView *metroPictogram;
 
@@ -65,40 +62,17 @@
 
 - (void)initRegularContentView
 {
-    _containerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, _contentView.bounds.size.width, self.bounds.size.height)];
-    [_contentView addSubview:_containerView];
-    
-    // una línea
-    _stopNameSingleLineLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, _verticallyCenteredLabelY, _containerView.bounds.size.width, LABEL_HEIGHT)];
-    _stopNameSingleLineLabel.backgroundColor    = [UIColor clearColor];
-    _stopNameSingleLineLabel.font               = [UIFont boldSystemFontOfSize:LABEL_FONT_SIZE];
-    _stopNameSingleLineLabel.adjustsFontSizeToFitWidth = YES;
-    _stopNameSingleLineLabel.textColor          = [UIColor whiteColor];
-    _stopNameSingleLineLabel.autoresizingMask   = UIViewAutoresizingFlexibleWidth;
-    _stopNameSingleLineLabel.hidden             = YES;
+    // the one and only label
+    _stopNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, _contentView.bounds.size.width, _contentView.bounds.size.height)];
+    _stopNameLabel.backgroundColor    = [UIColor clearColor];
+    _stopNameLabel.adjustsFontSizeToFitWidth = YES;
+    _stopNameLabel.font     = [UIFont boldSystemFontOfSize:LABEL_FONT_SIZE];
+    _stopNameLabel.textColor          = [UIColor whiteColor];
+    _stopNameLabel.autoresizingMask   = UIViewAutoresizingFlexibleWidth;
+    _stopNameLabel.hidden             = NO;
+    _stopNameLabel.numberOfLines      = 2;
     //    stopNameSingleLineLabel.backgroundColor = [UIColor yellowColor];
-    [_contentView addSubview:_stopNameSingleLineLabel];
-    
-    // dos líneas
-    _stopNameTopLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, (_containerView.bounds.size.height / 2) - LABEL_HEIGHT, _containerView.bounds.size.width, LABEL_HEIGHT)];
-    _stopNameTopLabel.backgroundColor           = [UIColor clearColor];
-    _stopNameTopLabel.font                      = [UIFont boldSystemFontOfSize:LABEL_FONT_SIZE];
-    _stopNameTopLabel.adjustsFontSizeToFitWidth = YES;
-    _stopNameTopLabel.textColor                 = [UIColor whiteColor];
-    _stopNameTopLabel.autoresizingMask          = UIViewAutoresizingFlexibleWidth;
-    _stopNameTopLabel.hidden                    = YES;
-    //    stopNameTopLabel.backgroundColor = [UIColor cyanColor];
-    [_containerView addSubview:_stopNameTopLabel];
-    
-    _stopNameBottomLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, (_containerView.bounds.size.height / 2) + 1.0, _containerView.bounds.size.width, LABEL_HEIGHT)];
-    _stopNameBottomLabel.backgroundColor        = [UIColor clearColor];
-    _stopNameBottomLabel.font                   = [UIFont systemFontOfSize:LABEL_FONT_SIZE];
-    _stopNameBottomLabel.adjustsFontSizeToFitWidth = YES;
-    _stopNameBottomLabel.textColor              = [UIColor whiteColor];
-    _stopNameBottomLabel.autoresizingMask       = UIViewAutoresizingFlexibleWidth;
-    _stopNameBottomLabel.hidden                 = YES;
-    //    stopNameBottomLabel.backgroundColor = [UIColor cyanColor];
-    [_containerView addSubview:_stopNameBottomLabel];
+    [_contentView addSubview:_stopNameLabel];
     
     // código de parada
     _stopCodeLabel = [[UILabel alloc] initWithFrame:CGRectMake(_contentView.bounds.size.width - 65.0 - HORIZONTAL_MARGIN, _verticallyCenteredLabelY, 65.0, LABEL_HEIGHT)];
@@ -147,9 +121,6 @@
 
 - (void)layoutSubviews
 {
-    self.stopNameSingleLineLabel.frame = CGRectMake(0, self.verticallyCenteredLabelY, self.containerView.bounds.size.width, LABEL_HEIGHT);
-    self.stopNameTopLabel.frame = CGRectMake(0, (self.containerView.bounds.size.height / 2) - LABEL_HEIGHT, self.containerView.bounds.size.width, LABEL_HEIGHT);
-    self.stopNameBottomLabel.frame = CGRectMake(0, (self.containerView.bounds.size.height / 2) + 1.0, self.containerView.bounds.size.width, LABEL_HEIGHT);
     self.stopCodeLabel.frame = CGRectMake(self.contentView.bounds.size.width - 65.0, self.verticallyCenteredLabelY, 65.0, LABEL_HEIGHT);
     
     if (self.busPictogram.hidden)
@@ -178,27 +149,32 @@
     if (stop.favoriteName) self.favoriteNameField.text = stop.favoriteName;
     self.stopFullNameLabel.text = stop.name;
     
-    // epic reset
-    CGRect newContainerFrame = CGRectMake(0, 0, self.contentView.bounds.size.width - self.horizontalMarginWithPictogram, self.bounds.size.height);
+    // reset
+    CGRect newLabelFrame = CGRectMake(0, 0, self.contentView.bounds.size.width, self.contentView.bounds.size.height);
     
-    self.stopNameSingleLineLabel.hidden = YES;
-    self.stopNameTopLabel.hidden = YES;
-    self.stopNameBottomLabel.hidden = YES;
     self.stopNumberLabel.hidden = YES;
     self.metroPictogram.hidden = YES;
     
     self.stopCodeLabel.text = stop.code;
     
     if (stop.intersection) {
-        self.stopNameTopLabel.text = stop.street;
-        self.stopNameBottomLabel.text = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"AND_BUS_STOP", nil), stop.intersection];
+        NSRange firstLineRange = NSMakeRange(0, [stop.street length]);
         
-        self.stopNameTopLabel.hidden = NO;
-        self.stopNameBottomLabel.hidden = NO;
+        UIFont *boldFont = [UIFont boldSystemFontOfSize:LABEL_FONT_SIZE];
+        UIFont *regularFont = [UIFont systemFontOfSize:LABEL_FONT_SIZE];
+        
+        NSDictionary *attrs = [NSDictionary dictionaryWithObjectsAndKeys:regularFont, NSFontAttributeName, nil];
+        NSDictionary *subAttrs = [NSDictionary dictionaryWithObjectsAndKeys:boldFont, NSFontAttributeName, nil];
+        
+        NSString *fullString = [NSString stringWithFormat:@"%@\n%@ %@", stop.street, NSLocalizedString(@"AND_BUS_STOP", nil), stop.intersection];
+        
+        NSMutableAttributedString *attributedText = [[NSMutableAttributedString alloc] initWithString:fullString attributes:attrs];
+        [attributedText setAttributes:subAttrs range:firstLineRange];
+        
+        [self.stopNameLabel setAttributedText:attributedText];
         
     } else {
-        self.stopNameSingleLineLabel.hidden = NO;
-        self.stopNameSingleLineLabel.text = stop.street;
+        self.stopNameLabel.text = stop.street;
     }
     
     // número de parada
@@ -208,14 +184,14 @@
         self.stopNumberLabel.frame = CGRectMake(self.stopNumberLabel.frame.origin.x, self.stopNumberLabel.frame.origin.y, self.stopNumberLabel.frame.size.width, self.bounds.size.height + 2.0);
         self.stopNumberLabel.hidden = NO;
         
-        newContainerFrame.origin.x += self.stopNumberLabel.bounds.size.width + HORIZONTAL_MARGIN - 3.0;
-        newContainerFrame.size.width -= newContainerFrame.origin.x;
+        newLabelFrame.origin.x += self.stopNumberLabel.bounds.size.width + HORIZONTAL_MARGIN - 3.0;
+        newLabelFrame.size.width -= newLabelFrame.origin.x;
     }
     
     // es metro
     if ([stop isMetro]) {
-        newContainerFrame.origin.x += self.metroPictogram.bounds.size.width + 4.0;
-        newContainerFrame.size.width -= (self.metroPictogram.bounds.size.width + HORIZONTAL_MARGIN);
+        newLabelFrame.origin.x += self.metroPictogram.bounds.size.width + 4.0;
+        newLabelFrame.size.width -= (self.metroPictogram.bounds.size.width + HORIZONTAL_MARGIN);
         
         // tiene número
         if (stop.number > 0) {
@@ -225,7 +201,7 @@
         self.metroPictogram.hidden = NO;
     }
     
-    self.containerView.frame = newContainerFrame;
+    self.stopNameLabel.frame = newLabelFrame;
     
     [self setNeedsLayout];
 }

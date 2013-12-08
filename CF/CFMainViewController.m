@@ -17,7 +17,7 @@
 #define TAB_BAR_HEIGHT 60.0
 #define TAB_BUTTON_WIDTH 75.0
 
-@interface CFMainViewController () <UIScrollViewDelegate, UISearchBarDelegate, CFEnterStopCodeViewDelegate, CFStopTableViewDelegate, CFMapControllerDelegate>
+@interface CFMainViewController () <UIScrollViewDelegate, UISearchBarDelegate, CFEnterStopCodeViewDelegate, CFStopTableViewDelegate, CFMapControllerDelegate, UIActionSheetDelegate>
 
 @property (nonatomic, strong) CFMapController *mapController;
 @property (nonatomic, strong) CFEnterStopCodeView *enterStopCodeView;
@@ -50,8 +50,6 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         self.title = @"";
-        
-//        [self.navigationController setValue:[CFStopNavigationBar new] forKeyPath:@"navigationBar"];
     }
     return self;
 }
@@ -131,6 +129,9 @@
     [self.moreButton addTarget:self action:@selector(tabButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     [self.tabBar addSubview:self.moreButton];
     
+    UILongPressGestureRecognizer *clearHistory = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressRecognized:)];
+    [self.historyButton addGestureRecognizer:clearHistory];
+    
     self.openMapButton = [UIButton buttonWithType:UIButtonTypeCustom];
     self.openMapButton.frame = CGRectMake(0, 45.0, self.view.bounds.size.width, 95.0);
     self.openMapButton.autoresizingMask = UIViewAutoresizingFlexibleWidth;
@@ -206,7 +207,6 @@
     [self.favoritesPlaceholder addSubview:favoritesPlaceholderMessage];
     
     [self.scrollView addSubview:self.favoritesPlaceholder];
-    
     
     self.historyPlaceholder = [[UIView alloc] initWithFrame:self.historyController.view.frame];
     UIImageView *historyPlaceholderImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"placeholder-history"]];
@@ -483,6 +483,29 @@
 
 #pragma mark - Other shit
 
+- (void)longPressRecognized:(UILongPressGestureRecognizer *)recognizer
+{
+    if (recognizer.state == UIGestureRecognizerStateBegan) {
+        UIActionSheet *clearSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:NSLocalizedString(@"CANCEL", nil) destructiveButtonTitle:NSLocalizedString(@"CLEAR_ALL_HISTORY", nil) otherButtonTitles:nil];
+        [clearSheet showInView:self.view];
+    }
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    NSLog(@"index: %d", buttonIndex);
+    if (buttonIndex == 0) {
+        NSArray *emptyArray = [NSArray new];
+        
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        [defaults setObject:emptyArray forKey:@"history"];
+        [defaults synchronize];
+        
+        [self.historyController.tableView reloadData];
+        self.historyPlaceholder.hidden = NO;
+    }
+}
+
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar
 {
     [self.mapController showDarkOverlay];
@@ -505,18 +528,6 @@
         center.y -= kbSize.height - 70;
         self.enterStopCodeView.center = center;
     } completion:nil];
-//    
-//    UIEdgeInsets contentInsets = UIEdgeInsetsMake(0.0, 0.0, kbSize.height, 0.0);
-//    self.scrollView.contentInset = contentInsets;
-//    self.scrollView.scrollIndicatorInsets = contentInsets;
-    
-    // If active text field is hidden by keyboard, scroll it so it's visible
-    // Your app might not need or want this behavior.
-//    CGRect aRect = self.view.frame;
-//    aRect.size.height -= kbSize.height;
-//    if (!CGRectContainsPoint(aRect, activeField.frame.origin) ) {
-//        [self.scrollView scrollRectToVisible:activeField.frame animated:YES];
-//    }
 }
 
 - (void)keyboardWillBeHidden:(NSNotification*)aNotification
