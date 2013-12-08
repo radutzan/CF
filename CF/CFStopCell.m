@@ -21,6 +21,7 @@
         self.nameLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         self.nameLabel.numberOfLines = 2;
         self.nameLabel.font = [UIFont systemFontOfSize:15.0];
+        self.nameLabel.textColor = [UIColor colorWithWhite:0 alpha:0.8];
         [self.contentView addSubview:self.nameLabel];
         
         self.codeLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.contentView.bounds.size.width - 60.0, 0, 60.0, self.contentView.bounds.size.height)];
@@ -61,10 +62,12 @@
 - (UILabel *)numberLabel
 {
     if (!_numberLabel) {
-        _numberLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 13.0, 26.0, 26.0)];
+        CGFloat originY = (self.contentView.bounds.size.height - 26.0) / 2;
+        _numberLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, originY, 26.0, 26.0)];
         _numberLabel.font = [UIFont systemFontOfSize:15];
         _numberLabel.textAlignment = NSTextAlignmentCenter;
-        _numberLabel.layer.borderColor = [UIColor blackColor].CGColor;
+        _numberLabel.textColor = self.nameLabel.textColor;
+        _numberLabel.layer.borderColor = self.nameLabel.textColor.CGColor;
         _numberLabel.layer.borderWidth = 1.0;
         _numberLabel.layer.cornerRadius = 2.0;
         _numberLabel.hidden = YES;

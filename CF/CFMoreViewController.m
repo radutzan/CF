@@ -7,6 +7,8 @@
 //
 
 #import "CFMoreViewController.h"
+#import "CFMoreContentViewController.h"
+#import "UIDevice+hardware.h"
 
 @interface CFMoreViewController ()
 
@@ -81,31 +83,46 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UIViewController *controller = [UIViewController new];
-    [controller.navigationController setNavigationBarHidden:NO animated:YES];
+    CFMoreContentViewController *controller = [CFMoreContentViewController new];
     
     NSURL *baseURL = [[NSBundle mainBundle] resourceURL];
     UIWebView *webView = nil;
     
     if (indexPath.section == 0) {
         webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, 320, self.navigationController.view.frame.size.height)];
-        webView.backgroundColor = [UIColor clearColor];
+        webView.backgroundColor = [UIColor whiteColor];
         webView.opaque = NO;
-        webView.backgroundColor = [UIColor colorWithWhite:0.04 alpha:1];
         
         controller.view = webView;
     }
     
     if (indexPath.section == 0 && indexPath.row == 0) {
-        NSString *tipsPath = [[NSBundle mainBundle] pathForResource:@"help" ofType:@"html"];
-        NSData *tips = [NSData dataWithContentsOfFile:tipsPath];
+        NSString *helpPath = [[NSBundle mainBundle] pathForResource:@"help" ofType:@"html"];
+        NSData *help = [NSData dataWithContentsOfFile:helpPath];
         
-        [webView loadData:tips MIMEType:@"text/html" textEncodingName:@"UTF-8" baseURL:baseURL];
-        controller.title = @"Help";
+        [webView loadData:help MIMEType:@"text/html" textEncodingName:@"UTF-8" baseURL:baseURL];
+        controller.title = NSLocalizedString(@"HELP", nil);
+        [self.navigationController pushViewController:controller animated:YES];
+        
+    } else if (indexPath.section == 0 && indexPath.row == 1) {
+        NSString *aboutPath = [[NSBundle mainBundle] pathForResource:@"help" ofType:@"html"];
+        NSData *about = [NSData dataWithContentsOfFile:aboutPath];
+        
+        [webView loadData:about MIMEType:@"text/html" textEncodingName:@"UTF-8" baseURL:baseURL];
+        controller.title = NSLocalizedString(@"ABOUT", nil);
+        [self.navigationController pushViewController:controller animated:YES];
+        
+    } else if (indexPath.section == 0 && indexPath.row == 2) {
+        NSString *appVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
+        NSString *contactURL = [@"http://api.cuantofalta.mobi" stringByAppendingFormat:@"/contact?local=%@&UDID=NULL&osver=%@&appver=%@&device=%@", [[NSLocale preferredLanguages] objectAtIndex:0], [[UIDevice currentDevice] systemVersion], appVersion, [UIDevice platform]];
+        NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:contactURL]];
+        [webView loadRequest:request];
+        
+        controller.title = NSLocalizedString(@"SEND_FEEDBACK", nil);
         [self.navigationController pushViewController:controller animated:YES];
         
     } else if (indexPath.section == 1 && indexPath.row == 0) {
-        NSArray *activityItems = [NSArray arrayWithObjects:@"Mira @cuantofaltapp, una pulenta app para el Transantiago", [NSURL URLWithString:@"https://itunes.apple.com/cl/app/id431174703"], nil];
+        NSArray *activityItems = [NSArray arrayWithObjects:NSLocalizedString(@"SHARE_TWEET_TEXT", nil), [NSURL URLWithString:@"https://itunes.apple.com/cl/app/id431174703"], nil];
         NSArray *excludeActivities = @[UIActivityTypeAssignToContact, UIActivityTypeCopyToPasteboard, UIActivityTypePostToWeibo, UIActivityTypePrint, UIActivityTypeSaveToCameraRoll];
         
         UIActivityViewController *activityController = [[UIActivityViewController alloc] initWithActivityItems:activityItems applicationActivities:nil];
@@ -127,7 +144,7 @@
         [[UIApplication sharedApplication] openURL:URL];
         
     } else if (indexPath.section == 1 && indexPath.row == 2) {
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=431174703"]];
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms-apps://itunes.apple.com/app/id431174703"]];
         
     }
     

@@ -94,6 +94,11 @@
     [self.navigationController setNavigationBarHidden:NO];
 }
 
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    [self.view endEditing:YES];
+}
+
 #pragma mark - Favorites and history
 
 - (void)favButtonTapped:(UIButton *)sender
@@ -101,8 +106,11 @@
     CGFloat animationDuration = 0.25;
     
     sender.selected = !sender.selected;
+    
     if (self.stop.isFavorite) {
         self.stop.favorite = NO;
+        
+        [self.view endEditing:YES];
         
         [UIView animateWithDuration:(animationDuration / 2) animations:^{
             self.stopInfoView.favoriteContentView.alpha = 0;
@@ -116,6 +124,8 @@
         }];
     } else {
         self.stop.favorite = YES;
+        
+        [self.stopInfoView.favoriteNameField becomeFirstResponder];
         
         [UIView animateWithDuration:(animationDuration / 2) animations:^{
             self.stopInfoView.contentView.alpha = 0;

@@ -7,6 +7,7 @@
 //
 
 #import "CFFavoritesViewController.h"
+#import "CFFavoriteCell.h"
 
 @interface CFFavoritesViewController ()
 
@@ -45,6 +46,23 @@
     return mutableFavorites;
 }
 
+- (void)saveFavoritesWithArray:(NSArray *)array
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setObject:array forKey:@"favorites"];
+    [defaults synchronize];
+}
+
+- (void)longPressRecognized:(UILongPressGestureRecognizer *)recognizer
+{
+    if (recognizer.state == UIGestureRecognizerStateBegan) {
+        if (!self.tableView.editing)
+            [self.tableView setEditing:YES animated:YES];
+        else
+            [self.tableView setEditing:NO animated:YES];
+    }
+}
+
 #pragma mark - Table view data source
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -55,75 +73,57 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";
-    CFStopCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    CFFavoriteCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
     NSInteger index = [self.mutableFavoritesArray count] - indexPath.row - 1;
     NSDictionary *stopDictionary = [self.mutableFavoritesArray objectAtIndex:index];
     
     if (cell == nil)
-        cell = [[CFStopCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        cell = [[CFFavoriteCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+    
+//    UILongPressGestureRecognizer *longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressRecognized:)];
+//    [cell addGestureRecognizer:longPressGesture];
     
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     cell.backgroundColor = [UIColor clearColor];
-    cell.contentView.frame = CGRectMake(cell.contentView.frame.origin.x, cell.contentView.frame.origin.y, cell.contentView.bounds.size.width, 52.0);
+    cell.contentView.frame = CGRectMake(cell.contentView.frame.origin.x, cell.contentView.frame.origin.y, cell.contentView.bounds.size.width, CELL_HEIGHT);
     
     cell.codeLabel.text = [stopDictionary objectForKey:@"codigo"];
+    cell.nameLabel.text = [stopDictionary objectForKey:@"nombre"];
     
-    NSString *street = [stopDictionary objectForKey:@"calle"];
-    NSString *intersection = [stopDictionary objectForKey:@"interseccion"];
+    NSString *favoriteName = [stopDictionary objectForKey:@"favoriteName"];
     
-    cell.nameLabel.text = street;
-    
-    if (intersection)
-        cell.nameLabel.text = [NSString stringWithFormat:@"%@\n%@ %@", street, @"and", intersection];
-    
-    NSInteger number = [[stopDictionary objectForKey:@"numero"] integerValue];
-    
-    if (number > 0) {
-        cell.numberLabel.hidden = NO;
-        cell.numberLabel.text = [NSString stringWithFormat:@"%d", number];
+    if ([favoriteName isEqualToString:@""]) {
+        cell.favoriteNameLabel.text = NSLocalizedString(@"NAMELESS_FAVORITE", nil);
+        cell.favoriteNameLabel.font = [UIFont italicSystemFontOfSize:19.0];
+    } else {
+        cell.favoriteNameLabel.text = favoriteName;
+        cell.favoriteNameLabel.font = [UIFont systemFontOfSize:19.0];
     }
-    
-    BOOL isMetro = [[stopDictionary objectForKey:@"metro"] boolValue];
-    
-    if (isMetro)
-        cell.metroBadge.hidden = NO;
     
     return cell;
 }
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
-
-
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
+        NSInteger index = [self.mutableFavoritesArray count] - indexPath.row - 1;
+        [self.mutableFavoritesArray removeObjectAtIndex:index];
+        [self saveFavoritesWithArray:self.mutableFavoritesArray];
+        
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
     }
 }
 
-/*
-// Override to support rearranging the table view.
 - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
 {
+    NSInteger oldIndex = [self.mutableFavoritesArray count] - fromIndexPath.row - 1;
+    NSInteger newIndex = [self.mutableFavoritesArray count] - toIndexPath.row - 1;
+    
+    NSDictionary *movedStop = [self.mutableFavoritesArray objectAtIndex:oldIndex];
+    
+    [self.mutableFavoritesArray removeObjectAtIndex:oldIndex];
+    [self.mutableFavoritesArray insertObject:movedStop atIndex:newIndex];
 }
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
 
 @end

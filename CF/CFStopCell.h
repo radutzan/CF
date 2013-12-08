@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 
 #define HORIZONTAL_MARGIN 6.0
-#define CELL_HEIGHT 52.0
+#define CELL_HEIGHT 56.0
 
 @interface CFStopCell : UITableViewCell
 

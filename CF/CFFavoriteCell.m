@@ -10,22 +10,28 @@
 
 @implementation CFFavoriteCell
 
-- (id)initWithFrame:(CGRect)frame
+- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
-    self = [super initWithFrame:frame];
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        // Initialization code
+        self.favoriteNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 10.0, self.contentView.bounds.size.width, 20.0)];
+        self.favoriteNameLabel.font = [UIFont systemFontOfSize:19.0];
+        self.favoriteNameLabel.textColor = [UIColor colorWithWhite:0 alpha:0.8];
+        [self.contentView addSubview:self.favoriteNameLabel];
     }
     return self;
 }
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
+- (void)layoutSubviews
 {
-    // Drawing code
+    self.numberLabel.hidden = YES;
+    self.metroBadge.hidden = YES;
+    self.codeLabel.hidden = YES;
+    
+    self.nameLabel.font = [UIFont boldSystemFontOfSize:11.0];
+    self.nameLabel.textColor = [UIColor colorWithWhite:0 alpha:0.5];
+    self.nameLabel.numberOfLines = 1;
+    self.nameLabel.frame = CGRectMake(0, 32.0, self.contentView.bounds.size.width, 12.0);
 }
-*/
 
 @end

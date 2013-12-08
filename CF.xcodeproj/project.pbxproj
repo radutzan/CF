@@ -19,6 +19,7 @@
 		7C5FD9CE184F8B140099FEE2 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7C5FD9CC184F8B140099FEE2 /* Localizable.strings */; };
 		7C7A15D61853EBF0002EE4C5 /* OLTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C7A15D51853EBF0002EE4C5 /* OLTextField.m */; };
 		7C7A15D818540966002EE4C5 /* pin-favorite@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7C7A15D718540966002EE4C5 /* pin-favorite@2x.png */; };
+		7C7A15DB18540E08002EE4C5 /* CFMoreContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C7A15DA18540E08002EE4C5 /* CFMoreContentViewController.m */; };
 		7C9A0F691852E9C60018ED1F /* NSDictionary+NSNullUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C9A0F681852E9C60018ED1F /* NSDictionary+NSNullUtility.m */; };
 		7CAFA3381842A206005A06BC /* placeholder-favorites@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CAFA3361842A206005A06BC /* placeholder-favorites@2x.png */; };
 		7CAFA3391842A206005A06BC /* placeholder-history@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CAFA3371842A206005A06BC /* placeholder-history@2x.png */; };
@@ -100,6 +101,8 @@
 		7C7A15D41853EBF0002EE4C5 /* OLTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLTextField.h; sourceTree = "<group>"; };
 		7C7A15D51853EBF0002EE4C5 /* OLTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLTextField.m; sourceTree = "<group>"; };
 		7C7A15D718540966002EE4C5 /* pin-favorite@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pin-favorite@2x.png"; sourceTree = "<group>"; };
+		7C7A15D918540E08002EE4C5 /* CFMoreContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFMoreContentViewController.h; sourceTree = "<group>"; };
+		7C7A15DA18540E08002EE4C5 /* CFMoreContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFMoreContentViewController.m; sourceTree = "<group>"; };
 		7C9A0F671852E9C60018ED1F /* NSDictionary+NSNullUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+NSNullUtility.h"; sourceTree = "<group>"; };
 		7C9A0F681852E9C60018ED1F /* NSDictionary+NSNullUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+NSNullUtility.m"; sourceTree = "<group>"; };
 		7CAFA3361842A206005A06BC /* placeholder-favorites@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-favorites@2x.png"; sourceTree = "<group>"; };
@@ -320,6 +323,8 @@
 		7CFF7E7E183826D3006230CE /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				7CFF7EB61838614C006230CE /* CFEnterStopCodeView.h */,
+				7CFF7EB71838614C006230CE /* CFEnterStopCodeView.m */,
 				7CFF7E7F1838288C006230CE /* SMCalloutView.h */,
 				7CFF7E801838288C006230CE /* SMCalloutView.m */,
 				7C42642B184BF57500A8968F /* UINavigationBar+CustomHeight.h */,
@@ -328,8 +333,6 @@
 				7C7A15D51853EBF0002EE4C5 /* OLTextField.m */,
 				7CFF7EBD1838700F006230CE /* CFStopSignView.h */,
 				7CFF7EBE1838700F006230CE /* CFStopSignView.m */,
-				7CFF7EB61838614C006230CE /* CFEnterStopCodeView.h */,
-				7CFF7EB71838614C006230CE /* CFEnterStopCodeView.m */,
 				7C42642A184AF50900A8968F /* Stop Cells */,
 				7C426415184AE88000A8968F /* CFResultCell.h */,
 				7C426416184AE88000A8968F /* CFResultCell.m */,
@@ -346,6 +349,8 @@
 				7CFF7E7C18382448006230CE /* CFMapController.m */,
 				7CFF7EC418387735006230CE /* CFStopResultsViewController.h */,
 				7CFF7EC518387735006230CE /* CFStopResultsViewController.m */,
+				7C7A15D918540E08002EE4C5 /* CFMoreContentViewController.h */,
+				7C7A15DA18540E08002EE4C5 /* CFMoreContentViewController.m */,
 				7C3B27C5183B1A6300818A3B /* Tabs */,
 			);
 			name = Controllers;
@@ -546,6 +551,7 @@
 				7CFF7E5518381645006230CE /* CFAppDelegate.m in Sources */,
 				7C7A15D61853EBF0002EE4C5 /* OLTextField.m in Sources */,
 				7CFF7EC618387735006230CE /* CFStopResultsViewController.m in Sources */,
+				7C7A15DB18540E08002EE4C5 /* CFMoreContentViewController.m in Sources */,
 				7C10B96F183ADD200086B650 /* CFFavoritesViewController.m in Sources */,
 				7CFF7E7818381D6E006230CE /* CFMainViewController.m in Sources */,
 				7C426414184AE87300A8968F /* CFStopCell.m in Sources */,

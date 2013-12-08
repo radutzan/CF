@@ -160,7 +160,7 @@ static NSRegularExpression *regexMetroSinNumero;
     NSMutableArray *mutableFavoritesArray = [[CFStop favoritesArray] mutableCopy];
     
     if (self.isFavorite) {
-        for (NSDictionary *stop in mutableFavoritesArray) {
+        for (NSDictionary *stop in [CFStop favoritesArray]) {
             if ([[stop objectForKey:@"codigo"] isEqualToString:self.code]) {
                 NSMutableDictionary *mutableStop = [stop mutableCopy];
                 [mutableFavoritesArray removeObject:stop];

@@ -20,6 +20,7 @@
 "HISTORY_PLACEHOLDER_MESSAGE" = "Tu historial se guardará automáticamente a medida que consultes paraderos.";
 
 "NAME_YOUR_FAVORITE" = "Pónle nombre";
+"NAMELESS_FAVORITE" = "Favorito sin nombre";
 
 "HELP" = "Ayuda";
 "ABOUT" = "Acerca";
@@ -27,3 +28,4 @@
 "SHARE_THIS_APP" = "Comparte Cuánto Falta";
 "FOLLOW_US_TWITTER" = "Síguenos en Twitter";
 "RATE_ON_APP_STORE" = "Evalúa en la App Store";
+"SHARE_TWEET_TEXT" = "Mira @cuantofaltapp, una pulenta app para el Transantiago";
