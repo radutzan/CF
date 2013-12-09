@@ -464,6 +464,15 @@
     
     if ([stopCode isEqualToString:@""]) return;
     
+    NSRegularExpression *expression = [NSRegularExpression regularExpressionWithPattern:@"P[A-J][0-9]{1-4}" options:(NSRegularExpressionCaseInsensitive) error:NULL];
+    
+    NSTextCheckingResult *result = [expression firstMatchInString:stopCode options:0 range:NSMakeRange(0, stopCode.length)];
+    
+    if (!result || [result rangeAtIndex:0].location == NSNotFound) {
+        //Invalid stuff.
+        return;
+    }
+    
     CFStopResultsViewController *stopResultsVC = [[CFStopResultsViewController alloc] initWithStyle:UITableViewStylePlain];
     stopResultsVC.stopCode = stopCode;
     
