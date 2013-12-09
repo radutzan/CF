@@ -49,7 +49,6 @@
 		7CFF7E7D18382448006230CE /* CFMapController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CFF7E7C18382448006230CE /* CFMapController.m */; };
 		7CFF7E811838288C006230CE /* SMCalloutView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CFF7E801838288C006230CE /* SMCalloutView.m */; };
 		7CFF7E9B18382B1B006230CE /* CLLocation+UTMUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CFF7E9718382B1B006230CE /* CLLocation+UTMUtilities.m */; };
-		7CFF7E9C18382B1B006230CE /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CFF7E9818382B1B006230CE /* NSData+Base64.m */; };
 		7CFF7E9D18382B1B006230CE /* NSString+Digest.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CFF7E9918382B1B006230CE /* NSString+Digest.m */; };
 		7CFF7E9E18382B1B006230CE /* UIDevice+hardware.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CFF7E9A18382B1B006230CE /* UIDevice+hardware.m */; };
 		7CFF7EA218382B4D006230CE /* CFSapoClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CFF7EA118382B4D006230CE /* CFSapoClient.m */; };
@@ -120,8 +119,8 @@
 		7CAFA3371842A206005A06BC /* placeholder-history@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-history@2x.png"; sourceTree = "<group>"; };
 		7CAFA33A1842C359005A06BC /* gripper@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "gripper@2x.png"; sourceTree = "<group>"; };
 		7CAFA33C1842C360005A06BC /* pin-bip@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pin-bip@2x.png"; sourceTree = "<group>"; };
-		7CB64D7818550695006422E0 /* en */ = {isa = PBXFileReference; lastKnownFileType = file; name = en; path = en.lproj/help.html; sourceTree = "<group>"; };
-		7CB64D7A18550699006422E0 /* es */ = {isa = PBXFileReference; lastKnownFileType = file; name = es; path = es.lproj/help.html; sourceTree = "<group>"; };
+		7CB64D7818550695006422E0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = en; path = en.lproj/help.html; sourceTree = "<group>"; };
+		7CB64D7A18550699006422E0 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = es; path = es.lproj/help.html; sourceTree = "<group>"; };
 		7CB64D7B18551C9C006422E0 /* button-bip@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-bip@2x.png"; sourceTree = "<group>"; };
 		7CB64D7D18552648006422E0 /* icon-about@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-about@2x.png"; sourceTree = "<group>"; };
 		7CF7EE4D1852D790009B3F46 /* CFBipSpot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFBipSpot.h; sourceTree = "<group>"; };
@@ -150,11 +149,9 @@
 		7CFF7E7F1838288C006230CE /* SMCalloutView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMCalloutView.h; sourceTree = "<group>"; };
 		7CFF7E801838288C006230CE /* SMCalloutView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMCalloutView.m; sourceTree = "<group>"; };
 		7CFF7E9318382B01006230CE /* CLLocation+UTMUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CLLocation+UTMUtilities.h"; sourceTree = "<group>"; };
-		7CFF7E9418382B01006230CE /* NSData+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Base64.h"; sourceTree = "<group>"; };
 		7CFF7E9518382B01006230CE /* NSString+Digest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Digest.h"; sourceTree = "<group>"; };
 		7CFF7E9618382B01006230CE /* UIDevice+hardware.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIDevice+hardware.h"; sourceTree = "<group>"; };
 		7CFF7E9718382B1B006230CE /* CLLocation+UTMUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CLLocation+UTMUtilities.m"; sourceTree = "<group>"; };
-		7CFF7E9818382B1B006230CE /* NSData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Base64.m"; sourceTree = "<group>"; };
 		7CFF7E9918382B1B006230CE /* NSString+Digest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Digest.m"; sourceTree = "<group>"; };
 		7CFF7E9A18382B1B006230CE /* UIDevice+hardware.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIDevice+hardware.m"; sourceTree = "<group>"; };
 		7CFF7EA018382B4D006230CE /* CFSapoClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFSapoClient.h; sourceTree = "<group>"; };
@@ -396,8 +393,6 @@
 				7CFF7EA118382B4D006230CE /* CFSapoClient.m */,
 				7CFF7E9318382B01006230CE /* CLLocation+UTMUtilities.h */,
 				7CFF7E9718382B1B006230CE /* CLLocation+UTMUtilities.m */,
-				7CFF7E9418382B01006230CE /* NSData+Base64.h */,
-				7CFF7E9818382B1B006230CE /* NSData+Base64.m */,
 				7CFF7E9518382B01006230CE /* NSString+Digest.h */,
 				7CFF7E9918382B1B006230CE /* NSString+Digest.m */,
 				7C9A0F671852E9C60018ED1F /* NSDictionary+NSNullUtility.h */,
@@ -583,7 +578,6 @@
 				7C10B96F183ADD200086B650 /* CFFavoritesViewController.m in Sources */,
 				7CFF7E7818381D6E006230CE /* CFMainViewController.m in Sources */,
 				7C426414184AE87300A8968F /* CFStopCell.m in Sources */,
-				7CFF7E9C18382B1B006230CE /* NSData+Base64.m in Sources */,
 				7CFF7E7D18382448006230CE /* CFMapController.m in Sources */,
 				7CFF7EA218382B4D006230CE /* CFSapoClient.m in Sources */,
 				7C426417184AE88000A8968F /* CFResultCell.m in Sources */,
