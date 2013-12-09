@@ -464,12 +464,14 @@
     
     if ([stopCode isEqualToString:@""]) return;
     
-    NSRegularExpression *expression = [NSRegularExpression regularExpressionWithPattern:@"P[A-J][0-9]{1-4}" options:(NSRegularExpressionCaseInsensitive) error:NULL];
+    NSRegularExpression *expression = [NSRegularExpression regularExpressionWithPattern:@"P[A-J][0-9]{1,4}$" options:(NSRegularExpressionCaseInsensitive) error:NULL];
     
     NSTextCheckingResult *result = [expression firstMatchInString:stopCode options:0 range:NSMakeRange(0, stopCode.length)];
     
     if (!result || [result rangeAtIndex:0].location == NSNotFound) {
-        //Invalid stuff.
+        UIAlertView *GTFO = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"INVALID_STOP_CODE_TITLE", nil) message:NSLocalizedString(@"INVALID_STOP_CODE_MESSAGE", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"DISMISS", nil) otherButtonTitles:nil];
+        [GTFO show];
+        
         return;
     }
     

@@ -15,8 +15,11 @@
 "NO_INFO" = "No information";
 "TO_DIRECTION" = "to";
 "TO_MINS" = "to";
-
 "MAP_SEARCHFIELD_PLACEHOLDER" = "Places or address";
+"CLEAR_ALL_HISTORY" = "Clear All History";
+
+"INVALID_STOP_CODE_TITLE" = "Invalid Stop Code";
+"INVALID_STOP_CODE_MESSAGE" = "Please make sure you entered it correctly. It needs to include the P, a letter and a number with up to 4 digits, without spaces.";
 "ZOOM_LEVEL_WARNING_TITLE" = "You're too far away";
 "ZOOM_LEVEL_WARNING_MESSAGE" = "Zoom in to see stops on the map.";
 "SEARCH_ERROR_NOTFOUND_TITLE" = "Place not found";
@@ -27,13 +30,13 @@
 "FAVORITES_PLACEHOLDER_MESSAGE" = "You can add a stop to Favorites by tapping the star on the stop results list.";
 "HISTORY_PLACEHOLDER_TITLE" = "No history";
 "HISTORY_PLACEHOLDER_MESSAGE" = "Your History will automatically appear here after you check your first stop.";
-"CLEAR_ALL_HISTORY" = "Clear All History";
 
 "NAME_YOUR_FAVORITE" = "Name this favorite";
 "NAMELESS_FAVORITE" = "No name";
 
 "CANCEL" = "Cancel";
 "BUY" = "Buy";
+"DISMISS" = "Dismiss";
 
 "HELP" = "Help";
 "ABOUT" = "About";

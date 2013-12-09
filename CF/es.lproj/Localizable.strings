@@ -4,7 +4,7 @@
 
   Created by Radu Dutzan on 12/4/13.
   Copyright (c) 2013 Onda. All rights reserved.
- */
+*/
 
 "ENTER_STOP_CODE" = "Ingresa\nel código\nde Parada";
 "AND_BUS_STOP" = "con";
@@ -15,8 +15,11 @@
 "NO_INFO" = "Sin información";
 "TO_DIRECTION" = "hacia";
 "TO_MINS" = "a";
-
 "MAP_SEARCHFIELD_PLACEHOLDER" = "Lugares o dirección";
+"CLEAR_ALL_HISTORY" = "Borrar Historial";
+
+"INVALID_STOP_CODE_TITLE" = "Código inválido";
+"INVALID_STOP_CODE_MESSAGE" = "Asegúrate de que lo ingresaste correctamente. Tiene que incluir la P, la letra de zona y un número de hasta 4 dígitos. No puede contener espacios.";
 "ZOOM_LEVEL_WARNING_TITLE" = "Estás muy lejos";
 "ZOOM_LEVEL_WARNING_MESSAGE" = "Acércate para ver paradas en el mapa.";
 "SEARCH_ERROR_NOTFOUND_TITLE" = "Lugar no encontrado";
@@ -25,15 +28,15 @@
 "SEARCH_ERROR_GENERIC_MESSAGE" = "En este momento, no es posible buscar lugares. Inténtalo después, o busca directamente en el mapa.";
 "FAVORITES_PLACEHOLDER_TITLE" = "No tienes favoritos";
 "FAVORITES_PLACEHOLDER_MESSAGE" = "Puedes agregar favoritos tocando la estrella que aparece cuando consultas un paradero.";
-"HISTORY_PLACEHOLDER_TITLE" = "Sin Historial";
+"HISTORY_PLACEHOLDER_TITLE" = "Sin historial";
 "HISTORY_PLACEHOLDER_MESSAGE" = "Tu historial se guardará automáticamente a medida que consultes paraderos.";
-"CLEAR_ALL_HISTORY" = "Borrar Historial";
 
 "NAME_YOUR_FAVORITE" = "Pónle nombre";
 "NAMELESS_FAVORITE" = "Favorito sin nombre";
 
 "CANCEL" = "Cancelar";
 "BUY" = "Comprar";
+"DISMISS" = "Cerrar";
 
 "HELP" = "Ayuda";
 "ABOUT" = "Acerca";
