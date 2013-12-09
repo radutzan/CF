@@ -33,6 +33,8 @@
         self.elPeA.placeholder = @"PA420";
         self.elPeA.font = [UIFont fontWithName:@"HelveticaNeue-Thin" size:46.0];
         self.elPeA.autocorrectionType = UITextAutocorrectionTypeNo;
+        self.elPeA.returnKeyType = UIReturnKeyGo;
+        self.elPeA.autocapitalizationType = UITextAutocapitalizationTypeAllCharacters;
         self.elPeA.delegate = self;
         self.elPeA.layer.cornerRadius = 5.0;
         self.elPeA.layer.backgroundColor = [UIColor colorWithWhite:0 alpha:0.07].CGColor;

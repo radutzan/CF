@@ -11,7 +11,6 @@
 @interface CFHistoryViewController ()
 
 @property (nonatomic, strong) NSArray *historyArray;
-@property (nonatomic, strong) NSMutableArray *mutableHistoryArray;
 
 @end
 
@@ -38,18 +37,18 @@
     return histArray;
 }
 
-- (NSMutableArray *)mutableHistoryArray
+- (void)saveHistoryWithArray:(NSArray *)array
 {
-    NSMutableArray *mutableHistory = [self.historyArray mutableCopy];
-    
-    return mutableHistory;
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setObject:array forKey:@"history"];
+    [defaults synchronize];
 }
 
 #pragma mark - Table view data source
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    NSInteger rows = [self.mutableHistoryArray count];
+    NSInteger rows = [self.historyArray count];
     if (rows > 10) rows = 10;
     return rows;
 }
@@ -59,8 +58,8 @@
     static NSString *CellIdentifier = @"Cell";
     CFStopCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
-    NSInteger index = [self.mutableHistoryArray count] - indexPath.row - 1;
-    NSDictionary *stopDictionary = [self.mutableHistoryArray objectAtIndex:index];
+    NSInteger index = [self.historyArray count] - indexPath.row - 1;
+    NSDictionary *stopDictionary = [self.historyArray objectAtIndex:index];
     
     if (cell == nil)
         cell = [[CFStopCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
@@ -97,7 +96,12 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
+        NSMutableArray *mutableHistoryArray = [self.historyArray mutableCopy];
+        
+        NSInteger index = [mutableHistoryArray count] - indexPath.row - 1;
+        [mutableHistoryArray removeObjectAtIndex:index];
+        [self saveHistoryWithArray:mutableHistoryArray];
+        
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
     }
 }

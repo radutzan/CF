@@ -19,6 +19,10 @@
 "MAP_SEARCHFIELD_PLACEHOLDER" = "Places or address";
 "ZOOM_LEVEL_WARNING_TITLE" = "You're too far away";
 "ZOOM_LEVEL_WARNING_MESSAGE" = "Zoom in to see stops on the map.";
+"SEARCH_ERROR_NOTFOUND_TITLE" = "Place not found";
+"SEARCH_ERROR_NOTFOUND_MESSAGE" = "Be more specific or look for the place directly on the map.";
+"SEARCH_ERROR_GENERIC_TITLE" = "Couldn't perform search";
+"SEARCH_ERROR_GENERIC_MESSAGE" = "It's impossible to search for places at the moment. Try again later.";
 "FAVORITES_PLACEHOLDER_TITLE" = "No Favorites";
 "FAVORITES_PLACEHOLDER_MESSAGE" = "You can add a stop to Favorites by tapping the star on the stop results list.";
 "HISTORY_PLACEHOLDER_TITLE" = "No history";

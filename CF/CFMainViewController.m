@@ -304,6 +304,8 @@
         
         [self.localNavigationBar pushNavigationItem:navItem animated:YES];
         
+        [self.view endEditing:YES];
+        
         [self.mapController.mapView setCenterCoordinate:self.mapController.mapView.userLocation.coordinate animated:YES];
         
         for (UIButton *b in self.tabBar.subviews) {
@@ -459,6 +461,8 @@
 - (void)pushStopResultsWithStopCode:(NSString *)stopCode
 {
     [self.view endEditing:YES];
+    
+    if ([stopCode isEqualToString:@""]) return;
     
     CFStopResultsViewController *stopResultsVC = [[CFStopResultsViewController alloc] initWithStyle:UITableViewStylePlain];
     stopResultsVC.stopCode = stopCode;

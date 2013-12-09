@@ -19,6 +19,10 @@
 "MAP_SEARCHFIELD_PLACEHOLDER" = "Lugares o dirección";
 "ZOOM_LEVEL_WARNING_TITLE" = "Estás muy lejos";
 "ZOOM_LEVEL_WARNING_MESSAGE" = "Acércate para ver paradas en el mapa.";
+"SEARCH_ERROR_NOTFOUND_TITLE" = "Lugar no encontrado";
+"SEARCH_ERROR_NOTFOUND_MESSAGE" = "Especifica más tu búsqueda o busca directamente en el mapa.";
+"SEARCH_ERROR_GENERIC_TITLE" = "Imposible buscar";
+"SEARCH_ERROR_GENERIC_MESSAGE" = "En este momento, no es posible buscar lugares. Inténtalo después, o busca directamente en el mapa.";
 "FAVORITES_PLACEHOLDER_TITLE" = "No tienes favoritos";
 "FAVORITES_PLACEHOLDER_MESSAGE" = "Puedes agregar favoritos tocando la estrella que aparece cuando consultas un paradero.";
 "HISTORY_PLACEHOLDER_TITLE" = "Sin Historial";

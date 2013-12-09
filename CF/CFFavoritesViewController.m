@@ -12,7 +12,6 @@
 @interface CFFavoritesViewController ()
 
 @property (nonatomic, strong) NSArray *favoritesArray;
-@property (nonatomic, strong) NSMutableArray *mutableFavoritesArray;
 
 @end
 
@@ -39,13 +38,6 @@
     return favsArray;
 }
 
-- (NSMutableArray *)mutableFavoritesArray
-{
-    NSMutableArray *mutableFavorites = [self.favoritesArray mutableCopy];
-    
-    return mutableFavorites;
-}
-
 - (void)saveFavoritesWithArray:(NSArray *)array
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -67,7 +59,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [self.mutableFavoritesArray count];
+    return [self.favoritesArray count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -75,8 +67,8 @@
     static NSString *CellIdentifier = @"Cell";
     CFFavoriteCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
-    NSInteger index = [self.mutableFavoritesArray count] - indexPath.row - 1;
-    NSDictionary *stopDictionary = [self.mutableFavoritesArray objectAtIndex:index];
+    NSInteger index = [self.favoritesArray count] - indexPath.row - 1;
+    NSDictionary *stopDictionary = [self.favoritesArray objectAtIndex:index];
     
     if (cell == nil)
         cell = [[CFFavoriteCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
@@ -107,9 +99,11 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        NSInteger index = [self.mutableFavoritesArray count] - indexPath.row - 1;
-        [self.mutableFavoritesArray removeObjectAtIndex:index];
-        [self saveFavoritesWithArray:self.mutableFavoritesArray];
+        NSMutableArray *mutableFavoritesArray = [self.favoritesArray mutableCopy];
+        
+        NSInteger index = [mutableFavoritesArray count] - indexPath.row - 1;
+        [mutableFavoritesArray removeObjectAtIndex:index];
+        [self saveFavoritesWithArray:mutableFavoritesArray];
         
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
     }
@@ -117,13 +111,15 @@
 
 - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
 {
-    NSInteger oldIndex = [self.mutableFavoritesArray count] - fromIndexPath.row - 1;
-    NSInteger newIndex = [self.mutableFavoritesArray count] - toIndexPath.row - 1;
+    NSMutableArray *mutableFavoritesArray = [self.favoritesArray mutableCopy];
     
-    NSDictionary *movedStop = [self.mutableFavoritesArray objectAtIndex:oldIndex];
+    NSInteger oldIndex = [mutableFavoritesArray count] - fromIndexPath.row - 1;
+    NSInteger newIndex = [mutableFavoritesArray count] - toIndexPath.row - 1;
     
-    [self.mutableFavoritesArray removeObjectAtIndex:oldIndex];
-    [self.mutableFavoritesArray insertObject:movedStop atIndex:newIndex];
+    NSDictionary *movedStop = [mutableFavoritesArray objectAtIndex:oldIndex];
+    
+    [mutableFavoritesArray removeObjectAtIndex:oldIndex];
+    [mutableFavoritesArray insertObject:movedStop atIndex:newIndex];
 }
 
 @end
