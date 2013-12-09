@@ -9,6 +9,7 @@
 #import "CFStopResultsViewController.h"
 #import "CFSapoClient.h"
 #import "CFStopSignView.h"
+#import "CFResultCell.h"
 #import "CFNavigationController.h"
 
 @interface CFStopResultsViewController () <CFStopSignViewDelegate>
@@ -32,7 +33,7 @@
         self.title = @"Stop Results";
         
         self.tableView.separatorInset = UIEdgeInsetsZero;
-        self.tableView.separatorColor = [UIColor colorWithWhite:1 alpha:0.3];
+        self.tableView.separatorColor = [UIColor colorWithWhite:1 alpha:0];
     }
     return self;
 }
@@ -253,18 +254,23 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    CFResultCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
     if (cell == nil)
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
+        cell = [[CFResultCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
     
-    cell.backgroundColor = [UIColor clearColor];
+    cell.backgroundColor = [UIColor blackColor];
+    cell.layer.shadowColor = [UIColor colorWithWhite:1 alpha:0.3].CGColor;
+    cell.layer.shadowOffset = CGSizeMake(0, 0.5);
+    cell.layer.shadowOpacity = 1.0;
+    cell.layer.shadowPath = [UIBezierPath bezierPathWithRect:cell.bounds].CGPath;
+    cell.layer.shadowRadius = 0.0;
     
     cell.textLabel.text = [[self.stop.services objectAtIndex:indexPath.row] objectForKey:@"name"];
     cell.textLabel.textColor = [UIColor whiteColor];
     cell.textLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:25.0];
     
-    if (!self.refreshing) cell.detailTextLabel.text = NSLocalizedString(@"NO_INFO", nil);
+    cell.directionLabel.text = [[[self.stop.services objectAtIndex:indexPath.row] objectForKey:@"destino"] capitalizedString];
     
     if ([self.estimation count] == 0 || indexPath.row >= [self.estimation count]) return cell;
     
@@ -283,8 +289,19 @@
                 distanceString = [NSString stringWithFormat:@"%.0f", distance];
             }
             
-            cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ %@", distanceString, unit];
-            cell.detailTextLabel.textColor = [UIColor whiteColor];
+            cell.distanceLabel.text = [NSString stringWithFormat:@"%@ %@", distanceString, unit];
+            
+            NSString *time = [estimation objectForKey:@"tiempo"];
+            NSLog(@"%@", time);
+            if ([time hasPrefix:@"Entre"]) {
+                NSRange fromRange = NSMakeRange(6, 2);
+                NSRange toRange = NSMakeRange(11, 2);
+                NSInteger fromMin = [[time substringWithRange:fromRange] integerValue];
+                NSInteger toMin = [[time substringWithRange:toRange] integerValue];
+                cell.timeLabel.text =  [NSString stringWithFormat:@"%d %@ %d min.", fromMin, NSLocalizedString(@"TO_MINS", nil), toMin];
+            } else {
+                cell.timeLabel.text = time;
+            }
         }
     }
     
@@ -296,43 +313,55 @@
     return NO;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return 52.0;
-}
-
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
     return 20.0;
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 52.0;
+}
+
 - (float)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
-    return 0.01f;
+    return 80.0;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
     UIView *headerView = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 20.0)];
     
-    UILabel *service = [[UILabel alloc] initWithFrame:CGRectMake(15.0, 0, 100.0, 20.0)];
+    UILabel *service = [[UILabel alloc] initWithFrame:CGRectMake(15.0, 0, 90.0, 20.0)];
     service.text = NSLocalizedString(@"SERVICE", nil);
     service.font = [UIFont systemFontOfSize:13.0];
     [headerView addSubview:service];
     
-    UILabel *estimate = [[UILabel alloc] initWithFrame:CGRectMake(15.0, 0, 290.0, 20.0)];
-    estimate.text = NSLocalizedString(@"ESTIMATION", nil);
+    UILabel *estimate = [[UILabel alloc] initWithFrame:CGRectMake(100.0, 0, 90.0, 20.0)];
+    estimate.text = NSLocalizedString(@"DIRECTION", nil);
     estimate.font = [UIFont systemFontOfSize:13.0];
-    estimate.textAlignment = NSTextAlignmentCenter;
+//    estimate.textAlignment = NSTextAlignmentCenter;
     [headerView addSubview:estimate];
     
-    UILabel *distance = [[UILabel alloc] initWithFrame:CGRectMake(205.0, 0, 100.0, 20.0)];
-    distance.text = NSLocalizedString(@"DISTANCE", nil);
+    UILabel *distance = [[UILabel alloc] initWithFrame:CGRectMake(200.0, 0, 100.0, 20.0)];
+    distance.text = NSLocalizedString(@"ESTIMATION", nil);
     distance.font = [UIFont systemFontOfSize:13.0];
-    distance.textAlignment = NSTextAlignmentRight;
+//    distance.textAlignment = NSTextAlignmentRight;
     [headerView addSubview:distance];
     
     return headerView;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
+{
+    UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 80.0)];
+    
+    UILabel *notice = [[UILabel alloc] initWithFrame:CGRectMake(15.0, 0, 90.0, 20.0)];
+    notice.text = NSLocalizedString(@"SERVICE", nil);
+    notice.font = [UIFont systemFontOfSize:13.0];
+    [footerView addSubview:notice];
+    
+    return footerView;
 }
 
 @end

@@ -115,7 +115,7 @@
     _showZoomWarning = showZoomWarning;
     
     if (showZoomWarning) {
-//        [self.zoomWarning show];
+        [self.zoomWarning showInView:self];
     } else {
         [self.zoomWarning hide];
     }
@@ -272,12 +272,6 @@
 }
 
 #pragma mark - MKMapViewDelegate
-
-- (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation
-{
-//    [[HOClient sharedClient] setLocation:userLocation.location];
-//    [self fetchServices];
-}
 
 - (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated
 {

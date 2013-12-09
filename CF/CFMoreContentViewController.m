@@ -34,6 +34,7 @@
     [super viewWillAppear:animated];
     
     [self.navigationController setNavigationBarHidden:NO animated:YES];
+    self.navigationController.navigationBar.barStyle = UIBarStyleDefault;
 }
 
 - (void)didReceiveMemoryWarning

@@ -9,11 +9,16 @@
 "ENTER_STOP_CODE" = "Ingresa\nel código\nde Parada";
 "AND_BUS_STOP" = "con";
 "SERVICE" = "servicio";
+"DIRECTION" = "hacia";
 "ESTIMATION" = "estimación";
 "DISTANCE" = "distancia";
 "NO_INFO" = "Sin información";
+"TO_DIRECTION" = "hacia";
+"TO_MINS" = "a";
 
 "MAP_SEARCHFIELD_PLACEHOLDER" = "Lugares o dirección";
+"ZOOM_LEVEL_WARNING_TITLE" = "Estás muy lejos";
+"ZOOM_LEVEL_WARNING_MESSAGE" = "Acércate para ver paradas en el mapa.";
 "FAVORITES_PLACEHOLDER_TITLE" = "No tienes favoritos";
 "FAVORITES_PLACEHOLDER_MESSAGE" = "Puedes agregar favoritos tocando la estrella que aparece cuando consultas un paradero.";
 "HISTORY_PLACEHOLDER_TITLE" = "Sin Historial";

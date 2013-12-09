@@ -9,11 +9,16 @@
 "ENTER_STOP_CODE" = "Enter the\nStop Code";
 "AND_BUS_STOP" = "and";
 "SERVICE" = "service";
+"DIRECTION" = "destination";
 "ESTIMATION" = "estimation";
 "DISTANCE" = "distance";
 "NO_INFO" = "No information";
+"TO_DIRECTION" = "to";
+"TO_MINS" = "to";
 
 "MAP_SEARCHFIELD_PLACEHOLDER" = "Places or address";
+"ZOOM_LEVEL_WARNING_TITLE" = "You're too far away";
+"ZOOM_LEVEL_WARNING_MESSAGE" = "Zoom in to see stops on the map.";
 "FAVORITES_PLACEHOLDER_TITLE" = "No Favorites";
 "FAVORITES_PLACEHOLDER_MESSAGE" = "You can add a stop to Favorites by tapping the star on the stop results list.";
 "HISTORY_PLACEHOLDER_TITLE" = "No history";
