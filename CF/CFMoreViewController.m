@@ -138,7 +138,7 @@
         
     } else if (indexPath.section == 1 && indexPath.row == 1) {
         NSURL *URL = nil;
-        NSArray *schemes = [NSArray arrayWithObjects:@"tweetbot:///follow/%@?callback_url=cuantofalta://success", @"twitter:@%@", @"http://twitter.com/%@", nil];
+        NSArray *schemes = [NSArray arrayWithObjects:@"tweetbot:///user_profile/%@", @"twitter:@%@", @"http://twitter.com/%@", nil];
         
         for (NSString *uri in schemes) {
             URL = [NSURL URLWithString:[NSString stringWithFormat:uri, @"cuantofaltapp"]];

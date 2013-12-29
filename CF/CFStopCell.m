@@ -20,7 +20,7 @@
         self.nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.contentView.bounds.size.width - HORIZONTAL_MARGIN * 2, self.contentView.bounds.size.height)];
         self.nameLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         self.nameLabel.numberOfLines = 2;
-        self.nameLabel.font = [UIFont systemFontOfSize:15.0];
+        self.nameLabel.font = [UIFont boldSystemFontOfSize:15.0];
         self.nameLabel.textColor = [UIColor colorWithWhite:0 alpha:0.8];
         [self.contentView addSubview:self.nameLabel];
         

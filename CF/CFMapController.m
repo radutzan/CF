@@ -42,6 +42,9 @@
         self.mapView.delegate = self;
         self.mapView.showsUserLocation = YES;
         self.mapView.showsPointsOfInterest = NO;
+        self.mapView.showsBuildings = YES;
+        self.mapView.rotateEnabled = NO;
+        self.mapView.pitchEnabled = NO;
         [self addSubview:self.mapView];
         
         self.locationManager = [[CLLocationManager alloc] init];
@@ -218,7 +221,8 @@
     }
     
     if (distance <= 1000) {
-        [self.mapView setCenterCoordinate:nearestSpot.coordinate animated:YES];
+        MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(nearestSpot.coordinate, 250, 250);
+        [self.mapView setRegion:region animated:YES];
         [self.mapView selectAnnotation:nearestSpot animated:YES];
     } else {
         [[CFSapoClient sharedClient] bipSpotsAroundCoordinate:self.mapView.centerCoordinate radius:0 handler:^(NSError *error, id result) {
@@ -228,7 +232,9 @@
             
             [self.bipSpots addObject:spot];
             [self.mapView addAnnotation:spot];
-            [self.mapView setCenterCoordinate:spot.coordinate animated:YES];
+            
+            MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(spot.coordinate, 250, 250);
+            [self.mapView setRegion:region animated:YES];
             [self.mapView selectAnnotation:spot animated:YES];
         }];
     }
@@ -260,7 +266,6 @@
     CLLocation *currentLocation = [locations lastObject];
     
     MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(currentLocation.coordinate, 250, 250);
-    self.mapView.centerCoordinate = currentLocation.coordinate;
     self.mapView.region = region;
     
     [manager stopUpdatingLocation];

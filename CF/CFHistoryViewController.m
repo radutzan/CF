@@ -73,10 +73,25 @@
     NSString *street = [stopDictionary objectForKey:@"calle"];
     NSString *intersection = [stopDictionary objectForKey:@"interseccion"];
     
-    cell.nameLabel.text = street;
-    
-    if (intersection)
-        cell.nameLabel.text = [NSString stringWithFormat:@"%@\n%@ %@", street, @"and", intersection];
+    if (intersection) {
+        NSRange firstLineRange = NSMakeRange(0, [street length]);
+        
+        UIFont *boldFont = [UIFont boldSystemFontOfSize:15.0];
+        UIFont *regularFont = [UIFont systemFontOfSize:15.0];
+        
+        NSDictionary *attrs = [NSDictionary dictionaryWithObjectsAndKeys:regularFont, NSFontAttributeName, nil];
+        NSDictionary *subAttrs = [NSDictionary dictionaryWithObjectsAndKeys:boldFont, NSFontAttributeName, nil];
+        
+        NSString *fullString = [NSString stringWithFormat:@"%@\n%@ %@", street, NSLocalizedString(@"AND_BUS_STOP", nil), intersection];
+        
+        NSMutableAttributedString *attributedText = [[NSMutableAttributedString alloc] initWithString:fullString attributes:attrs];
+        [attributedText setAttributes:subAttrs range:firstLineRange];
+        
+        [cell.nameLabel setAttributedText:attributedText];
+        
+    } else {
+        cell.nameLabel.text = street;
+    }
     
     NSInteger number = [[stopDictionary objectForKey:@"numero"] integerValue];
     
