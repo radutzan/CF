@@ -250,6 +250,8 @@
 {
     [self.finalData removeAllObjects];
     
+    NSMutableArray *estimationlessServices = [NSMutableArray new];
+    
     for (NSDictionary *service in self.stop.services) {
         NSMutableDictionary *moddedService = [service mutableCopy];
         NSMutableArray *estimations = [NSMutableArray new];
@@ -298,9 +300,15 @@
         }
         
         [moddedService setObject:estimations forKey:@"estimations"];
-        [self.finalData addObject:moddedService];
+        
+        if (![estimations lastObject]) {
+            [estimationlessServices addObject:moddedService];
+        } else {
+            [self.finalData addObject:moddedService];
+        }
     }
-    NSLog(@"finalData: %@", self.finalData);
+    
+    [self.finalData addObjectsFromArray:estimationlessServices];
     
     self.refreshing = NO;
     [self.tableView reloadData];
