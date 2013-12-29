@@ -27,5 +27,6 @@
 
 + (instancetype)stopWithCoordinate:(CLLocationCoordinate2D)coords code:(NSString *)code name:(NSString *)name services:(NSArray *)services;
 - (NSDictionary *)asDictionary;
+- (void)setFavoriteWithName:(NSString *)favoriteName;
 
 @end

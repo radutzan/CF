@@ -8,6 +8,7 @@
 
 #import "CFMainViewController.h"
 #import "CFMapController.h"
+#import "CFSapoClient.h"
 #import "CFStopResultsViewController.h"
 #import "CFEnterStopCodeView.h"
 #import "CFFavoritesViewController.h"
@@ -244,6 +245,14 @@
         
         [self tabButtonTapped:self.codeButton];
     }
+    
+//    BOOL runBefore = [[NSUserDefaults standardUserDefaults] boolForKey:@"OLHasRunBefore"];
+//    
+//    if (!runBefore) {
+//        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"OLHasRunBefore"];
+//        [[NSUserDefaults standardUserDefaults] synchronize];
+//    }
+    [self importUserData];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -252,6 +261,92 @@
     
     [self.navigationController setNavigationBarHidden:YES animated:YES];
     
+    [self reloadUserData];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    if (self.isMovingToParentViewController == YES)
+        [self tabButtonTapped:self.codeButton];
+}
+
+- (void)importUserData
+{
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    
+    NSString *favsPath = [documentsDirectory stringByAppendingPathComponent:@"favs.plist"];
+    BOOL haveFavs = [fileManager fileExistsAtPath:favsPath];
+    
+    if (haveFavs) {
+        NSMutableArray *tempFavs = [[NSMutableArray alloc] initWithContentsOfFile:favsPath];
+        
+        for (NSDictionary *oldStop in tempFavs) {
+            NSString *code = [oldStop objectForKey:@"codigo"];
+            NSString *favoriteName = [oldStop objectForKey:@"custName"];
+            
+            [[CFSapoClient sharedClient] fetchBusStop:code
+                                              handler:^(NSError *error, id result) {
+                                                  if (result) {
+                                                      for (NSDictionary *stopData in result) {
+                                                          CLLocationCoordinate2D coordinate;
+                                                          coordinate.latitude = [[stopData objectForKey:@"latitude"] doubleValue];
+                                                          coordinate.longitude = [[stopData objectForKey:@"longitude"] doubleValue];
+                                                          
+                                                          CFStop *stop = [CFStop stopWithCoordinate:coordinate code:[stopData objectForKey:@"codigo"] name:[stopData objectForKey:@"nombre"] services:[stopData objectForKey:@"recorridos"]];
+                                                          [stop setFavoriteWithName:favoriteName];
+                                                      }
+                                                      
+                                                      [self reloadUserData];
+                                                  } else {
+                                                      NSLog(@"Couldn't fetch stop. %@", error);
+                                                  }
+                                              }];
+        }
+    }
+    
+    NSString *histPath = [documentsDirectory stringByAppendingPathComponent:@"history.plist"];
+    BOOL haveHist = [fileManager fileExistsAtPath:histPath];
+    
+    if (haveHist) {
+        NSMutableArray *tempHist = [[NSMutableArray alloc] initWithContentsOfFile:histPath];
+        NSMutableArray *newHistory = [NSMutableArray new];
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        
+        for (NSDictionary *oldStop in tempHist) {
+            NSString *code = [oldStop objectForKey:@"codigo"];
+            [[CFSapoClient sharedClient] fetchBusStop:code
+                                              handler:^(NSError *error, id result) {
+                                                  if (result) {
+                                                      for (NSDictionary *stopData in result) {
+                                                          CLLocationCoordinate2D coordinate;
+                                                          coordinate.latitude = [[stopData objectForKey:@"latitude"] doubleValue];
+                                                          coordinate.longitude = [[stopData objectForKey:@"longitude"] doubleValue];
+                                                          
+                                                          CFStop *stop = [CFStop stopWithCoordinate:coordinate code:[stopData objectForKey:@"codigo"] name:[stopData objectForKey:@"nombre"] services:[stopData objectForKey:@"recorridos"]];
+                                                          
+                                                          [newHistory addObject:[stop asDictionary]];
+                                                          NSLog(@"one stop");
+                                                      }
+                                                      
+                                                      NSLog(@"done");
+                                                      [defaults setObject:newHistory forKey:@"history"];
+                                                      [defaults synchronize];
+                                                      
+                                                      [self reloadUserData];
+                                                  } else {
+                                                      NSLog(@"Couldn't fetch stop. %@", error);
+                                                  }
+                                              }];
+        }
+    }
+}
+
+- (void)reloadUserData
+{
     [self.favoritesController.tableView reloadData];
     [self.historyController.tableView reloadData];
     
@@ -264,14 +359,6 @@
         self.historyPlaceholder.hidden = NO;
     else
         self.historyPlaceholder.hidden = YES;
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-    
-    if (self.isMovingToParentViewController == YES)
-        [self tabButtonTapped:self.codeButton];
 }
 
 #pragma mark - Map mode switching
