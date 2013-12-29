@@ -11,7 +11,6 @@
 @interface CFResultCell : UITableViewCell
 
 @property (nonatomic, strong) UILabel *directionLabel;
-@property (nonatomic, strong) UILabel *timeLabel;
-@property (nonatomic, strong) UILabel *distanceLabel;
+@property (nonatomic, strong) NSArray *estimations;
 
 @end

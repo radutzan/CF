@@ -96,30 +96,30 @@
     return cell;
 }
 
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        NSMutableArray *mutableFavoritesArray = [self.favoritesArray mutableCopy];
-        
-        NSInteger index = [mutableFavoritesArray count] - indexPath.row - 1;
-        [mutableFavoritesArray removeObjectAtIndex:index];
-        [self saveFavoritesWithArray:mutableFavoritesArray];
-        
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }
-}
-
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-    NSMutableArray *mutableFavoritesArray = [self.favoritesArray mutableCopy];
-    
-    NSInteger oldIndex = [mutableFavoritesArray count] - fromIndexPath.row - 1;
-    NSInteger newIndex = [mutableFavoritesArray count] - toIndexPath.row - 1;
-    
-    NSDictionary *movedStop = [mutableFavoritesArray objectAtIndex:oldIndex];
-    
-    [mutableFavoritesArray removeObjectAtIndex:oldIndex];
-    [mutableFavoritesArray insertObject:movedStop atIndex:newIndex];
-}
+//- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    if (editingStyle == UITableViewCellEditingStyleDelete) {
+//        NSMutableArray *mutableFavoritesArray = [self.favoritesArray mutableCopy];
+//        
+//        NSInteger index = [mutableFavoritesArray count] - indexPath.row - 1;
+//        [mutableFavoritesArray removeObjectAtIndex:index];
+//        [self saveFavoritesWithArray:mutableFavoritesArray];
+//        
+//        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+//    }
+//}
+//
+//- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
+//{
+//    NSMutableArray *mutableFavoritesArray = [self.favoritesArray mutableCopy];
+//    
+//    NSInteger oldIndex = [mutableFavoritesArray count] - fromIndexPath.row - 1;
+//    NSInteger newIndex = [mutableFavoritesArray count] - toIndexPath.row - 1;
+//    
+//    NSDictionary *movedStop = [mutableFavoritesArray objectAtIndex:oldIndex];
+//    
+//    [mutableFavoritesArray removeObjectAtIndex:oldIndex];
+//    [mutableFavoritesArray insertObject:movedStop atIndex:newIndex];
+//}
 
 @end

@@ -16,7 +16,8 @@
 
 @property (nonatomic, strong) CFStopSignView *stopInfoView;
 @property (nonatomic, strong) UIButton *favoriteButton;
-@property (nonatomic, strong) NSMutableArray *estimation;
+@property (nonatomic, strong) NSMutableArray *responseEstimation;
+@property (nonatomic, strong) NSMutableArray *finalData;
 @property (assign) BOOL refreshing;
 
 @end
@@ -27,7 +28,8 @@
 {
     self = [super initWithStyle:style];
     if (self) {
-        _estimation = [NSMutableArray new];
+        _responseEstimation = [NSMutableArray new];
+        _finalData = [NSMutableArray new];
         _refreshing = YES;
         
         self.title = @"Stop Results";
@@ -85,6 +87,13 @@
     [super viewDidAppear:animated];
     
     [self.navigationController setNavigationBarHidden:NO];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    [self.view endEditing:YES];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
@@ -202,7 +211,7 @@
     self.favoriteButton.enabled = YES;
     if (stop.isFavorite) self.favoriteButton.selected = YES;
     
-    [self.estimation removeAllObjects];
+    [self.responseEstimation removeAllObjects];
     [self.tableView reloadData];
     [self updateHistory];
     [self performStopRequest];
@@ -213,7 +222,7 @@
 {
     self.refreshing = YES;
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-    [self.estimation removeAllObjects];
+    [self.responseEstimation removeAllObjects];
     [self.tableView reloadData];
     
     [[CFSapoClient sharedClient] estimateAtBusStop:self.stop.code
@@ -226,17 +235,76 @@
                                                    
                                                    for (NSArray *busData in buses) {
                                                        NSDictionary *dict = [NSDictionary dictionaryWithObjects:busData forKeys:[NSArray arrayWithObjects:@"recorrido", @"tiempo", @"distancia", nil]];
-                                                       [self.estimation addObject:dict];
+                                                       [self.responseEstimation addObject:dict];
                                                    }
                                                    
-                                                   self.refreshing = NO;
-                                                   [self.tableView reloadData];
-                                                   [self.refreshControl endRefreshing];
+                                                   [self processEstimationData];
                                                    
                                                } else if (error) {
                                                    NSLog(@"Consulta falló. Error: %@", error.description);
                                                }
                                            }];
+}
+
+- (void)processEstimationData
+{
+    [self.finalData removeAllObjects];
+    
+    for (NSDictionary *service in self.stop.services) {
+        NSMutableDictionary *moddedService = [service mutableCopy];
+        NSMutableArray *estimations = [NSMutableArray new];
+        NSString *serviceName = [service objectForKey:@"name"];
+        
+        for (NSDictionary *estimation in self.responseEstimation) {
+            if ([[estimation objectForKey:@"recorrido"] isEqualToString:serviceName]) {
+                NSMutableDictionary *thisEstimation = [NSMutableDictionary new];
+                
+                // take care of distance formatting
+                CGFloat distance = [[estimation objectForKey:@"distancia"] integerValue];
+                NSString *distanceString;
+                NSString *unit = @"m";
+                
+                if (distance >= 1000) {
+                    unit = @"km";
+                    distance = distance / 1000;
+                    distanceString = [NSString stringWithFormat:@"%.2f", distance];
+                } else {
+                    unit = @"m";
+                    distanceString = [NSString stringWithFormat:@"%.0f", distance];
+                }
+                
+                NSString *finalDistanceString = [NSString stringWithFormat:@"%@ %@", distanceString, unit];
+                
+                [thisEstimation setObject:finalDistanceString forKey:@"distance"];
+                
+                // and time formatting
+                NSString *time = [estimation objectForKey:@"tiempo"];
+                NSString *finalTimeString;
+                
+                if ([time hasPrefix:@"Entre"]) {
+                    NSRange fromRange = NSMakeRange(6, 2);
+                    NSRange toRange = NSMakeRange(11, 2);
+                    NSInteger fromMin = [[time substringWithRange:fromRange] integerValue];
+                    NSInteger toMin = [[time substringWithRange:toRange] integerValue];
+                    finalTimeString =  [NSString stringWithFormat:@"%d %@ %d min.", fromMin, NSLocalizedString(@"TO_MINS", nil), toMin];
+                } else {
+                    finalTimeString = time;
+                }
+                
+                [thisEstimation setObject:finalTimeString forKey:@"eta"];
+                
+                [estimations addObject:thisEstimation];
+            }
+        }
+        
+        [moddedService setObject:estimations forKey:@"estimations"];
+        [self.finalData addObject:moddedService];
+    }
+    NSLog(@"finalData: %@", self.finalData);
+    
+    self.refreshing = NO;
+    [self.tableView reloadData];
+    [self.refreshControl endRefreshing];
 }
 
 #pragma mark - Table view data source
@@ -259,6 +327,13 @@
     if (cell == nil)
         cell = [[CFResultCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
     
+    NSDictionary *serviceDictionary;
+    
+    if ([self.finalData lastObject])
+        serviceDictionary = [self.finalData objectAtIndex:indexPath.row];
+    else
+        serviceDictionary = [self.stop.services objectAtIndex:indexPath.row];
+    
     cell.backgroundColor = [UIColor blackColor];
     cell.layer.shadowColor = [UIColor colorWithWhite:1 alpha:0.3].CGColor;
     cell.layer.shadowOffset = CGSizeMake(0, 0.5);
@@ -266,44 +341,13 @@
     cell.layer.shadowPath = [UIBezierPath bezierPathWithRect:cell.bounds].CGPath;
     cell.layer.shadowRadius = 0.0;
     
-    cell.textLabel.text = [[self.stop.services objectAtIndex:indexPath.row] objectForKey:@"name"];
+    cell.textLabel.text = [serviceDictionary objectForKey:@"name"];
     cell.textLabel.textColor = [UIColor whiteColor];
     cell.textLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:25.0];
     
-    cell.directionLabel.text = [[[self.stop.services objectAtIndex:indexPath.row] objectForKey:@"destino"] capitalizedString];
+    cell.directionLabel.text = [[serviceDictionary objectForKey:@"destino"] capitalizedString];
     
-    if ([self.estimation count] == 0 || indexPath.row >= [self.estimation count]) return cell;
-    
-    for (NSDictionary *estimation in self.estimation) {
-        if ([[estimation objectForKey:@"recorrido"] isEqualToString:cell.textLabel.text]) {
-            CGFloat distance = [[estimation objectForKey:@"distancia"] integerValue];
-            NSString *distanceString;
-            NSString *unit = @"m";
-            
-            if (distance >= 1000) {
-                unit = @"km";
-                distance = distance / 1000;
-                distanceString = [NSString stringWithFormat:@"%.2f", distance];
-            } else {
-                unit = @"m";
-                distanceString = [NSString stringWithFormat:@"%.0f", distance];
-            }
-            
-            cell.distanceLabel.text = [NSString stringWithFormat:@"%@ %@", distanceString, unit];
-            
-            NSString *time = [estimation objectForKey:@"tiempo"];
-            NSLog(@"%@", time);
-            if ([time hasPrefix:@"Entre"]) {
-                NSRange fromRange = NSMakeRange(6, 2);
-                NSRange toRange = NSMakeRange(11, 2);
-                NSInteger fromMin = [[time substringWithRange:fromRange] integerValue];
-                NSInteger toMin = [[time substringWithRange:toRange] integerValue];
-                cell.timeLabel.text =  [NSString stringWithFormat:@"%d %@ %d min.", fromMin, NSLocalizedString(@"TO_MINS", nil), toMin];
-            } else {
-                cell.timeLabel.text = time;
-            }
-        }
-    }
+    cell.estimations = [serviceDictionary objectForKey:@"estimations"];
     
     return cell;
 }

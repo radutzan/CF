@@ -93,18 +93,18 @@
     return cell;
 }
 
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        NSMutableArray *mutableHistoryArray = [self.historyArray mutableCopy];
-        
-        NSInteger index = [mutableHistoryArray count] - indexPath.row - 1;
-        [mutableHistoryArray removeObjectAtIndex:index];
-        [self saveHistoryWithArray:mutableHistoryArray];
-        
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }
-}
+//- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    if (editingStyle == UITableViewCellEditingStyleDelete) {
+//        NSMutableArray *mutableHistoryArray = [self.historyArray mutableCopy];
+//        
+//        NSInteger index = [mutableHistoryArray count] - indexPath.row - 1;
+//        [mutableHistoryArray removeObjectAtIndex:index];
+//        [self saveHistoryWithArray:mutableHistoryArray];
+//        
+//        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+//    }
+//}
 
 
 @end
