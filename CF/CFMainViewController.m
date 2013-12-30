@@ -264,13 +264,14 @@
         [self tabButtonTapped:self.codeButton];
     }
     
-//    BOOL runBefore = [[NSUserDefaults standardUserDefaults] boolForKey:@"OLHasRunBefore"];
-//    
-//    if (!runBefore) {
-//        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"OLHasRunBefore"];
-//        [[NSUserDefaults standardUserDefaults] synchronize];
-//    }
-    [self importUserData];
+    BOOL runBefore = [[NSUserDefaults standardUserDefaults] boolForKey:@"OLHasRunBefore"];
+    
+    if (!runBefore) {
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"OLHasRunBefore"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        
+        [self importUserData];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
