@@ -39,6 +39,7 @@
 @property (nonatomic, strong) UIImageView *logoView;
 @property (nonatomic, assign) CGFloat initialContentCenterY;
 @property (nonatomic, assign) BOOL mapMode;
+@property (nonatomic, assign) BOOL mapEnabled;
 
 @end
 
@@ -133,11 +134,28 @@
     UILongPressGestureRecognizer *clearHistory = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressRecognized:)];
     [self.historyButton addGestureRecognizer:clearHistory];
     
+    // ese booleano po
+    self.mapEnabled = NO;
+    
     self.openMapButton = [UIButton buttonWithType:UIButtonTypeCustom];
     self.openMapButton.frame = CGRectMake(0, 45.0, self.view.bounds.size.width, 95.0);
     self.openMapButton.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    [self.openMapButton addTarget:self action:@selector(switchToMap) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.openMapButton];
+    
+    if (self.mapEnabled) {
+        [self.openMapButton addTarget:self action:@selector(switchToMap) forControlEvents:UIControlEventTouchUpInside];
+    } else {
+        self.openMapButton.backgroundColor = [UIColor colorWithWhite:0 alpha:0.4];
+        [self.openMapButton addTarget:self action:@selector(purchaseMap) forControlEvents:UIControlEventTouchUpInside];
+        
+        UILabel *buyMapLabel = [[UILabel alloc] initWithFrame:self.openMapButton.bounds];
+        buyMapLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:27.0];
+        buyMapLabel.textColor = [UIColor colorWithWhite:1 alpha:1];
+        buyMapLabel.textAlignment = NSTextAlignmentCenter;
+        buyMapLabel.text = @"Comprar Mapa";
+        buyMapLabel.autoresizingMask = UIViewAutoresizingFlexibleHeight;
+        [self.openMapButton addSubview:buyMapLabel];
+    }
     
     [self registerForKeyboardNotifications];
 }
@@ -329,10 +347,8 @@
                                                           CFStop *stop = [CFStop stopWithCoordinate:coordinate code:[stopData objectForKey:@"codigo"] name:[stopData objectForKey:@"nombre"] services:[stopData objectForKey:@"recorridos"]];
                                                           
                                                           [newHistory addObject:[stop asDictionary]];
-                                                          NSLog(@"one stop");
                                                       }
                                                       
-                                                      NSLog(@"done");
                                                       [defaults setObject:newHistory forKey:@"history"];
                                                       [defaults synchronize];
                                                       
@@ -418,6 +434,8 @@
         self.logoView.alpha = scrollViewAlpha;
         self.gripper.alpha = scrollViewAlpha;
         self.localNavigationBar.frame = CGRectMake(0, 0, self.localNavigationBar.bounds.size.width, localNavBarHeight);
+        self.openMapButton.frame = CGRectMake(0, 45.0, self.view.bounds.size.width, 95.0);
+        self.openMapButton.alpha = 1;
     } completion:^(BOOL finished) {
         
     }];
@@ -449,13 +467,17 @@
         contentCenter.x = self.contentView.center.x;
         contentCenter.y = self.initialContentCenterY + gripTranslation;
         
+        CGFloat buttonHeight = 95.0 + gripTranslation;
+        
         CGFloat slideFactor = gripTranslation / (self.contentView.bounds.size.height - TAB_BAR_HEIGHT);
         CGFloat appliedFactor = 1.0 - slideFactor;
         
         if (slideFactor <= 1.0 && slideFactor >= 0.0) {
+            self.openMapButton.frame = CGRectMake(0, 45.0, self.view.bounds.size.width, buttonHeight);
             self.contentView.center = contentCenter;
             self.scrollView.alpha = appliedFactor;
             self.gripper.alpha = appliedFactor;
+            self.openMapButton.alpha = appliedFactor;
             center.latitude -= self.mapController.mapView.region.span.latitudeDelta * (0.36 * appliedFactor);
             self.mapController.mapView.centerCoordinate = center;
         }
@@ -463,12 +485,23 @@
     } else if (recognizer.state == UIGestureRecognizerStateEnded) {
         CGFloat slideFactor = gripTranslation / (self.contentView.bounds.size.height - TAB_BAR_HEIGHT);
         
-        if (slideFactor >=0.25) {
-            self.mapMode = YES;
+        if (self.mapEnabled) {
+            if (slideFactor >=0.25) {
+                self.mapMode = YES;
+            } else {
+                self.mapMode = NO;
+            }
         } else {
             self.mapMode = NO;
+            [self purchaseMap];
         }
     }
+}
+
+- (void)purchaseMap
+{
+    UIAlertView *buyMap = [[UIAlertView alloc] initWithTitle:@"Buy Bitch" message:@"Aight" delegate:self cancelButtonTitle:@"Nah" otherButtonTitles:@"Buy", nil];
+    [buyMap show];
 }
 
 #pragma mark - Tab switching
