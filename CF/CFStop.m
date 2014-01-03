@@ -6,6 +6,7 @@
 //  Copyright (c) 2013 Onda. All rights reserved.
 //
 
+#import <Mixpanel/Mixpanel.h>
 #import "CFStop.h"
 #import "math.h"
 
@@ -199,6 +200,9 @@ static NSRegularExpression *regexMetroSinNumero;
         
         if (!added) {
             [mutableFavoritesArray addObject:[self asDictionary]];
+            
+            Mixpanel *mixpanel = [Mixpanel sharedInstance];
+            [mixpanel track:@"Added Favorite" properties:@{@"Code": self.code}];
         }
     } else {
         for (NSDictionary *stop in [CFStop favoritesArray]) {

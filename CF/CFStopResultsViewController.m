@@ -35,7 +35,6 @@
         self.title = @"Stop Results";
         
         self.tableView.separatorInset = UIEdgeInsetsZero;
-        self.tableView.separatorColor = [UIColor colorWithWhite:1 alpha:0];
     }
     return self;
 }
@@ -45,8 +44,10 @@
     [super viewDidLoad];
     
     self.view.backgroundColor = [UIColor blackColor];
+    self.tableView.separatorColor = [UIColor clearColor];
     
     self.refreshControl = [UIRefreshControl new];
+    self.refreshControl.tintColor = [UIColor whiteColor];
     [self.refreshControl addTarget:self action:@selector(performStopRequest) forControlEvents:UIControlEventValueChanged];
     
     UIView *earFuck = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 270, 44.0)];
@@ -329,7 +330,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
+    static NSString *CellIdentifier = @"Result Cell";
     CFResultCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
     if (cell == nil)
@@ -343,19 +344,31 @@
         serviceDictionary = [self.stop.services objectAtIndex:indexPath.row];
     
     cell.backgroundColor = [UIColor blackColor];
-    cell.layer.shadowColor = [UIColor colorWithWhite:1 alpha:0.3].CGColor;
-    cell.layer.shadowOffset = CGSizeMake(0, 0.5);
-    cell.layer.shadowOpacity = 1.0;
-    cell.layer.shadowPath = [UIBezierPath bezierPathWithRect:cell.bounds].CGPath;
-    cell.layer.shadowRadius = 0.0;
     
-    cell.textLabel.text = [serviceDictionary objectForKey:@"name"];
-    cell.textLabel.textColor = [UIColor whiteColor];
-    cell.textLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:25.0];
-    
-    cell.directionLabel.text = [[serviceDictionary objectForKey:@"destino"] capitalizedString];
-    
+    cell.serviceLabel.text = [serviceDictionary objectForKey:@"name"];
+    cell.directionLabel.text = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"TO_DIRECTION", nil), [[serviceDictionary objectForKey:@"destino"] capitalizedString]];
     cell.estimations = [serviceDictionary objectForKey:@"estimations"];
+    
+    NSString *operatorID = [cell.serviceLabel.text substringToIndex:1];
+    
+    UIColor *badgeColor = [UIColor whiteColor];
+    
+    if ([operatorID isEqualToString:@"1"]) // alsacia
+        badgeColor = [UIColor colorWithRed:0.00 green:0.62 blue:0.91 alpha:1.0];
+    else if ([operatorID isEqualToString:@"2"] || [operatorID isEqualToString:@"G"]) // subus
+        badgeColor = [UIColor colorWithRed:39.0/255.0 green:58.0/255.0 blue:145.0/255.0 alpha:1];
+    else if ([operatorID isEqualToString:@"3"] || [operatorID isEqualToString:@"E"] || [operatorID isEqualToString:@"H"] || [operatorID isEqualToString:@"I"]) // vule
+        badgeColor = [UIColor colorWithRed:0 green:167.0/255.0 blue:126.0/255.0 alpha:1];
+    else if ([operatorID isEqualToString:@"4"] || [operatorID isEqualToString:@"D"]) // express
+        badgeColor = [UIColor colorWithRed:247.0/255.0 green:148.0/255.0 blue:29.0/255.0 alpha:1];
+    else if ([operatorID isEqualToString:@"5"] || [operatorID isEqualToString:@"J"]) // metbus
+        badgeColor = [UIColor colorWithRed:0.00 green:0.68 blue:0.72 alpha:1.0];
+    else if ([operatorID isEqualToString:@"6"] || [operatorID isEqualToString:@"B"] || [operatorID isEqualToString:@"C"]) // veolia
+        badgeColor = [UIColor colorWithRed:237.0/255.0 green:28.0/255.0 blue:36.0/255.0 alpha:1];
+    else if ([operatorID isEqualToString:@"F"]) // stp
+        badgeColor = [UIColor colorWithRed:255.0/255.0 green:212.0/255.0 blue:0 alpha:1];
+    
+    cell.badgeColor = badgeColor;
     
     return cell;
 }
@@ -372,12 +385,12 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 52.0;
+    return 60.0;
 }
 
 - (float)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
-    return 80.0;
+    return 0.0;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
@@ -389,17 +402,10 @@
     service.font = [UIFont systemFontOfSize:13.0];
     [headerView addSubview:service];
     
-    UILabel *estimate = [[UILabel alloc] initWithFrame:CGRectMake(100.0, 0, 90.0, 20.0)];
-    estimate.text = NSLocalizedString(@"DIRECTION", nil);
+    UILabel *estimate = [[UILabel alloc] initWithFrame:CGRectMake(160.0, 0, 100.0, 20.0)];
+    estimate.text = NSLocalizedString(@"ESTIMATION", nil);
     estimate.font = [UIFont systemFontOfSize:13.0];
-//    estimate.textAlignment = NSTextAlignmentCenter;
     [headerView addSubview:estimate];
-    
-    UILabel *distance = [[UILabel alloc] initWithFrame:CGRectMake(200.0, 0, 100.0, 20.0)];
-    distance.text = NSLocalizedString(@"ESTIMATION", nil);
-    distance.font = [UIFont systemFontOfSize:13.0];
-//    distance.textAlignment = NSTextAlignmentRight;
-    [headerView addSubview:distance];
     
     return headerView;
 }
@@ -411,9 +417,10 @@
     UILabel *notice = [[UILabel alloc] initWithFrame:CGRectMake(15.0, 0, 90.0, 20.0)];
     notice.text = NSLocalizedString(@"SERVICE", nil);
     notice.font = [UIFont systemFontOfSize:13.0];
+    notice.textColor = [UIColor whiteColor];
     [footerView addSubview:notice];
     
-    return footerView;
+    return nil;
 }
 
 @end

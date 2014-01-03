@@ -6,6 +6,7 @@
 //  Copyright (c) 2013 Onda. All rights reserved.
 //
 
+#import <Mixpanel/Mixpanel.h>
 #import "CFMoreViewController.h"
 #import "CFMoreContentViewController.h"
 #import "UIDevice+hardware.h"
@@ -107,6 +108,9 @@
         controller.title = NSLocalizedString(@"HELP", nil);
         [self.navigationController pushViewController:controller animated:YES];
         
+        Mixpanel *mixpanel = [Mixpanel sharedInstance];
+        [mixpanel track:@"Opened Help" properties:nil];
+        
     } else if (indexPath.section == 0 && indexPath.row == 1) {
         NSString *aboutPath = [[NSBundle mainBundle] pathForResource:@"about" ofType:@"html"];
         NSString *aboutString = [NSString stringWithContentsOfFile:aboutPath encoding:NSStringEncodingConversionAllowLossy error:nil];
@@ -116,6 +120,9 @@
         
         controller.title = NSLocalizedString(@"ABOUT", nil);
         [self.navigationController pushViewController:controller animated:YES];
+        
+        Mixpanel *mixpanel = [Mixpanel sharedInstance];
+        [mixpanel track:@"Opened About" properties:nil];
         
     } else if (indexPath.section == 0 && indexPath.row == 2) {
         NSString *appVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
@@ -127,6 +134,9 @@
         controller.title = NSLocalizedString(@"SEND_FEEDBACK", nil);
         [self.navigationController pushViewController:controller animated:YES];
         
+        Mixpanel *mixpanel = [Mixpanel sharedInstance];
+        [mixpanel track:@"Opened Send Feedback" properties:nil];
+        
     } else if (indexPath.section == 1 && indexPath.row == 0) {
         NSArray *activityItems = [NSArray arrayWithObjects:NSLocalizedString(@"SHARE_TWEET_TEXT", nil), [NSURL URLWithString:@"https://itunes.apple.com/cl/app/id431174703"], nil];
         NSArray *excludeActivities = @[UIActivityTypeAssignToContact, UIActivityTypeCopyToPasteboard, UIActivityTypePostToWeibo, UIActivityTypePrint, UIActivityTypeSaveToCameraRoll];
@@ -135,6 +145,9 @@
         activityController.excludedActivityTypes = excludeActivities;
         
         [self presentViewController:activityController animated:YES completion:NULL];
+        
+        Mixpanel *mixpanel = [Mixpanel sharedInstance];
+        [mixpanel track:@"Opened Share CF" properties:nil];
         
     } else if (indexPath.section == 1 && indexPath.row == 1) {
         NSURL *URL = nil;
@@ -149,9 +162,15 @@
         
         [[UIApplication sharedApplication] openURL:URL];
         
-    } else if (indexPath.section == 1 && indexPath.row == 2) {
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms-apps://itunes.apple.com/app/id431174703"]];
+        Mixpanel *mixpanel = [Mixpanel sharedInstance];
+        [mixpanel track:@"Opened Twitter link" properties:nil];
         
+    } else if (indexPath.section == 1 && indexPath.row == 2) {
+        
+        Mixpanel *mixpanel = [Mixpanel sharedInstance];
+        [mixpanel track:@"Opened Rate on the App Store" properties:nil];
+        
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms-apps://itunes.apple.com/app/id431174703"]];
     }
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];

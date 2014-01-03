@@ -16,6 +16,8 @@
 		7C426417184AE88000A8968F /* CFResultCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C426416184AE88000A8968F /* CFResultCell.m */; };
 		7C42641A184AF3E300A8968F /* CFFavoriteCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C426419184AF3E300A8968F /* CFFavoriteCell.m */; };
 		7C5FD9CE184F8B140099FEE2 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7C5FD9CC184F8B140099FEE2 /* Localizable.strings */; };
+		7C6CE7CC1877450D00DDEF54 /* CFClipView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C6CE7CB1877450D00DDEF54 /* CFClipView.m */; };
+		7C6CE7CF187751FB00DDEF54 /* CFColorBadgeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C6CE7CE187751FB00DDEF54 /* CFColorBadgeView.m */; };
 		7C7A15D61853EBF0002EE4C5 /* OLTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C7A15D51853EBF0002EE4C5 /* OLTextField.m */; };
 		7C7A15D818540966002EE4C5 /* pin-favorite@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7C7A15D718540966002EE4C5 /* pin-favorite@2x.png */; };
 		7C7A15DB18540E08002EE4C5 /* CFMoreContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C7A15DA18540E08002EE4C5 /* CFMoreContentViewController.m */; };
@@ -101,6 +103,10 @@
 		7C5FD9CF184F8B5F0099FEE2 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		7C5FD9D0184F8B5F0099FEE2 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		7C5FD9D1184F8B5F0099FEE2 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		7C6CE7CA1877450D00DDEF54 /* CFClipView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFClipView.h; sourceTree = "<group>"; };
+		7C6CE7CB1877450D00DDEF54 /* CFClipView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFClipView.m; sourceTree = "<group>"; };
+		7C6CE7CD187751FB00DDEF54 /* CFColorBadgeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFColorBadgeView.h; sourceTree = "<group>"; };
+		7C6CE7CE187751FB00DDEF54 /* CFColorBadgeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFColorBadgeView.m; sourceTree = "<group>"; };
 		7C7A15D41853EBF0002EE4C5 /* OLTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLTextField.h; sourceTree = "<group>"; };
 		7C7A15D51853EBF0002EE4C5 /* OLTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLTextField.m; sourceTree = "<group>"; };
 		7C7A15D718540966002EE4C5 /* pin-favorite@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pin-favorite@2x.png"; sourceTree = "<group>"; };
@@ -235,6 +241,19 @@
 			name = "Stop Cells";
 			sourceTree = "<group>";
 		};
+		7C6CE7D018775DE000DDEF54 /* Result Cell */ = {
+			isa = PBXGroup;
+			children = (
+				7C426415184AE88000A8968F /* CFResultCell.h */,
+				7C426416184AE88000A8968F /* CFResultCell.m */,
+				7C6CE7CA1877450D00DDEF54 /* CFClipView.h */,
+				7C6CE7CB1877450D00DDEF54 /* CFClipView.m */,
+				7C6CE7CD187751FB00DDEF54 /* CFColorBadgeView.h */,
+				7C6CE7CE187751FB00DDEF54 /* CFColorBadgeView.m */,
+			);
+			name = "Result Cell";
+			sourceTree = "<group>";
+		};
 		7CFF7E3818381645006230CE = {
 			isa = PBXGroup;
 			children = (
@@ -351,8 +370,7 @@
 				7CFF7EBD1838700F006230CE /* CFStopSignView.h */,
 				7CFF7EBE1838700F006230CE /* CFStopSignView.m */,
 				7C42642A184AF50900A8968F /* Stop Cells */,
-				7C426415184AE88000A8968F /* CFResultCell.h */,
-				7C426416184AE88000A8968F /* CFResultCell.m */,
+				7C6CE7D018775DE000DDEF54 /* Result Cell */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -574,9 +592,11 @@
 				7CFF7E5518381645006230CE /* CFAppDelegate.m in Sources */,
 				7C7A15D61853EBF0002EE4C5 /* OLTextField.m in Sources */,
 				7CFF7EC618387735006230CE /* CFStopResultsViewController.m in Sources */,
+				7C6CE7CC1877450D00DDEF54 /* CFClipView.m in Sources */,
 				7C7A15DB18540E08002EE4C5 /* CFMoreContentViewController.m in Sources */,
 				7C10B96F183ADD200086B650 /* CFFavoritesViewController.m in Sources */,
 				7CFF7E7818381D6E006230CE /* CFMainViewController.m in Sources */,
+				7C6CE7CF187751FB00DDEF54 /* CFColorBadgeView.m in Sources */,
 				7C426414184AE87300A8968F /* CFStopCell.m in Sources */,
 				7CFF7E7D18382448006230CE /* CFMapController.m in Sources */,
 				7CFF7EA218382B4D006230CE /* CFSapoClient.m in Sources */,

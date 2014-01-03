@@ -6,6 +6,7 @@
 //  Copyright (c) 2013 Onda. All rights reserved.
 //
 
+#import <Mixpanel/Mixpanel.h>
 #import "CFMainViewController.h"
 #import "CFMapController.h"
 #import "CFSapoClient.h"
@@ -463,6 +464,9 @@
         
         [self.view endEditing:YES];
         
+        Mixpanel *mixpanel = [Mixpanel sharedInstance];
+        [mixpanel track:@"Used Map Drag Gesture" properties:nil];
+        
     } else if (recognizer.state == UIGestureRecognizerStateChanged) {
         CGPoint contentCenter;
         contentCenter.x = self.contentView.center.x;
@@ -503,6 +507,9 @@
 {
     UIAlertView *buyMap = [[UIAlertView alloc] initWithTitle:@"Buy Bitch" message:@"Aight" delegate:self cancelButtonTitle:@"Nah" otherButtonTitles:@"Buy", nil];
     [buyMap show];
+    
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    [mixpanel track:@"Triggered Map Purchase" properties:nil];
 }
 
 #pragma mark - Tab switching
@@ -605,16 +612,28 @@
 - (void)enterStopCodeViewDidEnterStopCode:(NSString *)stopCode
 {
     [self pushStopResultsWithStopCode:stopCode];
+    
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    
+    [mixpanel track:@"Stop Requested" properties:@{@"Code": stopCode, @"From": @"Enter Stop Code"}];
 }
 
 - (void)stopTableView:(UITableView *)tableView didSelectCellWithStop:(NSString *)stopCode
 {
     [self pushStopResultsWithStopCode:stopCode];
+    
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    
+    [mixpanel track:@"Stop Requested" properties:@{@"Code": stopCode, @"From": @"History or Favorites"}];
 }
 
 - (void)mapControllerDidSelectStop:(NSString *)stopCode
 {
     [self pushStopResultsWithStopCode:stopCode];
+    
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    
+    [mixpanel track:@"Stop Requested" properties:@{@"Code": stopCode, @"From": @"Map"}];
 }
 
 #pragma mark - Other shit

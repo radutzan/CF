@@ -14,7 +14,7 @@
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        self.favoriteNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 10.0, self.contentView.bounds.size.width, 20.0)];
+        self.favoriteNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 9.0, self.contentView.bounds.size.width, 22.0)];
         self.favoriteNameLabel.font = [UIFont systemFontOfSize:19.0];
         self.favoriteNameLabel.textColor = [UIColor colorWithWhite:0 alpha:0.8];
         [self.contentView addSubview:self.favoriteNameLabel];

@@ -7,6 +7,7 @@
 //
 
 #import "CFAppDelegate.h"
+#import <Mixpanel/Mixpanel.h>
 
 @implementation CFAppDelegate
 
@@ -18,6 +19,9 @@
     self.window.rootViewController = [[CFNavigationController alloc] initWithNavigationBarClass:[CFNavigationBar class] toolbarClass:nil];
     self.window.tintColor = [UIColor colorWithHue:130.0/360.0 saturation:0.9 brightness:0.9 alpha:1];
     [self.window makeKeyAndVisible];
+    
+    [Mixpanel sharedInstanceWithToken:@"9fda86f01e8e8821542524d96b1f7cfb"];
+    
     return YES;
 }
 
