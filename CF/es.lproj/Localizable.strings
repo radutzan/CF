@@ -18,6 +18,17 @@
 "MAP_SEARCHFIELD_PLACEHOLDER" = "Lugares o dirección";
 "CLEAR_ALL_HISTORY" = "Borrar Historial";
 
+"TOUCH_HERE_TO" = "Toca aquí para";
+"BUY_MAP_BUTTON" = "Comprar el Mapa";
+
+"STORE_ERROR_TITLE" = "Hubo un error con la compra";
+"STORE_ERROR_MESSAGE" = "Por favor, inténtalo de nuevo.";
+"STORE_WAIT_TITLE" = "Calmao…";
+"STORE_WAIT_MESSAGE" = "La magia toma tiempo.";
+"STORE_THANK_YOU_TITLE" = "Muchas gracias.";
+"STORE_THANK_YOU_MESSAGE_MAP" = "Ojalá que el Mapa de Paradas te sirva caleta.";
+"STORE_THANK_YOU_MESSAGE_ADS" = "Dato: solo los más bacanes eliminan la publicidad.";
+
 "INVALID_STOP_CODE_TITLE" = "Código inválido";
 "INVALID_STOP_CODE_MESSAGE" = "Asegúrate de que lo ingresaste correctamente. Tiene que incluir la P, la letra de zona y un número de hasta 4 dígitos. No puede contener espacios.";
 "ZOOM_LEVEL_WARNING_TITLE" = "Estás muy lejos";
@@ -31,16 +42,19 @@
 "HISTORY_PLACEHOLDER_TITLE" = "Sin historial";
 "HISTORY_PLACEHOLDER_MESSAGE" = "Tu historial se guardará automáticamente a medida que consultes paraderos.";
 
-"NAME_YOUR_FAVORITE" = "Pónle nombre";
+"NAME_YOUR_FAVORITE" = "Ponle nombre";
 "NAMELESS_FAVORITE" = "Favorito sin nombre";
 
 "CANCEL" = "Cancelar";
 "BUY" = "Comprar";
+"PURCHASED" = "Comprado";
 "DISMISS" = "Cerrar";
+"ERROR_DISMISS" = "Bueno";
 
 "HELP" = "Ayuda";
 "ABOUT" = "Acerca";
 "SEND_FEEDBACK" = "Envíanos comentarios";
+"STORE" = "Tienda";
 "SHARE_THIS_APP" = "Comparte Cuánto Falta";
 "FOLLOW_US_TWITTER" = "Síguenos en Twitter";
 "RATE_ON_APP_STORE" = "Evalúa en la App Store";

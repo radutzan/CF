@@ -7,6 +7,7 @@
 //
 
 #import <Mixpanel/Mixpanel.h>
+#import <OLGhostAlertView/OLGhostAlertView.h>
 #import "OLCashier.h"
 #import "CFMainViewController.h"
 #import "CFMapController.h"
@@ -139,6 +140,13 @@
     // ese booleano po
     self.mapEnabled = [OLCashier hasProduct:@"CF01"];
     
+    NSString *mappy = @"No";
+    if (self.mapEnabled) mappy = @"Yes";
+    
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    [mixpanel registerSuperProperties:@{@"Has Map": mappy}];
+    [mixpanel track:@"Launched App" properties:nil];
+    
     self.openMapButton = [UIButton buttonWithType:UIButtonTypeCustom];
     self.openMapButton.frame = CGRectMake(0, 45.0, self.view.bounds.size.width, 95.0);
     self.openMapButton.autoresizingMask = UIViewAutoresizingFlexibleWidth;
@@ -154,7 +162,7 @@
         buyMapLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:27.0];
         buyMapLabel.textColor = [UIColor colorWithWhite:1 alpha:1];
         buyMapLabel.textAlignment = NSTextAlignmentCenter;
-        buyMapLabel.text = @"Comprar Mapa";
+        buyMapLabel.text = NSLocalizedString(@"BUY_MAP_BUTTON", nil);
         buyMapLabel.autoresizingMask = UIViewAutoresizingFlexibleHeight;
         [self.openMapButton addSubview:buyMapLabel];
     }
@@ -499,27 +507,64 @@
             }
         } else {
             self.mapMode = NO;
-            [self purchaseMap];
         }
     }
 }
 
 - (void)purchaseMap
 {
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    [mixpanel track:@"Triggered Map Purchase"];
+    
     NSString *mapIdentifier = @"CF01";
+    
+    OLGhostAlertView *wait = [[OLGhostAlertView alloc] initWithTitle:NSLocalizedString(@"STORE_WAIT_TITLE", nil) message:NSLocalizedString(@"STORE_WAIT_MESSAGE", nil) timeout:100.0 dismissible:NO];
+    wait.position = OLGhostAlertViewPositionCenter;
+    [wait show];
+    
     [[OLCashier defaultCashier] buyProduct:mapIdentifier handler:^(NSError *error, NSArray *transactions, NSDictionary *userInfo) {
         SKPaymentTransaction *transaction = transactions.firstObject;
+        [wait hide];
+        
         if (error) {
-#warning Handle Error
+            UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"STORE_ERROR_TITLE", nil) message:[NSString stringWithFormat:@"%@. %@", error.localizedDescription, NSLocalizedString(@"STORE_ERROR_MESSAGE", nil)] delegate:self cancelButtonTitle:NSLocalizedString(@"ERROR_DISMISS", nil) otherButtonTitles:nil];
+            [errorAlert show];
+            
+            [mixpanel track:@"Failed to Purchase Map"];
             return;
         }
-#warning Handle successful purchase.
+        
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:mapIdentifier];
         [transaction finish];
+        
+        self.mapEnabled = [OLCashier hasProduct:@"CF01"];
+        self.mapMode = YES;
+        
+        OLGhostAlertView *thanks = [[OLGhostAlertView alloc] initWithTitle:NSLocalizedString(@"STORE_THANK_YOU_TITLE", nil) message:NSLocalizedString(@"STORE_THANK_YOU_MESSAGE_MAP", nil)];
+        thanks.position = OLGhostAlertViewPositionCenter;
+        [thanks show];
+        
+        [mixpanel track:@"Purchased Map"];
+        [mixpanel registerSuperProperties:@{@"Has Map": @"Yes"}];
     }];
+}
+
+- (void)setMapEnabled:(BOOL)mapEnabled
+{
+    _mapEnabled = mapEnabled;
     
-    Mixpanel *mixpanel = [Mixpanel sharedInstance];
-    [mixpanel track:@"Triggered Map Purchase" properties:nil];
+    if (mapEnabled) {
+        [UIView animateWithDuration:0.2 animations:^{
+            self.openMapButton.alpha = 0;
+        } completion:^(BOOL finished) {
+            [self.openMapButton removeTarget:self action:@selector(purchaseMap) forControlEvents:UIControlEventTouchUpInside];
+            for (UIView *subview in self.openMapButton.subviews) {
+                [subview removeFromSuperview];
+            }
+            self.openMapButton.backgroundColor = [UIColor clearColor];
+            [self.openMapButton addTarget:self action:@selector(switchToMap) forControlEvents:UIControlEventTouchUpInside];
+        }];
+    }
 }
 
 #pragma mark - Tab switching

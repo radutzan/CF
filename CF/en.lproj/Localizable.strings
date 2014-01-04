@@ -18,6 +18,17 @@
 "MAP_SEARCHFIELD_PLACEHOLDER" = "Places or address";
 "CLEAR_ALL_HISTORY" = "Clear All History";
 
+"TOUCH_HERE_TO" = "Touch here to";
+"BUY_MAP_BUTTON" = "Buy the Stops Map";
+
+"STORE_ERROR_TITLE" = "There was an error with your purchase";
+"STORE_ERROR_MESSAGE" = "Please try again.";
+"STORE_WAIT_TITLE" = "Please wait…";
+"STORE_WAIT_MESSAGE" = "Give it a second. It's going to space!";
+"STORE_THANK_YOU_TITLE" = "Thank you.";
+"STORE_THANK_YOU_MESSAGE_MAP" = "We hope you find the Stops Map useful.";
+"STORE_THANK_YOU_MESSAGE_ADS" = "Doesn't it feel great to get rid of those pesky ads?";
+
 "INVALID_STOP_CODE_TITLE" = "Invalid Stop Code";
 "INVALID_STOP_CODE_MESSAGE" = "Please make sure you entered it correctly. It needs to include the P, a letter and a number with up to 4 digits, without spaces.";
 "ZOOM_LEVEL_WARNING_TITLE" = "You're too far away";
@@ -36,11 +47,14 @@
 
 "CANCEL" = "Cancel";
 "BUY" = "Buy";
+"PURCHASED" = "Purchased";
 "DISMISS" = "Dismiss";
+"ERROR_DISMISS" = "Dang";
 
 "HELP" = "Help";
 "ABOUT" = "About";
 "SEND_FEEDBACK" = "Send Feedback";
+"STORE" = "Store";
 "SHARE_THIS_APP" = "Share Cuánto Falta";
 "FOLLOW_US_TWITTER" = "Follow us on Twitter";
 "RATE_ON_APP_STORE" = "Rate on the App Store";

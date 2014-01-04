@@ -26,10 +26,9 @@
     [cashier setDefaultTransactionHandler:^(NSError *error, NSArray *transactions, NSDictionary *userInfo){
         SKPaymentTransaction *transaction = transactions.firstObject;
         if (error) {
-#warning Handle Error
+            NSLog(@"%@", error);
             return;
         }
-#warning Handle successful purchase.
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:transaction.payment.productIdentifier];
         [transaction finish];
     }];

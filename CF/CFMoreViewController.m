@@ -9,6 +9,7 @@
 #import <Mixpanel/Mixpanel.h>
 #import "CFMoreViewController.h"
 #import "CFMoreContentViewController.h"
+#import "CFStoreViewController.h"
 #import "UIDevice+hardware.h"
 #import <OLGhostAlertView/OLGhostAlertView.h>
 
@@ -44,11 +45,13 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 2;
+    return 3;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    if (section == 1) return 1;
+    
     return 3;
 }
 
@@ -62,7 +65,7 @@
     
     cell.backgroundColor = [UIColor colorWithWhite:1 alpha:0.5];
     
-    if (indexPath.section == 0) {
+    if (indexPath.section != 2) {
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
     
@@ -73,10 +76,12 @@
     } else if (indexPath.row == 2 && indexPath.section == 0) {
         cell.textLabel.text = NSLocalizedString(@"SEND_FEEDBACK", nil);
     } else if (indexPath.row == 0 && indexPath.section == 1) {
+        cell.textLabel.text = NSLocalizedString(@"STORE", nil);
+    } else if (indexPath.row == 0 && indexPath.section == 2) {
         cell.textLabel.text = NSLocalizedString(@"SHARE_THIS_APP", nil);
-    } else if (indexPath.row == 1 && indexPath.section == 1) {
+    } else if (indexPath.row == 1 && indexPath.section == 2) {
         cell.textLabel.text = NSLocalizedString(@"FOLLOW_US_TWITTER", nil);
-    } else if (indexPath.row == 2 && indexPath.section == 1) {
+    } else if (indexPath.row == 2 && indexPath.section == 2) {
         cell.textLabel.text = NSLocalizedString(@"RATE_ON_APP_STORE", nil);
     }
     
@@ -138,6 +143,10 @@
         [mixpanel track:@"Opened Send Feedback" properties:nil];
         
     } else if (indexPath.section == 1 && indexPath.row == 0) {
+        CFStoreViewController *storeController = [[CFStoreViewController alloc] initWithStyle:UITableViewStyleGrouped];
+        [self.navigationController pushViewController:storeController animated:YES];
+        
+    } else if (indexPath.section == 2 && indexPath.row == 0) {
         NSArray *activityItems = [NSArray arrayWithObjects:NSLocalizedString(@"SHARE_TWEET_TEXT", nil), [NSURL URLWithString:@"https://itunes.apple.com/cl/app/id431174703"], nil];
         NSArray *excludeActivities = @[UIActivityTypeAssignToContact, UIActivityTypeCopyToPasteboard, UIActivityTypePostToWeibo, UIActivityTypePrint, UIActivityTypeSaveToCameraRoll];
         
@@ -149,7 +158,7 @@
         Mixpanel *mixpanel = [Mixpanel sharedInstance];
         [mixpanel track:@"Opened Share CF" properties:nil];
         
-    } else if (indexPath.section == 1 && indexPath.row == 1) {
+    } else if (indexPath.section == 2 && indexPath.row == 1) {
         NSURL *URL = nil;
         NSArray *schemes = [NSArray arrayWithObjects:@"tweetbot:///user_profile/%@", @"twitter:@%@", @"http://twitter.com/%@", nil];
         
@@ -165,7 +174,7 @@
         Mixpanel *mixpanel = [Mixpanel sharedInstance];
         [mixpanel track:@"Opened Twitter link" properties:nil];
         
-    } else if (indexPath.section == 1 && indexPath.row == 2) {
+    } else if (indexPath.section == 2 && indexPath.row == 2) {
         
         Mixpanel *mixpanel = [Mixpanel sharedInstance];
         [mixpanel track:@"Opened Rate on the App Store" properties:nil];

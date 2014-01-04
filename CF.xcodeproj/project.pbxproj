@@ -27,6 +27,7 @@
 		7C6CE7F91877B7C700DDEF54 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C6CE7F81877B7C700DDEF54 /* AVFoundation.framework */; };
 		7C6CE7FB1877B7D000DDEF54 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C6CE7FA1877B7D000DDEF54 /* MessageUI.framework */; };
 		7C6CE7FD1877B7DD00DDEF54 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C6CE7FC1877B7DD00DDEF54 /* StoreKit.framework */; };
+		7C6CE8001877D04A00DDEF54 /* CFStoreViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C6CE7FF1877D04A00DDEF54 /* CFStoreViewController.m */; };
 		7C7A15D61853EBF0002EE4C5 /* OLTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C7A15D51853EBF0002EE4C5 /* OLTextField.m */; };
 		7C7A15D818540966002EE4C5 /* pin-favorite@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7C7A15D718540966002EE4C5 /* pin-favorite@2x.png */; };
 		7C7A15DB18540E08002EE4C5 /* CFMoreContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C7A15DA18540E08002EE4C5 /* CFMoreContentViewController.m */; };
@@ -137,6 +138,8 @@
 		7C6CE7F81877B7C700DDEF54 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		7C6CE7FA1877B7D000DDEF54 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		7C6CE7FC1877B7DD00DDEF54 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		7C6CE7FE1877D04A00DDEF54 /* CFStoreViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFStoreViewController.h; sourceTree = "<group>"; };
+		7C6CE7FF1877D04A00DDEF54 /* CFStoreViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFStoreViewController.m; sourceTree = "<group>"; };
 		7C7A15D41853EBF0002EE4C5 /* OLTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLTextField.h; sourceTree = "<group>"; };
 		7C7A15D51853EBF0002EE4C5 /* OLTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLTextField.m; sourceTree = "<group>"; };
 		7C7A15D718540966002EE4C5 /* pin-favorite@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pin-favorite@2x.png"; sourceTree = "<group>"; };
@@ -459,6 +462,8 @@
 				7CFF7EC518387735006230CE /* CFStopResultsViewController.m */,
 				7C7A15D918540E08002EE4C5 /* CFMoreContentViewController.h */,
 				7C7A15DA18540E08002EE4C5 /* CFMoreContentViewController.m */,
+				7C6CE7FE1877D04A00DDEF54 /* CFStoreViewController.h */,
+				7C6CE7FF1877D04A00DDEF54 /* CFStoreViewController.m */,
 				7C3B27C5183B1A6300818A3B /* Tabs */,
 			);
 			name = Controllers;
@@ -657,6 +662,7 @@
 				7C3B27C4183B194A00818A3B /* CFStopTableViewController.m in Sources */,
 				7C9A0F691852E9C60018ED1F /* NSDictionary+NSNullUtility.m in Sources */,
 				7C7A15DE1854DF54002EE4C5 /* CFNavigationController.m in Sources */,
+				7C6CE8001877D04A00DDEF54 /* CFStoreViewController.m in Sources */,
 				7CFF7E9E18382B1B006230CE /* UIDevice+hardware.m in Sources */,
 				7CFF7EBF18387010006230CE /* CFStopSignView.m in Sources */,
 				7CFF7EA518382D55006230CE /* CFStop.m in Sources */,
