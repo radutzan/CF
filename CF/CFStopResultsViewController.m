@@ -11,6 +11,7 @@
 #import "CFStopSignView.h"
 #import "CFResultCell.h"
 #import "CFNavigationController.h"
+#import "GADBannerView.h"
 
 @interface CFStopResultsViewController () <CFStopSignViewDelegate>
 
@@ -390,7 +391,7 @@
 
 - (float)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
-    return 0.0;
+    return 50.0;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
@@ -412,15 +413,12 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
 {
-    UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 80.0)];
+    GADBannerView *banner = [[GADBannerView alloc] initWithAdSize:kGADAdSizeBanner];
+    banner.rootViewController = self;
+    banner.adUnitID = @"ca-app-pub-6226087428684107/3340545274";
+    [banner loadRequest:[GADRequest request]];
     
-    UILabel *notice = [[UILabel alloc] initWithFrame:CGRectMake(15.0, 0, 90.0, 20.0)];
-    notice.text = NSLocalizedString(@"SERVICE", nil);
-    notice.font = [UIFont systemFontOfSize:13.0];
-    notice.textColor = [UIColor whiteColor];
-    [footerView addSubview:notice];
-    
-    return nil;
+    return banner;
 }
 
 @end
