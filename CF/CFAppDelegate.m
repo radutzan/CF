@@ -8,6 +8,7 @@
 
 #import "CFAppDelegate.h"
 #import <Mixpanel/Mixpanel.h>
+#import "OLCashier.h"
 
 @implementation CFAppDelegate
 
@@ -19,6 +20,21 @@
     self.window.rootViewController = [[CFNavigationController alloc] initWithNavigationBarClass:[CFNavigationBar class] toolbarClass:nil];
     self.window.tintColor = [UIColor colorWithHue:130.0/360.0 saturation:0.9 brightness:0.9 alpha:1];
     [self.window makeKeyAndVisible];
+    
+    OLCashier *cashier = [OLCashier defaultCashier];
+    
+    [cashier setDefaultTransactionHandler:^(NSError *error, NSArray *transactions, NSDictionary *userInfo){
+        SKPaymentTransaction *transaction = transactions.firstObject;
+        if (error) {
+#warning Handle Error
+            return;
+        }
+#warning Handle successful purchase.
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:transaction.payment.productIdentifier];
+        [transaction finish];
+    }];
+    
+    [cashier setProductsWithIdentifiers:[NSSet setWithObjects:@"CF01", @"CF02", nil] handler:NULL];
     
     [Mixpanel sharedInstanceWithToken:@"9fda86f01e8e8821542524d96b1f7cfb"];
     

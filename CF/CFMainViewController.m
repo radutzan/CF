@@ -7,6 +7,7 @@
 //
 
 #import <Mixpanel/Mixpanel.h>
+#import "OLCashier.h"
 #import "CFMainViewController.h"
 #import "CFMapController.h"
 #import "CFSapoClient.h"
@@ -136,7 +137,7 @@
     [self.historyButton addGestureRecognizer:clearHistory];
     
     // ese booleano po
-    self.mapEnabled = NO;
+    self.mapEnabled = [OLCashier hasProduct:@"CF01"];
     
     self.openMapButton = [UIButton buttonWithType:UIButtonTypeCustom];
     self.openMapButton.frame = CGRectMake(0, 45.0, self.view.bounds.size.width, 95.0);
@@ -505,8 +506,17 @@
 
 - (void)purchaseMap
 {
-    UIAlertView *buyMap = [[UIAlertView alloc] initWithTitle:@"Buy Bitch" message:@"Aight" delegate:self cancelButtonTitle:@"Nah" otherButtonTitles:@"Buy", nil];
-    [buyMap show];
+    NSString *mapIdentifier = @"CF01";
+    [[OLCashier defaultCashier] buyProduct:mapIdentifier handler:^(NSError *error, NSArray *transactions, NSDictionary *userInfo) {
+        SKPaymentTransaction *transaction = transactions.firstObject;
+        if (error) {
+#warning Handle Error
+            return;
+        }
+#warning Handle successful purchase.
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:mapIdentifier];
+        [transaction finish];
+    }];
     
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     [mixpanel track:@"Triggered Map Purchase" properties:nil];

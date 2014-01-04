@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5A11D7751877A2BA001118F6 /* OLCashier.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A11D7701877A2BA001118F6 /* OLCashier.m */; };
+		5A11D7761877A2BA001118F6 /* OLPaymentQueueDispatchObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A11D7721877A2BA001118F6 /* OLPaymentQueueDispatchObserver.m */; };
+		5A11D7771877A2BA001118F6 /* OLProductRequestDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A11D7741877A2BA001118F6 /* OLProductRequestDelegate.m */; };
 		638E7104AF714820AFC7F0D0 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 87FD0B9EF07342C68E7A06CC /* libPods.a */; };
 		7C10B96F183ADD200086B650 /* CFFavoritesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C10B96E183ADD200086B650 /* CFFavoritesViewController.m */; };
 		7C10B972183ADD2A0086B650 /* CFHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C10B971183ADD2A0086B650 /* CFHistoryViewController.m */; };
@@ -85,6 +88,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5A11D76F1877A2BA001118F6 /* OLCashier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLCashier.h; sourceTree = "<group>"; };
+		5A11D7701877A2BA001118F6 /* OLCashier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLCashier.m; sourceTree = "<group>"; };
+		5A11D7711877A2BA001118F6 /* OLPaymentQueueDispatchObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPaymentQueueDispatchObserver.h; sourceTree = "<group>"; };
+		5A11D7721877A2BA001118F6 /* OLPaymentQueueDispatchObserver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPaymentQueueDispatchObserver.m; sourceTree = "<group>"; };
+		5A11D7731877A2BA001118F6 /* OLProductRequestDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLProductRequestDelegate.h; sourceTree = "<group>"; };
+		5A11D7741877A2BA001118F6 /* OLProductRequestDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLProductRequestDelegate.m; sourceTree = "<group>"; };
 		7C10B96D183ADD200086B650 /* CFFavoritesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFFavoritesViewController.h; sourceTree = "<group>"; };
 		7C10B96E183ADD200086B650 /* CFFavoritesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFFavoritesViewController.m; sourceTree = "<group>"; };
 		7C10B970183ADD2A0086B650 /* CFHistoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFHistoryViewController.h; sourceTree = "<group>"; };
@@ -215,6 +224,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5A11D7581877A278001118F6 /* Cashier */ = {
+			isa = PBXGroup;
+			children = (
+				5A11D76F1877A2BA001118F6 /* OLCashier.h */,
+				5A11D7701877A2BA001118F6 /* OLCashier.m */,
+				5A11D7711877A2BA001118F6 /* OLPaymentQueueDispatchObserver.h */,
+				5A11D7721877A2BA001118F6 /* OLPaymentQueueDispatchObserver.m */,
+				5A11D7731877A2BA001118F6 /* OLProductRequestDelegate.h */,
+				5A11D7741877A2BA001118F6 /* OLProductRequestDelegate.m */,
+			);
+			name = Cashier;
+			sourceTree = "<group>";
+		};
 		7C3B27C5183B1A6300818A3B /* Tabs */ = {
 			isa = PBXGroup;
 			children = (
@@ -407,6 +429,7 @@
 		7CFF7E9F18382B25006230CE /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				5A11D7581877A278001118F6 /* Cashier */,
 				7CFF7EA018382B4D006230CE /* CFSapoClient.h */,
 				7CFF7EA118382B4D006230CE /* CFSapoClient.m */,
 				7CFF7E9318382B01006230CE /* CLLocation+UTMUtilities.h */,
@@ -577,6 +600,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5A11D7751877A2BA001118F6 /* OLCashier.m in Sources */,
 				7CF7EE4F1852D790009B3F46 /* CFBipSpot.m in Sources */,
 				7C10B975183ADD320086B650 /* CFMoreViewController.m in Sources */,
 				7CFF7E811838288C006230CE /* SMCalloutView.m in Sources */,
@@ -586,8 +610,10 @@
 				7CFF7E9E18382B1B006230CE /* UIDevice+hardware.m in Sources */,
 				7CFF7EBF18387010006230CE /* CFStopSignView.m in Sources */,
 				7CFF7EA518382D55006230CE /* CFStop.m in Sources */,
+				5A11D7761877A2BA001118F6 /* OLPaymentQueueDispatchObserver.m in Sources */,
 				7CFF7EB81838614C006230CE /* CFEnterStopCodeView.m in Sources */,
 				7CFF7E5118381645006230CE /* main.m in Sources */,
+				5A11D7771877A2BA001118F6 /* OLProductRequestDelegate.m in Sources */,
 				7CFF7E9D18382B1B006230CE /* NSString+Digest.m in Sources */,
 				7CFF7E5518381645006230CE /* CFAppDelegate.m in Sources */,
 				7C7A15D61853EBF0002EE4C5 /* OLTextField.m in Sources */,
