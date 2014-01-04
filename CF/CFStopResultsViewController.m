@@ -22,8 +22,11 @@
 @property (nonatomic, strong) UIButton *favoriteButton;
 @property (nonatomic, strong) NSMutableArray *responseEstimation;
 @property (nonatomic, strong) NSMutableArray *finalData;
-@property (assign) BOOL refreshing;
-@property (assign) BOOL removedAds;
+@property (nonatomic, strong) GADRequest *adRequest;
+@property (nonatomic, strong) GADBannerView *bannerView;
+@property (nonatomic, assign) BOOL refreshing;
+@property (nonatomic, assign) BOOL removedAds;
+@property (nonatomic) CGFloat initialBannerCenterX;
 
 @end
 
@@ -73,6 +76,19 @@
     [self.favoriteButton setImage:[UIImage imageNamed:@"button-favorites-selected"] forState:UIControlStateSelected];
     [self.favoriteButton addTarget:self action:@selector(favButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     [earFuck addSubview:self.favoriteButton];
+    
+    if (!self.removedAds) {
+        self.bannerView = [[GADBannerView alloc] initWithAdSize:kGADAdSizeSmartBannerPortrait];
+        self.bannerView.rootViewController = self;
+        self.bannerView.adUnitID = @"ca-app-pub-6226087428684107/3340545274";
+        
+        self.adRequest = [GADRequest request];
+        self.adRequest.testDevices = @[@"f6e9cd9f495b43d1f85bc352988acb31", GAD_SIMULATOR_ID];
+        [self.bannerView loadRequest:self.adRequest];
+        
+        UIPanGestureRecognizer *removeAds = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleAdsPan:)];
+        [self.bannerView addGestureRecognizer:removeAds];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -224,6 +240,9 @@
     [self updateHistory];
     [self performStopRequest];
     [self.refreshControl beginRefreshing];
+    
+    [self.adRequest setLocationWithLatitude:self.stop.coordinate.latitude longitude:self.stop.coordinate.longitude accuracy:0];
+    [self.bannerView loadRequest:self.adRequest];
 }
 
 - (void)performStopRequest
@@ -424,20 +443,40 @@
 {
     if (self.removedAds) return nil;
     
-    GADBannerView *banner = [[GADBannerView alloc] initWithAdSize:kGADAdSizeBanner];
-    banner.rootViewController = self;
-    banner.adUnitID = @"ca-app-pub-6226087428684107/3340545274";
-    
-    GADRequest *request = [GADRequest request];
-    request.testDevices = @[@"f6e9cd9f495b43d1f85bc352988acb31", GAD_SIMULATOR_ID];
-    [banner loadRequest:request];
-    
-    return banner;
+    return self.bannerView;
 }
 
 #pragma mark - Store
 
+- (BOOL)removedAds
+{
+    return [OLCashier hasProduct:@"CF02"];
+}
 
+- (void)handleAdsPan:(UIPanGestureRecognizer *)recognizer
+{
+    CGFloat gripTranslation = [recognizer translationInView:self.tableView].x;
+    
+    if (recognizer.state == UIGestureRecognizerStateBegan) {
+        self.initialBannerCenterX = self.bannerView.center.x;
+        
+        Mixpanel *mixpanel = [Mixpanel sharedInstance];
+        [mixpanel track:@"Used Ad Drag Gesture" properties:nil];
+        
+    } else if (recognizer.state == UIGestureRecognizerStateChanged) {
+        CGPoint bannerCenter;
+        bannerCenter.x = self.initialBannerCenterX + gripTranslation;
+        bannerCenter.y = self.bannerView.center.y;
+        
+        self.bannerView.center = bannerCenter;
+        
+    } else if (recognizer.state == UIGestureRecognizerStateEnded) {
+        [self removeAds];
+        [UIView animateWithDuration:0.65 delay:0.0 usingSpringWithDamping:0.4 initialSpringVelocity:0.3 options:0 animations:^{
+            self.bannerView.center = CGPointMake(self.view.center.x, self.bannerView.center.y);
+        } completion:nil];
+    }
+}
 
 - (void)removeAds
 {
@@ -464,6 +503,14 @@
         
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:noAdsIdentifier];
         [transaction finish];
+        
+        [UIView animateWithDuration:0.25 animations:^{
+            self.bannerView.frame = CGRectMake(0, self.view.bounds.size.height, self.bannerView.bounds.size.width, self.bannerView.bounds.size.width);
+            self.bannerView.alpha = 0;
+        } completion:^(BOOL finished) {
+            self.bannerView.hidden = YES;
+            [self.tableView reloadData];
+        }];
         
         OLGhostAlertView *thanks = [[OLGhostAlertView alloc] initWithTitle:NSLocalizedString(@"STORE_THANK_YOU_TITLE", nil) message:NSLocalizedString(@"STORE_THANK_YOU_MESSAGE_ADS", nil)];
         thanks.position = OLGhostAlertViewPositionCenter;

@@ -49,7 +49,7 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 2;
+    return 3;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -69,16 +69,20 @@
     
     if (indexPath.section == 0)
         thisIdentifier = @"CF01";
-    else
+    else if (indexPath.section == 1)
         thisIdentifier = @"CF02";
     
-    SKProduct *currentProduct = [[[OLCashier defaultCashier] products] productForIdentifier:thisIdentifier];
-    
-    cell.textLabel.text = currentProduct.localizedTitle;
-    
-    NSString *priceOrNot = [currentProduct.price stringValue];
-    if ([OLCashier hasProduct:thisIdentifier]) priceOrNot = NSLocalizedString(@"PURCHASED", nil);
-    cell.detailTextLabel.text = priceOrNot;
+    if (indexPath.section == 0 || indexPath.section == 1) {
+        SKProduct *currentProduct = [[[OLCashier defaultCashier] products] productForIdentifier:thisIdentifier];
+        
+        cell.textLabel.text = currentProduct.localizedTitle;
+        
+        NSString *priceOrNot = [currentProduct.price stringValue];
+        if ([OLCashier hasProduct:thisIdentifier]) priceOrNot = NSLocalizedString(@"PURCHASED", nil);
+        cell.detailTextLabel.text = priceOrNot;
+    } else {
+        cell.textLabel.text = NSLocalizedString(@"STORE_RESTORE", nil);
+    }
     
     return cell;
 }
@@ -91,7 +95,7 @@
     
     if (indexPath.section == 0)
         thisIdentifier = @"CF01";
-    else
+    else if (indexPath.section == 1)
         thisIdentifier = @"CF02";
     
     if ([OLCashier hasProduct:thisIdentifier]) return;
@@ -101,38 +105,63 @@
     [wait show];
     
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
-    [mixpanel track:@"Triggered Purchase in Store"];
     
-    [[OLCashier defaultCashier] buyProduct:thisIdentifier handler:^(NSError *error, NSArray *transactions, NSDictionary *userInfo) {
-        SKPaymentTransaction *transaction = transactions.firstObject;
-        [wait hide];
+    if (indexPath.section == 0 || indexPath.section == 1) {
+        [mixpanel track:@"Triggered Purchase in Store"];
         
-        if (error) {
-            UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"STORE_ERROR_TITLE", nil) message:[NSString stringWithFormat:@"%@. %@", error.localizedDescription, NSLocalizedString(@"STORE_ERROR_MESSAGE", nil)] delegate:self cancelButtonTitle:NSLocalizedString(@"ERROR_DISMISS", nil) otherButtonTitles:nil];
-            [errorAlert show];
+        [[OLCashier defaultCashier] buyProduct:thisIdentifier handler:^(NSError *error, NSArray *transactions, NSDictionary *userInfo) {
+            SKPaymentTransaction *transaction = transactions.firstObject;
+            [wait hide];
+            
+            if (error) {
+                UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"STORE_ERROR_TITLE", nil) message:[NSString stringWithFormat:@"%@. %@", error.localizedDescription, NSLocalizedString(@"STORE_ERROR_MESSAGE", nil)] delegate:self cancelButtonTitle:NSLocalizedString(@"ERROR_DISMISS", nil) otherButtonTitles:nil];
+                [errorAlert show];
+                
+                if (indexPath.section == 0) {
+                    [mixpanel track:@"Failed to Purchase Map"];
+                } else {
+                    [mixpanel track:@"Failed to Purchase Ad Removal"];
+                }
+                return;
+            }
+            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:thisIdentifier];
+            [transaction finish];
+            
+            OLGhostAlertView *thanks = [[OLGhostAlertView alloc] initWithTitle:NSLocalizedString(@"STORE_THANK_YOU_TITLE", nil) message:NSLocalizedString(@"STORE_THANK_YOU_MESSAGE_MAP", nil)];
+            if (indexPath.section == 1) thanks.message = NSLocalizedString(@"STORE_THANK_YOU_MESSAGE_ADS", nil);
+            thanks.position = OLGhostAlertViewPositionCenter;
+            [thanks show];
             
             if (indexPath.section == 0) {
-                [mixpanel track:@"Failed to Purchase Map"];
+                [mixpanel track:@"Purchased Map"];
+                [mixpanel registerSuperProperties:@{@"Has Map": @"Yes"}];
             } else {
-                [mixpanel track:@"Failed to Purchase Ad Removal"];
+                [mixpanel track:@"Removed Ads"];
             }
-            return;
-        }
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:thisIdentifier];
-        [transaction finish];
+        }];
+    } else {
+        [mixpanel track:@"Triggered Restore Purchases"];
         
-        OLGhostAlertView *thanks = [[OLGhostAlertView alloc] initWithTitle:NSLocalizedString(@"STORE_THANK_YOU_TITLE", nil) message:NSLocalizedString(@"STORE_THANK_YOU_MESSAGE_MAP", nil)];
-        if (indexPath.section == 1) thanks.message = NSLocalizedString(@"STORE_THANK_YOU_MESSAGE_ADS", nil);
-        thanks.position = OLGhostAlertViewPositionCenter;
-        [thanks show];
-        
-        if (indexPath.section == 0) {
-            [mixpanel track:@"Purchased Map"];
-            [mixpanel registerSuperProperties:@{@"Has Map": @"Yes"}];
-        } else {
-            [mixpanel track:@"Removed Ads"];
-        }
-    }];
+        [[OLCashier defaultCashier] restoreCompletedTransactions:^(NSError *error, NSArray *transactions, NSDictionary *userInfo) {
+            [wait hide];
+            
+            if (error) {
+                UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"STORE_ERROR_TITLE", nil) message:[NSString stringWithFormat:@"%@. %@", error.localizedDescription, NSLocalizedString(@"STORE_ERROR_MESSAGE", nil)] delegate:self cancelButtonTitle:NSLocalizedString(@"ERROR_DISMISS", nil) otherButtonTitles:nil];
+                [errorAlert show];
+                
+                [mixpanel track:@"Failed to Restore Purchases"];
+                
+                return;
+            }
+            
+            for (SKPaymentTransaction *transaction in transactions) {
+                [[NSUserDefaults standardUserDefaults] setBool:YES forKey:transaction.payment.productIdentifier];
+                [transaction finish];
+            }
+            
+            [mixpanel track:@"Successfully Restored Purchases"];
+        }];
+    }
 }
 
 @end

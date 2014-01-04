@@ -21,6 +21,7 @@
 "TOUCH_HERE_TO" = "Toca aquí para";
 "BUY_MAP_BUTTON" = "Comprar el Mapa";
 
+"STORE_RESTORE" = "Restaurar Compras";
 "STORE_ERROR_TITLE" = "Hubo un error con la compra";
 "STORE_ERROR_MESSAGE" = "Por favor, inténtalo de nuevo.";
 "STORE_WAIT_TITLE" = "Calmao…";

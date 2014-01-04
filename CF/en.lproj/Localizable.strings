@@ -21,6 +21,7 @@
 "TOUCH_HERE_TO" = "Touch here to";
 "BUY_MAP_BUTTON" = "Buy the Stops Map";
 
+"STORE_RESTORE" = "Restore Purchases";
 "STORE_ERROR_TITLE" = "There was an error with your purchase";
 "STORE_ERROR_MESSAGE" = "Please try again.";
 "STORE_WAIT_TITLE" = "Please wait…";
