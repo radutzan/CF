@@ -14,12 +14,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    // Override point for customization after application launch.
-    self.window.backgroundColor = [UIColor whiteColor];
-    self.window.rootViewController = [[CFNavigationController alloc] initWithNavigationBarClass:[CFNavigationBar class] toolbarClass:nil];
-    self.window.tintColor = [UIColor colorWithHue:130.0/360.0 saturation:0.9 brightness:0.9 alpha:1];
-    [self.window makeKeyAndVisible];
+    [Mixpanel sharedInstanceWithToken:@"9fda86f01e8e8821542524d96b1f7cfb"];
     
     OLCashier *cashier = [OLCashier defaultCashier];
     
@@ -34,8 +29,13 @@
     }];
     
     [cashier setProductsWithIdentifiers:[NSSet setWithObjects:@"CF01", @"CF02", nil] handler:NULL];
-    
-    [Mixpanel sharedInstanceWithToken:@"9fda86f01e8e8821542524d96b1f7cfb"];
+
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    // Override point for customization after application launch.
+    self.window.backgroundColor = [UIColor whiteColor];
+    self.window.rootViewController = [[CFNavigationController alloc] initWithNavigationBarClass:[CFNavigationBar class] toolbarClass:nil];
+    self.window.tintColor = [UIColor colorWithHue:130.0/360.0 saturation:0.9 brightness:0.9 alpha:1];
+    [self.window makeKeyAndVisible];
     
     return YES;
 }

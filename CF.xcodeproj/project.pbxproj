@@ -840,7 +840,7 @@
 				INFOPLIST_FILE = "CF/CF-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/radutzan/Proyectos/Onda/sources/CF/CF,
+					../CF/CF,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "armv7 armv7s";
@@ -859,7 +859,7 @@
 				INFOPLIST_FILE = "CF/CF-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/radutzan/Proyectos/Onda/sources/CF/CF,
+					../CF/CF,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "armv7 armv7s";

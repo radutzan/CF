@@ -494,7 +494,7 @@
         [wait hide];
         
         if (error) {
-            UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"STORE_ERROR_TITLE", nil) message:[NSString stringWithFormat:@"%@. %@", error.localizedDescription, NSLocalizedString(@"STORE_ERROR_MESSAGE", nil)] delegate:self cancelButtonTitle:NSLocalizedString(@"ERROR_DISMISS", nil) otherButtonTitles:nil];
+            UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"STORE_ERROR_TITLE", nil) message:[NSString stringWithFormat:@"%@.\n%@", error.localizedDescription, NSLocalizedString(@"STORE_ERROR_MESSAGE", nil)] delegate:self cancelButtonTitle:NSLocalizedString(@"ERROR_DISMISS", nil) otherButtonTitles:nil];
             [errorAlert show];
             
             [mixpanel track:@"Failed to Purchase Ad Removal"];
