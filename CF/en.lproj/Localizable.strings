@@ -17,19 +17,21 @@
 "TO_MINS" = "to";
 "MAP_SEARCHFIELD_PLACEHOLDER" = "Places or address";
 "CLEAR_ALL_HISTORY" = "Clear All History";
+"ERROR_MESSAGE_TRY_AGAIN" = "Please try again.";
 
 "TOUCH_HERE_TO" = "Touch here to";
 "BUY_MAP_BUTTON" = "Buy the Stops Map";
 
 "STORE_RESTORE" = "Restore Purchases";
+"STORE_RESTORE_DESCRIPTION" = "If you've already purchased all or some of the items and they don't appear as purchased, restore them with this option.";
 "STORE_ERROR_TITLE" = "There was an error with your purchase";
-"STORE_ERROR_MESSAGE" = "Please try again.";
 "STORE_WAIT_TITLE" = "Please wait…";
 "STORE_WAIT_MESSAGE" = "Give it a second. It's going to space!";
 "STORE_THANK_YOU_TITLE" = "Thank you.";
 "STORE_THANK_YOU_MESSAGE_MAP" = "We hope you find the Stops Map useful.";
 "STORE_THANK_YOU_MESSAGE_ADS" = "Doesn't it feel great to get rid of those pesky ads?";
 
+"STOP_ERROR_TITLE" = "Couldn't check stop";
 "INVALID_STOP_CODE_TITLE" = "Invalid Stop Code";
 "INVALID_STOP_CODE_MESSAGE" = "Please make sure you entered it correctly. It needs to include the P, a letter and a number with up to 4 digits, without spaces.";
 "ZOOM_LEVEL_WARNING_TITLE" = "You're too far away";
@@ -51,6 +53,7 @@
 "PURCHASED" = "Purchased";
 "DISMISS" = "Dismiss";
 "ERROR_DISMISS" = "Dang";
+"LOADING" = "Loading…";
 
 "HELP" = "Help";
 "ABOUT" = "About";
