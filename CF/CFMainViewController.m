@@ -42,6 +42,7 @@
 @property (nonatomic, strong) UIButton *moreButton;
 @property (nonatomic, strong) UIImageView *logoView;
 @property (nonatomic, assign) CGFloat initialContentCenterY;
+@property (nonatomic, assign) CLLocationCoordinate2D mapLocationCoordinate;
 @property (nonatomic, assign) BOOL mapMode;
 @property (nonatomic, assign) BOOL mapEnabled;
 
@@ -282,6 +283,7 @@
         buyMapBackground.barStyle = UIBarStyleBlack;
         buyMapBackground.layer.cornerRadius = 4.0;
         buyMapBackground.layer.masksToBounds = YES;
+        buyMapBackground.userInteractionEnabled = NO;
         [self.openMapButton addSubview:buyMapBackground];
         [self.openMapButton addSubview:buyMapLabel];
     }
@@ -484,10 +486,9 @@
 {
     CGFloat gripTranslation = [recognizer translationInView:self.contentView].y;
     
-    CLLocationCoordinate2D center = self.mapController.mapView.userLocation.coordinate;
-    
     if (recognizer.state == UIGestureRecognizerStateBegan) {
         self.initialContentCenterY = self.contentView.center.y;
+        self.mapLocationCoordinate = self.mapController.mapView.userLocation.coordinate;
         
         [self.view endEditing:YES];
         
@@ -498,6 +499,8 @@
         CGPoint contentCenter;
         contentCenter.x = self.contentView.center.x;
         contentCenter.y = self.initialContentCenterY + gripTranslation;
+        
+        CLLocationCoordinate2D mapCenter = self.mapLocationCoordinate;
         
         CGFloat buttonHeight = 95.0 + gripTranslation;
         
@@ -510,8 +513,8 @@
             self.scrollView.alpha = appliedFactor;
             self.gripper.alpha = appliedFactor;
 //            self.openMapButton.alpha = appliedFactor;
-            center.latitude -= self.mapController.mapView.region.span.latitudeDelta * (0.36 * appliedFactor);
-            self.mapController.mapView.centerCoordinate = center;
+            mapCenter.latitude -= self.mapController.mapView.region.span.latitudeDelta * (0.36 * appliedFactor);
+            self.mapController.mapView.centerCoordinate = mapCenter;
         }
         
     } else if (recognizer.state == UIGestureRecognizerStateEnded) {
