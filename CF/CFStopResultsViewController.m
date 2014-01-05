@@ -221,7 +221,7 @@
                                               [errorAlert show];
                                               
                                               Mixpanel *mixpanel = [Mixpanel sharedInstance];
-                                              [mixpanel track:@"Failed Stop Data Request" properties:@{@"Code": stopCode, @"Error": error}];
+                                              [mixpanel track:@"Failed Stop Data Request" properties:@{@"Code": stopCode, @"Error": error.debugDescription}];
                                               
                                               [self.navigationController popViewControllerAnimated:YES];
                                           }
@@ -277,7 +277,7 @@
                                                    [errorAlert show];
                                                    
                                                    Mixpanel *mixpanel = [Mixpanel sharedInstance];
-                                                   [mixpanel track:@"Failed Estimation Request" properties:@{@"Code": self.stop.code, @"Error": error}];
+                                                   [mixpanel track:@"Failed Estimation Request" properties:@{@"Code": self.stop.code, @"Error": error.debugDescription}];
                                                }
                                            }];
 }

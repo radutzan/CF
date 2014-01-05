@@ -24,7 +24,6 @@
     [cashier setDefaultTransactionHandler:^(NSError *error, NSArray *transactions, NSDictionary *userInfo){
         SKPaymentTransaction *transaction = transactions.firstObject;
         if (error) {
-            NSLog(@"%@", error);
             return;
         }
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:transaction.payment.productIdentifier];
@@ -34,8 +33,6 @@
     [cashier setProductsWithIdentifiers:[NSSet setWithObjects:@"CF01", @"CF02", nil] handler:NULL];
 
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    // Override point for customization after application launch.
-    self.window.backgroundColor = [UIColor whiteColor];
     self.window.rootViewController = [[CFNavigationController alloc] initWithNavigationBarClass:[CFNavigationBar class] toolbarClass:nil];
     self.window.tintColor = [UIColor colorWithHue:130.0/360.0 saturation:0.9 brightness:0.9 alpha:1];
     [self.window makeKeyAndVisible];

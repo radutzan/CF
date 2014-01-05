@@ -21,6 +21,7 @@
 		7C5DD33A1879079E00FE5CFB /* CFBackgroundlessSystemButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C5DD3391879079E00FE5CFB /* CFBackgroundlessSystemButton.m */; };
 		7C5DD34118791F6900FE5CFB /* dsym_upload.sh in Resources */ = {isa = PBXBuildFile; fileRef = 7C5DD33F18791F6900FE5CFB /* dsym_upload.sh */; };
 		7C5DD34218791F6900FE5CFB /* libCrittercism_v4_3_0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C5DD34018791F6900FE5CFB /* libCrittercism_v4_3_0.a */; };
+		7C5DD3441879234F00FE5CFB /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C5DD3431879234F00FE5CFB /* SystemConfiguration.framework */; };
 		7C5FD9CE184F8B140099FEE2 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7C5FD9CC184F8B140099FEE2 /* Localizable.strings */; };
 		7C6CE7CC1877450D00DDEF54 /* CFClipView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C6CE7CB1877450D00DDEF54 /* CFClipView.m */; };
 		7C6CE7CF187751FB00DDEF54 /* CFColorBadgeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C6CE7CE187751FB00DDEF54 /* CFColorBadgeView.m */; };
@@ -125,6 +126,7 @@
 		7C5DD33E18791F6900FE5CFB /* CrittercismDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CrittercismDelegate.h; sourceTree = "<group>"; };
 		7C5DD33F18791F6900FE5CFB /* dsym_upload.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = dsym_upload.sh; sourceTree = "<group>"; };
 		7C5DD34018791F6900FE5CFB /* libCrittercism_v4_3_0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libCrittercism_v4_3_0.a; sourceTree = "<group>"; };
+		7C5DD3431879234F00FE5CFB /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		7C5FD9CD184F8B140099FEE2 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		7C5FD9CF184F8B5F0099FEE2 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		7C5FD9D0184F8B5F0099FEE2 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -236,6 +238,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7C5DD3441879234F00FE5CFB /* SystemConfiguration.framework in Frameworks */,
 				7C6CE7FD1877B7DD00DDEF54 /* StoreKit.framework in Frameworks */,
 				7C6CE7FB1877B7D000DDEF54 /* MessageUI.framework in Frameworks */,
 				7C6CE7F91877B7C700DDEF54 /* AVFoundation.framework in Frameworks */,
@@ -369,6 +372,7 @@
 		7CFF7E4318381645006230CE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7C5DD3431879234F00FE5CFB /* SystemConfiguration.framework */,
 				7C6CE7FC1877B7DD00DDEF54 /* StoreKit.framework */,
 				7C6CE7FA1877B7D000DDEF54 /* MessageUI.framework */,
 				7C6CE7F81877B7C700DDEF54 /* AVFoundation.framework */,
