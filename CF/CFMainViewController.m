@@ -27,6 +27,7 @@
 @property (nonatomic, strong) CFEnterStopCodeView *enterStopCodeView;
 @property (nonatomic, strong) CFFavoritesViewController *favoritesController;
 @property (nonatomic, strong) CFHistoryViewController *historyController;
+@property (nonatomic, strong) CFMoreViewController *moreController;
 @property (nonatomic, strong) UIView *favoritesPlaceholder;
 @property (nonatomic, strong) UIView *historyPlaceholder;
 @property (nonatomic, strong) UIView *contentView;
@@ -155,23 +156,8 @@
     
     self.openMapButton = [UIButton buttonWithType:UIButtonTypeCustom];
     self.openMapButton.frame = CGRectMake(0, 45.0, self.view.bounds.size.width, 95.0);
-    self.openMapButton.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    self.openMapButton.contentVerticalAlignment = UIControlContentVerticalAlignmentTop;
     [self.view addSubview:self.openMapButton];
-    
-    if (self.mapEnabled) {
-        [self.openMapButton addTarget:self action:@selector(switchToMap) forControlEvents:UIControlEventTouchUpInside];
-    } else {
-        self.openMapButton.backgroundColor = [UIColor colorWithWhite:0 alpha:0.4];
-        [self.openMapButton addTarget:self action:@selector(purchaseMap) forControlEvents:UIControlEventTouchUpInside];
-        
-        UILabel *buyMapLabel = [[UILabel alloc] initWithFrame:self.openMapButton.bounds];
-        buyMapLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:27.0];
-        buyMapLabel.textColor = [UIColor colorWithWhite:1 alpha:1];
-        buyMapLabel.textAlignment = NSTextAlignmentCenter;
-        buyMapLabel.text = NSLocalizedString(@"BUY_MAP_BUTTON", nil);
-        buyMapLabel.autoresizingMask = UIViewAutoresizingFlexibleHeight;
-        [self.openMapButton addSubview:buyMapLabel];
-    }
     
     [self registerForKeyboardNotifications];
 }
@@ -208,10 +194,10 @@
     
     [self initPlaceholders];
     
-    CFMoreViewController *moreController = [[CFMoreViewController alloc] initWithStyle:UITableViewStyleGrouped];
-    moreController.view.frame = CGRectMake(self.scrollView.bounds.size.width * 3, 0, self.scrollView.bounds.size.width, self.scrollView.bounds.size.height);
-    [self addChildViewController:moreController];
-    [self.scrollView addSubview:moreController.view];
+    self.moreController = [[CFMoreViewController alloc] initWithStyle:UITableViewStyleGrouped];
+    self.moreController.view.frame = CGRectMake(self.scrollView.bounds.size.width * 3, 0, self.scrollView.bounds.size.width, self.scrollView.bounds.size.height);
+    [self addChildViewController:self.moreController];
+    [self.scrollView addSubview:self.moreController.view];
 }
 
 - (void)initPlaceholders
@@ -278,6 +264,26 @@
         self.contentView.frame = CGRectMake(0, 140.0, self.view.bounds.size.width, self.view.bounds.size.height - 140.0);
         
         [self tabButtonTapped:self.codeButton];
+    }
+    
+    if (self.mapEnabled) {
+        [self.openMapButton addTarget:self action:@selector(switchToMap) forControlEvents:UIControlEventTouchUpInside];
+    } else {
+        self.openMapButton.backgroundColor = [UIColor colorWithWhite:0 alpha:0.2];
+        [self.openMapButton addTarget:self action:@selector(purchaseMap) forControlEvents:UIControlEventTouchUpInside];
+        
+        UILabel *buyMapLabel = [[UILabel alloc] initWithFrame:CGRectMake(30.0, 25.0, 260.0, 45.0)];
+        buyMapLabel.font = [UIFont systemFontOfSize:18.0];
+        buyMapLabel.textColor = [UIColor colorWithHue:130.0/360.0 saturation:0.9 brightness:0.9 alpha:1];
+        buyMapLabel.textAlignment = NSTextAlignmentCenter;
+        buyMapLabel.text = NSLocalizedString(@"BUY_MAP_BUTTON", nil);
+        
+        UIToolbar *buyMapBackground = [[UIToolbar alloc] initWithFrame:buyMapLabel.frame];
+        buyMapBackground.barStyle = UIBarStyleBlack;
+        buyMapBackground.layer.cornerRadius = 4.0;
+        buyMapBackground.layer.masksToBounds = YES;
+        [self.openMapButton addSubview:buyMapBackground];
+        [self.openMapButton addSubview:buyMapLabel];
     }
     
     BOOL runBefore = [[NSUserDefaults standardUserDefaults] boolForKey:@"OLHasRunBefore"];
@@ -431,6 +437,9 @@
         
         [self.mapController.mapView setCenterCoordinate:self.mapController.mapView.userLocation.coordinate animated:YES];
         
+        Mixpanel *mixpanel = [Mixpanel sharedInstance];
+        [mixpanel track:@"Entered Map Mode" properties:nil];
+        
         for (UIButton *b in self.tabBar.subviews) {
             b.selected = NO;
             b.tintColor = nil;
@@ -500,7 +509,7 @@
             self.contentView.center = contentCenter;
             self.scrollView.alpha = appliedFactor;
             self.gripper.alpha = appliedFactor;
-            self.openMapButton.alpha = appliedFactor;
+//            self.openMapButton.alpha = appliedFactor;
             center.latitude -= self.mapController.mapView.region.span.latitudeDelta * (0.36 * appliedFactor);
             self.mapController.mapView.centerCoordinate = center;
         }
@@ -633,14 +642,17 @@
             
         case 1:
             [self selectTabButton:self.favoritesButton];
+            [self.favoritesController.tableView flashScrollIndicators];
             break;
             
         case 2:
             [self selectTabButton:self.historyButton];
+            [self.historyController.tableView flashScrollIndicators];
             break;
             
         case 3:
             [self selectTabButton:self.moreButton];
+            [self.moreController.tableView flashScrollIndicators];
             break;
             
         default:
@@ -722,6 +734,9 @@
         
         [self.historyController.tableView reloadData];
         self.historyPlaceholder.hidden = NO;
+        
+        Mixpanel *mixpanel = [Mixpanel sharedInstance];
+        [mixpanel track:@"Cleared History" properties:nil];
     }
 }
 
@@ -735,6 +750,9 @@
     [searchBar resignFirstResponder];
     [self.mapController hideDarkOverlay];
     [self.mapController performSearchWithString:searchBar.text];
+    
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    [mixpanel track:@"Searched in Map" properties:nil];
 }
 
 - (void)keyboardWasShown:(NSNotification*)aNotification

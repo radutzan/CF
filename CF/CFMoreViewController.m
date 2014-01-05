@@ -114,7 +114,7 @@
         [self.navigationController pushViewController:controller animated:YES];
         
         Mixpanel *mixpanel = [Mixpanel sharedInstance];
-        [mixpanel track:@"Opened Help" properties:nil];
+        [mixpanel track:@"Opened Help"];
         
     } else if (indexPath.section == 0 && indexPath.row == 1) {
         NSString *aboutPath = [[NSBundle mainBundle] pathForResource:@"about" ofType:@"html"];
@@ -127,7 +127,7 @@
         [self.navigationController pushViewController:controller animated:YES];
         
         Mixpanel *mixpanel = [Mixpanel sharedInstance];
-        [mixpanel track:@"Opened About" properties:nil];
+        [mixpanel track:@"Opened About"];
         
     } else if (indexPath.section == 0 && indexPath.row == 2) {
         NSString *appVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
@@ -140,11 +140,14 @@
         [self.navigationController pushViewController:controller animated:YES];
         
         Mixpanel *mixpanel = [Mixpanel sharedInstance];
-        [mixpanel track:@"Opened Send Feedback" properties:nil];
+        [mixpanel track:@"Opened Send Feedback"];
         
     } else if (indexPath.section == 1 && indexPath.row == 0) {
         CFStoreViewController *storeController = [[CFStoreViewController alloc] initWithStyle:UITableViewStyleGrouped];
         [self.navigationController pushViewController:storeController animated:YES];
+        
+        Mixpanel *mixpanel = [Mixpanel sharedInstance];
+        [mixpanel track:@"Opened Store"];
         
     } else if (indexPath.section == 2 && indexPath.row == 0) {
         NSArray *activityItems = [NSArray arrayWithObjects:NSLocalizedString(@"SHARE_TWEET_TEXT", nil), [NSURL URLWithString:@"https://itunes.apple.com/cl/app/id431174703"], nil];
@@ -156,7 +159,7 @@
         [self presentViewController:activityController animated:YES completion:NULL];
         
         Mixpanel *mixpanel = [Mixpanel sharedInstance];
-        [mixpanel track:@"Opened Share CF" properties:nil];
+        [mixpanel track:@"Opened Share CF"];
         
     } else if (indexPath.section == 2 && indexPath.row == 1) {
         NSURL *URL = nil;
@@ -172,12 +175,12 @@
         [[UIApplication sharedApplication] openURL:URL];
         
         Mixpanel *mixpanel = [Mixpanel sharedInstance];
-        [mixpanel track:@"Opened Twitter link" properties:nil];
+        [mixpanel track:@"Opened Follow Us link"];
         
     } else if (indexPath.section == 2 && indexPath.row == 2) {
         
         Mixpanel *mixpanel = [Mixpanel sharedInstance];
-        [mixpanel track:@"Opened Rate on the App Store" properties:nil];
+        [mixpanel track:@"Opened Rate on the App Store"];
         
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms-apps://itunes.apple.com/app/id431174703"]];
     }

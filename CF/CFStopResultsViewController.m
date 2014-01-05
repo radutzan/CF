@@ -225,6 +225,9 @@
                                               UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"STOP_ERROR_TITLE", nil) message:[NSString stringWithFormat:@"%@\n%@", error.localizedDescription, NSLocalizedString(@"ERROR_MESSAGE_TRY_AGAIN", nil)] delegate:self cancelButtonTitle:NSLocalizedString(@"ERROR_DISMISS", nil) otherButtonTitles:nil];
                                               [errorAlert show];
                                               
+                                              Mixpanel *mixpanel = [Mixpanel sharedInstance];
+                                              [mixpanel track:@"Failed Stop Data Request" properties:@{@"Code": stopCode, @"Error": error}];
+                                              
                                               [self.navigationController popViewControllerAnimated:YES];
                                           }
                                       }];
@@ -277,6 +280,9 @@
                                                    
                                                    UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"STOP_ERROR_TITLE", nil) message:[NSString stringWithFormat:@"%@\n%@", error.localizedDescription, NSLocalizedString(@"ERROR_MESSAGE_TRY_AGAIN", nil)] delegate:self cancelButtonTitle:NSLocalizedString(@"ERROR_DISMISS", nil) otherButtonTitles:nil];
                                                    [errorAlert show];
+                                                   
+                                                   Mixpanel *mixpanel = [Mixpanel sharedInstance];
+                                                   [mixpanel track:@"Failed Estimation Request" properties:@{@"Code": self.stop.code, @"Error": error}];
                                                }
                                            }];
 }
@@ -323,7 +329,7 @@
                     NSRange toRange = NSMakeRange(11, 2);
                     NSInteger fromMin = [[time substringWithRange:fromRange] integerValue];
                     NSInteger toMin = [[time substringWithRange:toRange] integerValue];
-                    finalTimeString =  [NSString stringWithFormat:@"%d %@ %d min.", fromMin, NSLocalizedString(@"TO_MINS", nil), toMin];
+                    finalTimeString =  [NSString stringWithFormat:@"%d %@ %d min", fromMin, NSLocalizedString(@"TO_MINS", nil), toMin];
                 } else {
                     finalTimeString = time;
                 }
@@ -469,7 +475,7 @@
         self.initialBannerCenterX = self.bannerView.center.x;
         
         Mixpanel *mixpanel = [Mixpanel sharedInstance];
-        [mixpanel track:@"Used Ad Drag Gesture" properties:nil];
+        [mixpanel track:@"Used Ad Drag Gesture"];
         
     } else if (recognizer.state == UIGestureRecognizerStateChanged) {
         CGPoint bannerCenter;

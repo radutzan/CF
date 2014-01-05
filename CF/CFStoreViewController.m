@@ -79,7 +79,7 @@
             return cell;
         }
         
-        NSString *priceOrNot = [currentProduct.price stringValue];
+        NSString *priceOrNot = [NSString stringWithFormat:@"$%@ %@", [currentProduct.price stringValue], NSLocalizedString(@"USD", nil)];
         if ([OLCashier hasProduct:thisIdentifier]) priceOrNot = NSLocalizedString(@"PURCHASED", nil);
         cell.detailTextLabel.text = priceOrNot;
         cell.detailTextLabel.textColor = self.view.tintColor;

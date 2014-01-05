@@ -20,7 +20,7 @@
 "ERROR_MESSAGE_TRY_AGAIN" = "Por favor, inténtalo de nuevo.";
 
 "TOUCH_HERE_TO" = "Toca aquí para";
-"BUY_MAP_BUTTON" = "Comprar el Mapa";
+"BUY_MAP_BUTTON" = "Comprar Mapa de Paradas";
 
 "STORE_RESTORE" = "Restaurar Compras";
 "STORE_RESTORE_DESCRIPTION" = "Si ya has comprado algunos o todos los ítems y no te aparecen, restaura tus compras.";
@@ -48,6 +48,7 @@
 "NAME_YOUR_FAVORITE" = "Ponle nombre";
 "NAMELESS_FAVORITE" = "Favorito sin nombre";
 
+"USD" = "dólares";
 "CANCEL" = "Cancelar";
 "BUY" = "Comprar";
 "PURCHASED" = "Comprado";
