@@ -77,7 +77,12 @@
         
         cell.textLabel.text = currentProduct.localizedTitle;
         
-        NSString *priceOrNot = [currentProduct.price stringValue];
+        NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+        [numberFormatter setFormatterBehavior:NSNumberFormatterBehavior10_4];
+        [numberFormatter setNumberStyle:NSNumberFormatterCurrencyStyle];
+        [numberFormatter setLocale:currentProduct.priceLocale];
+        NSString *priceOrNot = [numberFormatter stringFromNumber:currentProduct.price];
+        
         if ([OLCashier hasProduct:thisIdentifier]) priceOrNot = NSLocalizedString(@"PURCHASED", nil);
         cell.detailTextLabel.text = priceOrNot;
     } else {
