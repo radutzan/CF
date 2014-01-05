@@ -91,6 +91,12 @@
     self.scrollView.showsHorizontalScrollIndicator = NO;
     [self.contentView addSubview:self.scrollView];
     
+    CAGradientLayer *gradientMask = [CAGradientLayer layer];
+    gradientMask.colors = @[(id)[UIColor colorWithWhite:0 alpha:1].CGColor, (id)[UIColor colorWithWhite:0 alpha:0].CGColor];
+    gradientMask.locations = @[@0.996, @1];
+    gradientMask.frame = CGRectMake(0, 0, self.scrollView.bounds.size.width * 4, self.scrollView.bounds.size.height);
+    self.scrollView.layer.mask = gradientMask;
+    
     [self initTabs];
     
     self.gripper = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.contentView.bounds.size.width, 30)];
@@ -629,6 +635,24 @@
 {
     CGFloat newOffset = self.scrollView.frame.size.width * (1 - tabNumber);
     self.scrollView.contentOffset = CGPointMake(-newOffset, 0.0);
+    
+    switch (tabNumber) {
+        case 2:
+            [self.favoritesController.tableView flashScrollIndicators];
+            break;
+            
+        case 3:
+            [self.historyController.tableView flashScrollIndicators];
+            break;
+            
+        case 4:
+            [self.moreController.tableView flashScrollIndicators];
+            break;
+            
+        case 1:
+        default:
+            break;
+    }
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)sender
@@ -645,17 +669,14 @@
             
         case 1:
             [self selectTabButton:self.favoritesButton];
-            [self.favoritesController.tableView flashScrollIndicators];
             break;
             
         case 2:
             [self selectTabButton:self.historyButton];
-            [self.historyController.tableView flashScrollIndicators];
             break;
             
         case 3:
             [self selectTabButton:self.moreButton];
-            [self.moreController.tableView flashScrollIndicators];
             break;
             
         default:

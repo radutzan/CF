@@ -13,13 +13,14 @@
 #import "CFStopSignView.h"
 #import "CFResultCell.h"
 #import "CFNavigationController.h"
+#import "CFBackgroundlessSystemButton.h"
 #import "GADBannerView.h"
 #import "OLCashier.h"
 
 @interface CFStopResultsViewController () <CFStopSignViewDelegate>
 
 @property (nonatomic, strong) CFStopSignView *stopInfoView;
-@property (nonatomic, strong) UIButton *favoriteButton;
+@property (nonatomic, strong) CFBackgroundlessSystemButton *favoriteButton;
 @property (nonatomic, strong) NSMutableArray *responseEstimation;
 @property (nonatomic, strong) NSMutableArray *finalData;
 @property (nonatomic, strong) GADRequest *adRequest;
@@ -69,7 +70,7 @@
     [earFuck addSubview:self.stopInfoView];
     self.navigationItem.titleView = earFuck;
     
-    self.favoriteButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    self.favoriteButton = [CFBackgroundlessSystemButton buttonWithType:UIButtonTypeSystem];
     self.favoriteButton.frame = CGRectMake(earFuck.bounds.size.width - 38.0, -5.0, 42.0, 42.0);
     self.favoriteButton.enabled = NO;
     [self.favoriteButton setImage:[UIImage imageNamed:@"button-favorites"] forState:UIControlStateNormal];
@@ -110,7 +111,7 @@
 {
     [super viewDidAppear:animated];
     
-    [self.navigationController setNavigationBarHidden:NO];
+    [self.navigationController setNavigationBarHidden:NO animated:YES];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -123,6 +124,8 @@
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     [self.view endEditing:YES];
+    
+    [self.navigationController setNavigationBarHidden:NO];
 }
 
 #pragma mark - Favorites and history
@@ -163,14 +166,6 @@
                 self.stopInfoView.favoriteContentView.alpha = 1;
             } completion:nil];
         }];
-    }
-    
-    BOOL didKillImageView = NO;
-    for (UIView *view in sender.subviews) {
-        if ([view isKindOfClass:[UIImageView class]] && !didKillImageView) {
-            view.hidden = YES;
-            didKillImageView = YES;
-        }
     }
 }
 

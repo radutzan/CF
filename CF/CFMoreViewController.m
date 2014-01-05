@@ -65,9 +65,10 @@
     
     cell.backgroundColor = [UIColor colorWithWhite:1 alpha:0.5];
     
-    if (indexPath.section != 2) {
+    if (indexPath.section != 2)
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    }
+    else
+        cell.accessoryType = UITableViewCellAccessoryNone;
     
     if (indexPath.row == 0 && indexPath.section == 0) {
         cell.textLabel.text = NSLocalizedString(@"HELP", nil);
