@@ -140,6 +140,12 @@
     // ese booleano po
     self.mapEnabled = [OLCashier hasProduct:@"CF01"];
     
+#if TARGET_IPHONE_SIMULATOR
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"CF01"];
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"CF02"];
+    self.mapEnabled = YES;
+#endif
+    
     NSString *mappy = @"No";
     if (self.mapEnabled) mappy = @"Yes";
     
@@ -386,6 +392,9 @@
         self.historyPlaceholder.hidden = NO;
     else
         self.historyPlaceholder.hidden = YES;
+    
+    if ([OLCashier hasProduct:@"CF01"])
+        self.mapEnabled = YES;
 }
 
 #pragma mark - Map mode switching
@@ -527,7 +536,7 @@
         [wait hide];
         
         if (error) {
-            UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"STORE_ERROR_TITLE", nil) message:[NSString stringWithFormat:@"%@. %@", error.localizedDescription, NSLocalizedString(@"STORE_ERROR_MESSAGE", nil)] delegate:self cancelButtonTitle:NSLocalizedString(@"ERROR_DISMISS", nil) otherButtonTitles:nil];
+            UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"STORE_ERROR_TITLE", nil) message:[NSString stringWithFormat:@"%@. %@", error.localizedDescription, NSLocalizedString(@"ERROR_MESSAGE_TRY_AGAIN", nil)] delegate:self cancelButtonTitle:NSLocalizedString(@"ERROR_DISMISS", nil) otherButtonTitles:nil];
             [errorAlert show];
             
             [mixpanel track:@"Failed to Purchase Map"];
@@ -551,11 +560,9 @@
 
 - (void)setMapEnabled:(BOOL)mapEnabled
 {
-    _mapEnabled = mapEnabled;
-    
-    if (mapEnabled) {
+    if (!_mapEnabled && mapEnabled) {
         [UIView animateWithDuration:0.2 animations:^{
-            self.openMapButton.alpha = 0;
+            self.openMapButton.backgroundColor = [UIColor clearColor];
         } completion:^(BOOL finished) {
             [self.openMapButton removeTarget:self action:@selector(purchaseMap) forControlEvents:UIControlEventTouchUpInside];
             for (UIView *subview in self.openMapButton.subviews) {
@@ -565,6 +572,8 @@
             [self.openMapButton addTarget:self action:@selector(switchToMap) forControlEvents:UIControlEventTouchUpInside];
         }];
     }
+    
+    _mapEnabled = mapEnabled;
 }
 
 #pragma mark - Tab switching

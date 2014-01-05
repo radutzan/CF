@@ -221,6 +221,11 @@
                                           } else {
                                               [self.refreshControl endRefreshing];
                                               NSLog(@"Couldn't fetch stop. %@", error);
+                                              
+                                              UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"STOP_ERROR_TITLE", nil) message:[NSString stringWithFormat:@"%@\n%@", error.localizedDescription, NSLocalizedString(@"ERROR_MESSAGE_TRY_AGAIN", nil)] delegate:self cancelButtonTitle:NSLocalizedString(@"ERROR_DISMISS", nil) otherButtonTitles:nil];
+                                              [errorAlert show];
+                                              
+                                              [self.navigationController popViewControllerAnimated:YES];
                                           }
                                       }];
 }
@@ -269,6 +274,9 @@
                                                    
                                                } else if (error) {
                                                    NSLog(@"Consulta falló. Error: %@", error.description);
+                                                   
+                                                   UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"STOP_ERROR_TITLE", nil) message:[NSString stringWithFormat:@"%@\n%@", error.localizedDescription, NSLocalizedString(@"ERROR_MESSAGE_TRY_AGAIN", nil)] delegate:self cancelButtonTitle:NSLocalizedString(@"ERROR_DISMISS", nil) otherButtonTitles:nil];
+                                                   [errorAlert show];
                                                }
                                            }];
 }
@@ -494,7 +502,7 @@
         [wait hide];
         
         if (error) {
-            UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"STORE_ERROR_TITLE", nil) message:[NSString stringWithFormat:@"%@.\n%@", error.localizedDescription, NSLocalizedString(@"STORE_ERROR_MESSAGE", nil)] delegate:self cancelButtonTitle:NSLocalizedString(@"ERROR_DISMISS", nil) otherButtonTitles:nil];
+            UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"STORE_ERROR_TITLE", nil) message:[NSString stringWithFormat:@"%@.\n%@", error.localizedDescription, NSLocalizedString(@"ERROR_MESSAGE_TRY_AGAIN", nil)] delegate:self cancelButtonTitle:NSLocalizedString(@"ERROR_DISMISS", nil) otherButtonTitles:nil];
             [errorAlert show];
             
             [mixpanel track:@"Failed to Purchase Ad Removal"];
