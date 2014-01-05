@@ -17,7 +17,7 @@
 #import "GADBannerView.h"
 #import "OLCashier.h"
 
-@interface CFStopResultsViewController () <CFStopSignViewDelegate>
+@interface CFStopResultsViewController () <CFStopSignViewDelegate, UIAlertViewDelegate>
 
 @property (nonatomic, strong) CFStopSignView *stopInfoView;
 @property (nonatomic, strong) CFBackgroundlessSystemButton *favoriteButton;
@@ -218,12 +218,11 @@
                                               NSLog(@"Couldn't fetch stop. %@", error);
                                               
                                               UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"STOP_ERROR_TITLE", nil) message:[NSString stringWithFormat:@"%@\n%@", error.localizedDescription, NSLocalizedString(@"ERROR_MESSAGE_TRY_AGAIN", nil)] delegate:self cancelButtonTitle:NSLocalizedString(@"ERROR_DISMISS", nil) otherButtonTitles:nil];
+                                              errorAlert.tag = 6009;
                                               [errorAlert show];
                                               
                                               Mixpanel *mixpanel = [Mixpanel sharedInstance];
                                               [mixpanel track:@"Failed Stop Data Request" properties:@{@"Code": stopCode, @"Error": error.debugDescription}];
-                                              
-                                              [self.navigationController popViewControllerAnimated:YES];
                                           }
                                       }];
 }
@@ -349,6 +348,13 @@
     self.refreshing = NO;
     [self.tableView reloadData];
     [self.refreshControl endRefreshing];
+}
+
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+    if (alertView.tag == 6009) {
+        [self.navigationController popToRootViewControllerAnimated:YES];
+    }
 }
 
 #pragma mark - Table view data source
