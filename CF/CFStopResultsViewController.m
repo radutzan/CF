@@ -289,6 +289,7 @@
         NSMutableDictionary *moddedService = [service mutableCopy];
         NSMutableArray *estimations = [NSMutableArray new];
         NSString *serviceName = [service objectForKey:@"name"];
+        CGFloat rawNearestDistance = CGFLOAT_MAX;
         
         for (NSDictionary *estimation in self.responseEstimation) {
             if ([[estimation objectForKey:@"recorrido"] isEqualToString:serviceName]) {
@@ -296,6 +297,11 @@
                 
                 // take care of distance formatting
                 CGFloat distance = [[estimation objectForKey:@"distancia"] integerValue];
+                
+                if (distance < rawNearestDistance) {
+                    rawNearestDistance = distance;
+                }
+                
                 NSString *distanceString;
                 NSString *unit = @"m";
                 
@@ -332,6 +338,7 @@
             }
         }
         
+        [moddedService setObject:[NSNumber numberWithFloat:rawNearestDistance] forKey:@"rawNearestDistance"];
         [moddedService setObject:estimations forKey:@"estimations"];
         
         if (![estimations lastObject]) {
@@ -340,6 +347,9 @@
             [self.finalData addObject:moddedService];
         }
     }
+    
+    NSSortDescriptor *distanceSortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"rawNearestDistance" ascending:YES];
+    [self.finalData sortUsingDescriptors:@[distanceSortDescriptor]];
     
     [self.finalData addObjectsFromArray:estimationlessServices];
     
