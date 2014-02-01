@@ -159,7 +159,6 @@
     
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     [mixpanel registerSuperProperties:@{@"Has Map": mappy}];
-    [mixpanel track:@"Launched App" properties:nil];
     
     self.openMapButton = [UIButton buttonWithType:UIButtonTypeCustom];
     self.openMapButton.frame = CGRectMake(0, 45.0, self.view.bounds.size.width, 95.0);
