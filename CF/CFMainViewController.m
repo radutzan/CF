@@ -91,12 +91,6 @@
     self.scrollView.showsHorizontalScrollIndicator = NO;
     [self.contentView addSubview:self.scrollView];
     
-    CAGradientLayer *gradientMask = [CAGradientLayer layer];
-    gradientMask.colors = @[(id)[UIColor colorWithWhite:0 alpha:1].CGColor, (id)[UIColor colorWithWhite:0 alpha:0].CGColor];
-    gradientMask.locations = @[@0.995, @1];
-    gradientMask.frame = CGRectMake(0, 0, self.scrollView.bounds.size.width * 4, self.scrollView.bounds.size.height);
-    self.scrollView.layer.mask = gradientMask;
-    
     [self initTabs];
     
     self.gripper = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.contentView.bounds.size.width, 30)];

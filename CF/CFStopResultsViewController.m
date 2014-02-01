@@ -77,19 +77,6 @@
     [self.favoriteButton setImage:[UIImage imageNamed:@"button-favorites-selected"] forState:UIControlStateSelected];
     [self.favoriteButton addTarget:self action:@selector(favButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     [earFuck addSubview:self.favoriteButton];
-    
-    if (!self.removedAds) {
-        self.bannerView = [[GADBannerView alloc] initWithAdSize:kGADAdSizeSmartBannerPortrait];
-        self.bannerView.rootViewController = self;
-        self.bannerView.adUnitID = @"ca-app-pub-6226087428684107/3340545274";
-        
-        self.adRequest = [GADRequest request];
-        self.adRequest.testDevices = @[@"f6e9cd9f495b43d1f85bc352988acb31", GAD_SIMULATOR_ID];
-        [self.bannerView loadRequest:self.adRequest];
-        
-        UIPanGestureRecognizer *removeAds = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleAdsPan:)];
-        [self.bannerView addGestureRecognizer:removeAds];
-    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -243,8 +230,19 @@
     [self performStopRequest];
     [self.refreshControl beginRefreshing];
     
-    [self.adRequest setLocationWithLatitude:self.stop.coordinate.latitude longitude:self.stop.coordinate.longitude accuracy:0];
-    [self.bannerView loadRequest:self.adRequest];
+    if (!self.removedAds) {
+        self.bannerView = [[GADBannerView alloc] initWithAdSize:kGADAdSizeSmartBannerPortrait];
+        self.bannerView.rootViewController = self;
+        self.bannerView.adUnitID = @"ca-app-pub-6226087428684107/3340545274";
+        
+        self.adRequest = [GADRequest request];
+        self.adRequest.testDevices = @[@"f6e9cd9f495b43d1f85bc352988acb31", GAD_SIMULATOR_ID];
+        [self.adRequest setLocationWithLatitude:self.stop.coordinate.latitude longitude:self.stop.coordinate.longitude accuracy:0];
+        [self.bannerView loadRequest:self.adRequest];
+        
+        UIPanGestureRecognizer *removeAds = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleAdsPan:)];
+        [self.bannerView addGestureRecognizer:removeAds];
+    }
 }
 
 - (void)performStopRequest
@@ -457,6 +455,7 @@
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
 {
     if (self.removedAds) return nil;
+    if (!self.stop) return nil;
     
     return self.bannerView;
 }
