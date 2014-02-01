@@ -13,14 +13,14 @@
 #import "CFStopSignView.h"
 #import "CFResultCell.h"
 #import "CFNavigationController.h"
-#import "CFBackgroundlessSystemButton.h"
+#import "OLShapeTintedButton.h"
 #import "GADBannerView.h"
 #import "OLCashier.h"
 
 @interface CFStopResultsViewController () <CFStopSignViewDelegate, UIAlertViewDelegate>
 
 @property (nonatomic, strong) CFStopSignView *stopInfoView;
-@property (nonatomic, strong) CFBackgroundlessSystemButton *favoriteButton;
+@property (nonatomic, strong) OLShapeTintedButton *favoriteButton;
 @property (nonatomic, strong) NSMutableArray *responseEstimation;
 @property (nonatomic, strong) NSMutableArray *finalData;
 @property (nonatomic, strong) GADRequest *adRequest;
@@ -70,7 +70,7 @@
     [earFuck addSubview:self.stopInfoView];
     self.navigationItem.titleView = earFuck;
     
-    self.favoriteButton = [CFBackgroundlessSystemButton buttonWithType:UIButtonTypeSystem];
+    self.favoriteButton = [OLShapeTintedButton buttonWithType:UIButtonTypeCustom];
     self.favoriteButton.frame = CGRectMake(earFuck.bounds.size.width - 38.0, -5.0, 42.0, 42.0);
     self.favoriteButton.enabled = NO;
     [self.favoriteButton setImage:[UIImage imageNamed:@"button-favorites"] forState:UIControlStateNormal];
@@ -126,7 +126,7 @@
     if (self.stop.isFavorite) {
         self.stop.favorite = NO;
         
-        [self.view endEditing:YES];
+        [self.stopInfoView.favoriteContentView endEditing:YES];
         
         [UIView animateWithDuration:(animationDuration / 2) animations:^{
             self.stopInfoView.favoriteContentView.alpha = 0;

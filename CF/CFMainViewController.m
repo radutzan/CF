@@ -17,6 +17,7 @@
 #import "CFFavoritesViewController.h"
 #import "CFHistoryViewController.h"
 #import "CFMoreViewController.h"
+#import "OLShapeTintedButton.h"
 
 #define TAB_BAR_HEIGHT 60.0
 #define TAB_BUTTON_WIDTH 75.0
@@ -36,10 +37,10 @@
 @property (nonatomic, strong) UIButton *openMapButton;
 @property (nonatomic, strong) UIScrollView *scrollView;
 @property (nonatomic, strong) UIView *tabBar;
-@property (nonatomic, strong) UIButton *codeButton;
-@property (nonatomic, strong) UIButton *favoritesButton;
-@property (nonatomic, strong) UIButton *historyButton;
-@property (nonatomic, strong) UIButton *moreButton;
+@property (nonatomic, strong) OLShapeTintedButton *codeButton;
+@property (nonatomic, strong) OLShapeTintedButton *favoritesButton;
+@property (nonatomic, strong) OLShapeTintedButton *historyButton;
+@property (nonatomic, strong) OLShapeTintedButton *moreButton;
 @property (nonatomic, strong) UIImageView *logoView;
 @property (nonatomic, assign) CGFloat initialContentCenterY;
 @property (nonatomic, assign) CLLocationCoordinate2D mapLocationCoordinate;
@@ -108,28 +109,28 @@
     self.tabBar.tintColor = [UIColor colorWithWhite:0.42 alpha:1];
     [self.view addSubview:self.tabBar];
     
-    self.codeButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    self.codeButton = [OLShapeTintedButton buttonWithType:UIButtonTypeCustom];
     self.codeButton.frame = CGRectMake(10.0, 0, TAB_BUTTON_WIDTH, TAB_BAR_HEIGHT);
     [self.codeButton setImage:[UIImage imageNamed:@"button-code"] forState:UIControlStateNormal];
     [self.codeButton setImage:[UIImage imageNamed:@"button-code-selected"] forState:UIControlStateSelected];
     [self.codeButton addTarget:self action:@selector(tabButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     [self.tabBar addSubview:self.codeButton];
     
-    self.favoritesButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    self.favoritesButton = [OLShapeTintedButton buttonWithType:UIButtonTypeCustom];
     self.favoritesButton.frame = CGRectMake(10.0 + TAB_BUTTON_WIDTH, 0, TAB_BUTTON_WIDTH, TAB_BAR_HEIGHT);
     [self.favoritesButton setImage:[UIImage imageNamed:@"button-favorites"] forState:UIControlStateNormal];
     [self.favoritesButton setImage:[UIImage imageNamed:@"button-favorites-selected"] forState:UIControlStateSelected];
     [self.favoritesButton addTarget:self action:@selector(tabButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     [self.tabBar addSubview:self.favoritesButton];
     
-    self.historyButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    self.historyButton = [OLShapeTintedButton buttonWithType:UIButtonTypeCustom];
     self.historyButton.frame = CGRectMake(10.0 + TAB_BUTTON_WIDTH * 2, 0, TAB_BUTTON_WIDTH, TAB_BAR_HEIGHT);
     [self.historyButton setImage:[UIImage imageNamed:@"button-history"] forState:UIControlStateNormal];
     [self.historyButton setImage:[UIImage imageNamed:@"button-history-selected"] forState:UIControlStateSelected];
     [self.historyButton addTarget:self action:@selector(tabButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     [self.tabBar addSubview:self.historyButton];
     
-    self.moreButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    self.moreButton = [OLShapeTintedButton buttonWithType:UIButtonTypeCustom];
     self.moreButton.frame = CGRectMake(10.0 + TAB_BUTTON_WIDTH * 3, 0, TAB_BUTTON_WIDTH, TAB_BAR_HEIGHT);
     [self.moreButton setImage:[UIImage imageNamed:@"button-more"] forState:UIControlStateNormal];
     [self.moreButton setImage:[UIImage imageNamed:@"button-more-selected"] forState:UIControlStateSelected];
@@ -614,14 +615,6 @@
     
     button.selected = YES;
     button.tintColor = [UIColor colorWithHue:130.0/360.0 saturation:0.9 brightness:0.9 alpha:1];
-    
-    BOOL didKillImageView = NO;
-    for (UIView *view in button.subviews) {
-        if ([view isKindOfClass:[UIImageView class]] && !didKillImageView) {
-            view.hidden = YES;
-            didKillImageView = YES;
-        }
-    }
 }
 
 - (void)switchToTab:(int)tabNumber
