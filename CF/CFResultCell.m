@@ -9,10 +9,11 @@
 #import "CFResultCell.h"
 #import "CFClipView.h"
 #import "CFColorBadgeView.h"
+#import <Social/Social.h>
 
 #define SECOND_ESTIMATION_ALPHA 0.35
 
-@interface CFResultCell () <UIScrollViewDelegate>
+@interface CFResultCell () <UIScrollViewDelegate, UIAlertViewDelegate>
 
 @property (nonatomic, strong) CFClipView *estimationContainer;
 @property (nonatomic, strong) CFColorBadgeView *colorBadge;
@@ -20,10 +21,8 @@
 @property (nonatomic, strong) UILabel *distanceLabel;
 @property (nonatomic, strong) UILabel *secondTimeLabel;
 @property (nonatomic, strong) UILabel *secondDistanceLabel;
-@property (nonatomic, strong) UILabel *noInfoLabel;
+@property (nonatomic, strong) UIView *noInfoView;
 @property (nonatomic, strong) UIButton *toggleButton;
-@property (nonatomic, strong) CALayer *estimationIndicators;
-@property (nonatomic, strong) CALayer *currentIndicator;
 
 @end
 
@@ -93,41 +92,26 @@
         _secondTimeLabel.alpha = SECOND_ESTIMATION_ALPHA;
         _secondTimeLabel.backgroundColor = _timeLabel.backgroundColor;
         
-        _noInfoLabel = [[UILabel alloc] initWithFrame:CGRectMake(160.0, 0, 125.0, self.contentView.bounds.size.height)];
-        _noInfoLabel.font = [UIFont italicSystemFontOfSize:15.0];
-        _noInfoLabel.textColor = [UIColor colorWithWhite:0.3 alpha:1];
-        _noInfoLabel.text = NSLocalizedString(@"NO_INFO", nil);
-        _noInfoLabel.numberOfLines = 0;
-        _noInfoLabel.backgroundColor = [UIColor blackColor];
+        _noInfoView = [[UIView alloc] initWithFrame:CGRectMake(160.0, 0, 125.0, self.contentView.bounds.size.height)];
+        
+        UIButton *noInfoButton = [UIButton buttonWithType:UIButtonTypeInfoLight];
+        noInfoButton.center = CGPointMake(noInfoButton.center.x, _noInfoView.center.y);
+        [noInfoButton addTarget:self action:@selector(noInfoButtonTapped) forControlEvents:UIControlEventTouchUpInside];
+        [_noInfoView addSubview:noInfoButton];
+        
+        UILabel *noInfoLabel = [[UILabel alloc] initWithFrame:CGRectMake(30.0, 0, 90.0, self.contentView.bounds.size.height)];
+        noInfoLabel.font = [UIFont italicSystemFontOfSize:15.0];
+        noInfoLabel.textColor = [UIColor colorWithWhite:0.3 alpha:1];
+        noInfoLabel.text = NSLocalizedString(@"NO_INFO", nil);
+        noInfoLabel.numberOfLines = 0;
+        noInfoLabel.backgroundColor = [UIColor blackColor];
+        [_noInfoView addSubview:noInfoLabel];
         
         _toggleButton = [UIButton buttonWithType:UIButtonTypeCustom];
         _toggleButton.frame = _estimationContainer.frame;
         [_toggleButton addTarget:self action:@selector(estimationsTapped) forControlEvents:UIControlEventTouchDown|UIControlEventTouchDragEnter];
         [_toggleButton addTarget:self action:@selector(toggleEstimations) forControlEvents:UIControlEventTouchUpInside];
         [_toggleButton addTarget:self action:@selector(estimationsTapCancelled) forControlEvents:UIControlEventTouchCancel|UIControlEventTouchDragExit];
-        
-        _estimationIndicators = [CALayer new];
-        _estimationIndicators.frame = CGRectMake(200.0, 0, 10.0, self.contentView.bounds.size.height);
-        
-        CALayer *indicator1 = [CALayer new];
-        indicator1.frame = CGRectMake(0, 16, 6.0, 6.0);
-        indicator1.cornerRadius = 3.0;
-        indicator1.borderColor = [UIColor colorWithHue:130.0/360.0 saturation:0.9 brightness:0.9 alpha:1].CGColor;
-        indicator1.borderWidth = 0.5;
-        [_estimationIndicators addSublayer:indicator1];
-        
-        CALayer *indicator2 = [CALayer new];
-        indicator2.frame = CGRectMake(0, 30, 6.0, 6.0);
-        indicator2.cornerRadius = 3.0;
-        indicator2.borderColor = [UIColor colorWithHue:130.0/360.0 saturation:0.9 brightness:0.9 alpha:1].CGColor;
-        indicator2.borderWidth = 0.5;
-        [_estimationIndicators addSublayer:indicator2];
-        
-        _currentIndicator = [CALayer new];
-        _currentIndicator.frame = CGRectMake(0, indicator1.frame.origin.y, 6.0, 6.0);
-        _currentIndicator.cornerRadius = 3.0;
-        _currentIndicator.backgroundColor = [UIColor colorWithHue:130.0/360.0 saturation:0.9 brightness:0.9 alpha:1].CGColor;
-        [_estimationIndicators addSublayer:_currentIndicator];
     }
     return self;
 }
@@ -143,10 +127,12 @@
     
     if (estimations.count == 0) {
         [self.estimationContainer removeFromSuperview];
-        [self.contentView addSubview:self.noInfoLabel];
+        [self.contentView addSubview:self.noInfoView];
     } else {
-        [self.noInfoLabel removeFromSuperview];
+        [self.noInfoView removeFromSuperview];
         if (!self.estimationContainer.superview) [self.contentView addSubview:self.estimationContainer];
+        
+        [self.contentView sendSubviewToBack:self.estimationContainer];
         self.distanceLabel.text = [[estimations firstObject] objectForKey:@"distance"];
         self.timeLabel.text = [[estimations firstObject] objectForKey:@"eta"];
     }
@@ -158,11 +144,6 @@
         
         self.secondDistanceLabel.text = [[estimations lastObject] objectForKey:@"distance"];
         self.secondTimeLabel.text = [[estimations lastObject] objectForKey:@"eta"];
-//        [self.contentView.layer addSublayer:self.estimationIndicators];
-//        self.estimationContainer.frame = CGRectMake(213.0, 0, 90.0, self.contentView.bounds.size.height);
-//        [UIView animateWithDuration:0.1 animations:^{
-//            self.currentIndicator.frame = CGRectMake(0, 16.0, self.currentIndicator.bounds.size.width, self.currentIndicator.bounds.size.height);
-//        }];
     }
 }
 
@@ -186,19 +167,6 @@
         self.estimationContainer.alpha = 1;
         self.estimationContainer.scrollView.contentOffset = CGPointMake(self.estimationContainer.bounds.size.width, 0);
     } completion:^(BOOL finished) {
-//        CGFloat indicatorY = 0;
-//        
-//        if ([self.distanceLabel.text isEqualToString:firstEstimationDistance]
-//            && [self.timeLabel.text isEqualToString:firstEstimationTime]) {
-//            indicatorY = 30.0;
-//        } else {
-//            indicatorY = 16.0;
-//        }
-//        
-//        [UIView animateWithDuration:0.1 animations:^{
-//            self.estimationContainer.alpha = 1;
-//            self.currentIndicator.frame = CGRectMake(0, indicatorY, self.currentIndicator.bounds.size.width, self.currentIndicator.bounds.size.height);
-//        }];
     }];
 }
 
@@ -236,13 +204,31 @@
     // Configure the view for the selected state
 }
 
+- (void)noInfoButtonTapped
+{
+    NSString *complainButtonTitle = nil;
+    
+    if ([SLComposeViewController isAvailableForServiceType:SLServiceTypeTwitter]) {
+        complainButtonTitle = NSLocalizedString(@"NO_INFO_BUTTON_COMPLAIN", nil);
+    }
+    
+    UIAlertView *noData = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"NO_INFO_TITLE", nil) message:NSLocalizedString(@"NO_INFO_MESSAGE", nil) delegate:self cancelButtonTitle:NSLocalizedString(@"DISMISS", nil) otherButtonTitles:complainButtonTitle, nil];
+    [noData show];
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 1) {
+        [self.delegate sendComplaintTweetForService:self.serviceLabel.text];
+    }
+}
+
 - (void)prepareForReuse
 {
-    [self.estimationIndicators removeFromSuperlayer];
     [self.toggleButton removeFromSuperview];
     [self.secondDistanceLabel removeFromSuperview];
     [self.secondTimeLabel removeFromSuperview];
-    [self.noInfoLabel removeFromSuperview];
+    [self.noInfoView removeFromSuperview];
 }
 
 @end

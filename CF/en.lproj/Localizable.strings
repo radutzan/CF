@@ -12,7 +12,11 @@
 "DIRECTION" = "destination";
 "ESTIMATION" = "estimation";
 "DISTANCE" = "distance";
-"NO_INFO" = "No information";
+"NO_INFO" = "No data";
+"NO_INFO_TITLE" = "There's no data about this service";
+"NO_INFO_MESSAGE" = "It may be out of its operation hours, or the operator may be failing to provide the information.";
+"NO_INFO_BUTTON_COMPLAIN" = "Report";
+"NO_INFO_COMPLAINT_TWEET" = "@transantiago No hay información para el servicio %@ en el paradero %@. ¿Qué sucede?";
 "TO_DIRECTION" = "to";
 "TO_MINS" = "to";
 "MAP_SEARCHFIELD_PLACEHOLDER" = "Places or address";

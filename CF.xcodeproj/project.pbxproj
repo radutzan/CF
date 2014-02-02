@@ -120,6 +120,7 @@
 		7CB64D7C18551C9C006422E0 /* button-bip@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CB64D7B18551C9C006422E0 /* button-bip@2x.png */; };
 		7CB64D7E18552648006422E0 /* icon-about@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CB64D7D18552648006422E0 /* icon-about@2x.png */; };
 		7CE0D9D8189DB34F00D9782E /* OLShapeTintedButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CE0D9D7189DB34F00D9782E /* OLShapeTintedButton.m */; };
+		7CE0D9DA189DD2D800D9782E /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CE0D9D9189DD2D800D9782E /* Social.framework */; };
 		7CF7EE4F1852D790009B3F46 /* CFBipSpot.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CF7EE4E1852D790009B3F46 /* CFBipSpot.m */; };
 		7CFF7E4518381645006230CE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CFF7E4418381645006230CE /* Foundation.framework */; };
 		7CFF7E4718381645006230CE /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CFF7E4618381645006230CE /* CoreGraphics.framework */; };
@@ -185,7 +186,7 @@
 		7C10B973183ADD320086B650 /* CFMoreViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFMoreViewController.h; sourceTree = "<group>"; };
 		7C10B974183ADD320086B650 /* CFMoreViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFMoreViewController.m; sourceTree = "<group>"; };
 		7C2EED11188345F500AE78C2 /* Cuánta Beta.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Cuánta Beta.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		7C2EED12188345F500AE78C2 /* Cuánto Falta copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Cuánto Falta copy-Info.plist"; path = "/Users/radutzan/Proyectos/Onda/sources/CF/Cuánto Falta copy-Info.plist"; sourceTree = "<absolute>"; };
+		7C2EED12188345F500AE78C2 /* Cuánto Falta copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Cuánto Falta copy-Info.plist"; path = "/Users/radutzan/Proyectos/Onda/sources/CF/Cuánto Falta copy-Info.plist"; sourceTree = "<absolute>"; };
 		7C3B27C2183B194A00818A3B /* CFStopTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFStopTableViewController.h; sourceTree = "<group>"; };
 		7C3B27C3183B194A00818A3B /* CFStopTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFStopTableViewController.m; sourceTree = "<group>"; };
 		7C426412184AE87300A8968F /* CFStopCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFStopCell.h; sourceTree = "<group>"; };
@@ -249,6 +250,7 @@
 		7CB64D7D18552648006422E0 /* icon-about@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-about@2x.png"; sourceTree = "<group>"; };
 		7CE0D9D6189DB34F00D9782E /* OLShapeTintedButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLShapeTintedButton.h; sourceTree = "<group>"; };
 		7CE0D9D7189DB34F00D9782E /* OLShapeTintedButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLShapeTintedButton.m; sourceTree = "<group>"; };
+		7CE0D9D9189DD2D800D9782E /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		7CF7EE4D1852D790009B3F46 /* CFBipSpot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFBipSpot.h; sourceTree = "<group>"; };
 		7CF7EE4E1852D790009B3F46 /* CFBipSpot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFBipSpot.m; sourceTree = "<group>"; };
 		7CFF7E4118381645006230CE /* Cuánto Falta.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Cuánto Falta.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -334,6 +336,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7CE0D9DA189DD2D800D9782E /* Social.framework in Frameworks */,
 				7C5DD3441879234F00FE5CFB /* SystemConfiguration.framework in Frameworks */,
 				7C6CE7FD1877B7DD00DDEF54 /* StoreKit.framework in Frameworks */,
 				7C6CE7FB1877B7D000DDEF54 /* MessageUI.framework in Frameworks */,
@@ -453,7 +456,7 @@
 				7CFF7E4318381645006230CE /* Frameworks */,
 				7CFF7E4218381645006230CE /* Products */,
 				F62BD801ED374EB1AD8B82CE /* Pods.xcconfig */,
-				7C2EED12188345F500AE78C2 /* Cuánto Falta copy-Info.plist */,
+				7C2EED12188345F500AE78C2 /* Cuánto Falta copy-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -470,6 +473,7 @@
 		7CFF7E4318381645006230CE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7CE0D9D9189DD2D800D9782E /* Social.framework */,
 				7C5DD3431879234F00FE5CFB /* SystemConfiguration.framework */,
 				7C6CE7FC1877B7DD00DDEF54 /* StoreKit.framework */,
 				7C6CE7FA1877B7D000DDEF54 /* MessageUI.framework */,
@@ -630,9 +634,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		7C2EECBE188345F500AE78C2 /* Cuánto Falta Dev */ = {
+		7C2EECBE188345F500AE78C2 /* Cuánto Falta Dev */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 7C2EED0E188345F500AE78C2 /* Build configuration list for PBXNativeTarget "Cuánto Falta Dev" */;
+			buildConfigurationList = 7C2EED0E188345F500AE78C2 /* Build configuration list for PBXNativeTarget "Cuánto Falta Dev" */;
 			buildPhases = (
 				7C2EECBF188345F500AE78C2 /* Check Pods Manifest.lock */,
 				7C2EECC0188345F500AE78C2 /* Sources */,
@@ -649,9 +653,9 @@
 			productReference = 7C2EED11188345F500AE78C2 /* Cuánta Beta.app */;
 			productType = "com.apple.product-type.application";
 		};
-		7CFF7E4018381645006230CE /* Cuánto Falta */ = {
+		7CFF7E4018381645006230CE /* Cuánto Falta */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 7CFF7E6D18381645006230CE /* Build configuration list for PBXNativeTarget "Cuánto Falta" */;
+			buildConfigurationList = 7CFF7E6D18381645006230CE /* Build configuration list for PBXNativeTarget "Cuánto Falta" */;
 			buildPhases = (
 				B946332E5D4C40EF8C1E5853 /* Check Pods Manifest.lock */,
 				7CFF7E3D18381645006230CE /* Sources */,
@@ -714,8 +718,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				7CFF7E4018381645006230CE /* Cuánto Falta */,
-				7C2EECBE188345F500AE78C2 /* Cuánto Falta Dev */,
+				7CFF7E4018381645006230CE /* Cuánto Falta */,
+				7C2EECBE188345F500AE78C2 /* Cuánto Falta Dev */,
 				7CFF7E5B18381645006230CE /* CFTests */,
 			);
 		};
@@ -956,7 +960,7 @@
 /* Begin PBXTargetDependency section */
 		7CFF7E6218381645006230CE /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 7CFF7E4018381645006230CE /* Cuánto Falta */;
+			target = 7CFF7E4018381645006230CE /* Cuánto Falta */;
 			targetProxy = 7CFF7E6118381645006230CE /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -1207,7 +1211,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		7C2EED0E188345F500AE78C2 /* Build configuration list for PBXNativeTarget "Cuánto Falta Dev" */ = {
+		7C2EED0E188345F500AE78C2 /* Build configuration list for PBXNativeTarget "Cuánto Falta Dev" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				7C2EED0F188345F500AE78C2 /* Debug */,
@@ -1225,7 +1229,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		7CFF7E6D18381645006230CE /* Build configuration list for PBXNativeTarget "Cuánto Falta" */ = {
+		7CFF7E6D18381645006230CE /* Build configuration list for PBXNativeTarget "Cuánto Falta" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				7CFF7E6E18381645006230CE /* Debug */,

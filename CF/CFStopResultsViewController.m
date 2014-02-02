@@ -7,6 +7,7 @@
 //
 
 #import <Mixpanel/Mixpanel.h>
+#import <Social/Social.h>
 #import <OLGhostAlertView/OLGhostAlertView.h>
 #import "CFStopResultsViewController.h"
 #import "CFSapoClient.h"
@@ -17,7 +18,7 @@
 #import "GADBannerView.h"
 #import "OLCashier.h"
 
-@interface CFStopResultsViewController () <CFStopSignViewDelegate, UIAlertViewDelegate>
+@interface CFStopResultsViewController () <CFStopSignViewDelegate, UIAlertViewDelegate, CFResultCellDelegate>
 
 @property (nonatomic, strong) CFStopSignView *stopInfoView;
 @property (nonatomic, strong) OLShapeTintedButton *favoriteButton;
@@ -379,6 +380,7 @@
 {
     static NSString *CellIdentifier = @"Result Cell";
     CFResultCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    cell.delegate = self;
     
     if (cell == nil)
         cell = [[CFResultCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
@@ -466,6 +468,15 @@
     if (!self.stop) return nil;
     
     return self.bannerView;
+}
+
+- (void)sendComplaintTweetForService:(NSString *)service
+{
+    if ([SLComposeViewController isAvailableForServiceType:SLServiceTypeTwitter]) {
+        SLComposeViewController *complaintTweet = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeTwitter];
+        [complaintTweet setInitialText:[NSString stringWithFormat:NSLocalizedString(@"NO_INFO_COMPLAINT_TWEET", nil), service, self.stop.code]];
+        [self presentViewController:complaintTweet animated:YES completion:nil];
+    }
 }
 
 #pragma mark - Store
