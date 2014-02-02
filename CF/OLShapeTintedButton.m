@@ -43,7 +43,6 @@
 {
     [super tintColorDidChange];
     self.imageView.tintColor = self.tintColor;
-    NSLog(@"tint color changed %@", self.tintColor);
 }
 
 @end

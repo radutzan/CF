@@ -23,7 +23,6 @@
 @property (nonatomic, strong) OLShapeTintedButton *favoriteButton;
 @property (nonatomic, strong) NSMutableArray *responseEstimation;
 @property (nonatomic, strong) NSMutableArray *finalData;
-@property (nonatomic, strong) GADRequest *adRequest;
 @property (nonatomic, strong) GADBannerView *bannerView;
 @property (nonatomic, assign) BOOL refreshing;
 @property (nonatomic, assign) BOOL removedAds;
@@ -224,25 +223,24 @@
     self.favoriteButton.enabled = YES;
     if (stop.isFavorite) self.favoriteButton.selected = YES;
     
-    [self.responseEstimation removeAllObjects];
-    [self.tableView reloadData];
-    [self updateHistory];
-    [self performStopRequest];
-    [self.refreshControl beginRefreshing];
-    
     if (!self.removedAds) {
         self.bannerView = [[GADBannerView alloc] initWithAdSize:kGADAdSizeSmartBannerPortrait];
         self.bannerView.rootViewController = self;
         self.bannerView.adUnitID = @"ca-app-pub-6226087428684107/3340545274";
         
-        self.adRequest = [GADRequest request];
-        self.adRequest.testDevices = @[@"f6e9cd9f495b43d1f85bc352988acb31", GAD_SIMULATOR_ID];
-        [self.adRequest setLocationWithLatitude:self.stop.coordinate.latitude longitude:self.stop.coordinate.longitude accuracy:0];
-        [self.bannerView loadRequest:self.adRequest];
+        GADRequest *adRequest = [GADRequest request];
+        [adRequest setLocationWithLatitude:stop.coordinate.latitude longitude:stop.coordinate.longitude accuracy:0];
+        [self.bannerView loadRequest:adRequest];
         
         UIPanGestureRecognizer *removeAds = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleAdsPan:)];
         [self.bannerView addGestureRecognizer:removeAds];
     }
+    
+    [self.responseEstimation removeAllObjects];
+    [self updateHistory];
+    [self.tableView reloadData];
+    [self performStopRequest];
+    [self.refreshControl beginRefreshing];
 }
 
 - (void)performStopRequest
