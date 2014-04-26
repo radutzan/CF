@@ -233,8 +233,8 @@
         [adRequest setLocationWithLatitude:stop.coordinate.latitude longitude:stop.coordinate.longitude accuracy:0];
         [self.bannerView loadRequest:adRequest];
         
-        UIPanGestureRecognizer *removeAds = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleAdsPan:)];
-        [self.bannerView addGestureRecognizer:removeAds];
+//        UIPanGestureRecognizer *removeAds = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleAdsPan:)];
+//        [self.bannerView addGestureRecognizer:removeAds];
     }
     
     [self.responseEstimation removeAllObjects];
