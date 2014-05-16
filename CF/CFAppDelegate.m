@@ -34,7 +34,7 @@
 
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.rootViewController = [[CFNavigationController alloc] initWithNavigationBarClass:[CFNavigationBar class] toolbarClass:nil];
-    self.window.tintColor = [UIColor colorWithHue:130.0/360.0 saturation:0.9 brightness:0.9 alpha:1];
+    self.window.tintColor = [UIColor colorWithHue:133.0/360.0 saturation:0.65 brightness:0.88 alpha:1];
     [self.window makeKeyAndVisible];
     
     return YES;

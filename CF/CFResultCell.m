@@ -44,11 +44,11 @@
         
         _serviceLabel = [[UILabel alloc] initWithFrame:CGRectMake(15.0, 10.0, 80.0, 25.0)];
         _serviceLabel.textColor = [UIColor whiteColor];
-        _serviceLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:25.0];
+        _serviceLabel.font = [UIFont fontWithName:@"AvenirNext-Regular" size:26.0];
         _serviceLabel.backgroundColor = [UIColor blackColor];
         
         _directionLabel = [[UILabel alloc] initWithFrame:CGRectMake(15.0, 35.0, 110.0, 17.0)];
-        _directionLabel.font = [UIFont systemFontOfSize:11.0];
+        _directionLabel.font = [UIFont fontWithName:@"AvenirNextCondensed-Medium" size:12.0];
         _directionLabel.textColor = [UIColor colorWithWhite:0.6 alpha:1];
         _directionLabel.numberOfLines = 1;
         _directionLabel.backgroundColor = [UIColor blackColor];

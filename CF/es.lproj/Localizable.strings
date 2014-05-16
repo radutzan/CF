@@ -6,7 +6,7 @@
   Copyright (c) 2013 Onda. All rights reserved.
 */
 
-"ENTER_STOP_CODE" = "Ingresa\nel código\nde Parada";
+"ENTER_STOP_CODE" = "Código\nde Parada";
 "AND_BUS_STOP" = "con";
 "SERVICE" = "servicio";
 "DIRECTION" = "hacia";

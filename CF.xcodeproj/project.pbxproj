@@ -112,6 +112,9 @@
 		7C7A15E71854EF37002EE4C5 /* about.css in Resources */ = {isa = PBXBuildFile; fileRef = 7C7A15E41854EF37002EE4C5 /* about.css */; };
 		7C7A15E81854EF67002EE4C5 /* about.html in Resources */ = {isa = PBXBuildFile; fileRef = 7C7A15EA1854EF67002EE4C5 /* about.html */; };
 		7C9A0F691852E9C60018ED1F /* NSDictionary+NSNullUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C9A0F681852E9C60018ED1F /* NSDictionary+NSNullUtility.m */; };
+		7C9BD16B1926B1FF003E9F8E /* OLShapeTintedButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CE0D9D7189DB34F00D9782E /* OLShapeTintedButton.m */; };
+		7C9BD16E1926BC7D003E9F8E /* CFElPeA.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C9BD16D1926BC7D003E9F8E /* CFElPeA.m */; };
+		7C9BD16F1926BCDB003E9F8E /* CFElPeA.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C9BD16D1926BC7D003E9F8E /* CFElPeA.m */; };
 		7CAFA3381842A206005A06BC /* placeholder-favorites@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CAFA3361842A206005A06BC /* placeholder-favorites@2x.png */; };
 		7CAFA3391842A206005A06BC /* placeholder-history@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CAFA3371842A206005A06BC /* placeholder-history@2x.png */; };
 		7CAFA33B1842C359005A06BC /* gripper@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CAFA33A1842C359005A06BC /* gripper@2x.png */; };
@@ -186,7 +189,7 @@
 		7C10B973183ADD320086B650 /* CFMoreViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFMoreViewController.h; sourceTree = "<group>"; };
 		7C10B974183ADD320086B650 /* CFMoreViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFMoreViewController.m; sourceTree = "<group>"; };
 		7C2EED11188345F500AE78C2 /* Cuánta Beta.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Cuánta Beta.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		7C2EED12188345F500AE78C2 /* Cuánto Falta copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Cuánto Falta copy-Info.plist"; path = "/Users/radutzan/Proyectos/Onda/sources/CF/Cuánto Falta copy-Info.plist"; sourceTree = "<absolute>"; };
+		7C2EED12188345F500AE78C2 /* Cuánto Falta copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Cuánto Falta copy-Info.plist"; path = "/Users/radutzan/Proyectos/Onda/sources/CF/Cuánto Falta copy-Info.plist"; sourceTree = "<absolute>"; };
 		7C3B27C2183B194A00818A3B /* CFStopTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFStopTableViewController.h; sourceTree = "<group>"; };
 		7C3B27C3183B194A00818A3B /* CFStopTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFStopTableViewController.m; sourceTree = "<group>"; };
 		7C426412184AE87300A8968F /* CFStopCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFStopCell.h; sourceTree = "<group>"; };
@@ -240,6 +243,8 @@
 		7C7A15EB1854EF6A002EE4C5 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = es; path = es.lproj/about.html; sourceTree = "<group>"; };
 		7C9A0F671852E9C60018ED1F /* NSDictionary+NSNullUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+NSNullUtility.h"; sourceTree = "<group>"; };
 		7C9A0F681852E9C60018ED1F /* NSDictionary+NSNullUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+NSNullUtility.m"; sourceTree = "<group>"; };
+		7C9BD16C1926BC7D003E9F8E /* CFElPeA.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFElPeA.h; sourceTree = "<group>"; };
+		7C9BD16D1926BC7D003E9F8E /* CFElPeA.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFElPeA.m; sourceTree = "<group>"; };
 		7CAFA3361842A206005A06BC /* placeholder-favorites@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-favorites@2x.png"; sourceTree = "<group>"; };
 		7CAFA3371842A206005A06BC /* placeholder-history@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-history@2x.png"; sourceTree = "<group>"; };
 		7CAFA33A1842C359005A06BC /* gripper@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "gripper@2x.png"; sourceTree = "<group>"; };
@@ -456,7 +461,7 @@
 				7CFF7E4318381645006230CE /* Frameworks */,
 				7CFF7E4218381645006230CE /* Products */,
 				F62BD801ED374EB1AD8B82CE /* Pods.xcconfig */,
-				7C2EED12188345F500AE78C2 /* Cuánto Falta copy-Info.plist */,
+				7C2EED12188345F500AE78C2 /* Cuánto Falta copy-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -566,6 +571,8 @@
 				7C7A15E01854E01F002EE4C5 /* CFNavigationBar.m */,
 				7CFF7EB61838614C006230CE /* CFEnterStopCodeView.h */,
 				7CFF7EB71838614C006230CE /* CFEnterStopCodeView.m */,
+				7C9BD16C1926BC7D003E9F8E /* CFElPeA.h */,
+				7C9BD16D1926BC7D003E9F8E /* CFElPeA.m */,
 				7CFF7E7F1838288C006230CE /* SMCalloutView.h */,
 				7CFF7E801838288C006230CE /* SMCalloutView.m */,
 				7CE0D9D6189DB34F00D9782E /* OLShapeTintedButton.h */,
@@ -634,9 +641,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		7C2EECBE188345F500AE78C2 /* Cuánto Falta Dev */ = {
+		7C2EECBE188345F500AE78C2 /* Cuánto Falta Dev */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 7C2EED0E188345F500AE78C2 /* Build configuration list for PBXNativeTarget "Cuánto Falta Dev" */;
+			buildConfigurationList = 7C2EED0E188345F500AE78C2 /* Build configuration list for PBXNativeTarget "Cuánto Falta Dev" */;
 			buildPhases = (
 				7C2EECBF188345F500AE78C2 /* Check Pods Manifest.lock */,
 				7C2EECC0188345F500AE78C2 /* Sources */,
@@ -653,9 +660,9 @@
 			productReference = 7C2EED11188345F500AE78C2 /* Cuánta Beta.app */;
 			productType = "com.apple.product-type.application";
 		};
-		7CFF7E4018381645006230CE /* Cuánto Falta */ = {
+		7CFF7E4018381645006230CE /* Cuánto Falta */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 7CFF7E6D18381645006230CE /* Build configuration list for PBXNativeTarget "Cuánto Falta" */;
+			buildConfigurationList = 7CFF7E6D18381645006230CE /* Build configuration list for PBXNativeTarget "Cuánto Falta" */;
 			buildPhases = (
 				B946332E5D4C40EF8C1E5853 /* Check Pods Manifest.lock */,
 				7CFF7E3D18381645006230CE /* Sources */,
@@ -718,8 +725,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				7CFF7E4018381645006230CE /* Cuánto Falta */,
-				7C2EECBE188345F500AE78C2 /* Cuánto Falta Dev */,
+				7CFF7E4018381645006230CE /* Cuánto Falta */,
+				7C2EECBE188345F500AE78C2 /* Cuánto Falta Dev */,
 				7CFF7E5B18381645006230CE /* CFTests */,
 			);
 		};
@@ -876,6 +883,7 @@
 				7C2EECC2188345F500AE78C2 /* CFBipSpot.m in Sources */,
 				7C2EECC3188345F500AE78C2 /* CFMoreViewController.m in Sources */,
 				7C2EECC4188345F500AE78C2 /* SMCalloutView.m in Sources */,
+				7C9BD16F1926BCDB003E9F8E /* CFElPeA.m in Sources */,
 				7C2EECC5188345F500AE78C2 /* CFStopTableViewController.m in Sources */,
 				7C2EECC7188345F500AE78C2 /* NSDictionary+NSNullUtility.m in Sources */,
 				7C2EECC8188345F500AE78C2 /* CFNavigationController.m in Sources */,
@@ -895,6 +903,7 @@
 				7C2EECD6188345F500AE78C2 /* CFMoreContentViewController.m in Sources */,
 				7C2EECD7188345F500AE78C2 /* CFFavoritesViewController.m in Sources */,
 				7C2EECD8188345F500AE78C2 /* CFMainViewController.m in Sources */,
+				7C9BD16B1926B1FF003E9F8E /* OLShapeTintedButton.m in Sources */,
 				7C2EECD9188345F500AE78C2 /* CFColorBadgeView.m in Sources */,
 				7C2EECDA188345F500AE78C2 /* CFStopCell.m in Sources */,
 				7C2EECDB188345F500AE78C2 /* CFMapController.m in Sources */,
@@ -915,6 +924,7 @@
 				7CF7EE4F1852D790009B3F46 /* CFBipSpot.m in Sources */,
 				7C10B975183ADD320086B650 /* CFMoreViewController.m in Sources */,
 				7CFF7E811838288C006230CE /* SMCalloutView.m in Sources */,
+				7C9BD16E1926BC7D003E9F8E /* CFElPeA.m in Sources */,
 				7C3B27C4183B194A00818A3B /* CFStopTableViewController.m in Sources */,
 				7C9A0F691852E9C60018ED1F /* NSDictionary+NSNullUtility.m in Sources */,
 				7C7A15DE1854DF54002EE4C5 /* CFNavigationController.m in Sources */,
@@ -960,7 +970,7 @@
 /* Begin PBXTargetDependency section */
 		7CFF7E6218381645006230CE /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 7CFF7E4018381645006230CE /* Cuánto Falta */;
+			target = 7CFF7E4018381645006230CE /* Cuánto Falta */;
 			targetProxy = 7CFF7E6118381645006230CE /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -1018,6 +1028,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F62BD801ED374EB1AD8B82CE /* Pods.xcconfig */;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -1029,7 +1040,7 @@
 					/Users/radutzan/Proyectos/Onda/sources/CF/CF/CrittercismSDK,
 				);
 				PRODUCT_NAME = "Cuánta Beta";
-				VALID_ARCHS = "armv7 armv7s";
+				VALID_ARCHS = "armv7 armv7s arm64";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1038,6 +1049,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F62BD801ED374EB1AD8B82CE /* Pods.xcconfig */;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -1049,7 +1061,7 @@
 					/Users/radutzan/Proyectos/Onda/sources/CF/CF/CrittercismSDK,
 				);
 				PRODUCT_NAME = "Cuánta Beta";
-				VALID_ARCHS = "armv7 armv7s";
+				VALID_ARCHS = "armv7 armv7s arm64";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -1058,7 +1070,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -1097,7 +1109,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -1130,6 +1142,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F62BD801ED374EB1AD8B82CE /* Pods.xcconfig */;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -1141,7 +1154,7 @@
 					/Users/radutzan/Proyectos/Onda/sources/CF/CF/CrittercismSDK,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				VALID_ARCHS = "armv7 armv7s";
+				VALID_ARCHS = "armv7 armv7s arm64";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1150,6 +1163,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F62BD801ED374EB1AD8B82CE /* Pods.xcconfig */;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -1161,7 +1175,7 @@
 					/Users/radutzan/Proyectos/Onda/sources/CF/CF/CrittercismSDK,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				VALID_ARCHS = "armv7 armv7s";
+				VALID_ARCHS = "armv7 armv7s arm64";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -1211,7 +1225,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		7C2EED0E188345F500AE78C2 /* Build configuration list for PBXNativeTarget "Cuánto Falta Dev" */ = {
+		7C2EED0E188345F500AE78C2 /* Build configuration list for PBXNativeTarget "Cuánto Falta Dev" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				7C2EED0F188345F500AE78C2 /* Debug */,
@@ -1229,7 +1243,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		7CFF7E6D18381645006230CE /* Build configuration list for PBXNativeTarget "Cuánto Falta" */ = {
+		7CFF7E6D18381645006230CE /* Build configuration list for PBXNativeTarget "Cuánto Falta" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				7CFF7E6E18381645006230CE /* Debug */,

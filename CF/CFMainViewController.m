@@ -21,6 +21,7 @@
 
 #define TAB_BAR_HEIGHT 60.0
 #define TAB_BUTTON_WIDTH 75.0
+#define CONTENT_ORIGIN 160.0
 
 @interface CFMainViewController () <UIScrollViewDelegate, UISearchBarDelegate, CFEnterStopCodeViewDelegate, CFStopTableViewDelegate, CFMapControllerDelegate, UIActionSheetDelegate>
 
@@ -81,7 +82,7 @@
     self.logoView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     [self.localNavigationBar addSubview:self.logoView];
     
-    self.contentView = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 140.0, self.view.bounds.size.width, self.view.bounds.size.height - 140.0)];
+    self.contentView = [[UIToolbar alloc] initWithFrame:CGRectMake(0, CONTENT_ORIGIN, self.view.bounds.size.width, self.view.bounds.size.height - CONTENT_ORIGIN)];
     [self.view addSubview:self.contentView];
     
     self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.contentView.bounds.size.width, self.contentView.bounds.size.height - TAB_BAR_HEIGHT)];
@@ -144,9 +145,9 @@
     self.mapEnabled = [OLCashier hasProduct:@"CF01"];
     
 #if TARGET_IPHONE_SIMULATOR
-    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"CF01"];
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"CF01"];
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"CF02"];
-    self.mapEnabled = YES;
+    self.mapEnabled = NO;
 #endif
     
     NSString *mappy = @"No";
@@ -156,7 +157,7 @@
     [mixpanel registerSuperProperties:@{@"Has Map": mappy}];
     
     self.openMapButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.openMapButton.frame = CGRectMake(0, 45.0, self.view.bounds.size.width, 95.0);
+    self.openMapButton.frame = CGRectMake(0, self.localNavigationBar.frame.size.height, self.view.bounds.size.width, CONTENT_ORIGIN - self.localNavigationBar.frame.size.height);
     self.openMapButton.contentVerticalAlignment = UIControlContentVerticalAlignmentTop;
     [self.view addSubview:self.openMapButton];
     
@@ -205,6 +206,7 @@
 {
     CGFloat verticalMargin = 12.0;
     CGFloat imageOriginY = floorf((self.scrollView.bounds.size.height - 240.0) / 2);
+    NSLog(@"%f", imageOriginY);
     
     self.favoritesPlaceholder = [[UIView alloc] initWithFrame:self.favoritesController.view.frame];
     UIImageView *favoritesPlaceholderImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"placeholder-favorites"]];
@@ -216,17 +218,22 @@
     UILabel *favoritesPlaceholderTitle = [[UILabel alloc] initWithFrame:CGRectMake(0, favoritesPlaceholderImage.frame.origin.y + favoritesPlaceholderImage.bounds.size.height + verticalMargin, self.favoritesPlaceholder.bounds.size.width, 25)];
     favoritesPlaceholderTitle.text = NSLocalizedString(@"FAVORITES_PLACEHOLDER_TITLE", nil);
     favoritesPlaceholderTitle.textAlignment = NSTextAlignmentCenter;
-    favoritesPlaceholderTitle.font = [UIFont boldSystemFontOfSize:17.0];
+    favoritesPlaceholderTitle.font = [UIFont fontWithName:@"AvenirNext-DemiBold" size:17.0];
     favoritesPlaceholderTitle.textColor = [UIColor colorWithWhite:0 alpha:0.4];
     [self.favoritesPlaceholder addSubview:favoritesPlaceholderTitle];
     
-    UILabel *favoritesPlaceholderMessage = [[UILabel alloc] initWithFrame:CGRectMake(50, favoritesPlaceholderTitle.frame.origin.y + favoritesPlaceholderTitle.bounds.size.height + verticalMargin / 2, self.favoritesPlaceholder.bounds.size.width - 100, 60)];
+    UILabel *favoritesPlaceholderMessage = [[UILabel alloc] initWithFrame:CGRectMake(50, favoritesPlaceholderTitle.frame.origin.y + favoritesPlaceholderTitle.bounds.size.height + verticalMargin / 2, self.favoritesPlaceholder.bounds.size.width - 100, 62)];
     favoritesPlaceholderMessage.text = NSLocalizedString(@"FAVORITES_PLACEHOLDER_MESSAGE", nil);
     favoritesPlaceholderMessage.numberOfLines = 3;
     favoritesPlaceholderMessage.textAlignment = NSTextAlignmentCenter;
-    favoritesPlaceholderMessage.font = [UIFont systemFontOfSize:15.0];
+    favoritesPlaceholderMessage.font = [UIFont fontWithName:@"AvenirNext-Regular" size:15.0];
     favoritesPlaceholderMessage.textColor = [UIColor colorWithWhite:0 alpha:0.4];
     [self.favoritesPlaceholder addSubview:favoritesPlaceholderMessage];
+    
+    if (imageOriginY < 20) {
+        favoritesPlaceholderImage.transform = CGAffineTransformMakeScale(0.8, 0.8);
+        favoritesPlaceholderImage.center = CGPointMake(favoritesPlaceholderImage.center.x, favoritesPlaceholderImage.center.y + 15.0);
+    }
     
     [self.scrollView addSubview:self.favoritesPlaceholder];
     
@@ -240,17 +247,22 @@
     UILabel *historyPlaceholderTitle = [[UILabel alloc] initWithFrame:CGRectMake(0, historyPlaceholderImage.frame.origin.y + historyPlaceholderImage.bounds.size.height + verticalMargin, self.historyPlaceholder.bounds.size.width, 25)];
     historyPlaceholderTitle.text = NSLocalizedString(@"HISTORY_PLACEHOLDER_TITLE", nil);
     historyPlaceholderTitle.textAlignment = NSTextAlignmentCenter;
-    historyPlaceholderTitle.font = [UIFont boldSystemFontOfSize:17.0];
+    historyPlaceholderTitle.font = [UIFont fontWithName:@"AvenirNext-DemiBold" size:17.0];
     historyPlaceholderTitle.textColor = [UIColor colorWithWhite:0 alpha:0.4];
     [self.historyPlaceholder addSubview:historyPlaceholderTitle];
     
-    UILabel *historyPlaceholderMessage = [[UILabel alloc] initWithFrame:CGRectMake(50, historyPlaceholderTitle.frame.origin.y + historyPlaceholderTitle.bounds.size.height + verticalMargin / 2, self.historyPlaceholder.bounds.size.width - 100, 60)];
+    UILabel *historyPlaceholderMessage = [[UILabel alloc] initWithFrame:CGRectMake(favoritesPlaceholderMessage.frame.origin.x, historyPlaceholderTitle.frame.origin.y + historyPlaceholderTitle.bounds.size.height + verticalMargin / 2, favoritesPlaceholderMessage.bounds.size.width, favoritesPlaceholderMessage.bounds.size.height)];
     historyPlaceholderMessage.text = NSLocalizedString(@"HISTORY_PLACEHOLDER_MESSAGE", nil);
     historyPlaceholderMessage.numberOfLines = 3;
     historyPlaceholderMessage.textAlignment = NSTextAlignmentCenter;
-    historyPlaceholderMessage.font = [UIFont systemFontOfSize:15.0];
+    historyPlaceholderMessage.font = [UIFont fontWithName:@"AvenirNext-Regular" size:15.0];
     historyPlaceholderMessage.textColor = [UIColor colorWithWhite:0 alpha:0.4];
     [self.historyPlaceholder addSubview:historyPlaceholderMessage];
+    
+    if (imageOriginY < 20) {
+        historyPlaceholderImage.transform = CGAffineTransformMakeScale(0.8, 0.8);
+        historyPlaceholderImage.center = CGPointMake(historyPlaceholderImage.center.x, historyPlaceholderImage.center.y + 15.0);
+    }
     
     [self.scrollView addSubview:self.historyPlaceholder];
 }
@@ -260,32 +272,19 @@
     self.mapMode = NO;
     
     if (self.mapMode)
-        self.contentView.frame = CGRectMake(0, self.view.bounds.size.height - TAB_BAR_HEIGHT, self.view.bounds.size.width, self.view.bounds.size.height - 140.0);
+        self.contentView.frame = CGRectMake(0, self.view.bounds.size.height - TAB_BAR_HEIGHT, self.view.bounds.size.width, self.view.bounds.size.height - CONTENT_ORIGIN);
     else {
-        self.contentView.frame = CGRectMake(0, 140.0, self.view.bounds.size.width, self.view.bounds.size.height - 140.0);
+        self.contentView.frame = CGRectMake(0, CONTENT_ORIGIN, self.view.bounds.size.width, self.view.bounds.size.height - CONTENT_ORIGIN);
         
         [self tabButtonTapped:self.codeButton];
     }
     
     if (self.mapEnabled) {
+        self.openMapButton.hidden = NO;
         [self.openMapButton addTarget:self action:@selector(switchToMap) forControlEvents:UIControlEventTouchUpInside];
     } else {
-        self.openMapButton.backgroundColor = [UIColor colorWithWhite:0 alpha:0.2];
-        [self.openMapButton addTarget:self action:@selector(purchaseMap) forControlEvents:UIControlEventTouchUpInside];
-        
-        UILabel *buyMapLabel = [[UILabel alloc] initWithFrame:CGRectMake(30.0, 25.0, 260.0, 45.0)];
-        buyMapLabel.font = [UIFont systemFontOfSize:18.0];
-        buyMapLabel.textColor = [UIColor colorWithHue:130.0/360.0 saturation:0.9 brightness:0.9 alpha:1];
-        buyMapLabel.textAlignment = NSTextAlignmentCenter;
-        buyMapLabel.text = NSLocalizedString(@"BUY_MAP_BUTTON", nil);
-        
-        UIToolbar *buyMapBackground = [[UIToolbar alloc] initWithFrame:buyMapLabel.frame];
-        buyMapBackground.barStyle = UIBarStyleBlack;
-        buyMapBackground.layer.cornerRadius = 4.0;
-        buyMapBackground.layer.masksToBounds = YES;
-        buyMapBackground.userInteractionEnabled = NO;
-        [self.openMapButton addSubview:buyMapBackground];
-        [self.openMapButton addSubview:buyMapLabel];
+        self.openMapButton.hidden = YES;
+        [self showMapFeatures];
     }
     
     BOOL runBefore = [[NSUserDefaults standardUserDefaults] boolForKey:@"OLHasRunBefore"];
@@ -296,6 +295,43 @@
         
         [self importUserData];
     }
+}
+
+- (void)showMapFeatures
+{
+    UIScrollView *mapFeatures = [[UIScrollView alloc] initWithFrame:self.openMapButton.bounds];
+    mapFeatures.pagingEnabled = YES;
+    mapFeatures.contentSize = CGSizeMake(mapFeatures.bounds.size.width * 4, mapFeatures.bounds.size.height);
+    mapFeatures.backgroundColor = [UIColor colorWithWhite:0 alpha:0.6];
+    mapFeatures.tag = 5674;
+    [self.openMapButton addSubview:mapFeatures];
+    
+    UIButton *activateMapButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [activateMapButton setTitle:@"Activar Gratis (con Publicidad)" forState:UIControlStateNormal];
+    activateMapButton.frame = CGRectMake(0.0, mapFeatures.bounds.size.height - 45.0, mapFeatures.bounds.size.width, 45.0);
+    activateMapButton.titleLabel.font = [UIFont fontWithName:@"AvenirNext-Medium" size:19.0];
+    activateMapButton.layer.backgroundColor = [[[[UIApplication sharedApplication] delegate] window].tintColor colorWithAlphaComponent:0.12].CGColor;
+    [mapFeatures addSubview:activateMapButton];
+    
+    
+    
+    UIButton *finalActivateMapButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [finalActivateMapButton setTitle:[activateMapButton titleForState:UIControlStateNormal] forState:UIControlStateNormal];
+    finalActivateMapButton.frame = CGRectOffset(activateMapButton.frame, mapFeatures.bounds.size.width * 3, 0.0);
+    finalActivateMapButton.titleLabel.font = activateMapButton.titleLabel.font;
+    finalActivateMapButton.layer.backgroundColor = [[[[UIApplication sharedApplication] delegate] window].tintColor colorWithAlphaComponent:0.12].CGColor;
+    [mapFeatures addSubview:finalActivateMapButton];
+}
+
+- (void)hideMapFeatures
+{
+    UIScrollView *mapFeatures = (UIScrollView *)[self.view viewWithTag:5674];
+    
+    [UIView animateWithDuration:0.25 delay:0 options:0 animations:^{
+        mapFeatures.alpha = 0;
+    } completion:^(BOOL finished) {
+        [mapFeatures removeFromSuperview];
+    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -416,7 +452,7 @@
     CGFloat localNavBarHeight = 0.0;
     
     if (mapMode) {
-        contentFrame = CGRectMake(0, self.view.bounds.size.height - TAB_BAR_HEIGHT, self.view.bounds.size.width, self.view.bounds.size.height - 140.0);
+        contentFrame = CGRectMake(0, self.view.bounds.size.height - TAB_BAR_HEIGHT, self.view.bounds.size.width, self.view.bounds.size.height - CONTENT_ORIGIN);
         self.openMapButton.hidden = YES;
         scrollViewAlpha = 0.0;
         localNavBarHeight = 64.0;
@@ -447,7 +483,7 @@
             b.tintColor = nil;
         }
     } else {
-        contentFrame = CGRectMake(0, 140.0, self.view.bounds.size.width, self.view.bounds.size.height - 140.0);
+        contentFrame = CGRectMake(0, CONTENT_ORIGIN, self.view.bounds.size.width, self.view.bounds.size.height - CONTENT_ORIGIN);
         scrollViewAlpha = 1.0;
         localNavBarHeight = 45.0;
         self.openMapButton.hidden = NO;
@@ -465,7 +501,7 @@
         self.logoView.alpha = scrollViewAlpha;
         self.gripper.alpha = scrollViewAlpha;
         self.localNavigationBar.frame = CGRectMake(0, 0, self.localNavigationBar.bounds.size.width, localNavBarHeight);
-        self.openMapButton.frame = CGRectMake(0, 45.0, self.view.bounds.size.width, 95.0);
+        self.openMapButton.frame = CGRectMake(0, self.localNavigationBar.frame.size.height, self.view.bounds.size.width, CONTENT_ORIGIN - self.localNavigationBar.frame.size.height);
         self.openMapButton.alpha = 1;
     } completion:^(BOOL finished) {
         
@@ -502,13 +538,13 @@
         
         CLLocationCoordinate2D mapCenter = self.mapLocationCoordinate;
         
-        CGFloat buttonHeight = 95.0 + gripTranslation;
+        CGFloat buttonHeight = CONTENT_ORIGIN - self.localNavigationBar.frame.size.height + gripTranslation;
         
         CGFloat slideFactor = gripTranslation / (self.contentView.bounds.size.height - TAB_BAR_HEIGHT);
         CGFloat appliedFactor = 1.0 - slideFactor;
         
         if (slideFactor <= 1.0 && slideFactor >= 0.0) {
-            self.openMapButton.frame = CGRectMake(0, 45.0, self.view.bounds.size.width, buttonHeight);
+            self.openMapButton.frame = CGRectMake(0, self.localNavigationBar.frame.size.height, self.view.bounds.size.width, buttonHeight);
             self.contentView.center = contentCenter;
             self.scrollView.alpha = appliedFactor;
             self.gripper.alpha = appliedFactor;
@@ -614,7 +650,7 @@
     }
     
     button.selected = YES;
-    button.tintColor = [UIColor colorWithHue:130.0/360.0 saturation:0.9 brightness:0.9 alpha:1];
+    button.tintColor = [[UIApplication sharedApplication] keyWindow].tintColor;
 }
 
 - (void)switchToTab:(int)tabNumber
