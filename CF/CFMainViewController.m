@@ -37,6 +37,7 @@
 @property (nonatomic, strong) UINavigationBar *localNavigationBar;
 @property (nonatomic, strong) UIButton *openMapButton;
 @property (nonatomic, strong) UIScrollView *scrollView;
+@property (nonatomic, strong) UIScrollView *mapFeaturesView;
 @property (nonatomic, strong) UIView *tabBar;
 @property (nonatomic, strong) OLShapeTintedButton *codeButton;
 @property (nonatomic, strong) OLShapeTintedButton *favoritesButton;
@@ -44,6 +45,7 @@
 @property (nonatomic, strong) OLShapeTintedButton *moreButton;
 @property (nonatomic, strong) UIImageView *logoView;
 @property (nonatomic, assign) CGFloat initialContentCenterY;
+@property (nonatomic, assign) CGPoint initialOpenMapButtonCenter;
 @property (nonatomic, assign) CLLocationCoordinate2D mapLocationCoordinate;
 @property (nonatomic, assign) BOOL mapMode;
 @property (nonatomic, assign) BOOL mapEnabled;
@@ -83,6 +85,8 @@
     [self.localNavigationBar addSubview:self.logoView];
     
     self.contentView = [[UIToolbar alloc] initWithFrame:CGRectMake(0, CONTENT_ORIGIN, self.view.bounds.size.width, self.view.bounds.size.height - CONTENT_ORIGIN)];
+    self.contentView.layer.anchorPoint = CGPointMake(0.5, 1.0);
+    self.contentView.frame = CGRectMake(0, CONTENT_ORIGIN, self.view.bounds.size.width, self.view.bounds.size.height - CONTENT_ORIGIN);
     [self.view addSubview:self.contentView];
     
     self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.contentView.bounds.size.width, self.contentView.bounds.size.height - TAB_BAR_HEIGHT)];
@@ -159,7 +163,10 @@
     self.openMapButton = [UIButton buttonWithType:UIButtonTypeCustom];
     self.openMapButton.frame = CGRectMake(0, self.localNavigationBar.frame.size.height, self.view.bounds.size.width, CONTENT_ORIGIN - self.localNavigationBar.frame.size.height);
     self.openMapButton.contentVerticalAlignment = UIControlContentVerticalAlignmentTop;
-    [self.view addSubview:self.openMapButton];
+    [self.view insertSubview:self.openMapButton aboveSubview:self.mapController];
+    
+    UIPanGestureRecognizer *openMapButtonDrag = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleGripDragGesture:)];
+    [self.openMapButton addGestureRecognizer:openMapButtonDrag];
     
     [self registerForKeyboardNotifications];
 }
@@ -271,11 +278,7 @@
 {
     self.mapMode = NO;
     
-    if (self.mapMode)
-        self.contentView.frame = CGRectMake(0, self.view.bounds.size.height - TAB_BAR_HEIGHT, self.view.bounds.size.width, self.view.bounds.size.height - CONTENT_ORIGIN);
-    else {
-        self.contentView.frame = CGRectMake(0, CONTENT_ORIGIN, self.view.bounds.size.width, self.view.bounds.size.height - CONTENT_ORIGIN);
-        
+    if (!self.mapMode) {
         [self tabButtonTapped:self.codeButton];
     }
     
@@ -299,28 +302,28 @@
 
 - (void)showMapFeatures
 {
-    UIScrollView *mapFeatures = [[UIScrollView alloc] initWithFrame:self.openMapButton.bounds];
-    mapFeatures.pagingEnabled = YES;
-    mapFeatures.contentSize = CGSizeMake(mapFeatures.bounds.size.width * 4, mapFeatures.bounds.size.height);
-    mapFeatures.backgroundColor = [UIColor colorWithWhite:0 alpha:0.6];
-    mapFeatures.tag = 5674;
-    [self.openMapButton addSubview:mapFeatures];
+    self.mapFeaturesView = [[UIScrollView alloc] initWithFrame:self.openMapButton.bounds];
+    self.mapFeaturesView.pagingEnabled = YES;
+    self.mapFeaturesView.contentSize = CGSizeMake(self.mapFeaturesView.bounds.size.width * 4, self.mapFeaturesView.bounds.size.height);
+    self.mapFeaturesView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.6];
+    self.mapFeaturesView.tag = 5674;
+    [self.openMapButton addSubview:self.mapFeaturesView];
     
     UIButton *activateMapButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [activateMapButton setTitle:@"Activar Gratis (con Publicidad)" forState:UIControlStateNormal];
-    activateMapButton.frame = CGRectMake(0.0, mapFeatures.bounds.size.height - 45.0, mapFeatures.bounds.size.width, 45.0);
+    activateMapButton.frame = CGRectMake(0.0, self.mapFeaturesView.bounds.size.height - 45.0, self.mapFeaturesView.bounds.size.width, 45.0);
     activateMapButton.titleLabel.font = [UIFont fontWithName:@"AvenirNext-Medium" size:19.0];
     activateMapButton.layer.backgroundColor = [[[[UIApplication sharedApplication] delegate] window].tintColor colorWithAlphaComponent:0.12].CGColor;
-    [mapFeatures addSubview:activateMapButton];
+    [self.mapFeaturesView addSubview:activateMapButton];
     
     
     
     UIButton *finalActivateMapButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [finalActivateMapButton setTitle:[activateMapButton titleForState:UIControlStateNormal] forState:UIControlStateNormal];
-    finalActivateMapButton.frame = CGRectOffset(activateMapButton.frame, mapFeatures.bounds.size.width * 3, 0.0);
+    finalActivateMapButton.frame = CGRectOffset(activateMapButton.frame, self.mapFeaturesView.bounds.size.width * 3, 0.0);
     finalActivateMapButton.titleLabel.font = activateMapButton.titleLabel.font;
     finalActivateMapButton.layer.backgroundColor = [[[[UIApplication sharedApplication] delegate] window].tintColor colorWithAlphaComponent:0.12].CGColor;
-    [mapFeatures addSubview:finalActivateMapButton];
+    [self.mapFeaturesView addSubview:finalActivateMapButton];
 }
 
 - (void)hideMapFeatures
@@ -447,12 +450,16 @@
 {
     _mapMode = mapMode;
     
-    CGRect contentFrame = CGRectZero;
     CGFloat scrollViewAlpha = 0.0;
     CGFloat localNavBarHeight = 0.0;
     
     if (mapMode) {
-        contentFrame = CGRectMake(0, self.view.bounds.size.height - TAB_BAR_HEIGHT, self.view.bounds.size.width, self.view.bounds.size.height - CONTENT_ORIGIN);
+        if (self.scrollView.alpha > 0) {
+            [UIView animateWithDuration:0.33 delay:0.0 options:(7 >> 16) animations:^{
+                [self openMap];
+            } completion:nil];
+        }
+        
         self.openMapButton.hidden = YES;
         scrollViewAlpha = 0.0;
         localNavBarHeight = 64.0;
@@ -471,19 +478,16 @@
         
         [self.localNavigationBar pushNavigationItem:navItem animated:YES];
         
-        [self.view endEditing:YES];
-        
-        [self.mapController.mapView setCenterCoordinate:self.mapController.mapView.userLocation.coordinate animated:YES];
-        
         Mixpanel *mixpanel = [Mixpanel sharedInstance];
         [mixpanel track:@"Entered Map Mode" properties:nil];
         
-        for (UIButton *b in self.tabBar.subviews) {
-            b.selected = NO;
-            b.tintColor = nil;
-        }
     } else {
-        contentFrame = CGRectMake(0, CONTENT_ORIGIN, self.view.bounds.size.width, self.view.bounds.size.height - CONTENT_ORIGIN);
+        if (self.scrollView.alpha < 1) {
+            [UIView animateWithDuration:0.33 delay:0.0 options:(7 >> 16) animations:^{
+                [self closeMap];
+            } completion:nil];
+        }
+        
         scrollViewAlpha = 1.0;
         localNavBarHeight = 45.0;
         self.openMapButton.hidden = NO;
@@ -492,14 +496,11 @@
         
         CLLocationCoordinate2D center = self.mapController.mapView.userLocation.coordinate;
         center.latitude -= self.mapController.mapView.region.span.latitudeDelta * 0.36;
-        [self.mapController.mapView setCenterCoordinate:center animated:YES];
+        [self.mapController.mapView setCenterCoordinate:center];
     }
     
     [UIView animateWithDuration:0.33 delay:0.0 options:(7 >> 16) animations:^{
-        self.contentView.frame = contentFrame;
-        self.scrollView.alpha = scrollViewAlpha;
         self.logoView.alpha = scrollViewAlpha;
-        self.gripper.alpha = scrollViewAlpha;
         self.localNavigationBar.frame = CGRectMake(0, 0, self.localNavigationBar.bounds.size.width, localNavBarHeight);
         self.openMapButton.frame = CGRectMake(0, self.localNavigationBar.frame.size.height, self.view.bounds.size.width, CONTENT_ORIGIN - self.localNavigationBar.frame.size.height);
         self.openMapButton.alpha = 1;
@@ -518,12 +519,76 @@
     self.mapMode = NO;
 }
 
+- (void)openMap
+{
+    self.contentView.transform = CGAffineTransformIdentity;
+    self.contentView.center = CGPointMake(self.contentView.center.x, self.initialContentCenterY + self.contentView.bounds.size.height - TAB_BAR_HEIGHT);
+    self.scrollView.alpha = 0;
+    self.gripper.alpha = 0;
+    self.openMapButton.alpha = 0;
+    self.openMapButton.center = CGPointMake(self.openMapButton.center.x, self.initialOpenMapButtonCenter.y - self.openMapButton.bounds.size.height);
+    
+    [self.view endEditing:YES];
+    
+    [self.mapController.mapView setCenterCoordinate:self.mapController.mapView.userLocation.coordinate];
+    
+    for (UIButton *b in self.tabBar.subviews) {
+        b.selected = NO;
+        b.tintColor = nil;
+    }
+}
+
+- (void)closeMap
+{
+    self.contentView.center = CGPointMake(self.contentView.center.x, self.initialContentCenterY);
+    self.scrollView.alpha = 1;
+    self.gripper.alpha = 1;
+    self.openMapButton.alpha = 1.0;
+    self.openMapButton.center = self.initialOpenMapButtonCenter;
+}
+
+- (void)openMapWithVelocity:(CGFloat)velocity
+{
+    velocity = MIN(abs(velocity), 3500);
+    CGFloat velocityFactor = velocity / 3500;
+    CGFloat animationDuration = 0.3 * (1 - velocityFactor);
+    
+    [UIView animateWithDuration:animationDuration delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+        [self openMap];
+    } completion:^(BOOL finished) {
+        self.mapMode = YES;
+    }];
+}
+
+- (void)closeMapWithVelocity:(CGFloat)velocity
+{
+    velocity = MIN(velocity, 3500);
+    CGFloat velocityFactor = velocity / 3500;
+    CGFloat animationDuration = 0.3 * (1 - velocityFactor);
+    CGFloat scaleFactor = 1 + velocityFactor * 0.2;
+    
+    [UIView animateWithDuration:animationDuration delay:0 options:0 animations:^{
+        [self closeMap];
+        
+        if (CGAffineTransformIsIdentity(self.contentView.transform)) {
+            self.contentView.transform = CGAffineTransformMakeScale(scaleFactor, 1.0);
+        }
+        
+    } completion:^(BOOL finished) {
+        [UIView animateWithDuration:0.7 delay:0 usingSpringWithDamping:0.25 initialSpringVelocity:0 options:UIViewAnimationOptionAllowUserInteraction animations:^{
+            self.contentView.transform = CGAffineTransformIdentity;
+        } completion:nil];
+        self.mapMode = NO;
+    }];
+}
+
 - (void)handleGripDragGesture:(UIPanGestureRecognizer *)recognizer
 {
     CGFloat gripTranslation = [recognizer translationInView:self.contentView].y;
     
     if (recognizer.state == UIGestureRecognizerStateBegan) {
         self.initialContentCenterY = self.contentView.center.y;
+        self.initialOpenMapButtonCenter = self.openMapButton.center;
         self.mapLocationCoordinate = self.mapController.mapView.userLocation.coordinate;
         
         [self.view endEditing:YES];
@@ -538,29 +603,47 @@
         
         CLLocationCoordinate2D mapCenter = self.mapLocationCoordinate;
         
-        CGFloat buttonHeight = CONTENT_ORIGIN - self.localNavigationBar.frame.size.height + gripTranslation;
-        
         CGFloat slideFactor = gripTranslation / (self.contentView.bounds.size.height - TAB_BAR_HEIGHT);
         CGFloat appliedFactor = 1.0 - slideFactor;
         
         if (slideFactor <= 1.0 && slideFactor >= 0.0) {
-            self.openMapButton.frame = CGRectMake(0, self.localNavigationBar.frame.size.height, self.view.bounds.size.width, buttonHeight);
             self.contentView.center = contentCenter;
             self.scrollView.alpha = appliedFactor;
             self.gripper.alpha = appliedFactor;
-//            self.openMapButton.alpha = appliedFactor;
+            self.openMapButton.alpha = appliedFactor;
+            self.openMapButton.center = CGPointMake(self.openMapButton.center.x, self.initialOpenMapButtonCenter.y - self.openMapButton.bounds.size.height * slideFactor);
+            
             mapCenter.latitude -= self.mapController.mapView.region.span.latitudeDelta * (0.36 * appliedFactor);
             self.mapController.mapView.centerCoordinate = mapCenter;
+            
+        } else if (slideFactor < 0.0) {
+            self.openMapButton.alpha = 1.0;
+            self.openMapButton.center = self.initialOpenMapButtonCenter;
+            self.contentView.center = CGPointMake(self.contentView.center.x, self.initialContentCenterY);
+            CGFloat scaleFactor = 1.0 - slideFactor / 4;
+            self.contentView.transform = CGAffineTransformMakeScale(1.0, scaleFactor);
+            
+            CLLocationCoordinate2D center = self.mapController.mapView.userLocation.coordinate;
+            center.latitude -= self.mapController.mapView.region.span.latitudeDelta * 0.36;
+            [self.mapController.mapView setCenterCoordinate:center];
         }
         
-    } else if (recognizer.state == UIGestureRecognizerStateEnded) {
+    } else {
+        CGFloat terminalVelocity = [recognizer velocityInView:self.view].x;
         CGFloat slideFactor = gripTranslation / (self.contentView.bounds.size.height - TAB_BAR_HEIGHT);
+        BOOL opening = [recognizer.view isEqual:self.gripper] || [recognizer.view isEqual:self.openMapButton];
         
         if (self.mapEnabled) {
-            if (slideFactor >=0.25) {
-                self.mapMode = YES;
+            if (terminalVelocity > 250 || (opening && slideFactor >= 0.25)) {
+                [self openMapWithVelocity:terminalVelocity];
+            } else if (terminalVelocity < -40 || (!opening && slideFactor < 0.25)) {
+                [self closeMapWithVelocity:terminalVelocity];
             } else {
-                self.mapMode = NO;
+                if (opening) {
+                    [self closeMapWithVelocity:terminalVelocity];
+                } else {
+                    [self closeMapWithVelocity:terminalVelocity];
+                }
             }
         } else {
             self.mapMode = NO;
@@ -609,16 +692,10 @@
 - (void)setMapEnabled:(BOOL)mapEnabled
 {
     if (!_mapEnabled && mapEnabled) {
-        [UIView animateWithDuration:0.2 animations:^{
-            self.openMapButton.backgroundColor = [UIColor clearColor];
-        } completion:^(BOOL finished) {
-            [self.openMapButton removeTarget:self action:@selector(purchaseMap) forControlEvents:UIControlEventTouchUpInside];
-            for (UIView *subview in self.openMapButton.subviews) {
-                [subview removeFromSuperview];
-            }
-            self.openMapButton.backgroundColor = [UIColor clearColor];
-            [self.openMapButton addTarget:self action:@selector(switchToMap) forControlEvents:UIControlEventTouchUpInside];
-        }];
+        [self hideMapFeatures];
+        
+        [self.openMapButton removeTarget:self action:@selector(purchaseMap) forControlEvents:UIControlEventTouchUpInside];
+        [self.openMapButton addTarget:self action:@selector(switchToMap) forControlEvents:UIControlEventTouchUpInside];
     }
     
     _mapEnabled = mapEnabled;
