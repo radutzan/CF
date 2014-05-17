@@ -232,9 +232,6 @@
         GADRequest *adRequest = [GADRequest request];
         [adRequest setLocationWithLatitude:stop.coordinate.latitude longitude:stop.coordinate.longitude accuracy:0];
         [self.bannerView loadRequest:adRequest];
-        
-//        UIPanGestureRecognizer *removeAds = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleAdsPan:)];
-//        [self.bannerView addGestureRecognizer:removeAds];
     }
     
     [self.responseEstimation removeAllObjects];
@@ -437,7 +434,7 @@
     return 60.0;
 }
 
-- (float)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
     if (self.removedAds)
         return 0;
@@ -483,32 +480,7 @@
 
 - (BOOL)removedAds
 {
-    return [OLCashier hasProduct:@"CF02"];
-}
-
-- (void)handleAdsPan:(UIPanGestureRecognizer *)recognizer
-{
-    CGFloat gripTranslation = [recognizer translationInView:self.tableView].x;
-    
-    if (recognizer.state == UIGestureRecognizerStateBegan) {
-        self.initialBannerCenterX = self.bannerView.center.x;
-        
-        Mixpanel *mixpanel = [Mixpanel sharedInstance];
-        [mixpanel track:@"Used Ad Drag Gesture"];
-        
-    } else if (recognizer.state == UIGestureRecognizerStateChanged) {
-        CGPoint bannerCenter;
-        bannerCenter.x = self.initialBannerCenterX + gripTranslation;
-        bannerCenter.y = self.bannerView.center.y;
-        
-        self.bannerView.center = bannerCenter;
-        
-    } else if (recognizer.state == UIGestureRecognizerStateEnded) {
-        [self removeAds];
-        [UIView animateWithDuration:0.65 delay:0.0 usingSpringWithDamping:0.4 initialSpringVelocity:0.3 options:0 animations:^{
-            self.bannerView.center = CGPointMake(self.view.center.x, self.bannerView.center.y);
-        } completion:nil];
-    }
+    return ([OLCashier hasProduct:@"CF01"] || [OLCashier hasProduct:@"CF02"]);
 }
 
 - (void)removeAds

@@ -245,6 +245,9 @@
 		7C9A0F681852E9C60018ED1F /* NSDictionary+NSNullUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+NSNullUtility.m"; sourceTree = "<group>"; };
 		7C9BD16C1926BC7D003E9F8E /* CFElPeA.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFElPeA.h; sourceTree = "<group>"; };
 		7C9BD16D1926BC7D003E9F8E /* CFElPeA.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFElPeA.m; sourceTree = "<group>"; };
+		7C9BD1701926EB13003E9F8E /* GADModules.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GADModules.h; sourceTree = "<group>"; };
+		7C9BD1711926EEF6003E9F8E /* GADInAppPurchase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GADInAppPurchase.h; sourceTree = "<group>"; };
+		7C9BD1721926EEF6003E9F8E /* GADInAppPurchaseDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GADInAppPurchaseDelegate.h; sourceTree = "<group>"; };
 		7CAFA3361842A206005A06BC /* placeholder-favorites@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-favorites@2x.png"; sourceTree = "<group>"; };
 		7CAFA3371842A206005A06BC /* placeholder-history@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-history@2x.png"; sourceTree = "<group>"; };
 		7CAFA33A1842C359005A06BC /* gripper@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "gripper@2x.png"; sourceTree = "<group>"; };
@@ -448,6 +451,9 @@
 				7C6CE7EE1877B77100DDEF54 /* GADInterstitialDelegate.h */,
 				7C6CE7EF1877B77100DDEF54 /* GADRequest.h */,
 				7C6CE7F01877B77100DDEF54 /* GADRequestError.h */,
+				7C9BD1711926EEF6003E9F8E /* GADInAppPurchase.h */,
+				7C9BD1721926EEF6003E9F8E /* GADInAppPurchaseDelegate.h */,
+				7C9BD1701926EB13003E9F8E /* GADModules.h */,
 				7C6CE7F11877B77100DDEF54 /* libGoogleAdMobAds.a */,
 			);
 			name = AdMob;

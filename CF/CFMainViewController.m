@@ -18,12 +18,14 @@
 #import "CFHistoryViewController.h"
 #import "CFMoreViewController.h"
 #import "OLShapeTintedButton.h"
+#import "GADInterstitial.h"
+#import "GADBannerView.h"
 
 #define TAB_BAR_HEIGHT 60.0
 #define TAB_BUTTON_WIDTH 75.0
 #define CONTENT_ORIGIN 160.0
 
-@interface CFMainViewController () <UIScrollViewDelegate, UISearchBarDelegate, CFEnterStopCodeViewDelegate, CFStopTableViewDelegate, CFMapControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate>
+@interface CFMainViewController () <UIScrollViewDelegate, UISearchBarDelegate, CFEnterStopCodeViewDelegate, CFStopTableViewDelegate, CFMapControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate, GADInterstitialDelegate>
 
 @property (nonatomic, strong) CFMapController *mapController;
 @property (nonatomic, strong) CFEnterStopCodeView *enterStopCodeView;
@@ -49,6 +51,10 @@
 @property (nonatomic, assign) CLLocationCoordinate2D mapLocationCoordinate;
 @property (nonatomic, assign) BOOL mapMode;
 @property (nonatomic, assign) BOOL mapEnabled;
+
+@property (nonatomic, strong) GADBannerView *mapBannerAd;
+@property (nonatomic, strong) GADInterstitial *interstitialAd;
+@property (nonatomic, assign) BOOL interstitialLoaded;
 
 @end
 
@@ -87,6 +93,7 @@
     self.contentView = [[UIToolbar alloc] initWithFrame:CGRectMake(0, CONTENT_ORIGIN, self.view.bounds.size.width, self.view.bounds.size.height - CONTENT_ORIGIN)];
     self.contentView.layer.anchorPoint = CGPointMake(0.5, 1.0);
     self.contentView.frame = CGRectMake(0, CONTENT_ORIGIN, self.view.bounds.size.width, self.view.bounds.size.height - CONTENT_ORIGIN);
+    self.initialContentCenterY = self.contentView.center.y;
     [self.view addSubview:self.contentView];
     
     self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.contentView.bounds.size.width, self.contentView.bounds.size.height - TAB_BAR_HEIGHT)];
@@ -146,7 +153,7 @@
     [self.historyButton addGestureRecognizer:clearHistory];
     
     // ese booleano po
-    self.mapEnabled = [OLCashier hasProduct:@"CF01"] || [[NSUserDefaults standardUserDefaults] boolForKey:@"CFEnableMapWithAds"];
+    if ([OLCashier hasProduct:@"CF01"] || [[NSUserDefaults standardUserDefaults] boolForKey:@"CFEnableMapWithAds"]) self.mapEnabled = YES;
     
 #if TARGET_IPHONE_SIMULATOR
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"CF01"];
@@ -213,7 +220,6 @@
 {
     CGFloat verticalMargin = 12.0;
     CGFloat imageOriginY = floorf((self.scrollView.bounds.size.height - 240.0) / 2);
-    NSLog(@"%f", imageOriginY);
     
     self.favoritesPlaceholder = [[UIView alloc] initWithFrame:self.favoritesController.view.frame];
     UIImageView *favoritesPlaceholderImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"placeholder-favorites"]];
@@ -315,6 +321,12 @@
     
     if (self.isMovingToParentViewController == YES)
         [self tabButtonTapped:self.codeButton];
+    
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CFEnableMapWithAds"]) {
+        self.interstitialLoaded = NO;
+        [self loadInterstitialAd];
+        [self loadMapBannerAd];
+    }
 }
 
 - (void)importUserData
@@ -441,6 +453,11 @@
         
         [self.localNavigationBar pushNavigationItem:navItem animated:YES];
         
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CFEnableMapWithAds"]) {
+            if (self.interstitialLoaded) [self.interstitialAd presentFromRootViewController:self];
+            [self.view insertSubview:self.mapBannerAd aboveSubview:self.mapController];
+        }
+        
         Mixpanel *mixpanel = [Mixpanel sharedInstance];
         [mixpanel track:@"Entered Map Mode" properties:nil];
         
@@ -459,7 +476,7 @@
         
         CLLocationCoordinate2D center = self.mapController.mapView.userLocation.coordinate;
         center.latitude -= self.mapController.mapView.region.span.latitudeDelta * 0.36;
-        [self.mapController.mapView setCenterCoordinate:center];
+        [self.mapController.mapView setCenterCoordinate:center animated:YES];
     }
     
     [UIView animateWithDuration:0.33 delay:0.0 options:(7 >> 16) animations:^{
@@ -603,7 +620,7 @@
         [self closeMap];
         
         if (CGAffineTransformIsIdentity(self.contentView.transform)) {
-            self.contentView.transform = CGAffineTransformMakeScale(scaleFactor, 1.0);
+            self.contentView.transform = CGAffineTransformMakeScale(1.0, scaleFactor);
         }
         
     } completion:^(BOOL finished) {
@@ -736,7 +753,7 @@
     if (alertView.tag == 405) {
         switch (buttonIndex) {
             case 1:
-                
+                [self enableMapWithAds];
                 break;
                 
             case 2:
@@ -747,15 +764,6 @@
                 break;
         }
     }
-}
-
-- (void)enableMapWithAds
-{
-    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"CFEnableMapWithAds"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-    
-    self.mapEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"CFEnableMapWithAds"];
-    self.mapMode = YES;
 }
 
 - (void)purchaseMap
@@ -806,6 +814,64 @@
     }
     
     _mapEnabled = mapEnabled;
+}
+
+#pragma mark - Ads
+
+- (void)enableMapWithAds
+{
+    [self loadInterstitialAd];
+    [self loadMapBannerAd];
+    
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"CFEnableMapWithAds"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
+    self.mapEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"CFEnableMapWithAds"];
+    self.mapMode = YES;
+    
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    [mixpanel track:@"Enabled Map With Ads"];
+    [mixpanel registerSuperProperties:@{@"Has Map": @"Yes"}];
+}
+
+- (void)loadInterstitialAd
+{
+    GADRequest *request = [GADRequest request];
+    request.testDevices = @[@"61abccb6c029497b02bef4224933c76b", GAD_SIMULATOR_ID];
+    
+    self.interstitialAd = [GADInterstitial new];
+    self.interstitialAd.delegate = self;
+    self.interstitialAd.adUnitID = @"ca-app-pub-6226087428684107/9858178470";
+    [self.interstitialAd loadRequest:request];
+}
+
+- (void)loadMapBannerAd
+{
+    GADRequest *request = [GADRequest request];
+    request.testDevices = @[@"61abccb6c029497b02bef4224933c76b", GAD_SIMULATOR_ID];
+    
+    self.mapBannerAd = [[GADBannerView alloc] initWithAdSize:kGADAdSizeBanner];
+    self.mapBannerAd.adUnitID = @"ca-app-pub-6226087428684107/9439376076";
+    self.mapBannerAd.rootViewController = self;
+    self.mapBannerAd.frame = CGRectMake(0, self.view.bounds.size.height - TAB_BAR_HEIGHT - self.mapBannerAd.bounds.size.height, self.mapBannerAd.bounds.size.width, self.mapBannerAd.bounds.size.height);
+    [self.mapBannerAd loadRequest:request];
+}
+
+- (void)interstitialDidReceiveAd:(GADInterstitial *)interstitial
+{
+    self.interstitialLoaded = YES;
+}
+
+- (void)interstitial:(GADInterstitial *)interstitial didFailToReceiveAdWithError:(GADRequestError *)error
+{
+    self.interstitialLoaded = NO;
+}
+
+- (void)interstitialDidDismissScreen:(GADInterstitial *)interstitial
+{
+    self.interstitialAd = nil;
+    self.interstitialLoaded = NO;
+    [self loadInterstitialAd];
 }
 
 #pragma mark - Tab switching
@@ -954,7 +1020,6 @@
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    NSLog(@"index: %d", buttonIndex);
     if (buttonIndex == 0) {
         NSArray *emptyArray = [NSArray new];
         
