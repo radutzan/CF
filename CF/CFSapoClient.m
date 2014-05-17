@@ -31,7 +31,7 @@ NSString * const queryKeySalt = @"4ESMLSVB_ONDA";
         [_sharedSapoClient setDefaultHeader:@"Accept" value:@"application/json"];
         [_sharedSapoClient setDefaultHeader:@"X-Api-Version" value:APIVersion];
 
-        [_sharedSapoClient setDefaultHeader:@"User-Agent" value:[NSString stringWithFormat:@"%@ %@ rv:%@ (%@; iPhone OS %@; %@)",[[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString *)kCFBundleExecutableKey] ?: [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString *)kCFBundleIdentifierKey],[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"],(__bridge id)CFBundleGetValueForInfoDictionaryKey(CFBundleGetMainBundle(), kCFBundleVersionKey) ?: [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString *)kCFBundleVersionKey],[[UIDevice currentDevice] model],[[UIDevice currentDevice] systemVersion],[[NSLocale currentLocale] localeIdentifier]]];
+        [_sharedSapoClient setDefaultHeader:@"User-Agent" value:[NSString stringWithFormat:@"%@ %@ rv:%@ (%@; iOS %@; %@)",[[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString *)kCFBundleExecutableKey] ?: [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString *)kCFBundleIdentifierKey],[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"],(__bridge id)CFBundleGetValueForInfoDictionaryKey(CFBundleGetMainBundle(), kCFBundleVersionKey) ?: [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString *)kCFBundleVersionKey],[[UIDevice currentDevice] model],[[UIDevice currentDevice] systemVersion],[[NSLocale currentLocale] localeIdentifier]]];
     });
     return _sharedSapoClient;
 }

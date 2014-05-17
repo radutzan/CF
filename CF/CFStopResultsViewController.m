@@ -230,6 +230,7 @@
         self.bannerView.adUnitID = @"ca-app-pub-6226087428684107/3340545274";
         
         GADRequest *adRequest = [GADRequest request];
+        adRequest.testDevices = @[GAD_SIMULATOR_ID];
         [adRequest setLocationWithLatitude:stop.coordinate.latitude longitude:stop.coordinate.longitude accuracy:0];
         [self.bannerView loadRequest:adRequest];
     }

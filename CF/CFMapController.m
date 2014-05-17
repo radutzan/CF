@@ -55,14 +55,8 @@
         
         self.stopCalloutView = [SMCalloutView new];
         self.stopCalloutView.delegate = self;
-        self.stopCalloutView.clipsToBounds = NO;
-        self.stopCalloutView.userInteractionEnabled = YES;
-        self.stopCalloutView.layer.contentsCenter = CGRectMake(0.0, 0.25, 0.0, 0.24);
-        self.stopCalloutView.layer.masksToBounds = NO;
-        self.stopCalloutView.layer.shadowColor = [UIColor colorWithWhite:0 alpha:0.1].CGColor;
-        self.stopCalloutView.layer.shadowOffset = CGSizeMake(0, 0);
-        self.stopCalloutView.layer.shadowOpacity = 1.0;
-        self.stopCalloutView.layer.shadowRadius = 30.0;
+        self.stopCalloutView.constrainedInsets = UIEdgeInsetsMake(64.0, 0, 60.0, 0);
+        self.stopCalloutView.permittedArrowDirection = SMCalloutArrowDirectionAny;
         
         self.darkOverlay = [[UIView alloc] initWithFrame:self.bounds];
         self.darkOverlay.backgroundColor = [UIColor colorWithWhite:0 alpha:0.2];
@@ -127,7 +121,7 @@
 - (void)stopCalloutTapped
 {
     [self.delegate mapControllerDidSelectStop:self.selectedStop.code];
-    [self.mapView deselectAnnotation:self.selectedStop animated:NO];
+//    [self.mapView deselectAnnotation:self.selectedStop animated:NO];
 }
 
 - (void)showDarkOverlay
@@ -380,43 +374,36 @@
 {
     CFStopSignView *stopSign = [[CFStopSignView alloc] initWithFrame:CGRectMake(0, 0, 280, 52)];
     stopSign.stop = self.selectedStop;
-    
-    UIButton *requestButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    requestButton.frame = stopSign.bounds;
-    [requestButton addTarget:self action:@selector(stopCalloutTapped) forControlEvents:UIControlEventTouchUpInside];
-    [stopSign addSubview:requestButton];
+    stopSign.userInteractionEnabled = NO;
     
     self.stopCalloutView.contentView = stopSign;
-    
-    self.stopCalloutView.layer.shadowPath = CGPathCreateWithRoundedRect(self.stopCalloutView.contentView.bounds, 4.0, 4.0, nil);
     
     ((CustomPinAnnotationView *)pin).calloutView = self.stopCalloutView;
     [self.stopCalloutView presentCalloutFromRect:pin.bounds
                                           inView:pin
                                constrainedToView:self.mapView
-                        permittedArrowDirections:SMCalloutArrowDirectionAny
                                         animated:YES];
 }
 
 - (NSTimeInterval)calloutView:(SMCalloutView *)theCalloutView delayForRepositionWithSize:(CGSize)offset
 {
-    if ([NSStringFromClass([self.stopCalloutView.superview.superview class]) isEqualToString:@"MKAnnotationContainerView"]) {
-        CGFloat pixelsPerDegreeLat = self.mapView.frame.size.height / self.mapView.region.span.latitudeDelta;
-        CGFloat pixelsPerDegreeLon = self.mapView.frame.size.width / self.mapView.region.span.longitudeDelta;
-        
-        CLLocationDegrees latitudinalShift = offset.height / pixelsPerDegreeLat;
-        CLLocationDegrees longitudinalShift = -(offset.width / pixelsPerDegreeLon);
-        
-        CGFloat lat = self.mapView.region.center.latitude + latitudinalShift;
-        CGFloat lon = self.mapView.region.center.longitude + longitudinalShift;
-        CLLocationCoordinate2D newCenterCoordinate = (CLLocationCoordinate2D){lat, lon};
-        
-        if (fabsf(newCenterCoordinate.latitude) <= 90 && fabsf(newCenterCoordinate.longitude <= 180)) {
-            [self.mapView setCenterCoordinate:newCenterCoordinate animated:YES];
-        }
-    }
+    CLLocationCoordinate2D coordinate = self.mapView.centerCoordinate;
+    
+    CGPoint center = [self.mapView convertCoordinate:coordinate toPointToView:self];
+    
+    center.x -= offset.width;
+    center.y -= offset.height;
+    
+    coordinate = [self.mapView convertPoint:center toCoordinateFromView:self];
+    
+    [self.mapView setCenterCoordinate:coordinate animated:YES];
     
     return kSMCalloutViewRepositionDelayForUIScrollView;
+}
+
+- (void)calloutViewClicked:(SMCalloutView *)calloutView
+{
+    [self stopCalloutTapped];
 }
 
 - (MKOverlayRenderer *)mapView:(MKMapView *)mapView rendererForOverlay:(id<MKOverlay>)overlay
