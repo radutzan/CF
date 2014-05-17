@@ -109,6 +109,8 @@
         NSString *helpPath = [[NSBundle mainBundle] pathForResource:@"help" ofType:@"html"];
         NSData *help = [NSData dataWithContentsOfFile:helpPath];
         
+        if (!webView) NSLog(@"no webview lol");
+        
         [webView loadData:help MIMEType:@"text/html" textEncodingName:@"UTF-8" baseURL:baseURL];
         
         controller.title = NSLocalizedString(@"HELP", nil);

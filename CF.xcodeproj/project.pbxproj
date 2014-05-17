@@ -58,7 +58,6 @@
 		7C2EECEC188345F500AE78C2 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CFF7E4818381645006230CE /* UIKit.framework */; };
 		7C2EECED188345F500AE78C2 /* libGoogleAdMobAds.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C6CE7F11877B77100DDEF54 /* libGoogleAdMobAds.a */; };
 		7C2EECEE188345F500AE78C2 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CFF7E4418381645006230CE /* Foundation.framework */; };
-		7C2EECEF188345F500AE78C2 /* libCrittercism_v4_3_0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C5DD34018791F6900FE5CFB /* libCrittercism_v4_3_0.a */; };
 		7C2EECF0188345F500AE78C2 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 87FD0B9EF07342C68E7A06CC /* libPods.a */; };
 		7C2EECF2188345F500AE78C2 /* metro@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CFF7EC0183871E8006230CE /* metro@2x.png */; };
 		7C2EECF3188345F500AE78C2 /* button-favorites@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CFF7EAD18384106006230CE /* button-favorites@2x.png */; };
@@ -92,7 +91,6 @@
 		7C426417184AE88000A8968F /* CFResultCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C426416184AE88000A8968F /* CFResultCell.m */; };
 		7C42641A184AF3E300A8968F /* CFFavoriteCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C426419184AF3E300A8968F /* CFFavoriteCell.m */; };
 		7C5DD34118791F6900FE5CFB /* dsym_upload.sh in Resources */ = {isa = PBXBuildFile; fileRef = 7C5DD33F18791F6900FE5CFB /* dsym_upload.sh */; };
-		7C5DD34218791F6900FE5CFB /* libCrittercism_v4_3_0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C5DD34018791F6900FE5CFB /* libCrittercism_v4_3_0.a */; };
 		7C5DD3441879234F00FE5CFB /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C5DD3431879234F00FE5CFB /* SystemConfiguration.framework */; };
 		7C5FD9CE184F8B140099FEE2 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7C5FD9CC184F8B140099FEE2 /* Localizable.strings */; };
 		7C6CE7CC1877450D00DDEF54 /* CFClipView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C6CE7CB1877450D00DDEF54 /* CFClipView.m */; };
@@ -119,6 +117,8 @@
 		7C9BD17619272726003E9F8E /* features-bip@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7C9BD17319272726003E9F8E /* features-bip@2x.png */; };
 		7C9BD17719272726003E9F8E /* features-stops@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7C9BD17419272726003E9F8E /* features-stops@2x.png */; };
 		7C9BD17819272726003E9F8E /* features-stops@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7C9BD17419272726003E9F8E /* features-stops@2x.png */; };
+		7C9BD17A19282BEB003E9F8E /* libCrittercism_v4_3_3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C9BD17919282BEB003E9F8E /* libCrittercism_v4_3_3.a */; };
+		7C9BD17B19282BEB003E9F8E /* libCrittercism_v4_3_3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C9BD17919282BEB003E9F8E /* libCrittercism_v4_3_3.a */; };
 		7CAFA3381842A206005A06BC /* placeholder-favorites@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CAFA3361842A206005A06BC /* placeholder-favorites@2x.png */; };
 		7CAFA3391842A206005A06BC /* placeholder-history@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CAFA3371842A206005A06BC /* placeholder-history@2x.png */; };
 		7CAFA33B1842C359005A06BC /* gripper@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CAFA33A1842C359005A06BC /* gripper@2x.png */; };
@@ -206,7 +206,6 @@
 		7C5DD33D18791F6900FE5CFB /* Crittercism.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Crittercism.h; sourceTree = "<group>"; };
 		7C5DD33E18791F6900FE5CFB /* CrittercismDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CrittercismDelegate.h; sourceTree = "<group>"; };
 		7C5DD33F18791F6900FE5CFB /* dsym_upload.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = dsym_upload.sh; sourceTree = "<group>"; };
-		7C5DD34018791F6900FE5CFB /* libCrittercism_v4_3_0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libCrittercism_v4_3_0.a; sourceTree = "<group>"; };
 		7C5DD3431879234F00FE5CFB /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		7C5FD9CD184F8B140099FEE2 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		7C5FD9CF184F8B5F0099FEE2 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -254,6 +253,7 @@
 		7C9BD1721926EEF6003E9F8E /* GADInAppPurchaseDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GADInAppPurchaseDelegate.h; sourceTree = "<group>"; };
 		7C9BD17319272726003E9F8E /* features-bip@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "features-bip@2x.png"; sourceTree = "<group>"; };
 		7C9BD17419272726003E9F8E /* features-stops@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "features-stops@2x.png"; sourceTree = "<group>"; };
+		7C9BD17919282BEB003E9F8E /* libCrittercism_v4_3_3.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libCrittercism_v4_3_3.a; sourceTree = "<group>"; };
 		7CAFA3361842A206005A06BC /* placeholder-favorites@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-favorites@2x.png"; sourceTree = "<group>"; };
 		7CAFA3371842A206005A06BC /* placeholder-history@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-history@2x.png"; sourceTree = "<group>"; };
 		7CAFA33A1842C359005A06BC /* gripper@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "gripper@2x.png"; sourceTree = "<group>"; };
@@ -341,7 +341,7 @@
 				7C2EECEC188345F500AE78C2 /* UIKit.framework in Frameworks */,
 				7C2EECED188345F500AE78C2 /* libGoogleAdMobAds.a in Frameworks */,
 				7C2EECEE188345F500AE78C2 /* Foundation.framework in Frameworks */,
-				7C2EECEF188345F500AE78C2 /* libCrittercism_v4_3_0.a in Frameworks */,
+				7C9BD17B19282BEB003E9F8E /* libCrittercism_v4_3_3.a in Frameworks */,
 				7C2EECF0188345F500AE78C2 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -353,6 +353,7 @@
 				7CE0D9DA189DD2D800D9782E /* Social.framework in Frameworks */,
 				7C5DD3441879234F00FE5CFB /* SystemConfiguration.framework in Frameworks */,
 				7C6CE7FD1877B7DD00DDEF54 /* StoreKit.framework in Frameworks */,
+				7C9BD17A19282BEB003E9F8E /* libCrittercism_v4_3_3.a in Frameworks */,
 				7C6CE7FB1877B7D000DDEF54 /* MessageUI.framework in Frameworks */,
 				7C6CE7F91877B7C700DDEF54 /* AVFoundation.framework in Frameworks */,
 				7C6CE7F71877B7BF00DDEF54 /* AudioToolbox.framework in Frameworks */,
@@ -363,7 +364,6 @@
 				7CFF7E4918381645006230CE /* UIKit.framework in Frameworks */,
 				7C6CE7F21877B77100DDEF54 /* libGoogleAdMobAds.a in Frameworks */,
 				7CFF7E4518381645006230CE /* Foundation.framework in Frameworks */,
-				7C5DD34218791F6900FE5CFB /* libCrittercism_v4_3_0.a in Frameworks */,
 				638E7104AF714820AFC7F0D0 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -427,7 +427,7 @@
 				7C5DD33D18791F6900FE5CFB /* Crittercism.h */,
 				7C5DD33E18791F6900FE5CFB /* CrittercismDelegate.h */,
 				7C5DD33F18791F6900FE5CFB /* dsym_upload.sh */,
-				7C5DD34018791F6900FE5CFB /* libCrittercism_v4_3_0.a */,
+				7C9BD17919282BEB003E9F8E /* libCrittercism_v4_3_3.a */,
 			);
 			path = CrittercismSDK;
 			sourceTree = "<group>";
@@ -1061,6 +1061,7 @@
 					"$(inherited)",
 					../CF/CF,
 					/Users/radutzan/Proyectos/Onda/sources/CF/CF/CrittercismSDK,
+					"$(PROJECT_DIR)/CF/CrittercismSDK",
 				);
 				PRODUCT_NAME = "Cuánta Beta";
 				VALID_ARCHS = "armv7 armv7s arm64";
@@ -1082,6 +1083,7 @@
 					"$(inherited)",
 					../CF/CF,
 					/Users/radutzan/Proyectos/Onda/sources/CF/CF/CrittercismSDK,
+					"$(PROJECT_DIR)/CF/CrittercismSDK",
 				);
 				PRODUCT_NAME = "Cuánta Beta";
 				VALID_ARCHS = "armv7 armv7s arm64";
@@ -1175,6 +1177,7 @@
 					"$(inherited)",
 					../CF/CF,
 					/Users/radutzan/Proyectos/Onda/sources/CF/CF/CrittercismSDK,
+					"$(PROJECT_DIR)/CF/CrittercismSDK",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "armv7 armv7s arm64";
@@ -1196,6 +1199,7 @@
 					"$(inherited)",
 					../CF/CF,
 					/Users/radutzan/Proyectos/Onda/sources/CF/CF/CrittercismSDK,
+					"$(PROJECT_DIR)/CF/CrittercismSDK",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "armv7 armv7s arm64";

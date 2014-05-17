@@ -164,12 +164,12 @@
 
 // Crittercism delegate property
 
-- (id <CrittercismDelegate>)delegate;
++ (id <CrittercismDelegate>)delegate;
 
-- (void)setDelegate:(id <CrittercismDelegate>)delegate;
++ (void)setDelegate:(id <CrittercismDelegate>)delegate;
 
 // Did the application crash on the previous load?
 
-- (BOOL)didCrashOnLastLoad;
++ (BOOL)didCrashOnLastLoad;
 
 @end
