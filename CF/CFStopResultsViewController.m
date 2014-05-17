@@ -45,7 +45,7 @@
         
         self.tableView.separatorInset = UIEdgeInsetsZero;
         
-        self.removedAds = [OLCashier hasProduct:@"CF02"];
+        self.removedAds = ([OLCashier hasProduct:@"CF01"] || [OLCashier hasProduct:@"CF02"]);
     }
     return self;
 }
@@ -482,48 +482,6 @@
 - (BOOL)removedAds
 {
     return ([OLCashier hasProduct:@"CF01"] || [OLCashier hasProduct:@"CF02"]);
-}
-
-- (void)removeAds
-{
-    Mixpanel *mixpanel = [Mixpanel sharedInstance];
-    [mixpanel track:@"Triggered Ad Removal"];
-    
-    NSString *noAdsIdentifier = @"CF02";
-    
-    OLGhostAlertView *wait = [[OLGhostAlertView alloc] initWithTitle:NSLocalizedString(@"STORE_WAIT_TITLE", nil) message:NSLocalizedString(@"STORE_WAIT_MESSAGE", nil) timeout:100.0 dismissible:NO];
-    wait.position = OLGhostAlertViewPositionCenter;
-    [wait show];
-    
-    [[OLCashier defaultCashier] buyProduct:noAdsIdentifier handler:^(NSError *error, NSArray *transactions, NSDictionary *userInfo) {
-        SKPaymentTransaction *transaction = transactions.firstObject;
-        [wait hide];
-        
-        if (error) {
-            UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"STORE_ERROR_TITLE", nil) message:[NSString stringWithFormat:@"%@.\n%@", error.localizedDescription, NSLocalizedString(@"ERROR_MESSAGE_TRY_AGAIN", nil)] delegate:self cancelButtonTitle:NSLocalizedString(@"ERROR_DISMISS", nil) otherButtonTitles:nil];
-            [errorAlert show];
-            
-            [mixpanel track:@"Failed to Purchase Ad Removal"];
-            return;
-        }
-        
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:noAdsIdentifier];
-        [transaction finish];
-        
-        [UIView animateWithDuration:0.25 animations:^{
-            self.bannerView.frame = CGRectMake(0, self.view.bounds.size.height, self.bannerView.bounds.size.width, self.bannerView.bounds.size.width);
-            self.bannerView.alpha = 0;
-        } completion:^(BOOL finished) {
-            self.bannerView.hidden = YES;
-            [self.tableView reloadData];
-        }];
-        
-        OLGhostAlertView *thanks = [[OLGhostAlertView alloc] initWithTitle:NSLocalizedString(@"STORE_THANK_YOU_TITLE", nil) message:NSLocalizedString(@"STORE_THANK_YOU_MESSAGE_ADS", nil)];
-        thanks.position = OLGhostAlertViewPositionCenter;
-        [thanks show];
-        
-        [mixpanel track:@"Removed Ads"];
-    }];
 }
 
 @end

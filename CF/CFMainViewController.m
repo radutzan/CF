@@ -162,11 +162,17 @@
     self.mapEnabled = NO;
 #endif
     
-    NSString *mappy = @"No";
-    if (self.mapEnabled) mappy = @"Yes";
+#ifdef DEV_VERSION
+    NSLog(@"dev!");
+#endif
     
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    
+    NSString *mappy = (self.mapEnabled)? @"Yes" : @"No";
+    NSString *freeMap = ([[NSUserDefaults standardUserDefaults] boolForKey:@"CFEnableMapWithAds"])? @"Yes" : @"No";
+    
     [mixpanel registerSuperProperties:@{@"Has Map": mappy}];
+    [mixpanel registerSuperProperties:@{@"Has Free Map": freeMap}];
     
     self.openMapButton = [UIButton buttonWithType:UIButtonTypeCustom];
     self.openMapButton.frame = CGRectMake(0, self.localNavigationBar.frame.size.height, self.view.bounds.size.width, CONTENT_ORIGIN - self.localNavigationBar.frame.size.height);
@@ -320,8 +326,10 @@
 {
     [super viewDidAppear:animated];
     
-    if (self.isMovingToParentViewController == YES)
+    if (self.isMovingToParentViewController == YES) {
         [self tabButtonTapped:self.codeButton];
+        self.mapMode = NO;
+    }
     
     if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CFEnableMapWithAds"]) {
         self.interstitialLoaded = NO;
@@ -475,9 +483,7 @@
         
         [self.localNavigationBar popNavigationItemAnimated:YES];
         
-        CLLocationCoordinate2D center = self.mapController.mapView.userLocation.coordinate;
-        center.latitude -= self.mapController.mapView.region.span.latitudeDelta * 0.36;
-        [self.mapController.mapView setCenterCoordinate:center animated:YES];
+        [self centerMapLocationForClosedState];
     }
     
     [UIView animateWithDuration:0.33 delay:0.0 options:(7 >> 16) animations:^{
@@ -493,11 +499,6 @@
 - (void)switchToMap
 {
     self.mapMode = YES;
-}
-
-- (void)switchFromMap
-{
-    self.mapMode = NO;
 }
 
 - (void)openMap
@@ -526,6 +527,38 @@
     self.gripper.alpha = 1;
     self.openMapButton.alpha = 1.0;
     self.openMapButton.center = self.initialOpenMapButtonCenter;
+}
+
+- (void)centerMapLocationForClosedState
+{
+    CLLocationCoordinate2D center = self.mapController.mapView.userLocation.coordinate;
+    center.latitude -= self.mapController.mapView.region.span.latitudeDelta * 0.36;
+    [self.mapController.mapView setCenterCoordinate:center animated:YES];
+}
+
+- (void)centerMapLocationInTransition
+{
+    CGPoint targetCenter = CGPointMake(self.view.center.x, 102.0);
+    
+    CLLocationCoordinate2D userLocation = self.mapController.mapView.userLocation.coordinate;
+    CGPoint currentCenter = [self.mapController.mapView convertCoordinate:userLocation toPointToView:self.view];
+    CGPoint finalCenter = currentCenter;
+    
+    //    userLocation.latitude -= self.mapController.mapView.region.span.latitudeDelta * 0.36;
+    
+    CGSize offset = CGSizeMake(targetCenter.x - currentCenter.x, targetCenter.y - currentCenter.y);
+    
+    finalCenter.x -= offset.width;
+    finalCenter.y -= offset.height;
+    
+    CLLocationCoordinate2D coordinate = [self.mapController.mapView convertPoint:finalCenter toCoordinateFromView:self.view];
+    
+    [self.mapController.mapView setCenterCoordinate:coordinate animated:YES];
+}
+
+- (void)mapControllerDidUpdateLocation
+{
+    [self centerMapLocationForClosedState];
 }
 
 - (void)handleGripDragGesture:(UIPanGestureRecognizer *)recognizer
@@ -569,9 +602,7 @@
             CGFloat scaleFactor = 1.0 - slideFactor / 4;
             self.contentView.transform = CGAffineTransformMakeScale(1.0, scaleFactor);
             
-            CLLocationCoordinate2D center = self.mapController.mapView.userLocation.coordinate;
-            center.latitude -= self.mapController.mapView.region.span.latitudeDelta * 0.36;
-            [self.mapController.mapView setCenterCoordinate:center];
+            [self centerMapLocationForClosedState];
         }
         
     } else {
@@ -841,6 +872,7 @@
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     [mixpanel track:@"Enabled Map With Ads"];
     [mixpanel registerSuperProperties:@{@"Has Map": @"Yes"}];
+    [mixpanel registerSuperProperties:@{@"Has Free Map": @"Yes"}];
 }
 
 - (void)loadInterstitialAd

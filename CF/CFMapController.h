@@ -15,6 +15,10 @@
 
 - (void)mapControllerDidSelectStop:(NSString *)stopCode;
 
+@optional
+
+- (void)mapControllerDidUpdateLocation;
+
 @end
 
 @interface CFMapController : UIView <MKMapViewDelegate>

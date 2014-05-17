@@ -179,7 +179,7 @@
 - (void)placeBipAnnotationsInRegion:(MKCoordinateRegion)region withRadius:(float)radius
 {
     [[CFSapoClient sharedClient] bipSpotsAroundCoordinate:region.center radius:radius handler:^(NSError *error, id result) {
-        if (error || [result count] == 0) {
+        if (error) {
             NSLog(@"bip spots error: %@", error);
             return;
         }
@@ -261,6 +261,8 @@
     
     MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(currentLocation.coordinate, 250, 250);
     self.mapView.region = region;
+    
+    [self.delegate mapControllerDidUpdateLocation];
     
     [manager stopUpdatingLocation];
 }

@@ -45,7 +45,7 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 3;
+    return 2;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -65,10 +65,8 @@
     
     if (indexPath.section == 0)
         thisIdentifier = @"CF01";
-    else if (indexPath.section == 1)
-        thisIdentifier = @"CF02";
     
-    if (indexPath.section == 0 || indexPath.section == 1) {
+    if (indexPath.section == 0) {
         SKProduct *currentProduct = [[[OLCashier defaultCashier] products] productForIdentifier:thisIdentifier];
         
         cell.textLabel.text = currentProduct.localizedTitle;
@@ -96,13 +94,11 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
 {
-    if (section == 0 || section == 1) {
+    if (section == 0) {
         NSString *thisIdentifier;
         
         if (section == 0)
             thisIdentifier = @"CF01";
-        else if (section == 1)
-            thisIdentifier = @"CF02";
         
         return [[[OLCashier defaultCashier] products] productForIdentifier:thisIdentifier].localizedDescription;
     } else {
@@ -125,13 +121,11 @@
     
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     
-    if (indexPath.section == 0 || indexPath.section == 1) {
+    if (indexPath.section == 0) {
         NSString *thisIdentifier;
         
         if (indexPath.section == 0)
             thisIdentifier = @"CF01";
-        else if (indexPath.section == 1)
-            thisIdentifier = @"CF02";
         
         if ([OLCashier hasProduct:thisIdentifier]) return;
         
@@ -158,7 +152,6 @@
             [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
             
             OLGhostAlertView *thanks = [[OLGhostAlertView alloc] initWithTitle:NSLocalizedString(@"STORE_THANK_YOU_TITLE", nil) message:NSLocalizedString(@"STORE_THANK_YOU_MESSAGE_MAP", nil)];
-            if (indexPath.section == 1) thanks.message = NSLocalizedString(@"STORE_THANK_YOU_MESSAGE_ADS", nil);
             thanks.position = OLGhostAlertViewPositionCenter;
             [thanks show];
             

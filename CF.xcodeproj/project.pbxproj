@@ -1051,6 +1051,11 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "CF/CF-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"COCOAPODS=1",
+					"DEV_VERSION=1",
+				);
 				INFOPLIST_FILE = "Cuánto Falta copy-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
