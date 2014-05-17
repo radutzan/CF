@@ -23,7 +23,7 @@
 #define TAB_BUTTON_WIDTH 75.0
 #define CONTENT_ORIGIN 160.0
 
-@interface CFMainViewController () <UIScrollViewDelegate, UISearchBarDelegate, CFEnterStopCodeViewDelegate, CFStopTableViewDelegate, CFMapControllerDelegate, UIActionSheetDelegate>
+@interface CFMainViewController () <UIScrollViewDelegate, UISearchBarDelegate, CFEnterStopCodeViewDelegate, CFStopTableViewDelegate, CFMapControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate>
 
 @property (nonatomic, strong) CFMapController *mapController;
 @property (nonatomic, strong) CFEnterStopCodeView *enterStopCodeView;
@@ -146,7 +146,7 @@
     [self.historyButton addGestureRecognizer:clearHistory];
     
     // ese booleano po
-    self.mapEnabled = [OLCashier hasProduct:@"CF01"];
+    self.mapEnabled = [OLCashier hasProduct:@"CF01"] || [[NSUserDefaults standardUserDefaults] boolForKey:@"CFEnableMapWithAds"];
     
 #if TARGET_IPHONE_SIMULATOR
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"CF01"];
@@ -298,43 +298,6 @@
         
         [self importUserData];
     }
-}
-
-- (void)showMapFeatures
-{
-    self.mapFeaturesView = [[UIScrollView alloc] initWithFrame:self.openMapButton.bounds];
-    self.mapFeaturesView.pagingEnabled = YES;
-    self.mapFeaturesView.contentSize = CGSizeMake(self.mapFeaturesView.bounds.size.width * 4, self.mapFeaturesView.bounds.size.height);
-    self.mapFeaturesView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.6];
-    self.mapFeaturesView.tag = 5674;
-    [self.openMapButton addSubview:self.mapFeaturesView];
-    
-    UIButton *activateMapButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [activateMapButton setTitle:@"Activar Gratis (con Publicidad)" forState:UIControlStateNormal];
-    activateMapButton.frame = CGRectMake(0.0, self.mapFeaturesView.bounds.size.height - 45.0, self.mapFeaturesView.bounds.size.width, 45.0);
-    activateMapButton.titleLabel.font = [UIFont fontWithName:@"AvenirNext-Medium" size:19.0];
-    activateMapButton.layer.backgroundColor = [[[[UIApplication sharedApplication] delegate] window].tintColor colorWithAlphaComponent:0.12].CGColor;
-    [self.mapFeaturesView addSubview:activateMapButton];
-    
-    
-    
-    UIButton *finalActivateMapButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [finalActivateMapButton setTitle:[activateMapButton titleForState:UIControlStateNormal] forState:UIControlStateNormal];
-    finalActivateMapButton.frame = CGRectOffset(activateMapButton.frame, self.mapFeaturesView.bounds.size.width * 3, 0.0);
-    finalActivateMapButton.titleLabel.font = activateMapButton.titleLabel.font;
-    finalActivateMapButton.layer.backgroundColor = [[[[UIApplication sharedApplication] delegate] window].tintColor colorWithAlphaComponent:0.12].CGColor;
-    [self.mapFeaturesView addSubview:finalActivateMapButton];
-}
-
-- (void)hideMapFeatures
-{
-    UIScrollView *mapFeatures = (UIScrollView *)[self.view viewWithTag:5674];
-    
-    [UIView animateWithDuration:0.25 delay:0 options:0 animations:^{
-        mapFeatures.alpha = 0;
-    } completion:^(BOOL finished) {
-        [mapFeatures removeFromSuperview];
-    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -547,41 +510,6 @@
     self.openMapButton.center = self.initialOpenMapButtonCenter;
 }
 
-- (void)openMapWithVelocity:(CGFloat)velocity
-{
-    velocity = MIN(abs(velocity), 3500);
-    CGFloat velocityFactor = velocity / 3500;
-    CGFloat animationDuration = 0.3 * (1 - velocityFactor);
-    
-    [UIView animateWithDuration:animationDuration delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-        [self openMap];
-    } completion:^(BOOL finished) {
-        self.mapMode = YES;
-    }];
-}
-
-- (void)closeMapWithVelocity:(CGFloat)velocity
-{
-    velocity = MIN(velocity, 3500);
-    CGFloat velocityFactor = velocity / 3500;
-    CGFloat animationDuration = 0.3 * (1 - velocityFactor);
-    CGFloat scaleFactor = 1 + velocityFactor * 0.2;
-    
-    [UIView animateWithDuration:animationDuration delay:0 options:0 animations:^{
-        [self closeMap];
-        
-        if (CGAffineTransformIsIdentity(self.contentView.transform)) {
-            self.contentView.transform = CGAffineTransformMakeScale(scaleFactor, 1.0);
-        }
-        
-    } completion:^(BOOL finished) {
-        [UIView animateWithDuration:0.7 delay:0 usingSpringWithDamping:0.25 initialSpringVelocity:0 options:UIViewAnimationOptionAllowUserInteraction animations:^{
-            self.contentView.transform = CGAffineTransformIdentity;
-        } completion:nil];
-        self.mapMode = NO;
-    }];
-}
-
 - (void)handleGripDragGesture:(UIPanGestureRecognizer *)recognizer
 {
     CGFloat gripTranslation = [recognizer translationInView:self.contentView].y;
@@ -649,6 +577,185 @@
             self.mapMode = NO;
         }
     }
+}
+
+- (void)openMapWithVelocity:(CGFloat)velocity
+{
+    velocity = MIN(abs(velocity), 3500);
+    CGFloat velocityFactor = velocity / 3500;
+    CGFloat animationDuration = 0.3 * (1 - velocityFactor);
+    
+    [UIView animateWithDuration:animationDuration delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+        [self openMap];
+    } completion:^(BOOL finished) {
+        self.mapMode = YES;
+    }];
+}
+
+- (void)closeMapWithVelocity:(CGFloat)velocity
+{
+    velocity = MIN(velocity, 3500);
+    CGFloat velocityFactor = velocity / 3500;
+    CGFloat animationDuration = 0.3 * (1 - velocityFactor);
+    CGFloat scaleFactor = 1 + velocityFactor * 0.2;
+    
+    [UIView animateWithDuration:animationDuration delay:0 options:0 animations:^{
+        [self closeMap];
+        
+        if (CGAffineTransformIsIdentity(self.contentView.transform)) {
+            self.contentView.transform = CGAffineTransformMakeScale(scaleFactor, 1.0);
+        }
+        
+    } completion:^(BOOL finished) {
+        [UIView animateWithDuration:0.7 delay:0 usingSpringWithDamping:0.25 initialSpringVelocity:0 options:UIViewAnimationOptionAllowUserInteraction animations:^{
+            self.contentView.transform = CGAffineTransformIdentity;
+        } completion:nil];
+        self.mapMode = NO;
+    }];
+}
+
+- (void)showMapFeatures
+{
+    self.mapFeaturesView = [[UIScrollView alloc] initWithFrame:self.openMapButton.bounds];
+    self.mapFeaturesView.pagingEnabled = YES;
+    self.mapFeaturesView.contentSize = CGSizeMake(self.mapFeaturesView.bounds.size.width * 4, self.mapFeaturesView.bounds.size.height);
+    self.mapFeaturesView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.6];
+    self.mapFeaturesView.tag = 5674;
+    [self.openMapButton addSubview:self.mapFeaturesView];
+    
+    // page 1
+    UIButton *activateMapButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [activateMapButton setTitle:@"Actívalo Gratis (con Publicidad)" forState:UIControlStateNormal];
+    activateMapButton.frame = CGRectMake(0.0, self.mapFeaturesView.bounds.size.height - 45.0, self.mapFeaturesView.bounds.size.width, 45.0);
+    activateMapButton.titleLabel.font = [UIFont fontWithName:@"AvenirNext-Medium" size:19.0];
+    activateMapButton.layer.backgroundColor = [[[[UIApplication sharedApplication] delegate] window].tintColor colorWithAlphaComponent:0.12].CGColor;
+    [activateMapButton addTarget:self action:@selector(enableMapWithAdsButtonTapped) forControlEvents:UIControlEventTouchUpInside];
+    [self.mapFeaturesView addSubview:activateMapButton];
+    
+    UILabel *pageOneTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, 0, self.mapFeaturesView.bounds.size.width - 40.0, self.mapFeaturesView.bounds.size.height - 45.0)];
+    pageOneTitleLabel.font = [UIFont fontWithName:@"AvenirNext-Medium" size:19.0];
+    pageOneTitleLabel.textColor = [UIColor whiteColor];
+    pageOneTitleLabel.text = @"El Mapa";
+    [self.mapFeaturesView addSubview:pageOneTitleLabel];
+    
+    UILabel *pageOneSlideLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.mapFeaturesView.bounds.size.width - 20.0, self.mapFeaturesView.bounds.size.height - 45.0)];
+    pageOneSlideLabel.font = [UIFont fontWithName:@"AvenirNext-Regular" size:19.0];
+    pageOneSlideLabel.textColor = [UIColor colorWithWhite:0.6 alpha:1];
+    pageOneSlideLabel.text = @"‹ desliza y conócelo";
+    pageOneSlideLabel.textAlignment = NSTextAlignmentRight;
+    [self.mapFeaturesView addSubview:pageOneSlideLabel];
+    
+    UILabel *pageOneSlideLabelGradient = [[UILabel alloc] initWithFrame:pageOneSlideLabel.frame];
+    pageOneSlideLabelGradient.font = pageOneSlideLabel.font;
+    pageOneSlideLabelGradient.textColor = [UIColor whiteColor];
+    pageOneSlideLabelGradient.text = pageOneSlideLabel.text;
+    pageOneSlideLabelGradient.textAlignment = pageOneSlideLabel.textAlignment;
+    [self.mapFeaturesView addSubview:pageOneSlideLabelGradient];
+    
+    CGFloat gradientSize = 0.2;
+    
+    NSArray *startLocations = @[@1.0, [NSNumber numberWithFloat:1.0 + (gradientSize / 2)], [NSNumber numberWithFloat:1.0 + gradientSize]];
+    NSArray *endLocations = @[@0.0, [NSNumber numberWithFloat:gradientSize / 2], [NSNumber numberWithFloat:gradientSize]];
+    
+    CAGradientLayer *gradientMask = [CAGradientLayer layer];
+    gradientMask.frame = pageOneSlideLabel.bounds;
+    gradientMask.colors = @[(id)[UIColor clearColor].CGColor, (id)[UIColor whiteColor].CGColor, (id)[UIColor clearColor].CGColor];
+    gradientMask.locations = startLocations;
+    gradientMask.startPoint = CGPointMake(0 - (gradientSize * 2), .5);
+    gradientMask.endPoint = CGPointMake(1 + gradientSize, .5);
+    
+    pageOneSlideLabelGradient.layer.mask = gradientMask;
+    
+    CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"locations"];
+    animation.fromValue = startLocations;
+    animation.toValue = endLocations;
+    animation.repeatCount = 3.4e38f;
+    animation.duration  = 3.0f;
+    
+    [gradientMask addAnimation:animation forKey:@"animateGradient"];
+    
+    // page 2
+    CGFloat pageTwoOrigin = self.mapFeaturesView.bounds.size.width;
+    
+    UILabel *pageTwoLabel = [[UILabel alloc] initWithFrame:CGRectMake(pageTwoOrigin + 20.0, 0, self.mapFeaturesView.bounds.size.width - 40.0, self.mapFeaturesView.bounds.size.height)];
+    pageTwoLabel.font = [UIFont fontWithName:@"AvenirNext-Regular" size:16.0];
+    pageTwoLabel.textColor = [UIColor whiteColor];
+    pageTwoLabel.text = @"Encuentra todas las paradas de Santiago y consúltalas.";
+    pageTwoLabel.numberOfLines = 0;
+    [self.mapFeaturesView addSubview:pageTwoLabel];
+    
+    // page 3
+    CGFloat pageThreeOrigin = self.mapFeaturesView.bounds.size.width * 2;
+    
+    UILabel *pageThreeLabel = [[UILabel alloc] initWithFrame:CGRectMake(pageThreeOrigin + 20.0, 0, self.mapFeaturesView.bounds.size.width - 40.0, self.mapFeaturesView.bounds.size.height)];
+    pageThreeLabel.font = [UIFont fontWithName:@"AvenirNext-Regular" size:16.0];
+    pageThreeLabel.textColor = [UIColor whiteColor];
+    pageThreeLabel.text = @"Encuentra también todos los puntos Bip!, y salta automáticamente al más cercano.";
+    pageThreeLabel.numberOfLines = 0;
+    [self.mapFeaturesView addSubview:pageThreeLabel];
+    
+    // page 4
+    CGFloat pageFourOrigin = self.mapFeaturesView.bounds.size.width * 3;
+    
+    UILabel *pageFourTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(pageFourOrigin, 0, self.mapFeaturesView.bounds.size.width, self.mapFeaturesView.bounds.size.height - 45.0)];
+    pageFourTitleLabel.font = [UIFont fontWithName:@"AvenirNext-Medium" size:19.0];
+    pageFourTitleLabel.textColor = [UIColor whiteColor];
+    pageFourTitleLabel.text = @"Está aquí. Es pulento. Es bacán.";
+    pageFourTitleLabel.textAlignment = NSTextAlignmentCenter;
+    [self.mapFeaturesView addSubview:pageFourTitleLabel];
+    
+    UIButton *finalActivateMapButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [finalActivateMapButton setTitle:[activateMapButton titleForState:UIControlStateNormal] forState:UIControlStateNormal];
+    finalActivateMapButton.frame = CGRectOffset(activateMapButton.frame, pageFourOrigin, 0.0);
+    finalActivateMapButton.titleLabel.font = activateMapButton.titleLabel.font;
+    finalActivateMapButton.layer.backgroundColor = [[[[UIApplication sharedApplication] delegate] window].tintColor colorWithAlphaComponent:0.12].CGColor;
+    [finalActivateMapButton addTarget:self action:@selector(enableMapWithAdsButtonTapped) forControlEvents:UIControlEventTouchUpInside];
+    [self.mapFeaturesView addSubview:finalActivateMapButton];
+}
+
+- (void)hideMapFeatures
+{
+    UIScrollView *mapFeatures = (UIScrollView *)[self.view viewWithTag:5674];
+    
+    [UIView animateWithDuration:0.25 delay:0 options:0 animations:^{
+        mapFeatures.alpha = 0;
+    } completion:^(BOOL finished) {
+        [mapFeatures removeFromSuperview];
+    }];
+}
+
+- (void)enableMapWithAdsButtonTapped
+{
+    UIAlertView *enableMapWithAdsAlert = [[UIAlertView alloc] initWithTitle:@"Activar Mapa" message:@"Al activar el Mapa con publicidad, verás un aviso intersitial cada vez que abras el Mapa, además de un banner bajo el Mapa.\n\nPuedes desactivar toda la publicidad de Cuánto Falta y activar el Mapa por USD $1.99." delegate:self cancelButtonTitle:@"Cancelar" otherButtonTitles:@"Con Publicidad — Gratis", @"Sin Publicidad — USD $1.99", nil];
+    enableMapWithAdsAlert.tag = 405;
+    [enableMapWithAdsAlert show];
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (alertView.tag == 405) {
+        switch (buttonIndex) {
+            case 1:
+                
+                break;
+                
+            case 2:
+                [self purchaseMap];
+                break;
+                
+            default:
+                break;
+        }
+    }
+}
+
+- (void)enableMapWithAds
+{
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"CFEnableMapWithAds"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
+    self.mapEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"CFEnableMapWithAds"];
+    self.mapMode = YES;
 }
 
 - (void)purchaseMap
