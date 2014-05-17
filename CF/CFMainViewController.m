@@ -154,8 +154,11 @@
     
     // ese booleano po
     if ([OLCashier hasProduct:@"CF01"] || [[NSUserDefaults standardUserDefaults] boolForKey:@"CFEnableMapWithAds"]) self.mapEnabled = YES;
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"CFEnableMapWithAds"];
+    self.mapEnabled = NO;
     
 #if TARGET_IPHONE_SIMULATOR
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"CFEnableMapWithAds"];
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"CF01"];
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"CF02"];
     self.mapEnabled = NO;
@@ -591,7 +594,7 @@
                 }
             }
         } else {
-            self.mapMode = NO;
+            [self closeMapWithVelocity:terminalVelocity];
         }
     }
 }
@@ -645,7 +648,7 @@
     [activateMapButton setTitle:NSLocalizedString(@"ENABLE_MAP_WITH_ADS", nil) forState:UIControlStateNormal];
     activateMapButton.frame = CGRectMake(0.0, self.mapFeaturesView.bounds.size.height - 45.0, self.mapFeaturesView.bounds.size.width, 45.0);
     activateMapButton.titleLabel.font = [UIFont fontWithName:@"AvenirNext-Medium" size:19.0];
-    activateMapButton.layer.backgroundColor = [[[[UIApplication sharedApplication] delegate] window].tintColor colorWithAlphaComponent:0.12].CGColor;
+    activateMapButton.layer.backgroundColor = [UIColor colorWithWhite:0 alpha:0.25].CGColor;
     [activateMapButton addTarget:self action:@selector(enableMapWithAdsButtonTapped) forControlEvents:UIControlEventTouchUpInside];
     [self.mapFeaturesView addSubview:activateMapButton];
     
@@ -694,22 +697,30 @@
     // page 2
     CGFloat pageTwoOrigin = self.mapFeaturesView.bounds.size.width;
     
-    UILabel *pageTwoLabel = [[UILabel alloc] initWithFrame:CGRectMake(pageTwoOrigin + 20.0, 0, self.mapFeaturesView.bounds.size.width - 40.0, self.mapFeaturesView.bounds.size.height)];
+    UILabel *pageTwoLabel = [[UILabel alloc] initWithFrame:CGRectMake(pageTwoOrigin + 85.0, 0, self.mapFeaturesView.bounds.size.width - 105.0, self.mapFeaturesView.bounds.size.height)];
     pageTwoLabel.font = [UIFont fontWithName:@"AvenirNext-Regular" size:16.0];
     pageTwoLabel.textColor = [UIColor whiteColor];
     pageTwoLabel.text = NSLocalizedString(@"MAP_FEATURE_STOPS", nil);
     pageTwoLabel.numberOfLines = 0;
     [self.mapFeaturesView addSubview:pageTwoLabel];
     
+    UIImageView *pageTwoImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"features-stops"]];
+    pageTwoImage.frame = CGRectOffset(pageTwoImage.frame, pageTwoOrigin + 20.0, floorf((self.mapFeaturesView.bounds.size.height - pageTwoImage.bounds.size.height) / 2));
+    [self.mapFeaturesView addSubview:pageTwoImage];
+    
     // page 3
     CGFloat pageThreeOrigin = self.mapFeaturesView.bounds.size.width * 2;
     
-    UILabel *pageThreeLabel = [[UILabel alloc] initWithFrame:CGRectMake(pageThreeOrigin + 20.0, 0, self.mapFeaturesView.bounds.size.width - 40.0, self.mapFeaturesView.bounds.size.height)];
+    UILabel *pageThreeLabel = [[UILabel alloc] initWithFrame:CGRectMake(pageThreeOrigin + 85.0, 0, self.mapFeaturesView.bounds.size.width - 105.0, self.mapFeaturesView.bounds.size.height)];
     pageThreeLabel.font = [UIFont fontWithName:@"AvenirNext-Regular" size:16.0];
     pageThreeLabel.textColor = [UIColor whiteColor];
     pageThreeLabel.text = NSLocalizedString(@"MAP_FEATURE_BIP", nil);
     pageThreeLabel.numberOfLines = 0;
     [self.mapFeaturesView addSubview:pageThreeLabel];
+    
+    UIImageView *pageThreeImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"features-bip"]];
+    pageThreeImage.frame = CGRectOffset(pageThreeImage.frame, pageThreeOrigin + 20.0, floorf((self.mapFeaturesView.bounds.size.height - pageThreeImage.bounds.size.height) / 2));
+    [self.mapFeaturesView addSubview:pageThreeImage];
     
     // page 4
     CGFloat pageFourOrigin = self.mapFeaturesView.bounds.size.width * 3;
@@ -725,7 +736,7 @@
     [finalActivateMapButton setTitle:[activateMapButton titleForState:UIControlStateNormal] forState:UIControlStateNormal];
     finalActivateMapButton.frame = CGRectOffset(activateMapButton.frame, pageFourOrigin, 0.0);
     finalActivateMapButton.titleLabel.font = activateMapButton.titleLabel.font;
-    finalActivateMapButton.layer.backgroundColor = [[[[UIApplication sharedApplication] delegate] window].tintColor colorWithAlphaComponent:0.12].CGColor;
+    finalActivateMapButton.layer.backgroundColor = activateMapButton.layer.backgroundColor;
     [finalActivateMapButton addTarget:self action:@selector(enableMapWithAdsButtonTapped) forControlEvents:UIControlEventTouchUpInside];
     [self.mapFeaturesView addSubview:finalActivateMapButton];
 }

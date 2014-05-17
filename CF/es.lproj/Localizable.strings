@@ -29,7 +29,7 @@
 "THE_MAP" = "El Mapa";
 "SLIDE_TO_LEARN_MORE_MAP" = "‹ desliza y conócelo";
 "MAP_FEATURE_STOPS" = "Encuentra todas las paradas de Santiago y revisa sus estimaciones.";
-"MAP_FEATURE_BIP" = "Ve todos los puntos Bip!, y salta automáticamente al que está más cerca tuyo.";
+"MAP_FEATURE_BIP" = "Ve todos los puntos Bip! y salta automáticamente al que esté más cerca tuyo.";
 "MAP_FEATURES_END" = "Es pulento.";
 
 "ENABLE_MAP" = "Activar Mapa";
