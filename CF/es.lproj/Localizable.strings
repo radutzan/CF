@@ -25,14 +25,25 @@
 
 "TOUCH_HERE_TO" = "Toca aquí para";
 "BUY_MAP_BUTTON" = "Comprar Mapa de Paradas";
+"ENABLE_MAP_WITH_ADS" = "Actívalo Gratis (con Publicidad)";
+"THE_MAP" = "El Mapa";
+"SLIDE_TO_LEARN_MORE_MAP" = "‹ desliza y conócelo";
+"MAP_FEATURE_STOPS" = "Encuentra todas las paradas de Santiago y revisa sus estimaciones.";
+"MAP_FEATURE_BIP" = "Ve todos los puntos Bip!, y salta automáticamente al que está más cerca tuyo.";
+"MAP_FEATURES_END" = "Es pulento.";
+
+"ENABLE_MAP" = "Activar Mapa";
+"ENABLE_MAP_ALERT_MESSAGE" = "Al activar el Mapa con publicidad, verás un aviso intersitial cada vez que abras el Mapa, además de un banner bajo el Mapa.\n\nCuánto Falta Pro activa el Mapa y desactiva para siempre toda la publicidad de la app — USD $1.99.";
+"ENABLE_MAP_ALERT_BUTTON_FREE" = "Con Publicidad — Gratis";
+"ENABLE_MAP_ALERT_BUTTON_PAID" = "Comprar Pro — USD $1.99";
 
 "STORE_RESTORE" = "Restaurar Compras";
 "STORE_RESTORE_DESCRIPTION" = "Si ya has comprado algunos o todos los ítems y no te aparecen, restaura tus compras.";
 "STORE_ERROR_TITLE" = "Hubo un error con la compra";
 "STORE_WAIT_TITLE" = "Espera un poco…";
 "STORE_WAIT_MESSAGE" = "Seguro se demora menos que la micro.";
-"STORE_THANK_YOU_TITLE" = "Muchas gracias.";
-"STORE_THANK_YOU_MESSAGE_MAP" = "Ojalá que el Mapa de Paradas te sirva caleta.";
+"STORE_THANK_YOU_TITLE" = "Gracias por activar Pro.";
+"STORE_THANK_YOU_MESSAGE_MAP" = "El Mapa se activó y se desactivó toda la publicidad. Que tengas un día pulento.";
 "STORE_THANK_YOU_MESSAGE_ADS" = "Dato: solo los más bacanes eliminan la publicidad.";
 
 "STOP_ERROR_TITLE" = "No se pudo consultar la parada";

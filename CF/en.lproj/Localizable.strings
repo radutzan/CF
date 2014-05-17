@@ -25,14 +25,25 @@
 
 "TOUCH_HERE_TO" = "Touch here to";
 "BUY_MAP_BUTTON" = "Buy the Stops Map";
+"ENABLE_MAP_WITH_ADS" = "Enable it Free (with Ads)";
+"THE_MAP" = "The Map";
+"SLIDE_TO_LEARN_MORE_MAP" = "‹ slide to learn more";
+"MAP_FEATURE_STOPS" = "Find every bus stop in Santiago and check their estimations.";
+"MAP_FEATURE_BIP" = "See every Bip! spot and jump quickly to your nearest one.";
+"MAP_FEATURES_END" = "It's awesome.";
+
+"ENABLE_MAP" = "Enable Map";
+"ENABLE_MAP_ALERT_MESSAGE" = "You can enable the Map for free, with Ads. Every time you open the Map you'll see an interstitial ad, plus a standard banner across the bottom.\n\nCuánto Falta Pro enables the Map and removes all ads forever — $1.99.";
+"ENABLE_MAP_ALERT_BUTTON_FREE" = "With Ads — Free";
+"ENABLE_MAP_ALERT_BUTTON_PAID" = "Get Pro — $1.99";
 
 "STORE_RESTORE" = "Restore Purchases";
 "STORE_RESTORE_DESCRIPTION" = "If you've already purchased all or some of the items and they don't appear as purchased, restore them with this option.";
 "STORE_ERROR_TITLE" = "There was an error with your purchase";
 "STORE_WAIT_TITLE" = "Please wait…";
 "STORE_WAIT_MESSAGE" = "Give it a second. It's going to space!";
-"STORE_THANK_YOU_TITLE" = "Thank you.";
-"STORE_THANK_YOU_MESSAGE_MAP" = "We hope you find the Stops Map useful.";
+"STORE_THANK_YOU_TITLE" = "Welcome to Pro.";
+"STORE_THANK_YOU_MESSAGE_MAP" = "Thank you, you are awesome. The Map has been enabled and all ads have been disabled forever. Enjoy the quiet.";
 "STORE_THANK_YOU_MESSAGE_ADS" = "Doesn't it feel great to get rid of those pesky ads?";
 
 "STOP_ERROR_TITLE" = "Couldn't check stop";

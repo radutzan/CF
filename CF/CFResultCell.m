@@ -42,7 +42,7 @@
         _colorBadge = [[CFColorBadgeView alloc] initWithFrame:CGRectMake(0, 0, 10.0, 10.0)];
         [self.contentView addSubview:_colorBadge];
         
-        _serviceLabel = [[UILabel alloc] initWithFrame:CGRectMake(15.0, 10.0, 80.0, 25.0)];
+        _serviceLabel = [[UILabel alloc] initWithFrame:CGRectMake(16.0, 10.0, 80.0, 25.0)];
         _serviceLabel.textColor = [UIColor whiteColor];
         _serviceLabel.font = [UIFont fontWithName:@"AvenirNext-Regular" size:26.0];
         _serviceLabel.backgroundColor = [UIColor blackColor];
@@ -68,13 +68,13 @@
         [self.contentView addSubview:_directionLabel];
         
         _distanceLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 12.0, _estimationContainer.scrollView.bounds.size.width, 20.0)];
-        _distanceLabel.font = [UIFont systemFontOfSize:20.0];
+        _distanceLabel.font = [UIFont fontWithName:@"AvenirNext-Regular" size:20.0];
         _distanceLabel.textColor = [UIColor whiteColor];
         _distanceLabel.backgroundColor = [UIColor blackColor];
         [_estimationContainer.scrollView addSubview:_distanceLabel];
         
         _timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 35.0, _estimationContainer.scrollView.bounds.size.width, 14.0)];
-        _timeLabel.font = [UIFont boldSystemFontOfSize:14.0];
+        _timeLabel.font = [UIFont fontWithName:@"AvenirNextCondensed-DemiBold" size:14.0];
         _timeLabel.textColor = [UIColor colorWithWhite:0.4 alpha:1];
         _timeLabel.alpha = 1;
         _timeLabel.backgroundColor = [UIColor blackColor];
@@ -100,7 +100,7 @@
         [_noInfoView addSubview:noInfoButton];
         
         UILabel *noInfoLabel = [[UILabel alloc] initWithFrame:CGRectMake(30.0, 0, 90.0, self.contentView.bounds.size.height)];
-        noInfoLabel.font = [UIFont italicSystemFontOfSize:15.0];
+        noInfoLabel.font = [UIFont fontWithName:@"AvenirNextCondensed-Italic" size:15.0];
         noInfoLabel.textColor = [UIColor colorWithWhite:0.3 alpha:1];
         noInfoLabel.text = NSLocalizedString(@"NO_INFO", nil);
         noInfoLabel.numberOfLines = 0;
@@ -134,7 +134,7 @@
         
         [self.contentView sendSubviewToBack:self.estimationContainer];
         self.distanceLabel.text = [[estimations firstObject] objectForKey:@"distance"];
-        self.timeLabel.text = [[estimations firstObject] objectForKey:@"eta"];
+        self.timeLabel.text = [[[estimations firstObject] objectForKey:@"eta"] stringByReplacingOccurrencesOfString:@"." withString:@""];
     }
     
     if (estimations.count > 1) {
@@ -143,7 +143,7 @@
         [self.estimationContainer.scrollView addSubview:self.secondTimeLabel];
         
         self.secondDistanceLabel.text = [[estimations lastObject] objectForKey:@"distance"];
-        self.secondTimeLabel.text = [[estimations lastObject] objectForKey:@"eta"];
+        self.secondTimeLabel.text = [[[estimations lastObject] objectForKey:@"eta"] stringByReplacingOccurrencesOfString:@"." withString:@""];
     }
 }
 

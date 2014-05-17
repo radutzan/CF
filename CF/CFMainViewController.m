@@ -642,7 +642,7 @@
     
     // page 1
     UIButton *activateMapButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [activateMapButton setTitle:@"Actívalo Gratis (con Publicidad)" forState:UIControlStateNormal];
+    [activateMapButton setTitle:NSLocalizedString(@"ENABLE_MAP_WITH_ADS", nil) forState:UIControlStateNormal];
     activateMapButton.frame = CGRectMake(0.0, self.mapFeaturesView.bounds.size.height - 45.0, self.mapFeaturesView.bounds.size.width, 45.0);
     activateMapButton.titleLabel.font = [UIFont fontWithName:@"AvenirNext-Medium" size:19.0];
     activateMapButton.layer.backgroundColor = [[[[UIApplication sharedApplication] delegate] window].tintColor colorWithAlphaComponent:0.12].CGColor;
@@ -652,13 +652,13 @@
     UILabel *pageOneTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, 0, self.mapFeaturesView.bounds.size.width - 40.0, self.mapFeaturesView.bounds.size.height - 45.0)];
     pageOneTitleLabel.font = [UIFont fontWithName:@"AvenirNext-Medium" size:19.0];
     pageOneTitleLabel.textColor = [UIColor whiteColor];
-    pageOneTitleLabel.text = @"El Mapa";
+    pageOneTitleLabel.text = NSLocalizedString(@"THE_MAP", nil);
     [self.mapFeaturesView addSubview:pageOneTitleLabel];
     
     UILabel *pageOneSlideLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.mapFeaturesView.bounds.size.width - 20.0, self.mapFeaturesView.bounds.size.height - 45.0)];
     pageOneSlideLabel.font = [UIFont fontWithName:@"AvenirNext-Regular" size:19.0];
     pageOneSlideLabel.textColor = [UIColor colorWithWhite:0.6 alpha:1];
-    pageOneSlideLabel.text = @"‹ desliza y conócelo";
+    pageOneSlideLabel.text = NSLocalizedString(@"SLIDE_TO_LEARN_MORE_MAP", nil);
     pageOneSlideLabel.textAlignment = NSTextAlignmentRight;
     [self.mapFeaturesView addSubview:pageOneSlideLabel];
     
@@ -697,7 +697,7 @@
     UILabel *pageTwoLabel = [[UILabel alloc] initWithFrame:CGRectMake(pageTwoOrigin + 20.0, 0, self.mapFeaturesView.bounds.size.width - 40.0, self.mapFeaturesView.bounds.size.height)];
     pageTwoLabel.font = [UIFont fontWithName:@"AvenirNext-Regular" size:16.0];
     pageTwoLabel.textColor = [UIColor whiteColor];
-    pageTwoLabel.text = @"Encuentra todas las paradas de Santiago y consúltalas.";
+    pageTwoLabel.text = NSLocalizedString(@"MAP_FEATURE_STOPS", nil);
     pageTwoLabel.numberOfLines = 0;
     [self.mapFeaturesView addSubview:pageTwoLabel];
     
@@ -707,7 +707,7 @@
     UILabel *pageThreeLabel = [[UILabel alloc] initWithFrame:CGRectMake(pageThreeOrigin + 20.0, 0, self.mapFeaturesView.bounds.size.width - 40.0, self.mapFeaturesView.bounds.size.height)];
     pageThreeLabel.font = [UIFont fontWithName:@"AvenirNext-Regular" size:16.0];
     pageThreeLabel.textColor = [UIColor whiteColor];
-    pageThreeLabel.text = @"Encuentra también todos los puntos Bip!, y salta automáticamente al más cercano.";
+    pageThreeLabel.text = NSLocalizedString(@"MAP_FEATURE_BIP", nil);
     pageThreeLabel.numberOfLines = 0;
     [self.mapFeaturesView addSubview:pageThreeLabel];
     
@@ -717,7 +717,7 @@
     UILabel *pageFourTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(pageFourOrigin, 0, self.mapFeaturesView.bounds.size.width, self.mapFeaturesView.bounds.size.height - 45.0)];
     pageFourTitleLabel.font = [UIFont fontWithName:@"AvenirNext-Medium" size:19.0];
     pageFourTitleLabel.textColor = [UIColor whiteColor];
-    pageFourTitleLabel.text = @"Está aquí. Es pulento. Es bacán.";
+    pageFourTitleLabel.text = NSLocalizedString(@"MAP_FEATURES_END", nil);
     pageFourTitleLabel.textAlignment = NSTextAlignmentCenter;
     [self.mapFeaturesView addSubview:pageFourTitleLabel];
     
@@ -743,7 +743,7 @@
 
 - (void)enableMapWithAdsButtonTapped
 {
-    UIAlertView *enableMapWithAdsAlert = [[UIAlertView alloc] initWithTitle:@"Activar Mapa" message:@"Al activar el Mapa con publicidad, verás un aviso intersitial cada vez que abras el Mapa, además de un banner bajo el Mapa.\n\nPuedes desactivar toda la publicidad de Cuánto Falta y activar el Mapa por USD $1.99." delegate:self cancelButtonTitle:@"Cancelar" otherButtonTitles:@"Con Publicidad — Gratis", @"Sin Publicidad — USD $1.99", nil];
+    UIAlertView *enableMapWithAdsAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"ENABLE_MAP", nil) message:NSLocalizedString(@"ENABLE_MAP_ALERT_MESSAGE", nil) delegate:self cancelButtonTitle:NSLocalizedString(@"CANCEL", nil) otherButtonTitles:NSLocalizedString(@"ENABLE_MAP_ALERT_BUTTON_FREE", nil), NSLocalizedString(@"ENABLE_MAP_ALERT_BUTTON_PAID", nil), nil];
     enableMapWithAdsAlert.tag = 405;
     [enableMapWithAdsAlert show];
 }

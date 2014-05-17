@@ -448,12 +448,12 @@
     
     UILabel *service = [[UILabel alloc] initWithFrame:CGRectMake(15.0, 0, 90.0, 20.0)];
     service.text = NSLocalizedString(@"SERVICE", nil);
-    service.font = [UIFont systemFontOfSize:13.0];
+    service.font = [UIFont fontWithName:@"AvenirNext-MediumItalic" size:13.0];
     [headerView addSubview:service];
     
     UILabel *estimate = [[UILabel alloc] initWithFrame:CGRectMake(160.0, 0, 100.0, 20.0)];
     estimate.text = NSLocalizedString(@"ESTIMATION", nil);
-    estimate.font = [UIFont systemFontOfSize:13.0];
+    estimate.font = [UIFont fontWithName:@"AvenirNext-MediumItalic" size:13.0];
     [headerView addSubview:estimate];
     
     return headerView;
