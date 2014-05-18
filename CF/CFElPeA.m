@@ -21,12 +21,12 @@
 
 - (CGRect)textRectForBounds:(CGRect)bounds
 {
-    return CGRectOffset(bounds, 0, 2.0);
+    return bounds;// CGRectOffset(bounds, 0, 2.0);
 }
 
 - (CGRect)editingRectForBounds:(CGRect)bounds
 {
-    return CGRectOffset(bounds, 0, 2.0);
+    return bounds;// CGRectOffset(bounds, 0, 2.0);
 }
 
 @end

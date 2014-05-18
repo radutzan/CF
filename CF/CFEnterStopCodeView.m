@@ -23,14 +23,14 @@
         [self addSubview:containerView];
         
         UILabel *enterStopCodeLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, containerView.bounds.size.width, 165.0)];
-        enterStopCodeLabel.font = [UIFont fontWithName:@"AvenirNext-Regular" size:46.0];
+        enterStopCodeLabel.font = [UIFont fontWithName:@"HelveticaNeue-Thin" size:46.0];
         enterStopCodeLabel.text = NSLocalizedString(@"ENTER_STOP_CODE", nil);
         enterStopCodeLabel.numberOfLines = 2;
         enterStopCodeLabel.textColor = [UIColor colorWithWhite:0 alpha:0.65];
         [containerView addSubview:enterStopCodeLabel];
         
         self.elPeA = [[CFElPeA alloc] initWithFrame:CGRectMake(0, enterStopCodeLabel.bounds.size.height, 200.0, 62.0)];
-        self.elPeA.font = [UIFont fontWithName:@"AvenirNext-Regular" size:46.0];
+        self.elPeA.font = [UIFont fontWithName:@"HelveticaNeue-Thin" size:46.0];
         self.elPeA.placeholder = @"PA420";
         self.elPeA.autocorrectionType = UITextAutocorrectionTypeNo;
         self.elPeA.returnKeyType = UIReturnKeyGo;

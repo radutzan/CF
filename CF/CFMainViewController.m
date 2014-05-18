@@ -238,7 +238,7 @@
     UILabel *favoritesPlaceholderTitle = [[UILabel alloc] initWithFrame:CGRectMake(0, favoritesPlaceholderImage.frame.origin.y + favoritesPlaceholderImage.bounds.size.height + verticalMargin, self.favoritesPlaceholder.bounds.size.width, 25)];
     favoritesPlaceholderTitle.text = NSLocalizedString(@"FAVORITES_PLACEHOLDER_TITLE", nil);
     favoritesPlaceholderTitle.textAlignment = NSTextAlignmentCenter;
-    favoritesPlaceholderTitle.font = [UIFont fontWithName:@"AvenirNext-DemiBold" size:17.0];
+    favoritesPlaceholderTitle.font = [UIFont boldSystemFontOfSize:17.0];
     favoritesPlaceholderTitle.textColor = [UIColor colorWithWhite:0 alpha:0.4];
     [self.favoritesPlaceholder addSubview:favoritesPlaceholderTitle];
     
@@ -246,7 +246,7 @@
     favoritesPlaceholderMessage.text = NSLocalizedString(@"FAVORITES_PLACEHOLDER_MESSAGE", nil);
     favoritesPlaceholderMessage.numberOfLines = 3;
     favoritesPlaceholderMessage.textAlignment = NSTextAlignmentCenter;
-    favoritesPlaceholderMessage.font = [UIFont fontWithName:@"AvenirNext-Regular" size:15.0];
+    favoritesPlaceholderMessage.font = [UIFont systemFontOfSize:15.0];
     favoritesPlaceholderMessage.textColor = [UIColor colorWithWhite:0 alpha:0.4];
     [self.favoritesPlaceholder addSubview:favoritesPlaceholderMessage];
     
@@ -267,7 +267,7 @@
     UILabel *historyPlaceholderTitle = [[UILabel alloc] initWithFrame:CGRectMake(0, historyPlaceholderImage.frame.origin.y + historyPlaceholderImage.bounds.size.height + verticalMargin, self.historyPlaceholder.bounds.size.width, 25)];
     historyPlaceholderTitle.text = NSLocalizedString(@"HISTORY_PLACEHOLDER_TITLE", nil);
     historyPlaceholderTitle.textAlignment = NSTextAlignmentCenter;
-    historyPlaceholderTitle.font = [UIFont fontWithName:@"AvenirNext-DemiBold" size:17.0];
+    historyPlaceholderTitle.font = [UIFont boldSystemFontOfSize:17.0];
     historyPlaceholderTitle.textColor = [UIColor colorWithWhite:0 alpha:0.4];
     [self.historyPlaceholder addSubview:historyPlaceholderTitle];
     
@@ -275,7 +275,7 @@
     historyPlaceholderMessage.text = NSLocalizedString(@"HISTORY_PLACEHOLDER_MESSAGE", nil);
     historyPlaceholderMessage.numberOfLines = 3;
     historyPlaceholderMessage.textAlignment = NSTextAlignmentCenter;
-    historyPlaceholderMessage.font = [UIFont fontWithName:@"AvenirNext-Regular" size:15.0];
+    historyPlaceholderMessage.font = [UIFont systemFontOfSize:15.0];
     historyPlaceholderMessage.textColor = [UIColor colorWithWhite:0 alpha:0.4];
     [self.historyPlaceholder addSubview:historyPlaceholderMessage];
     
