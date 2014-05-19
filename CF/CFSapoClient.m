@@ -115,6 +115,39 @@ NSString * const queryKeySalt = @"4ESMLSVB_ONDA";
     }];
 }
 
+- (void)serviceInfoForService:(NSString *)service handler:(CFSapoResultBlock)handler
+{
+    NSDictionary *params = @{@"service" : service };
+    
+    [self getPath:@"/bus_service/info" parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        AFJSONRequestOperation *JSONop = (AFJSONRequestOperation *)operation;
+        if (handler) {
+            handler(nil, JSONop.responseJSON);
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        if (handler) {
+            handler(error, nil);
+        }
+    }];
+}
+
+- (void)routeForBusService:(NSString *)service direction:(CFDirection)direction handler:(CFSapoResultBlock)handler
+{
+    NSString *sentido = (direction == CFDirectionOutward) ? @"I" : @"R";
+    NSDictionary *params = @{@"service" : service, @"sentido": sentido};
+    
+    [self getPath:@"/bus_service/stops" parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        AFJSONRequestOperation *JSONop = (AFJSONRequestOperation *)operation;
+        if (handler) {
+            handler(nil, JSONop.responseJSON);
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        if (handler) {
+            handler(error, nil);
+        }
+    }];
+}
+
 - (void)fetchBusStop:(NSString *)busStop handler:(CFSapoResultBlock)handler
 {
     NSDictionary *params = @{@"stop_code" : busStop };

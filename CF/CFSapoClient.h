@@ -10,9 +10,8 @@
 #import "CLLocation+UTMUtilities.h"
 
 typedef NS_ENUM(NSUInteger, CFDirection) {
-    CFDirectionRoundTrip,
-    CFDirectionInward,
-    CFDirectionOutward
+    CFDirectionOutward = 0,
+    CFDirectionInward = 1
 };
 
 typedef void(^CFSapoResultBlock)(NSError *error, id result);
@@ -79,6 +78,18 @@ typedef void(^CFSapoResultBlock)(NSError *error, id result);
  
  */
 - (void)bipSpotsAroundCoordinate:(CLLocationCoordinate2D)coordinate radius:(double)radius handler:(CFSapoResultBlock)handler;
+
+/**
+ Fetches the route of a bus service
+ 
+ @param service Identifier of the service as defined by Transantiago. This argument must not be `nil`.
+ 
+ @param direction Direction for the requested route.
+ 
+ @param handler Asynchronously called block to handle the response (result is an array)
+ 
+ */
+- (void)serviceInfoForService:(NSString *)service handler:(CFSapoResultBlock)handler;
 
 /**
  Fetches the route of a bus service

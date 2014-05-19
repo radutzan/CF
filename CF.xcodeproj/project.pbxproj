@@ -123,9 +123,17 @@
 		7CAFA3391842A206005A06BC /* placeholder-history@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CAFA3371842A206005A06BC /* placeholder-history@2x.png */; };
 		7CAFA33B1842C359005A06BC /* gripper@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CAFA33A1842C359005A06BC /* gripper@2x.png */; };
 		7CAFA33D1842C360005A06BC /* pin-bip@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CAFA33C1842C360005A06BC /* pin-bip@2x.png */; };
+		7CB337FA1929BF5C00234792 /* CustomPinAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CB337F91929BF5C00234792 /* CustomPinAnnotationView.m */; };
+		7CB337FB1929BFDB00234792 /* CustomPinAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CB337F91929BF5C00234792 /* CustomPinAnnotationView.m */; };
 		7CB64D7718550695006422E0 /* help.html in Resources */ = {isa = PBXBuildFile; fileRef = 7CB64D7918550695006422E0 /* help.html */; };
 		7CB64D7C18551C9C006422E0 /* button-bip@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CB64D7B18551C9C006422E0 /* button-bip@2x.png */; };
 		7CB64D7E18552648006422E0 /* icon-about@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CB64D7D18552648006422E0 /* icon-about@2x.png */; };
+		7CC7EC421929B5F6002160E5 /* CFServiceRouteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CC7EC411929B5F6002160E5 /* CFServiceRouteViewController.m */; };
+		7CC7EC451929B74B002160E5 /* CFRoute.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CC7EC431929B74B002160E5 /* CFRoute.m */; };
+		7CC7EC461929B74B002160E5 /* CFRoute.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CC7EC431929B74B002160E5 /* CFRoute.m */; };
+		7CC7EC491929B79C002160E5 /* HOFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CC7EC481929B79C002160E5 /* HOFunctions.m */; };
+		7CC7EC4A1929B79C002160E5 /* HOFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CC7EC481929B79C002160E5 /* HOFunctions.m */; };
+		7CC7EC4C1929BBA2002160E5 /* CFServiceRouteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CC7EC411929B5F6002160E5 /* CFServiceRouteViewController.m */; };
 		7CE0D9D8189DB34F00D9782E /* OLShapeTintedButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CE0D9D7189DB34F00D9782E /* OLShapeTintedButton.m */; };
 		7CE0D9DA189DD2D800D9782E /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CE0D9D9189DD2D800D9782E /* Social.framework */; };
 		7CF7EE4F1852D790009B3F46 /* CFBipSpot.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CF7EE4E1852D790009B3F46 /* CFBipSpot.m */; };
@@ -258,10 +266,18 @@
 		7CAFA3371842A206005A06BC /* placeholder-history@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-history@2x.png"; sourceTree = "<group>"; };
 		7CAFA33A1842C359005A06BC /* gripper@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "gripper@2x.png"; sourceTree = "<group>"; };
 		7CAFA33C1842C360005A06BC /* pin-bip@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pin-bip@2x.png"; sourceTree = "<group>"; };
+		7CB337F81929BF5C00234792 /* CustomPinAnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomPinAnnotationView.h; sourceTree = "<group>"; };
+		7CB337F91929BF5C00234792 /* CustomPinAnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomPinAnnotationView.m; sourceTree = "<group>"; };
 		7CB64D7818550695006422E0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = en; path = en.lproj/help.html; sourceTree = "<group>"; };
 		7CB64D7A18550699006422E0 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = es; path = es.lproj/help.html; sourceTree = "<group>"; };
 		7CB64D7B18551C9C006422E0 /* button-bip@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-bip@2x.png"; sourceTree = "<group>"; };
 		7CB64D7D18552648006422E0 /* icon-about@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-about@2x.png"; sourceTree = "<group>"; };
+		7CC7EC401929B5F6002160E5 /* CFServiceRouteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = CFServiceRouteViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		7CC7EC411929B5F6002160E5 /* CFServiceRouteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CFServiceRouteViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		7CC7EC431929B74B002160E5 /* CFRoute.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFRoute.m; sourceTree = "<group>"; };
+		7CC7EC441929B74B002160E5 /* CFRoute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFRoute.h; sourceTree = "<group>"; };
+		7CC7EC471929B79C002160E5 /* HOFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HOFunctions.h; sourceTree = "<group>"; };
+		7CC7EC481929B79C002160E5 /* HOFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HOFunctions.m; sourceTree = "<group>"; };
 		7CE0D9D6189DB34F00D9782E /* OLShapeTintedButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLShapeTintedButton.h; sourceTree = "<group>"; };
 		7CE0D9D7189DB34F00D9782E /* OLShapeTintedButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLShapeTintedButton.m; sourceTree = "<group>"; };
 		7CE0D9D9189DD2D800D9782E /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
@@ -317,7 +333,7 @@
 		7CFF7EC0183871E8006230CE /* metro@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "metro@2x.png"; sourceTree = "<group>"; };
 		7CFF7EC2183871F7006230CE /* bus@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bus@2x.png"; sourceTree = "<group>"; };
 		7CFF7EC418387735006230CE /* CFStopResultsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFStopResultsViewController.h; sourceTree = "<group>"; };
-		7CFF7EC518387735006230CE /* CFStopResultsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFStopResultsViewController.m; sourceTree = "<group>"; };
+		7CFF7EC518387735006230CE /* CFStopResultsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CFStopResultsViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		7CFF7EC7183A639C006230CE /* button-more-selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-more-selected@2x.png"; sourceTree = "<group>"; };
 		7CFF7EC8183A639C006230CE /* button-more@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-more@2x.png"; sourceTree = "<group>"; };
 		87FD0B9EF07342C68E7A06CC /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -589,6 +605,8 @@
 				7C9BD16D1926BC7D003E9F8E /* CFElPeA.m */,
 				7CFF7E7F1838288C006230CE /* SMCalloutView.h */,
 				7CFF7E801838288C006230CE /* SMCalloutView.m */,
+				7CB337F81929BF5C00234792 /* CustomPinAnnotationView.h */,
+				7CB337F91929BF5C00234792 /* CustomPinAnnotationView.m */,
 				7CE0D9D6189DB34F00D9782E /* OLShapeTintedButton.h */,
 				7CE0D9D7189DB34F00D9782E /* OLShapeTintedButton.m */,
 				7C7A15D41853EBF0002EE4C5 /* OLTextField.h */,
@@ -614,6 +632,8 @@
 				7CFF7EC518387735006230CE /* CFStopResultsViewController.m */,
 				7C7A15D918540E08002EE4C5 /* CFMoreContentViewController.h */,
 				7C7A15DA18540E08002EE4C5 /* CFMoreContentViewController.m */,
+				7CC7EC401929B5F6002160E5 /* CFServiceRouteViewController.h */,
+				7CC7EC411929B5F6002160E5 /* CFServiceRouteViewController.m */,
 				7C6CE7FE1877D04A00DDEF54 /* CFStoreViewController.h */,
 				7C6CE7FF1877D04A00DDEF54 /* CFStoreViewController.m */,
 				7C3B27C5183B1A6300818A3B /* Tabs */,
@@ -626,6 +646,8 @@
 			children = (
 				7CFF7EA418382D55006230CE /* CFStop.h */,
 				7CFF7EA318382D55006230CE /* CFStop.m */,
+				7CC7EC441929B74B002160E5 /* CFRoute.h */,
+				7CC7EC431929B74B002160E5 /* CFRoute.m */,
 				7CF7EE4D1852D790009B3F46 /* CFBipSpot.h */,
 				7CF7EE4E1852D790009B3F46 /* CFBipSpot.m */,
 			);
@@ -648,6 +670,8 @@
 				7C9A0F681852E9C60018ED1F /* NSDictionary+NSNullUtility.m */,
 				7CFF7E9618382B01006230CE /* UIDevice+hardware.h */,
 				7CFF7E9A18382B1B006230CE /* UIDevice+hardware.m */,
+				7CC7EC471929B79C002160E5 /* HOFunctions.h */,
+				7CC7EC481929B79C002160E5 /* HOFunctions.m */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -898,6 +922,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				7C2EECC1188345F500AE78C2 /* OLCashier.m in Sources */,
+				7CC7EC461929B74B002160E5 /* CFRoute.m in Sources */,
+				7CB337FB1929BFDB00234792 /* CustomPinAnnotationView.m in Sources */,
 				7C2EECC2188345F500AE78C2 /* CFBipSpot.m in Sources */,
 				7C2EECC3188345F500AE78C2 /* CFMoreViewController.m in Sources */,
 				7C2EECC4188345F500AE78C2 /* SMCalloutView.m in Sources */,
@@ -912,6 +938,7 @@
 				7C2EECCD188345F500AE78C2 /* OLPaymentQueueDispatchObserver.m in Sources */,
 				7C2EECCE188345F500AE78C2 /* CFEnterStopCodeView.m in Sources */,
 				7C2EECCF188345F500AE78C2 /* main.m in Sources */,
+				7CC7EC4A1929B79C002160E5 /* HOFunctions.m in Sources */,
 				7C2EECD0188345F500AE78C2 /* OLProductRequestDelegate.m in Sources */,
 				7C2EECD1188345F500AE78C2 /* NSString+Digest.m in Sources */,
 				7C2EECD2188345F500AE78C2 /* CFAppDelegate.m in Sources */,
@@ -924,6 +951,7 @@
 				7C9BD16B1926B1FF003E9F8E /* OLShapeTintedButton.m in Sources */,
 				7C2EECD9188345F500AE78C2 /* CFColorBadgeView.m in Sources */,
 				7C2EECDA188345F500AE78C2 /* CFStopCell.m in Sources */,
+				7CC7EC4C1929BBA2002160E5 /* CFServiceRouteViewController.m in Sources */,
 				7C2EECDB188345F500AE78C2 /* CFMapController.m in Sources */,
 				7C2EECDC188345F500AE78C2 /* CFSapoClient.m in Sources */,
 				7C2EECDD188345F500AE78C2 /* CFResultCell.m in Sources */,
@@ -938,7 +966,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7CC7EC491929B79C002160E5 /* HOFunctions.m in Sources */,
 				5A11D7751877A2BA001118F6 /* OLCashier.m in Sources */,
+				7CB337FA1929BF5C00234792 /* CustomPinAnnotationView.m in Sources */,
 				7CF7EE4F1852D790009B3F46 /* CFBipSpot.m in Sources */,
 				7C10B975183ADD320086B650 /* CFMoreViewController.m in Sources */,
 				7CFF7E811838288C006230CE /* SMCalloutView.m in Sources */,
@@ -947,6 +977,7 @@
 				7C9A0F691852E9C60018ED1F /* NSDictionary+NSNullUtility.m in Sources */,
 				7C7A15DE1854DF54002EE4C5 /* CFNavigationController.m in Sources */,
 				7C6CE8001877D04A00DDEF54 /* CFStoreViewController.m in Sources */,
+				7CC7EC421929B5F6002160E5 /* CFServiceRouteViewController.m in Sources */,
 				7CFF7E9E18382B1B006230CE /* UIDevice+hardware.m in Sources */,
 				7CFF7EBF18387010006230CE /* CFStopSignView.m in Sources */,
 				7CFF7EA518382D55006230CE /* CFStop.m in Sources */,
@@ -969,6 +1000,7 @@
 				7CFF7EA218382B4D006230CE /* CFSapoClient.m in Sources */,
 				7C426417184AE88000A8968F /* CFResultCell.m in Sources */,
 				7C10B972183ADD2A0086B650 /* CFHistoryViewController.m in Sources */,
+				7CC7EC451929B74B002160E5 /* CFRoute.m in Sources */,
 				7C42641A184AF3E300A8968F /* CFFavoriteCell.m in Sources */,
 				7C7A15E11854E01F002EE4C5 /* CFNavigationBar.m in Sources */,
 				7CFF7E9B18382B1B006230CE /* CLLocation+UTMUtilities.m in Sources */,

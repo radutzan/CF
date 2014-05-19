@@ -9,7 +9,7 @@
 @import UIKit;
 @import MapKit;
 
-#import "SMCalloutView.h"
+#import "CustomPinAnnotationView.h"
 
 @protocol CFMapControllerDelegate <NSObject>
 
@@ -32,8 +32,4 @@
 @property (nonatomic, weak) id<CFMapControllerDelegate> delegate;
 @property (nonatomic, strong) UIView *darkOverlay;
 
-@end
-
-@interface CustomPinAnnotationView : MKAnnotationView
-@property (strong, nonatomic) SMCalloutView *calloutView;
 @end

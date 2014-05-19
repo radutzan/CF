@@ -17,6 +17,7 @@
 #import "OLShapeTintedButton.h"
 #import "GADBannerView.h"
 #import "OLCashier.h"
+#import "CFServiceRouteViewController.h"
 
 @interface CFStopResultsViewController () <CFStopSignViewDelegate, UIAlertViewDelegate, CFResultCellDelegate>
 
@@ -422,7 +423,7 @@
 
 - (BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return NO;
+    return YES;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -466,6 +467,14 @@
     if (!self.stop) return nil;
     
     return self.bannerView;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    CFResultCell *cell = (CFResultCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+    
+    CFServiceRouteViewController *stopRoute = [[CFServiceRouteViewController alloc] initWithService:cell.serviceLabel.text directionString:cell.directionLabel.text];
+    [self.navigationController pushViewController:stopRoute animated:YES];
 }
 
 - (void)sendComplaintTweetForService:(NSString *)service
