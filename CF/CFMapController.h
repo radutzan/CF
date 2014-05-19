@@ -31,5 +31,6 @@
 @property (nonatomic, strong) MKMapView *mapView;
 @property (nonatomic, weak) id<CFMapControllerDelegate> delegate;
 @property (nonatomic, strong) UIView *darkOverlay;
+@property (nonatomic, assign) CLLocationCoordinate2D defaultCenterCoordinate;
 
 @end

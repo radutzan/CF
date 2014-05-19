@@ -512,7 +512,7 @@
     
     [self.view endEditing:YES];
     
-    [self.mapController.mapView setCenterCoordinate:self.mapController.mapView.userLocation.coordinate];
+    [self.mapController.mapView setCenterCoordinate:self.mapController.defaultCenterCoordinate];
     
     for (UIButton *b in self.tabBar.subviews) {
         b.selected = NO;
@@ -531,7 +531,7 @@
 
 - (void)centerMapLocationForClosedState
 {
-    CLLocationCoordinate2D center = self.mapController.mapView.userLocation.coordinate;
+    CLLocationCoordinate2D center = self.mapController.defaultCenterCoordinate;
     center.latitude -= self.mapController.mapView.region.span.latitudeDelta * 0.36;
     [self.mapController.mapView setCenterCoordinate:center animated:YES];
 }
@@ -540,7 +540,7 @@
 {
     CGPoint targetCenter = CGPointMake(self.view.center.x, 102.0);
     
-    CLLocationCoordinate2D userLocation = self.mapController.mapView.userLocation.coordinate;
+    CLLocationCoordinate2D userLocation = self.mapController.defaultCenterCoordinate;
     CGPoint currentCenter = [self.mapController.mapView convertCoordinate:userLocation toPointToView:self.view];
     CGPoint finalCenter = currentCenter;
     
@@ -568,7 +568,7 @@
     if (recognizer.state == UIGestureRecognizerStateBegan) {
         self.initialContentCenterY = self.contentView.center.y;
         self.initialOpenMapButtonCenter = self.openMapButton.center;
-        self.mapLocationCoordinate = self.mapController.mapView.userLocation.coordinate;
+        self.mapLocationCoordinate = self.mapController.defaultCenterCoordinate;
         
         [self.view endEditing:YES];
         

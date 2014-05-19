@@ -128,6 +128,15 @@
     }
 }
 
+- (void)setDefaultRegion
+{
+    CLLocationCoordinate2D startCoordinate = CLLocationCoordinate2DMake(-33.444117, -70.651055);
+    MKCoordinateRegion adjustedRegion = [self.mapView regionThatFits:MKCoordinateRegionMakeWithDistance(startCoordinate, 400, 400)];
+    [self.mapView setRegion:adjustedRegion animated:NO];
+}
+
+#pragma mark - Cuantofaltism
+
 - (void)drawPolylineForService:(NSString *)service direction:(CFDirection)direction
 {
     [self.mapView removeOverlays:self.mapView.overlays];
@@ -234,6 +243,11 @@
 }
 
 #pragma mark - MKMapViewDelegate
+
+- (void)mapView:(MKMapView *)mapView didFailToLocateUserWithError:(NSError *)error
+{
+    [self setDefaultRegion];
+}
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
 {

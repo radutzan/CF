@@ -19,16 +19,20 @@
 
 @property (nonatomic, strong) SMCalloutView *stopCalloutView;
 @property (nonatomic, strong) OLGhostAlertView *zoomWarning;
+@property (nonatomic, strong) OLGhostAlertView *outOfSantiagoWarning;
 
 @property (nonatomic, strong) NSMutableSet *stops;
 @property (nonatomic, strong) NSMutableSet *bipSpots;
 @property (assign) CFStop *selectedStop;
 @property (nonatomic) BOOL showZoomWarning;
+@property (nonatomic) BOOL showOutOfSantiagoWarning;
 @property (nonatomic, strong) CLLocationManager *locationManager;
 
 @end
 
 @implementation CFMapController
+
+static MKMapRect santiagoBounds;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -70,6 +74,19 @@
         self.zoomWarning.style = OLGhostAlertViewStyleLight;
         self.zoomWarning.position = OLGhostAlertViewPositionCenter;
         self.zoomWarning.userInteractionEnabled = NO;
+        
+        self.outOfSantiagoWarning = [[OLGhostAlertView alloc] initWithTitle:NSLocalizedString(@"OUT_OF_SANTIAGO_WARNING_TITLE", nil) message:NSLocalizedString(@"OUT_OF_SANTIAGO_WARNING_MESSAGE", nil) timeout:200.0 dismissible:NO];
+        self.outOfSantiagoWarning.style = OLGhostAlertViewStyleLight;
+        self.outOfSantiagoWarning.position = OLGhostAlertViewPositionCenter;
+        self.outOfSantiagoWarning.userInteractionEnabled = NO;
+        
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            MKMapPoint upperLeft = MKMapPointForCoordinate(CLLocationCoordinate2DMake(-33.259, -70.939));
+            MKMapPoint lowerRight = MKMapPointForCoordinate(CLLocationCoordinate2DMake(-33.674, -70.391));
+            
+            santiagoBounds = MKMapRectMake(upperLeft.x, upperLeft.y, lowerRight.x-upperLeft.x, lowerRight.y-upperLeft.y);
+        });
     }
     return self;
 }
@@ -111,10 +128,23 @@
     
     _showZoomWarning = showZoomWarning;
     
-    if (showZoomWarning) {
+    if (showZoomWarning && !self.showOutOfSantiagoWarning) {
         [self.zoomWarning showInView:self];
     } else {
         [self.zoomWarning hide];
+    }
+}
+
+- (void)setShowOutOfSantiagoWarning:(BOOL)showOutOfSantiagoWarning
+{
+    if (_showOutOfSantiagoWarning == showOutOfSantiagoWarning) return;
+    
+    _showOutOfSantiagoWarning = showOutOfSantiagoWarning;
+    
+    if (showOutOfSantiagoWarning) {
+        [self.outOfSantiagoWarning showInView:self];
+    } else {
+        [self.outOfSantiagoWarning hide];
     }
 }
 
@@ -262,6 +292,7 @@
     MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(currentLocation.coordinate, 250, 250);
     self.mapView.region = region;
     
+    self.defaultCenterCoordinate = currentLocation.coordinate;
     [self.delegate mapControllerDidUpdateLocation];
     
     [manager stopUpdatingLocation];
@@ -270,12 +301,32 @@
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
 {
     NSLog(@"location manager failure: %@", error);
+    [self setDefaultRegion];
+    
+    if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied) {
+        UIAlertView *locationDenied = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"LOCATION_DENIED_ALERT_TITLE", nil) message:NSLocalizedString(@"LOCATION_DENIED_ALERT_MESSAGE", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"DISMISS", nil) otherButtonTitles:nil];
+        [locationDenied show];
+    }
+}
+
+- (void)setDefaultRegion
+{
+    CLLocationCoordinate2D startCoordinate = CLLocationCoordinate2DMake(-33.444117, -70.651055);
+    MKCoordinateRegion adjustedRegion = [self.mapView regionThatFits:MKCoordinateRegionMakeWithDistance(startCoordinate, 400, 400)];
+    [self.mapView setRegion:adjustedRegion animated:NO];
+    
+    self.defaultCenterCoordinate = startCoordinate;
 }
 
 #pragma mark - MKMapViewDelegate
 
 - (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated
 {
+    if (!MKMapRectIntersectsRect(santiagoBounds, mapView.visibleMapRect)) {
+        NSLog(@"ESTAS FUERA DE SANTIAGO!");
+        return;
+    }
+    
     [self loadStopAnnotations];
 }
 
