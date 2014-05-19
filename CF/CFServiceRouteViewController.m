@@ -22,6 +22,7 @@
 @property (assign) CFStop *selectedStop;
 @property (nonatomic, strong) SMCalloutView *stopCalloutView;
 @property (nonatomic, strong) UISegmentedControl *directionSwitcher;
+@property (nonatomic, assign) BOOL regionSet;
 
 @property (nonatomic, strong) NSString *currentService;
 @property (nonatomic, assign) CFDirection currentDirection;
@@ -31,6 +32,8 @@
 @end
 
 @implementation CFServiceRouteViewController
+
+static MKMapRect santiagoBounds;
 
 - (id)initWithService:(NSString *)service direction:(CFDirection)direction
 {
@@ -70,9 +73,11 @@
     self.mapView.showsUserLocation = YES;
     self.mapView.showsPointsOfInterest = NO;
     self.mapView.showsBuildings = YES;
-    self.mapView.rotateEnabled = NO;
-    self.mapView.pitchEnabled = NO;
+//    self.mapView.rotateEnabled = NO;
+//    self.mapView.pitchEnabled = NO;
     [self.view addSubview:self.mapView];
+    
+    self.regionSet = NO;
     
     self.stopCalloutView = [SMCalloutView new];
     self.stopCalloutView.delegate = self;
@@ -85,6 +90,14 @@
     [self.directionSwitcher setWidth:segmentWidth forSegmentAtIndex:0];
     [self.directionSwitcher setWidth:segmentWidth forSegmentAtIndex:1];
     [self.directionSwitcher addTarget:self action:@selector(segmentedControlValueChanged:) forControlEvents:UIControlEventValueChanged];
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        MKMapPoint upperLeft = MKMapPointForCoordinate(CLLocationCoordinate2DMake(-33.259, -70.939));
+        MKMapPoint lowerRight = MKMapPointForCoordinate(CLLocationCoordinate2DMake(-33.674, -70.391));
+        
+        santiagoBounds = MKMapRectMake(upperLeft.x, upperLeft.y, lowerRight.x-upperLeft.x, lowerRight.y-upperLeft.y);
+    });
     
     [self drawPolylineForService:self.currentService direction:self.currentDirection];
 }
@@ -144,7 +157,7 @@
     
     [[CFSapoClient sharedClient] routeForBusService:service direction:direction handler:^(NSError *error, NSArray *result) {
         if (error || [result count] == 0) {
-            UIAlertView *nope = [[UIAlertView alloc] initWithTitle:@"Nope." message:@"Not gonna happen. Take a screenshot, send it to us. Then go back and try something else." delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+            UIAlertView *nope = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"SERVICE_ROUTE_ERROR_ALERT_TITLE", nil) message:NSLocalizedString(@"ERROR_MESSAGE_TRY_AGAIN", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"ERROR_DISMISS", nil) otherButtonTitles:nil];
             [nope show];
             return;
         }
@@ -176,8 +189,18 @@
             [self.mapView addOverlay:[route polyline] level:MKOverlayLevelAboveRoads];
             [self.mapView addAnnotations:stops];
             
-            if (i == result.count) {
-                [self.mapView showAnnotations:self.mapView.annotations animated:YES];
+            if (i == result.count && !self.regionSet) {
+                MKCoordinateRegion adjustedRegion;
+                
+                if (self.mapView.userLocation && MKMapRectContainsPoint(santiagoBounds, MKMapPointForCoordinate(self.mapView.userLocation.coordinate))) {
+                    adjustedRegion = [self.mapView regionThatFits:MKCoordinateRegionMakeWithDistance(self.mapView.userLocation.coordinate, 400, 400)];
+                } else {
+                    CFStop *middleAnnotation = [stops objectAtIndex:floorf(stops.count / 2)];
+                    adjustedRegion = [self.mapView regionThatFits:MKCoordinateRegionMakeWithDistance(middleAnnotation.coordinate, 1400, 1400)];
+                }
+                
+                [self.mapView setRegion:adjustedRegion];
+                self.regionSet = YES;
             }
         });
     }];
@@ -186,6 +209,7 @@
 - (void)setCurrentDirection:(CFDirection)currentDirection
 {
     if (currentDirection != _currentDirection) {
+        [self clearAnnotations];
         [self drawPolylineForService:self.currentService direction:currentDirection];
     }
     

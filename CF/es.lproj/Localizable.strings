@@ -6,71 +6,67 @@
   Copyright (c) 2013 Onda. All rights reserved.
 */
 
-"ENTER_STOP_CODE" = "Código\nde Parada";
-"AND_BUS_STOP" = "con";
-"SERVICE" = "servicio";
-"DIRECTION" = "hacia";
-"ESTIMATION" = "estimación";
-"DISTANCE" = "distancia";
-"NO_INFO" = "No hay datos";
-"NO_INFO_TITLE" = "No hay datos sobre este servicio";
-"NO_INFO_MESSAGE" = "Puede que esté fuera de su horario de operación o que la empresa operadora no esté enviando la información.";
-"NO_INFO_BUTTON_COMPLAIN" = "Denunciar";
-"NO_INFO_COMPLAINT_TWEET" = "@transantiago No hay información para el servicio %@ en el paradero %@. ¿Qué sucede?";
-"TO_DIRECTION" = "a";
-"TO_MINS" = "a";
-"MAP_SEARCHFIELD_PLACEHOLDER" = "Lugares o dirección";
-"CLEAR_ALL_HISTORY" = "Borrar Historial";
+// general
+"DISMISS" = "Cerrar";
+"ERROR_DISMISS" = "Rayos";
+"LOADING" = "Cargando…";
 "ERROR_MESSAGE_TRY_AGAIN" = "Por favor, inténtalo de nuevo.";
+"ERROR_MESSAGE_TRY_AGAIN_OR_REPORT" = "Por favor, inténtalo de nuevo, y si sigue fallando, repórtanoslo vía Twitter.";
 
-"TOUCH_HERE_TO" = "Toca aquí para";
-"BUY_MAP_BUTTON" = "Comprar Mapa de Paradas";
+// map ad
 "ENABLE_MAP_WITH_ADS" = "Actívalo Gratis (con Publicidad)";
 "THE_MAP" = "El Mapa";
 "SLIDE_TO_LEARN_MORE_MAP" = "‹ desliza y conócelo";
 "MAP_FEATURE_STOPS" = "Encuentra todas las paradas de Santiago y revisa sus estimaciones.";
 "MAP_FEATURE_BIP" = "Ve todos los puntos Bip! y salta automáticamente al que esté más cerca tuyo.";
 "MAP_FEATURES_END" = "Es pulento.";
-
 "ENABLE_MAP" = "Activar Mapa";
 "ENABLE_MAP_ALERT_MESSAGE" = "Al activar el Mapa con publicidad, verás un aviso intersitial cada vez que abras el Mapa, además de un banner bajo el Mapa.\n\nCuánto Falta Pro activa el Mapa y desactiva para siempre toda la publicidad de la app — USD $1.99.";
 "ENABLE_MAP_ALERT_BUTTON_FREE" = "Con Publicidad — Gratis";
 "ENABLE_MAP_ALERT_BUTTON_PAID" = "Comprar Pro — USD $1.99";
 
-"STORE_RESTORE" = "Restaurar Compras";
-"STORE_RESTORE_DESCRIPTION" = "Si ya has comprado algunos o todos los ítems y no te aparecen, restaura tus compras.";
-"STORE_ERROR_TITLE" = "Hubo un error con la compra";
-"STORE_WAIT_TITLE" = "Espera un poco…";
-"STORE_WAIT_MESSAGE" = "Seguro se demora menos que la micro.";
-"STORE_THANK_YOU_TITLE" = "Gracias por activar Pro.";
-"STORE_THANK_YOU_MESSAGE_MAP" = "El Mapa se activó y se desactivó toda la publicidad. Que tengas un día pulento.";
-"STORE_THANK_YOU_MESSAGE_ADS" = "Dato: solo los más bacanes eliminan la publicidad.";
-
+// stop stuff
+"AND_BUS_STOP" = "con";
+"SERVICE" = "servicio";
+"DIRECTION" = "hacia";
+"ESTIMATION" = "estimación";
+"DISTANCE" = "distancia";
+"NO_INFO" = "No hay datos";
+"TO_DIRECTION" = "a";
+"TO_MINS" = "a";
+"ENTER_STOP_CODE" = "Código\nde Parada";
 "STOP_ERROR_TITLE" = "No se pudo consultar la parada";
 "INVALID_STOP_CODE_TITLE" = "Código inválido";
 "INVALID_STOP_CODE_MESSAGE" = "Asegúrate de que lo ingresaste correctamente. Tiene que incluir la P, la letra de zona y un número de hasta 4 dígitos. No puede contener espacios.";
+"NO_INFO_TITLE" = "No hay datos sobre este servicio";
+"NO_INFO_MESSAGE" = "Puede que esté fuera de su horario de operación o que la empresa operadora no esté enviando la información.";
+"NO_INFO_BUTTON_COMPLAIN" = "Reportar";
+"NO_INFO_COMPLAINT_TWEET" = "@transantiago No hay información para el servicio %@ en el paradero %@. ¿Qué sucede?";
+
+// map
+"LOCATION_DENIED_ALERT_TITLE" = "Ubicación Desactivada";
+"LOCATION_DENIED_ALERT_MESSAGE" = "El Mapa de Cuánto Falta necesita que le des permiso para usar tu ubicación, o no podrá mostrarte los paraderos o puntos Bip! más cercanos. Tu ubicación es completamente privada, nunca se va de tu teléfono.\n\nPara activar la ubicación, anda a la app de Ajustes > Privacidad > Ubicación y activa Cuánto Falta.";
+"OUT_OF_SANTIAGO_WARNING_TITLE" = "Estás fuera de Santiago";
+"OUT_OF_SANTIAGO_WARNING_MESSAGE" = "Cuánto Falta sólo funciona en Santiago. Navega hacia Santiago en el mapa para ver cosas.";
 "ZOOM_LEVEL_WARNING_TITLE" = "Estás muy lejos";
 "ZOOM_LEVEL_WARNING_MESSAGE" = "Acércate para ver paradas en el mapa.";
+"MAP_SEARCHFIELD_PLACEHOLDER" = "Lugares o dirección";
 "SEARCH_ERROR_NOTFOUND_TITLE" = "Lugar no encontrado";
 "SEARCH_ERROR_NOTFOUND_MESSAGE" = "Especifica más tu búsqueda o busca directamente en el mapa.";
 "SEARCH_ERROR_GENERIC_TITLE" = "Imposible buscar";
 "SEARCH_ERROR_GENERIC_MESSAGE" = "En este momento, no es posible buscar lugares. Inténtalo después, o busca directamente en el mapa.";
+"SERVICE_ROUTE_ERROR_ALERT_TITLE" = "No se pudo encontrar la ruta de este servicio";
+
+// favs and history
 "FAVORITES_PLACEHOLDER_TITLE" = "No tienes favoritos";
 "FAVORITES_PLACEHOLDER_MESSAGE" = "Puedes agregar favoritos tocando la estrella que aparece cuando consultas una parada.";
 "HISTORY_PLACEHOLDER_TITLE" = "Sin historial";
 "HISTORY_PLACEHOLDER_MESSAGE" = "Tu historial se guardará automáticamente a medida que consultes paradas.";
-
+"CLEAR_ALL_HISTORY" = "Borrar Historial";
 "NAME_YOUR_FAVORITE" = "Ponle nombre";
 "NAMELESS_FAVORITE" = "Favorito sin nombre";
 
-"USD" = "dólares";
-"CANCEL" = "Cancelar";
-"BUY" = "Comprar";
-"PURCHASED" = "Comprado";
-"DISMISS" = "Cerrar";
-"ERROR_DISMISS" = "Pucha";
-"LOADING" = "Cargando…";
-
+// more
 "HELP" = "Ayuda";
 "ABOUT" = "Acerca";
 "SEND_FEEDBACK" = "Envíanos comentarios";
@@ -79,3 +75,17 @@
 "FOLLOW_US_TWITTER" = "Síguenos en Twitter";
 "RATE_ON_APP_STORE" = "Evalúa en la App Store";
 "SHARE_TWEET_TEXT" = "Mira @cuantofaltapp, una pulenta app para el Transantiago";
+
+// store
+"USD" = "dólares";
+"CANCEL" = "Cancelar";
+"BUY" = "Comprar";
+"PURCHASED" = "Comprado";
+"STORE_RESTORE" = "Restaurar Compras";
+"STORE_RESTORE_DESCRIPTION" = "Si ya has comprado algunos o todos los ítems y no te aparecen, restaura tus compras.";
+"STORE_ERROR_TITLE" = "Hubo un error con la compra";
+"STORE_WAIT_TITLE" = "Espera un poco…";
+"STORE_WAIT_MESSAGE" = "Seguro se demora menos que la micro.";
+"STORE_THANK_YOU_TITLE" = "Gracias por activar Pro.";
+"STORE_THANK_YOU_MESSAGE_MAP" = "El Mapa se activó y se desactivó toda la publicidad. Que tengas un día pulento.";
+"STORE_THANK_YOU_MESSAGE_ADS" = "Dato: solo los más bacanes eliminan la publicidad.";

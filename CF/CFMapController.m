@@ -323,8 +323,10 @@ static MKMapRect santiagoBounds;
 - (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated
 {
     if (!MKMapRectIntersectsRect(santiagoBounds, mapView.visibleMapRect)) {
-        NSLog(@"ESTAS FUERA DE SANTIAGO!");
+        self.showOutOfSantiagoWarning = YES;
         return;
+    } else {
+        self.showOutOfSantiagoWarning = NO;
     }
     
     [self loadStopAnnotations];

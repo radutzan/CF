@@ -6,71 +6,67 @@
   Copyright (c) 2013 Onda. All rights reserved.
 */
 
-"ENTER_STOP_CODE" = "Enter the\nStop Code";
-"AND_BUS_STOP" = "and";
-"SERVICE" = "service";
-"DIRECTION" = "destination";
-"ESTIMATION" = "estimation";
-"DISTANCE" = "distance";
-"NO_INFO" = "No data";
-"NO_INFO_TITLE" = "There's no data about this service";
-"NO_INFO_MESSAGE" = "It may be out of its operation hours, or the operator may be failing to provide the information.";
-"NO_INFO_BUTTON_COMPLAIN" = "Report";
-"NO_INFO_COMPLAINT_TWEET" = "@transantiago No hay información para el servicio %@ en el paradero %@. ¿Qué sucede?";
-"TO_DIRECTION" = "to";
-"TO_MINS" = "to";
-"MAP_SEARCHFIELD_PLACEHOLDER" = "Places or address";
-"CLEAR_ALL_HISTORY" = "Clear All History";
+// general
+"DISMISS" = "Dismiss";
+"ERROR_DISMISS" = "Boo!";
+"LOADING" = "Loading…";
 "ERROR_MESSAGE_TRY_AGAIN" = "Please try again.";
+"ERROR_MESSAGE_TRY_AGAIN_OR_REPORT" = "Please try again, and if it keeps failing, please report it to us via Twitter.";
 
-"TOUCH_HERE_TO" = "Touch here to";
-"BUY_MAP_BUTTON" = "Buy the Stops Map";
+// map ad
 "ENABLE_MAP_WITH_ADS" = "Enable it for Free (with ads)";
 "THE_MAP" = "The Map";
 "SLIDE_TO_LEARN_MORE_MAP" = "‹ slide to learn more";
 "MAP_FEATURE_STOPS" = "Find every bus stop in Santiago and check their estimations.";
 "MAP_FEATURE_BIP" = "See every Bip! spot and jump quickly to your nearest one.";
 "MAP_FEATURES_END" = "It's awesome.";
-
 "ENABLE_MAP" = "Enable Map";
 "ENABLE_MAP_ALERT_MESSAGE" = "You can enable the Map for free, with Ads. Every time you open the Map you'll see an interstitial ad, plus a standard banner across the bottom.\n\nCuánto Falta Pro enables the Map and removes all ads forever — $1.99.";
 "ENABLE_MAP_ALERT_BUTTON_FREE" = "Enable with Ads — Free";
 "ENABLE_MAP_ALERT_BUTTON_PAID" = "Get Pro — $1.99";
 
-"STORE_RESTORE" = "Restore Purchases";
-"STORE_RESTORE_DESCRIPTION" = "If you've already purchased all or some of the items and they don't appear as purchased, restore them with this option.";
-"STORE_ERROR_TITLE" = "There was an error with your purchase";
-"STORE_WAIT_TITLE" = "Please wait…";
-"STORE_WAIT_MESSAGE" = "Give it a second. It's going to space!";
-"STORE_THANK_YOU_TITLE" = "Welcome to Pro.";
-"STORE_THANK_YOU_MESSAGE_MAP" = "Thank you, you are awesome. The Map has been enabled and all ads have been disabled forever. Enjoy the quiet.";
-"STORE_THANK_YOU_MESSAGE_ADS" = "Doesn't it feel great to get rid of those pesky ads?";
-
+// stop stuff
+"AND_BUS_STOP" = "and";
+"SERVICE" = "service";
+"DIRECTION" = "destination";
+"ESTIMATION" = "estimation";
+"DISTANCE" = "distance";
+"NO_INFO" = "No data";
+"TO_DIRECTION" = "to";
+"TO_MINS" = "to";
+"ENTER_STOP_CODE" = "Enter the\nStop Code";
 "STOP_ERROR_TITLE" = "Couldn't check stop";
 "INVALID_STOP_CODE_TITLE" = "Invalid Stop Code";
 "INVALID_STOP_CODE_MESSAGE" = "Please make sure you entered it correctly. It needs to include the P, a letter and a number with up to 4 digits, without spaces.";
+"NO_INFO_TITLE" = "There's no data about this service";
+"NO_INFO_MESSAGE" = "It may be out of its operation hours, or the operator may be failing to provide the information.";
+"NO_INFO_BUTTON_COMPLAIN" = "Report";
+"NO_INFO_COMPLAINT_TWEET" = "@transantiago No hay información para el servicio %@ en el paradero %@. ¿Qué sucede?";
+
+// map
+"LOCATION_DENIED_ALERT_TITLE" = "Location Disabled";
+"LOCATION_DENIED_ALERT_MESSAGE" = "Cuánto Falta needs your permission to use Location Services in order to show you the nearest stops and Bip! spots. Your location is kept private at all times, it never leaves your device.\n\nTo allow Cuánto Falta to use your Location, go to the Settings app > Privacy > Location Services and turn on Cuánto Falta.";
+"OUT_OF_SANTIAGO_WARNING_TITLE" = "You're not in Santiago";
+"OUT_OF_SANTIAGO_WARNING_MESSAGE" = "Cuánto Falta only works in Santiago. Navigate to Santiago on the map to see stuff.";
 "ZOOM_LEVEL_WARNING_TITLE" = "You're too far away";
 "ZOOM_LEVEL_WARNING_MESSAGE" = "Zoom in to see stops on the map.";
+"MAP_SEARCHFIELD_PLACEHOLDER" = "Places or address";
 "SEARCH_ERROR_NOTFOUND_TITLE" = "Place not found";
 "SEARCH_ERROR_NOTFOUND_MESSAGE" = "Be more specific or look for the place directly on the map.";
 "SEARCH_ERROR_GENERIC_TITLE" = "Couldn't perform search";
 "SEARCH_ERROR_GENERIC_MESSAGE" = "It's impossible to search for places at the moment. Try again later.";
+"SERVICE_ROUTE_ERROR_ALERT_TITLE" = "Couldn't find the route for this service";
+
+// favs and history
 "FAVORITES_PLACEHOLDER_TITLE" = "No Favorites";
 "FAVORITES_PLACEHOLDER_MESSAGE" = "You can add a stop to Favorites by tapping the star on the stop results list.";
 "HISTORY_PLACEHOLDER_TITLE" = "No history";
 "HISTORY_PLACEHOLDER_MESSAGE" = "Your History will automatically appear here after you check your first stop.";
-
+"CLEAR_ALL_HISTORY" = "Clear All History";
 "NAME_YOUR_FAVORITE" = "Name this favorite";
 "NAMELESS_FAVORITE" = "No name";
 
-"USD" = "USD";
-"CANCEL" = "Cancel";
-"BUY" = "Buy";
-"PURCHASED" = "Purchased";
-"DISMISS" = "Dismiss";
-"ERROR_DISMISS" = "Dang";
-"LOADING" = "Loading…";
-
+// more
 "HELP" = "Help";
 "ABOUT" = "About";
 "SEND_FEEDBACK" = "Send Feedback";
@@ -79,3 +75,17 @@
 "FOLLOW_US_TWITTER" = "Follow us on Twitter";
 "RATE_ON_APP_STORE" = "Rate on the App Store";
 "SHARE_TWEET_TEXT" = "Check out @cuantofaltapp, a great app for Transantiago";
+
+// store
+"USD" = "USD";
+"CANCEL" = "Cancel";
+"BUY" = "Buy";
+"PURCHASED" = "Purchased";
+"STORE_RESTORE" = "Restore Purchases";
+"STORE_RESTORE_DESCRIPTION" = "If you've already purchased all or some of the items and they don't appear as purchased, restore them with this option.";
+"STORE_ERROR_TITLE" = "There was an error with your purchase";
+"STORE_WAIT_TITLE" = "Please wait…";
+"STORE_WAIT_MESSAGE" = "Give it a second. It's going to space!";
+"STORE_THANK_YOU_TITLE" = "Welcome to Pro.";
+"STORE_THANK_YOU_MESSAGE_MAP" = "Thank you, you are awesome. The Map has been enabled and all ads have been disabled forever. Enjoy the quiet.";
+"STORE_THANK_YOU_MESSAGE_ADS" = "Doesn't it feel great to get rid of those pesky ads?";
