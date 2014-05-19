@@ -45,7 +45,7 @@
 
 // map
 "LOCATION_DENIED_ALERT_TITLE" = "Ubicación Desactivada";
-"LOCATION_DENIED_ALERT_MESSAGE" = "El Mapa de Cuánto Falta necesita que le des permiso para usar tu ubicación, o no podrá mostrarte los paraderos o puntos Bip! más cercanos. Tu ubicación es completamente privada, nunca se va de tu teléfono.\n\nPara activar la ubicación, anda a la app de Ajustes > Privacidad > Ubicación y activa Cuánto Falta.";
+"LOCATION_DENIED_ALERT_MESSAGE" = "El Mapa de Cuánto Falta necesita que le des permiso para usar tu ubicación y así mostrarte los paraderos y puntos Bip! más cercanos. Tu ubicación se mantendrá completamente privada, nunca se enviará a ningún servidor, y sólo se usará dentro de tu dispositivo.\n\nPara permitir el uso de la ubicación, anda a la app de Ajustes > Privacidad > Ubicación y activa Cuánto Falta.";
 "OUT_OF_SANTIAGO_WARNING_TITLE" = "Estás fuera de Santiago";
 "OUT_OF_SANTIAGO_WARNING_MESSAGE" = "Cuánto Falta sólo funciona en Santiago. Navega hacia Santiago en el mapa para ver cosas.";
 "ZOOM_LEVEL_WARNING_TITLE" = "Estás muy lejos";
