@@ -22,7 +22,7 @@
 @property (nonatomic, strong) UILabel *secondTimeLabel;
 @property (nonatomic, strong) UILabel *secondDistanceLabel;
 @property (nonatomic, strong) UIView *noInfoView;
-@property (nonatomic, strong) UIButton *toggleButton;
+@property (nonatomic, strong) CALayer *selectionVeilLayer;
 
 @end
 
@@ -33,6 +33,7 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         self.contentView.frame = CGRectMake(self.contentView.frame.origin.x, self.contentView.frame.origin.y, self.contentView.bounds.size.width, 60.0);
+        self.selectionStyle = UITableViewCellSelectionStyleNone;
         
         CALayer *separatorLayer = [CALayer new];
         separatorLayer.frame = CGRectMake(0, self.contentView.bounds.size.height - 0.5, self.contentView.bounds.size.width, 0.5);
@@ -47,13 +48,13 @@
         _serviceLabel.font = [UIFont fontWithName:@"AvenirNext-Regular" size:26.0];
         _serviceLabel.backgroundColor = [UIColor blackColor];
         
-        _directionLabel = [[UILabel alloc] initWithFrame:CGRectMake(15.0, 35.0, 110.0, 17.0)];
+        _directionLabel = [[UILabel alloc] initWithFrame:CGRectMake(15.0, 35.0, 100.0, 17.0)];
         _directionLabel.font = [UIFont fontWithName:@"AvenirNextCondensed-Medium" size:12.0];
         _directionLabel.textColor = [UIColor colorWithWhite:0.6 alpha:1];
         _directionLabel.numberOfLines = 1;
         _directionLabel.backgroundColor = [UIColor blackColor];
         
-        _estimationContainer = [[CFClipView alloc] initWithFrame:CGRectMake(110.0, 0, 185.0, self.contentView.bounds.size.height)];
+        _estimationContainer = [[CFClipView alloc] initWithFrame:CGRectMake(90.0, 0, 185.0, self.contentView.bounds.size.height)];
         _estimationContainer.backgroundColor = [UIColor blackColor];
         _estimationContainer.scrollView.frame = CGRectMake(50.0, 0, 95.0, self.contentView.bounds.size.height);
         _estimationContainer.scrollView.delegate = self;
@@ -71,6 +72,7 @@
         _distanceLabel.font = [UIFont fontWithName:@"AvenirNext-Regular" size:20.0];
         _distanceLabel.textColor = [UIColor whiteColor];
         _distanceLabel.backgroundColor = [UIColor blackColor];
+        _distanceLabel.userInteractionEnabled = NO;
         [_estimationContainer.scrollView addSubview:_distanceLabel];
         
         _timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 35.0, _estimationContainer.scrollView.bounds.size.width, 14.0)];
@@ -78,6 +80,7 @@
         _timeLabel.textColor = [UIColor colorWithWhite:0.4 alpha:1];
         _timeLabel.alpha = 1;
         _timeLabel.backgroundColor = [UIColor blackColor];
+        _timeLabel.userInteractionEnabled = NO;
         [_estimationContainer.scrollView addSubview:_timeLabel];
         
         _secondDistanceLabel = [[UILabel alloc] initWithFrame:CGRectMake(_estimationContainer.scrollView.bounds.size.width, _distanceLabel.frame.origin.y, _estimationContainer.bounds.size.width, _distanceLabel.bounds.size.height)];
@@ -92,7 +95,7 @@
         _secondTimeLabel.alpha = SECOND_ESTIMATION_ALPHA;
         _secondTimeLabel.backgroundColor = _timeLabel.backgroundColor;
         
-        _noInfoView = [[UIView alloc] initWithFrame:CGRectMake(160.0, 0, 125.0, self.contentView.bounds.size.height)];
+        _noInfoView = [[UIView alloc] initWithFrame:CGRectMake(140.0, 0, 125.0, self.contentView.bounds.size.height)];
         
         UIButton *noInfoButton = [UIButton buttonWithType:UIButtonTypeInfoLight];
         noInfoButton.center = CGPointMake(noInfoButton.center.x, _noInfoView.center.y);
@@ -107,11 +110,11 @@
         noInfoLabel.backgroundColor = [UIColor blackColor];
         [_noInfoView addSubview:noInfoLabel];
         
-        _toggleButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        _toggleButton.frame = _estimationContainer.frame;
-        [_toggleButton addTarget:self action:@selector(estimationsTapped) forControlEvents:UIControlEventTouchDown|UIControlEventTouchDragEnter];
-        [_toggleButton addTarget:self action:@selector(toggleEstimations) forControlEvents:UIControlEventTouchUpInside];
-        [_toggleButton addTarget:self action:@selector(estimationsTapCancelled) forControlEvents:UIControlEventTouchCancel|UIControlEventTouchDragExit];
+        _selectionVeilLayer = [CALayer layer];
+        _selectionVeilLayer.frame = self.contentView.bounds;
+        _selectionVeilLayer.backgroundColor = [UIColor colorWithWhite:1 alpha:0.12].CGColor;
+        _selectionVeilLayer.hidden = YES;
+        [self.layer addSublayer:_selectionVeilLayer];
     }
     return self;
 }
@@ -123,7 +126,6 @@
     self.estimationContainer.scrollView.contentSize = CGSizeMake(self.estimationContainer.scrollView.bounds.size.width, self.estimationContainer.bounds.size.height);
     [self.secondDistanceLabel removeFromSuperview];
     [self.secondTimeLabel removeFromSuperview];
-    [self.toggleButton removeFromSuperview];
     
     if (estimations.count == 0) {
         [self.estimationContainer removeFromSuperview];
@@ -145,29 +147,6 @@
         self.secondDistanceLabel.text = [[estimations lastObject] objectForKey:@"distance"];
         self.secondTimeLabel.text = [[[estimations lastObject] objectForKey:@"eta"] stringByReplacingOccurrencesOfString:@"." withString:@""];
     }
-}
-
-- (void)estimationsTapped
-{
-    [UIView animateWithDuration:0.1 animations:^{
-        self.estimationContainer.alpha = 0.5;
-    }];
-}
-
-- (void)estimationsTapCancelled
-{
-    [UIView animateWithDuration:0.1 animations:^{
-        self.estimationContainer.alpha = 1;
-    }];
-}
-
-- (void)toggleEstimations
-{
-    [UIView animateWithDuration:0.1 animations:^{
-        self.estimationContainer.alpha = 1;
-        self.estimationContainer.scrollView.contentOffset = CGPointMake(self.estimationContainer.bounds.size.width, 0);
-    } completion:^(BOOL finished) {
-    }];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)sender
@@ -197,11 +176,15 @@
     self.colorBadge.badgeColor = badgeColor;
 }
 
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated
+- (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated
 {
-    [super setSelected:selected animated:animated];
-
-    // Configure the view for the selected state
+    [super setHighlighted:highlighted animated:animated];
+    
+    if (highlighted) {
+        self.selectionVeilLayer.hidden = NO;
+    } else {
+        self.selectionVeilLayer.hidden = YES;
+    }
 }
 
 - (void)noInfoButtonTapped
@@ -225,7 +208,6 @@
 
 - (void)prepareForReuse
 {
-    [self.toggleButton removeFromSuperview];
     [self.secondDistanceLabel removeFromSuperview];
     [self.secondTimeLabel removeFromSuperview];
     [self.noInfoView removeFromSuperview];

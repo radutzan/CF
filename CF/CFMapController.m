@@ -311,7 +311,7 @@ static MKMapRect santiagoBounds;
 
 - (void)setDefaultRegion
 {
-    CLLocationCoordinate2D startCoordinate = CLLocationCoordinate2DMake(-33.444117, -70.651055);
+    CLLocationCoordinate2D startCoordinate = CLLocationCoordinate2DMake(-33.437671, -70.636461);
     MKCoordinateRegion adjustedRegion = [self.mapView regionThatFits:MKCoordinateRegionMakeWithDistance(startCoordinate, 400, 400)];
     [self.mapView setRegion:adjustedRegion animated:NO];
     

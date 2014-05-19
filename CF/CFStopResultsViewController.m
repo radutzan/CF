@@ -23,6 +23,9 @@
 
 @property (nonatomic, strong) CFStopSignView *stopInfoView;
 @property (nonatomic, strong) OLShapeTintedButton *favoriteButton;
+@property (nonatomic, strong) NSTimer *timer;
+@property (nonatomic, strong) UILabel *timerLabel;
+@property (nonatomic, assign) NSUInteger timerCount;
 @property (nonatomic, strong) NSMutableArray *responseEstimation;
 @property (nonatomic, strong) NSMutableArray *finalData;
 @property (nonatomic, strong) GADBannerView *bannerView;
@@ -61,6 +64,12 @@
     self.refreshControl = [UIRefreshControl new];
     self.refreshControl.tintColor = [UIColor whiteColor];
     [self.refreshControl addTarget:self action:@selector(performStopRequest) forControlEvents:UIControlEventValueChanged];
+    
+    self.timerLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.view.bounds.size.width - 100.0 - 15.0, 0, 100.0, 20.0)];
+    self.timerLabel.font = [UIFont fontWithName:@"AvenirNext-MediumItalic" size:13.0];
+    self.timerLabel.alpha = 0.5;
+    self.timerLabel.textAlignment = NSTextAlignmentRight;
+    self.timerLabel.text = @"holi";
     
     UIView *earFuck = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 270, 44.0)];
     
@@ -246,6 +255,11 @@
 - (void)performStopRequest
 {
     self.refreshing = YES;
+    
+    [self refreshTimerLabel];
+    [self.class cancelPreviousPerformRequestsWithTarget:nil];
+    [self.timer invalidate];
+    
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     [self.responseEstimation removeAllObjects];
     [self.tableView reloadData];
@@ -354,6 +368,25 @@
     self.refreshing = NO;
     [self.tableView reloadData];
     [self.refreshControl endRefreshing];
+    
+    [self performSelector:@selector(performStopRequest) withObject:nil afterDelay:16.0];
+    
+    if (!self.timer.isValid) {
+        NSTimer *newTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(refreshTimerLabel) userInfo:nil repeats:YES];
+        
+        self.timer = newTimer;
+    }
+
+}
+
+- (void)refreshTimerLabel
+{
+    if (self.refreshing) {
+        self.timerLabel.text = NSLocalizedString(@"REFRESHING", nil);
+        self.timerCount = 15;
+    } else {
+        self.timerLabel.text = [NSString stringWithFormat:@"%d", self.timerCount--];
+    }
 }
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
@@ -392,6 +425,7 @@
         serviceDictionary = [self.stop.services objectAtIndex:indexPath.row];
     
     cell.backgroundColor = [UIColor blackColor];
+    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     
     cell.serviceLabel.text = [serviceDictionary objectForKey:@"name"];
     cell.directionLabel.text = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"TO_DIRECTION", nil), [[serviceDictionary objectForKey:@"destino"] capitalizedString]];
@@ -453,10 +487,12 @@
     service.font = [UIFont fontWithName:@"AvenirNext-MediumItalic" size:13.0];
     [headerView addSubview:service];
     
-    UILabel *estimate = [[UILabel alloc] initWithFrame:CGRectMake(160.0, 0, 100.0, 20.0)];
+    UILabel *estimate = [[UILabel alloc] initWithFrame:CGRectMake(140.0, 0, 100.0, 20.0)];
     estimate.text = NSLocalizedString(@"ESTIMATION", nil);
     estimate.font = [UIFont fontWithName:@"AvenirNext-MediumItalic" size:13.0];
     [headerView addSubview:estimate];
+    
+    [headerView addSubview:self.timerLabel];
     
     return headerView;
 }

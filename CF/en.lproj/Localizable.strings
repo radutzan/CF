@@ -30,6 +30,7 @@
 "SERVICE" = "service";
 "DIRECTION" = "destination";
 "ESTIMATION" = "estimation";
+"REFRESHING" = "updating…";
 "DISTANCE" = "distance";
 "NO_INFO" = "No data";
 "TO_DIRECTION" = "to";

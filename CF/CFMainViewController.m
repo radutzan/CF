@@ -157,9 +157,16 @@
     
 #if TARGET_IPHONE_SIMULATOR
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"CFEnableMapWithAds"];
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"CF01"];
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"CF02"];
+    self.mapEnabled = YES;
+    
+#ifdef DEV_VERSION
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"CFEnableMapWithAds"];
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"CF01"];
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"CF02"];
     self.mapEnabled = NO;
+#endif
 #endif
     
 #ifdef DEV_VERSION
@@ -606,7 +613,7 @@
         }
         
     } else {
-        CGFloat terminalVelocity = [recognizer velocityInView:self.view].x;
+        CGFloat terminalVelocity = [recognizer velocityInView:self.view].y;
         CGFloat slideFactor = gripTranslation / (self.contentView.bounds.size.height - TAB_BAR_HEIGHT);
         BOOL opening = [recognizer.view isEqual:self.gripper] || [recognizer.view isEqual:self.openMapButton];
         
