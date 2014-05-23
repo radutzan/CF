@@ -19,6 +19,7 @@
 @interface CFServiceRouteViewController () <MKMapViewDelegate, SMCalloutViewDelegate>
 
 @property (nonatomic, strong) MKMapView *mapView;
+@property (nonatomic, strong) UINavigationBar *navigationBar;
 @property (assign) CFStop *selectedStop;
 @property (nonatomic, strong) SMCalloutView *stopCalloutView;
 @property (nonatomic, strong) UISegmentedControl *directionSwitcher;
@@ -41,6 +42,9 @@ static MKMapRect santiagoBounds;
     if (self) {
         self.currentService = service;
         self.currentDirection = direction;
+        
+        self.title = service;
+        self.navigationItem.backBarButtonItem.title = @"";
     }
     return self;
 }
@@ -57,6 +61,8 @@ static MKMapRect santiagoBounds;
     if (self) {
         self.currentService = service;
         self.directionString = directionString;
+        
+        self.title = service;
     }
     return self;
 }
@@ -65,19 +71,19 @@ static MKMapRect santiagoBounds;
 {
     [super viewDidLoad];
     
-    self.title = self.currentService;
-    
     self.mapView = [[MKMapView alloc] initWithFrame:self.view.bounds];
     self.mapView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     self.mapView.delegate = self;
     self.mapView.showsUserLocation = YES;
     self.mapView.showsPointsOfInterest = NO;
     self.mapView.showsBuildings = YES;
-//    self.mapView.rotateEnabled = NO;
-//    self.mapView.pitchEnabled = NO;
     [self.view addSubview:self.mapView];
     
     self.regionSet = NO;
+    
+    self.navigationBar = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, 0, 64.0)];
+    self.navigationBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    self.navigationBar.delegate = self;
     
     self.stopCalloutView = [SMCalloutView new];
     self.stopCalloutView.delegate = self;
@@ -121,7 +127,7 @@ static MKMapRect santiagoBounds;
     UIBarButtonItem *spaceItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
     self.toolbarItems = @[spaceItem, segmentedControlItem, spaceItem];
     
-    [self.navigationController setNavigationBarHidden:NO animated:YES];
+    [self.navigationController setNavigationBarHidden:YES animated:YES];
     [self.navigationController setToolbarHidden:NO];
     
     self.navigationController.navigationBar.barStyle = UIBarStyleDefault;
@@ -193,7 +199,7 @@ static MKMapRect santiagoBounds;
                 MKCoordinateRegion adjustedRegion;
                 
                 if (self.mapView.userLocation && MKMapRectContainsPoint(santiagoBounds, MKMapPointForCoordinate(self.mapView.userLocation.coordinate))) {
-                    adjustedRegion = [self.mapView regionThatFits:MKCoordinateRegionMakeWithDistance(self.mapView.userLocation.coordinate, 400, 400)];
+                    adjustedRegion = [self.mapView regionThatFits:MKCoordinateRegionMakeWithDistance(self.mapView.userLocation.coordinate, 1400, 1400)];
                 } else {
                     CFStop *middleAnnotation = [stops objectAtIndex:floorf(stops.count / 2)];
                     adjustedRegion = [self.mapView regionThatFits:MKCoordinateRegionMakeWithDistance(middleAnnotation.coordinate, 1400, 1400)];
@@ -270,7 +276,7 @@ static MKMapRect santiagoBounds;
 
 - (void)mapView:(MKMapView *)mapView didFailToLocateUserWithError:(NSError *)error
 {
-    [self setDefaultRegion];
+//    [self setDefaultRegion];
 }
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation

@@ -150,7 +150,8 @@ NSString * const queryKeySalt = @"4ESMLSVB_ONDA";
 
 - (void)fetchBusStop:(NSString *)busStop handler:(CFSapoResultBlock)handler
 {
-    NSDictionary *params = @{@"stop_code" : busStop };
+    NSDictionary *params = @{@"stop_code" : busStop};
+    
     [self getPath:@"/bus_stops" parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
         AFJSONRequestOperation *JSONop = (AFJSONRequestOperation *)operation;
         if (handler) {

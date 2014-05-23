@@ -125,6 +125,7 @@
 		7CAFA33D1842C360005A06BC /* pin-bip@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CAFA33C1842C360005A06BC /* pin-bip@2x.png */; };
 		7CB337FA1929BF5C00234792 /* CustomPinAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CB337F91929BF5C00234792 /* CustomPinAnnotationView.m */; };
 		7CB337FB1929BFDB00234792 /* CustomPinAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CB337F91929BF5C00234792 /* CustomPinAnnotationView.m */; };
+		7CB337FE192AB27500234792 /* CFStopServicesButtonArrayView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CB337FD192AB27500234792 /* CFStopServicesButtonArrayView.m */; };
 		7CB64D7718550695006422E0 /* help.html in Resources */ = {isa = PBXBuildFile; fileRef = 7CB64D7918550695006422E0 /* help.html */; };
 		7CB64D7C18551C9C006422E0 /* button-bip@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CB64D7B18551C9C006422E0 /* button-bip@2x.png */; };
 		7CB64D7E18552648006422E0 /* icon-about@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CB64D7D18552648006422E0 /* icon-about@2x.png */; };
@@ -268,6 +269,8 @@
 		7CAFA33C1842C360005A06BC /* pin-bip@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pin-bip@2x.png"; sourceTree = "<group>"; };
 		7CB337F81929BF5C00234792 /* CustomPinAnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomPinAnnotationView.h; sourceTree = "<group>"; };
 		7CB337F91929BF5C00234792 /* CustomPinAnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomPinAnnotationView.m; sourceTree = "<group>"; };
+		7CB337FC192AB27500234792 /* CFStopServicesButtonArrayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFStopServicesButtonArrayView.h; sourceTree = "<group>"; };
+		7CB337FD192AB27500234792 /* CFStopServicesButtonArrayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFStopServicesButtonArrayView.m; sourceTree = "<group>"; };
 		7CB64D7818550695006422E0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = en; path = en.lproj/help.html; sourceTree = "<group>"; };
 		7CB64D7A18550699006422E0 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = es; path = es.lproj/help.html; sourceTree = "<group>"; };
 		7CB64D7B18551C9C006422E0 /* button-bip@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-bip@2x.png"; sourceTree = "<group>"; };
@@ -613,6 +616,8 @@
 				7C7A15D51853EBF0002EE4C5 /* OLTextField.m */,
 				7CFF7EBD1838700F006230CE /* CFStopSignView.h */,
 				7CFF7EBE1838700F006230CE /* CFStopSignView.m */,
+				7CB337FC192AB27500234792 /* CFStopServicesButtonArrayView.h */,
+				7CB337FD192AB27500234792 /* CFStopServicesButtonArrayView.m */,
 				7C42642A184AF50900A8968F /* Stop Cells */,
 				7C6CE7D018775DE000DDEF54 /* Result Cell */,
 			);
@@ -995,6 +1000,7 @@
 				7CFF7E7818381D6E006230CE /* CFMainViewController.m in Sources */,
 				7CE0D9D8189DB34F00D9782E /* OLShapeTintedButton.m in Sources */,
 				7C6CE7CF187751FB00DDEF54 /* CFColorBadgeView.m in Sources */,
+				7CB337FE192AB27500234792 /* CFStopServicesButtonArrayView.m in Sources */,
 				7C426414184AE87300A8968F /* CFStopCell.m in Sources */,
 				7CFF7E7D18382448006230CE /* CFMapController.m in Sources */,
 				7CFF7EA218382B4D006230CE /* CFSapoClient.m in Sources */,

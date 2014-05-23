@@ -72,13 +72,14 @@
     self.timerLabel.text = @"holi";
     
     UIView *earFuck = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 270, 44.0)];
+    self.navigationItem.titleView = earFuck;
+    self.navigationItem.backBarButtonItem.title = @"";
     
     self.stopInfoView = [[CFStopSignView alloc] initWithFrame:CGRectMake(-25.0, -11.0, 280.0, 52.0)];
     self.stopInfoView.delegate = self;
     self.stopInfoView.stopCodeLabel.hidden = YES;
     self.stopInfoView.favoriteContentView.userInteractionEnabled = YES;
     [earFuck addSubview:self.stopInfoView];
-    self.navigationItem.titleView = earFuck;
     
     self.favoriteButton = [OLShapeTintedButton buttonWithType:UIButtonTypeCustom];
     self.favoriteButton.frame = CGRectMake(earFuck.bounds.size.width - 38.0, -5.0, 42.0, 42.0);
@@ -392,7 +393,9 @@
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
     if (alertView.tag == 6009) {
-        [self.navigationController popToRootViewControllerAnimated:YES];
+        if (![self.navigationController.topViewController isEqual:[self.navigationController.viewControllers objectAtIndex:0]]) {
+            [self.navigationController popToRootViewControllerAnimated:YES];
+        }
     }
 }
 
