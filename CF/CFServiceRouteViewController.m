@@ -84,6 +84,7 @@ static MKMapRect santiagoBounds;
     self.navigationBar = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, 0, 64.0)];
     self.navigationBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     self.navigationBar.delegate = self;
+    [self.view addSubview:self.navigationBar];
     
     self.stopCalloutView = [SMCalloutView new];
     self.stopCalloutView.delegate = self;

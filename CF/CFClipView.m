@@ -14,7 +14,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        _scrollView = [UIScrollView new];
+        _scrollView = [CFForwardingTouchScrollView new];
         [self addSubview:_scrollView];
         
         CAGradientLayer *gradient = [CAGradientLayer layer];

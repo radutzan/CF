@@ -428,26 +428,9 @@ static MKMapRect santiagoBounds;
 
 - (void)popupStopCalloutViewFromPin:(MKAnnotationView *)pin
 {
-    UIView *completeCalloutContentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 280.0, 102.0)];
-    
     CFStopSignView *stopSign = [[CFStopSignView alloc] initWithFrame:CGRectMake(0, 0, 280, 52)];
     stopSign.stop = self.selectedStop;
     stopSign.userInteractionEnabled = NO;
-    [completeCalloutContentView addSubview:stopSign];
-    
-    if (![self.selectedStop.services lastObject]) {
-        [[CFSapoClient sharedClient] fetchBusStop:self.selectedStop.code handler:^(NSError *error, NSArray *result) {
-            if (result) {
-                for (NSDictionary *stopData in result) {
-                    CFStopServicesButtonArrayView *servicesArrayView = [[CFStopServicesButtonArrayView alloc] initWithFrame:CGRectMake(0, 52.0, 280.0, 50.0)];
-                    servicesArrayView.services = [stopData objectForKey:@"recorridos"];
-                    [self.stopCalloutView.contentView addSubview:servicesArrayView];
-//                    completeCalloutContentView.frame = CGRectMake(0, 0, completeCalloutContentView.bounds.size.width, servicesArrayView.bounds.size.height + stopSign.bounds.size.height);
-                    self.stopCalloutView.contentView.frame = CGRectMake(self.stopCalloutView.contentView.frame.origin.x, self.stopCalloutView.contentView.frame.origin.y, stopSign.bounds.size.width, servicesArrayView.bounds.size.height + stopSign.bounds.size.height);
-                }
-            }
-        }];
-    }
     
     self.stopCalloutView.contentView = stopSign;
     

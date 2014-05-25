@@ -135,6 +135,7 @@
 		7CC7EC491929B79C002160E5 /* HOFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CC7EC481929B79C002160E5 /* HOFunctions.m */; };
 		7CC7EC4A1929B79C002160E5 /* HOFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CC7EC481929B79C002160E5 /* HOFunctions.m */; };
 		7CC7EC4C1929BBA2002160E5 /* CFServiceRouteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CC7EC411929B5F6002160E5 /* CFServiceRouteViewController.m */; };
+		7CCA7469193248C200ADB397 /* CFForwardingTouchScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CCA7468193248C200ADB397 /* CFForwardingTouchScrollView.m */; };
 		7CE0D9D8189DB34F00D9782E /* OLShapeTintedButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CE0D9D7189DB34F00D9782E /* OLShapeTintedButton.m */; };
 		7CE0D9DA189DD2D800D9782E /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CE0D9D9189DD2D800D9782E /* Social.framework */; };
 		7CF7EE4F1852D790009B3F46 /* CFBipSpot.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CF7EE4E1852D790009B3F46 /* CFBipSpot.m */; };
@@ -281,6 +282,8 @@
 		7CC7EC441929B74B002160E5 /* CFRoute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFRoute.h; sourceTree = "<group>"; };
 		7CC7EC471929B79C002160E5 /* HOFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HOFunctions.h; sourceTree = "<group>"; };
 		7CC7EC481929B79C002160E5 /* HOFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HOFunctions.m; sourceTree = "<group>"; };
+		7CCA7467193248C200ADB397 /* CFForwardingTouchScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFForwardingTouchScrollView.h; sourceTree = "<group>"; };
+		7CCA7468193248C200ADB397 /* CFForwardingTouchScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFForwardingTouchScrollView.m; sourceTree = "<group>"; };
 		7CE0D9D6189DB34F00D9782E /* OLShapeTintedButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLShapeTintedButton.h; sourceTree = "<group>"; };
 		7CE0D9D7189DB34F00D9782E /* OLShapeTintedButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLShapeTintedButton.m; sourceTree = "<group>"; };
 		7CE0D9D9189DD2D800D9782E /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
@@ -458,6 +461,8 @@
 				7C426416184AE88000A8968F /* CFResultCell.m */,
 				7C6CE7CA1877450D00DDEF54 /* CFClipView.h */,
 				7C6CE7CB1877450D00DDEF54 /* CFClipView.m */,
+				7CCA7467193248C200ADB397 /* CFForwardingTouchScrollView.h */,
+				7CCA7468193248C200ADB397 /* CFForwardingTouchScrollView.m */,
 				7C6CE7CD187751FB00DDEF54 /* CFColorBadgeView.h */,
 				7C6CE7CE187751FB00DDEF54 /* CFColorBadgeView.m */,
 			);
@@ -980,6 +985,7 @@
 				7C9BD16E1926BC7D003E9F8E /* CFElPeA.m in Sources */,
 				7C3B27C4183B194A00818A3B /* CFStopTableViewController.m in Sources */,
 				7C9A0F691852E9C60018ED1F /* NSDictionary+NSNullUtility.m in Sources */,
+				7CCA7469193248C200ADB397 /* CFForwardingTouchScrollView.m in Sources */,
 				7C7A15DE1854DF54002EE4C5 /* CFNavigationController.m in Sources */,
 				7C6CE8001877D04A00DDEF54 /* CFStoreViewController.m in Sources */,
 				7CC7EC421929B5F6002160E5 /* CFServiceRouteViewController.m in Sources */,

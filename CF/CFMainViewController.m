@@ -650,7 +650,7 @@
 
 - (void)closeMapWithVelocity:(CGFloat)velocity
 {
-    velocity = MIN(velocity, 3500);
+    velocity = MIN(abs(velocity), 3500);
     CGFloat velocityFactor = velocity / 3500;
     CGFloat animationDuration = 0.3 * (1 - velocityFactor);
     CGFloat scaleFactor = 1 + velocityFactor * 0.2;
@@ -663,10 +663,15 @@
         }
         
     } completion:^(BOOL finished) {
-        [UIView animateWithDuration:0.7 delay:0 usingSpringWithDamping:0.25 initialSpringVelocity:0 options:UIViewAnimationOptionAllowUserInteraction animations:^{
-            self.contentView.transform = CGAffineTransformIdentity;
-        } completion:nil];
-        self.mapMode = NO;
+        if (CGAffineTransformIsIdentity(self.contentView.transform)) {
+            self.mapMode = NO;
+        } else {
+            [UIView animateWithDuration:0.7 delay:0 usingSpringWithDamping:0.25 initialSpringVelocity:0 options:UIViewAnimationOptionAllowUserInteraction animations:^{
+                self.contentView.transform = CGAffineTransformIdentity;
+            } completion:^(BOOL finished) {
+                self.mapMode = NO;
+            }];
+        }
     }];
 }
 

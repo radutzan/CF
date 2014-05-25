@@ -7,9 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "CFForwardingTouchScrollView.h"
 
 @interface CFClipView : UIView
 
-@property (nonatomic, strong) UIScrollView *scrollView;
+@property (nonatomic, strong) CFForwardingTouchScrollView *scrollView;
 
 @end
