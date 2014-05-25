@@ -19,7 +19,7 @@
 @interface CFServiceRouteViewController () <MKMapViewDelegate, SMCalloutViewDelegate>
 
 @property (nonatomic, strong) MKMapView *mapView;
-@property (nonatomic, strong) UINavigationBar *navigationBar;
+@property (nonatomic, strong) UINavigationBar *notANavigationBar;
 @property (assign) CFStop *selectedStop;
 @property (nonatomic, strong) SMCalloutView *stopCalloutView;
 @property (nonatomic, strong) UISegmentedControl *directionSwitcher;
@@ -81,11 +81,6 @@ static MKMapRect santiagoBounds;
     
     self.regionSet = NO;
     
-    self.navigationBar = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, 0, 64.0)];
-    self.navigationBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    self.navigationBar.delegate = self;
-    [self.view addSubview:self.navigationBar];
-    
     self.stopCalloutView = [SMCalloutView new];
     self.stopCalloutView.delegate = self;
     self.stopCalloutView.constrainedInsets = UIEdgeInsetsMake(64.0, 0, 45.0, 0);
@@ -98,6 +93,10 @@ static MKMapRect santiagoBounds;
     [self.directionSwitcher setWidth:segmentWidth forSegmentAtIndex:1];
     [self.directionSwitcher addTarget:self action:@selector(segmentedControlValueChanged:) forControlEvents:UIControlEventValueChanged];
     
+    UIBarButtonItem *segmentedControlItem = [[UIBarButtonItem alloc] initWithCustomView:self.directionSwitcher];
+    UIBarButtonItem *spaceItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    self.toolbarItems = @[spaceItem, segmentedControlItem, spaceItem];
+    
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         MKMapPoint upperLeft = MKMapPointForCoordinate(CLLocationCoordinate2DMake(-33.259, -70.939));
@@ -107,6 +106,9 @@ static MKMapRect santiagoBounds;
     });
     
     [self drawPolylineForService:self.currentService direction:self.currentDirection];
+    
+    UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
+    [self.navigationItem setBackBarButtonItem:backButtonItem];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -124,11 +126,7 @@ static MKMapRect santiagoBounds;
         }
     }];
     
-    UIBarButtonItem *segmentedControlItem = [[UIBarButtonItem alloc] initWithCustomView:self.directionSwitcher];
-    UIBarButtonItem *spaceItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-    self.toolbarItems = @[spaceItem, segmentedControlItem, spaceItem];
-    
-    [self.navigationController setNavigationBarHidden:YES animated:YES];
+    [self.navigationController setNavigationBarHidden:NO animated:YES];
     [self.navigationController setToolbarHidden:NO];
     
     self.navigationController.navigationBar.barStyle = UIBarStyleDefault;
@@ -136,6 +134,8 @@ static MKMapRect santiagoBounds;
 
 - (void)viewWillDisappear:(BOOL)animated
 {
+    [super viewWillDisappear:animated];
+    
     [self.navigationController setToolbarHidden:YES];
 }
 
@@ -230,12 +230,12 @@ static MKMapRect santiagoBounds;
             CFDirection finalDirection;
             NSDictionary *resultDictionary = [result objectAtIndex:0];
             NSString *responseIda = [resultDictionary objectForKey:@"ida"];
-            NSString *responseRegreso = [resultDictionary objectForKey:@"regreso"];
+//            NSString *responseRegreso = [resultDictionary objectForKey:@"regreso"];
             NSString *localizedTo = NSLocalizedString(@"TO_DIRECTION", nil);
             NSString *comparableDirectionString = [[directionString stringByReplacingCharactersInRange:NSMakeRange(0, localizedTo.length + 1) withString:@""] uppercaseString];
-            NSLog(@"%@", responseIda);
-            NSLog(@"%@", responseRegreso);
-            NSLog(@"%@", comparableDirectionString);
+//            NSLog(@"%@", responseIda);
+//            NSLog(@"%@", responseRegreso);
+//            NSLog(@"%@", comparableDirectionString);
             
             if ([comparableDirectionString isEqualToString:responseIda]) {
                 finalDirection = CFDirectionOutward;NSLog(@"CFDirectionOutward");

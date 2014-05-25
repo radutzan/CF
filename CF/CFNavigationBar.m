@@ -8,6 +8,12 @@
 
 #import "CFNavigationBar.h"
 
+@interface CFNavigationBar ()
+
+@property (nonatomic, assign) BOOL inStopResult;
+
+@end
+
 @implementation CFNavigationBar
 
 - (id)initWithFrame:(CGRect)frame
@@ -18,34 +24,48 @@
     return self;
 }
 
+- (void)pushNavigationItem:(UINavigationItem *)item animated:(BOOL)animated
+{
+    [super pushNavigationItem:item animated:animated];
+    
+    NSLog(@"pushed: %@", item.title);
+}
+
 - (void)layoutSubviews
 {
     [super layoutSubviews];
     
-    if ([self.topItem.title isEqualToString:@"Stop Results"] || [self.topItem.title isEqualToString:@""]) {
+    self.inStopResult = [self.topItem.title isEqualToString:@"Stop Results"];
+    
+    [UIView animateWithDuration:0.2 animations:^{
+        CGFloat navBarHeight = (self.inStopResult) ? 54.0 : 44.0;
+        self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, navBarHeight);
+        
         for (UIView *subview in self.subviews) {
-//            NSLog(@"%@", subview);
             if ([subview isKindOfClass:NSClassFromString(@"_UINavigationBarBackIndicatorView")]) {
                 CGPoint center = subview.center;
-                center.y = 27.25f;
+                center.y = (self.inStopResult) ? 27.25f : 22.25f;
                 subview.center = center;
             }
         }
-    }
+    }];
 }
 
 - (CGSize)sizeThatFits:(CGSize)size
 {
-    if ([self.topItem.title isEqualToString:@"Stop Results"] || [self.topItem.title isEqualToString:@""]) {
+    if (self.inStopResult) {
         size.width = self.frame.size.width;
         size.height = 54.0;
+        NSLog(@"navbar size in stop");
         return size;
     } else {
         size.width = self.frame.size.width;
         size.height = 44.0;
+        NSLog(@"navbar size not in stop");
         return size;
     }
     
+    NSLog(@"you should never see this nslog");
     return [super sizeThatFits:size];
 }
 

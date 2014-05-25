@@ -69,11 +69,10 @@
     self.timerLabel.font = [UIFont fontWithName:@"AvenirNext-MediumItalic" size:13.0];
     self.timerLabel.alpha = 0.5;
     self.timerLabel.textAlignment = NSTextAlignmentRight;
-    self.timerLabel.text = @"holi";
+    self.timerLabel.text = NSLocalizedString(@"REFRESHING", nil);
     
     UIView *earFuck = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 270, 44.0)];
     self.navigationItem.titleView = earFuck;
-    self.navigationItem.backBarButtonItem.title = @"";
     
     self.stopInfoView = [[CFStopSignView alloc] initWithFrame:CGRectMake(-25.0, -11.0, 280.0, 52.0)];
     self.stopInfoView.delegate = self;
@@ -88,6 +87,9 @@
     [self.favoriteButton setImage:[UIImage imageNamed:@"button-favorites-selected"] forState:UIControlStateSelected];
     [self.favoriteButton addTarget:self action:@selector(favButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     [earFuck addSubview:self.favoriteButton];
+    
+    UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
+    [self.navigationItem setBackBarButtonItem:backButtonItem];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -228,8 +230,6 @@
 - (void)setStop:(CFStop *)stop
 {
     _stop = stop;
-    
-    self.title = @"";
     
     self.stopInfoView.stop = stop;
     self.favoriteButton.enabled = YES;
