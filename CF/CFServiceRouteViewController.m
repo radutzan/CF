@@ -97,6 +97,9 @@ static MKMapRect santiagoBounds;
     UIBarButtonItem *spaceItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
     self.toolbarItems = @[spaceItem, segmentedControlItem, spaceItem];
     
+    MKUserTrackingBarButtonItem *tracky = [[MKUserTrackingBarButtonItem alloc] initWithMapView:self.mapView];
+    self.navigationItem.rightBarButtonItem = tracky;
+    
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         MKMapPoint upperLeft = MKMapPointForCoordinate(CLLocationCoordinate2DMake(-33.259, -70.939));
@@ -120,7 +123,7 @@ static MKMapRect santiagoBounds;
             NSDictionary *resultDictionary = [result objectAtIndex:0];
             NSString *outwardName = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"TO_DIRECTION", nil), [[resultDictionary objectForKey:@"ida"] capitalizedString]];
             NSString *inwardName = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"TO_DIRECTION", nil), [[resultDictionary objectForKey:@"regreso"] capitalizedString]];
-            NSLog(@"%@, %@", outwardName, inwardName);
+//            NSLog(@"%@, %@", outwardName, inwardName);
             [self.directionSwitcher setTitle:outwardName forSegmentAtIndex:0];
             [self.directionSwitcher setTitle:inwardName forSegmentAtIndex:1];
         }
@@ -238,9 +241,9 @@ static MKMapRect santiagoBounds;
 //            NSLog(@"%@", comparableDirectionString);
             
             if ([comparableDirectionString isEqualToString:responseIda]) {
-                finalDirection = CFDirectionOutward;NSLog(@"CFDirectionOutward");
+                finalDirection = CFDirectionOutward;//NSLog(@"CFDirectionOutward");
             } else {
-                finalDirection = CFDirectionInward;NSLog(@"CFDirectionInward");
+                finalDirection = CFDirectionInward;//NSLog(@"CFDirectionInward");
             }
             
             self.directionSwitcher.selectedSegmentIndex = finalDirection;

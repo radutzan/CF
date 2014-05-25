@@ -112,12 +112,14 @@
     [super viewDidAppear:animated];
     
     [self.navigationController setNavigationBarHidden:NO animated:YES];
+    if (self.stop) [self performStopRequest];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
     
+    [self.timer invalidate];
     [self.view endEditing:YES];
 }
 
