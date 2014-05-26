@@ -71,7 +71,7 @@ static MKMapRect santiagoBounds;
         UITapGestureRecognizer *darkOverlayTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(darkOverlayTapped)];
         [self.darkOverlay addGestureRecognizer:darkOverlayTap];
         
-        self.zoomWarning = [[OLGhostAlertView alloc] initWithTitle:NSLocalizedString(@"ZOOM_LEVEL_WARNING_TITLE", nil) message:NSLocalizedString(@"ZOOM_LEVEL_WARNING_MESSAGE", nil) timeout:200.0 dismissible:NO];
+        self.zoomWarning = [[OLGhostAlertView alloc] initWithTitle:NSLocalizedString(@"ZOOM_LEVEL_WARNING_TITLE", nil) message:NSLocalizedString(@"ZOOM_LEVEL_WARNING_MESSAGE", nil) timeout:200.0 dismissible:YES];
         self.zoomWarning.style = OLGhostAlertViewStyleLight;
         self.zoomWarning.position = OLGhostAlertViewPositionCenter;
         self.zoomWarning.userInteractionEnabled = NO;

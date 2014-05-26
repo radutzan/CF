@@ -153,7 +153,7 @@
 {
     UIView *hitView = [super hitTest:point withEvent:event];
     
-    if (![self.subviews containsObject:hitView]) {
+    if ([hitView isEqual:self]) {
         return nil;
     }
     

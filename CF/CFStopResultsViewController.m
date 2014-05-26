@@ -395,7 +395,7 @@
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
     if (alertView.tag == 6009) {
-        if (![self.navigationController.topViewController isEqual:[self.navigationController.viewControllers objectAtIndex:0]]) {
+        if ([[self.navigationController.viewControllers lastObject] isEqual:self]) {
             [self.navigationController popToRootViewControllerAnimated:YES];
         }
     }
