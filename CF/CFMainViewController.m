@@ -328,11 +328,11 @@
         [self importUserData];
     }
     
-    BOOL hasLaunched192 = NO;//[[NSUserDefaults standardUserDefaults] boolForKey:@"OLHasLaunched192"];
+    BOOL hasLaunched192 = [[NSUserDefaults standardUserDefaults] boolForKey:@"OLHasLaunched192"];
     
     if (!hasLaunched192) {
-//        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"OLHasLaunched192"];
-//        [[NSUserDefaults standardUserDefaults] synchronize];
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"OLHasLaunched192"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
         
         CFWhatsNewViewController *whatsNew = [CFWhatsNewViewController new];
         [self presentViewController:whatsNew animated:YES completion:nil];
@@ -1110,6 +1110,51 @@
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar
 {
     [self.mapController showDarkOverlay];
+}
+
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
+{
+    if (searchText.length == 2) {
+        NSRegularExpression *expression = [NSRegularExpression regularExpressionWithPattern:@"[A-J][0-9]" options:(NSRegularExpressionCaseInsensitive) error:NULL];
+        
+        NSTextCheckingResult *result = [expression firstMatchInString:searchText options:0 range:NSMakeRange(0, searchText.length)];
+        
+        if (result) {
+            NSLog(@"possible short service");
+            NSMutableString *expandedServiceName = [NSMutableString stringWithString:searchText];
+            [expandedServiceName insertString:@"0" atIndex:1];
+            [[CFSapoClient sharedClient] serviceInfoForService:expandedServiceName handler:^(NSError *error, id result) {
+                if (result) {
+                    // win
+                    NSLog(@"service exists");
+                }
+                
+                if (error) {
+                    // quit
+                    NSLog(@"not really");
+                }
+            }];
+        }
+    } else if (searchText.length == 3) {
+        NSRegularExpression *expression = [NSRegularExpression regularExpressionWithPattern:@"([1-5]|[A-J])[0-9][0-9]" options:(NSRegularExpressionCaseInsensitive) error:NULL];
+        
+        NSTextCheckingResult *result = [expression firstMatchInString:searchText options:0 range:NSMakeRange(0, searchText.length)];
+        
+        if (result) {
+            NSLog(@"possible service");
+            [[CFSapoClient sharedClient] serviceInfoForService:searchText handler:^(NSError *error, id result) {
+                if (result) {
+                    // win
+                    NSLog(@"service exists");
+                }
+                
+                if (error) {
+                    // quit
+                    NSLog(@"not really");
+                }
+            }];
+        }
+    }
 }
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
