@@ -47,7 +47,7 @@
     titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Thin" size:36.0];
     titleLabel.numberOfLines = 2;
     titleLabel.textColor = [UIColor colorWithWhite:0 alpha:.8];
-    titleLabel.text = @"What's New in \nCuánto Falta";
+    titleLabel.text = NSLocalizedString(@"WHATS_NEW_TITLE", nil);
     titleLabel.textAlignment = NSTextAlignmentCenter;
     [self.view addSubview:titleLabel];
     
@@ -56,14 +56,14 @@
     [self.view addSubview:self.scrollView];
     
     NSArray *contentArray = @[@{@"image": [UIImage imageNamed:@"feature-map"],
-                                @"title": @"Free Map, with Ads",
-                                @"description": @"The Map can now be activated for free, with an ad-supported experience."},
+                                @"title": NSLocalizedString(@"WHATS_NEW_MAP_TITLE", nil),
+                                @"description": NSLocalizedString(@"WHATS_NEW_MAP_DESCRIPTION", nil)},
                               @{@"image": [UIImage imageNamed:@"feature-service"],
-                                @"title": @"Service Routes",
-                                @"description": @"See the route of every bus service and their stops. Tap a service on a stop or search from the Map's search bar."},
+                                @"title": NSLocalizedString(@"WHATS_NEW_ROUTES_TITLE", nil),
+                                @"description": NSLocalizedString(@"WHATS_NEW_ROUTES_DESCRIPTION", nil)},
                               @{@"image": [UIImage imageNamed:@"feature-pro"],
-                                @"title": @"Cuánto Falta Pro",
-                                @"description": @"Pro removes all ads and enables the Map. Already had the Map? Great! You're now Pro!"}];
+                                @"title": NSLocalizedString(@"WHATS_NEW_PRO_TITLE", nil),
+                                @"description": NSLocalizedString(@"WHATS_NEW_PRO_DESCRIPTION", nil)}];
     
     CGFloat itemOriginY = 0;
     CGFloat labelOriginX;
@@ -98,7 +98,7 @@
     UIButton *doneButton = [UIButton buttonWithType:UIButtonTypeSystem];
     doneButton.frame = CGRectMake(0, self.scrollView.frame.origin.y + self.scrollView.bounds.size.height, self.view.bounds.size.width, BUTTON_HEIGHT);
     doneButton.titleLabel.font = [UIFont systemFontOfSize:23.0];
-    [doneButton setTitle:@"Continue" forState:UIControlStateNormal];
+    [doneButton setTitle:NSLocalizedString(@"WHATS_NEW_DISMISS", nil) forState:UIControlStateNormal];
     [doneButton addTarget:self action:@selector(dismiss) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:doneButton];
 }

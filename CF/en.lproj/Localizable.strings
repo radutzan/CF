@@ -77,6 +77,16 @@
 "RATE_ON_APP_STORE" = "Rate on the App Store";
 "SHARE_TWEET_TEXT" = "Check out @cuantofaltapp, a great app for Transantiago";
 
+// whats new
+"WHATS_NEW_TITLE" = "What's New in \nCuánto Falta";
+"WHATS_NEW_MAP_TITLE" = "Free Map, with Ads";
+"WHATS_NEW_MAP_DESCRIPTION" = "The Map can now be activated for free, with an ad-supported experience.";
+"WHATS_NEW_ROUTES_TITLE" = "Service Routes";
+"WHATS_NEW_ROUTES_DESCRIPTION" = "See the route of every bus service and their stops. Tap a service on a stop or search from the Map's search bar.";
+"WHATS_NEW_PRO_TITLE" = "Cuánto Falta Pro";
+"WHATS_NEW_PRO_DESCRIPTION" = "Pro removes all ads and enables the Map. Already had the Map? Great! You're now Pro!";
+"WHATS_NEW_DISMISS" = "Cool";
+
 // store
 "USD" = "USD";
 "CANCEL" = "Cancel";

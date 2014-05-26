@@ -77,6 +77,16 @@
 "RATE_ON_APP_STORE" = "Evalúa en la App Store";
 "SHARE_TWEET_TEXT" = "Mira @cuantofaltapp, una pulenta app para el Transantiago";
 
+// whats new
+"WHATS_NEW_TITLE" = "Lo nuevo en \nCuánto Falta";
+"WHATS_NEW_MAP_TITLE" = "Mapa Gratis, c/ Publicidad";
+"WHATS_NEW_MAP_DESCRIPTION" = "Ahora puedes activar el Mapa gratis, con publicidad.";
+"WHATS_NEW_ROUTES_TITLE" = "Rutas de Servicios";
+"WHATS_NEW_ROUTES_DESCRIPTION" = "Ve la ruta de los buses y sus paraderos. Ingresa el servicio en el buscador del Mapa o selecciónalo en el paradero.";
+"WHATS_NEW_PRO_TITLE" = "Cuánto Falta Pro";
+"WHATS_NEW_PRO_DESCRIPTION" = "Pro elimina toda la publicidad y activa el Mapa. ¿Tenías el Mapa de antes? ¡Bacán! Ahora eres Pro.";
+"WHATS_NEW_DISMISS" = "Buena";
+
 // store
 "USD" = "dólares";
 "CANCEL" = "Cancelar";
