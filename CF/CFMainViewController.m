@@ -14,6 +14,7 @@
 #import "CFSapoClient.h"
 
 #import "CFMapController.h"
+#import "CFSmartSearchList.h"
 #import "CFStopResultsViewController.h"
 #import "CFEnterStopCodeView.h"
 #import "CFFavoritesViewController.h"
@@ -30,9 +31,10 @@
 #define TAB_BUTTON_WIDTH 75.0
 #define CONTENT_ORIGIN 160.0
 
-@interface CFMainViewController () <UIScrollViewDelegate, UISearchBarDelegate, CFEnterStopCodeViewDelegate, CFStopTableViewDelegate, CFMapControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate, GADInterstitialDelegate>
+@interface CFMainViewController () <UIScrollViewDelegate, UISearchBarDelegate, CFEnterStopCodeViewDelegate, CFStopTableViewDelegate, CFMapControllerDelegate, CFSmartSearchListDelegate, UIActionSheetDelegate, UIAlertViewDelegate, GADInterstitialDelegate>
 
 @property (nonatomic, strong) CFMapController *mapController;
+@property (nonatomic, strong) CFSmartSearchList *smartSearchList;
 @property (nonatomic, strong) CFEnterStopCodeView *enterStopCodeView;
 @property (nonatomic, strong) CFFavoritesViewController *favoritesController;
 @property (nonatomic, strong) CFHistoryViewController *historyController;
@@ -88,6 +90,8 @@
     self.mapController.delegate = self;
     self.mapController.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     [self.view addSubview:self.mapController];
+    
+    self.smartSearchList = [CFSmartSearchList new];
     
     self.localNavigationBar = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 45.0)];
     self.localNavigationBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
@@ -1114,47 +1118,7 @@
 
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
 {
-    if (searchText.length == 2) {
-        NSRegularExpression *expression = [NSRegularExpression regularExpressionWithPattern:@"[A-J][0-9]" options:(NSRegularExpressionCaseInsensitive) error:NULL];
-        
-        NSTextCheckingResult *result = [expression firstMatchInString:searchText options:0 range:NSMakeRange(0, searchText.length)];
-        
-        if (result) {
-            NSLog(@"possible short service");
-            NSMutableString *expandedServiceName = [NSMutableString stringWithString:searchText];
-            [expandedServiceName insertString:@"0" atIndex:1];
-            [[CFSapoClient sharedClient] serviceInfoForService:expandedServiceName handler:^(NSError *error, id result) {
-                if (result) {
-                    // win
-                    NSLog(@"service exists");
-                }
-                
-                if (error) {
-                    // quit
-                    NSLog(@"not really");
-                }
-            }];
-        }
-    } else if (searchText.length == 3) {
-        NSRegularExpression *expression = [NSRegularExpression regularExpressionWithPattern:@"([1-5]|[A-J])[0-9][0-9]" options:(NSRegularExpressionCaseInsensitive) error:NULL];
-        
-        NSTextCheckingResult *result = [expression firstMatchInString:searchText options:0 range:NSMakeRange(0, searchText.length)];
-        
-        if (result) {
-            NSLog(@"possible service");
-            [[CFSapoClient sharedClient] serviceInfoForService:searchText handler:^(NSError *error, id result) {
-                if (result) {
-                    // win
-                    NSLog(@"service exists");
-                }
-                
-                if (error) {
-                    // quit
-                    NSLog(@"not really");
-                }
-            }];
-        }
-    }
+    [self.smartSearchList processSearchString:searchText];
 }
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
