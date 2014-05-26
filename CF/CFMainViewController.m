@@ -8,16 +8,21 @@
 
 #import <Mixpanel/Mixpanel.h>
 #import <OLGhostAlertView/OLGhostAlertView.h>
-#import "OLCashier.h"
+
 #import "CFMainViewController.h"
-#import "CFMapController.h"
+#import "OLCashier.h"
 #import "CFSapoClient.h"
+
+#import "CFMapController.h"
 #import "CFStopResultsViewController.h"
 #import "CFEnterStopCodeView.h"
 #import "CFFavoritesViewController.h"
 #import "CFHistoryViewController.h"
 #import "CFMoreViewController.h"
+#import "CFWhatsNewViewController.h"
+
 #import "OLShapeTintedButton.h"
+
 #import "GADInterstitial.h"
 #import "GADBannerView.h"
 
@@ -34,21 +39,25 @@
 @property (nonatomic, strong) CFMoreViewController *moreController;
 @property (nonatomic, strong) UIView *favoritesPlaceholder;
 @property (nonatomic, strong) UIView *historyPlaceholder;
+
 @property (nonatomic, strong) UIView *contentView;
-@property (nonatomic, strong) UIView *gripper;
-@property (nonatomic, strong) UINavigationBar *localNavigationBar;
-@property (nonatomic, strong) UIButton *openMapButton;
 @property (nonatomic, strong) UIScrollView *scrollView;
+@property (nonatomic, strong) UIView *gripper;
+@property (nonatomic, strong) UIButton *openMapButton;
 @property (nonatomic, strong) UIScrollView *mapFeaturesView;
+@property (nonatomic, strong) UINavigationBar *localNavigationBar;
+@property (nonatomic, strong) UIImageView *logoView;
+
 @property (nonatomic, strong) UIView *tabBar;
 @property (nonatomic, strong) OLShapeTintedButton *codeButton;
 @property (nonatomic, strong) OLShapeTintedButton *favoritesButton;
 @property (nonatomic, strong) OLShapeTintedButton *historyButton;
 @property (nonatomic, strong) OLShapeTintedButton *moreButton;
-@property (nonatomic, strong) UIImageView *logoView;
+
 @property (nonatomic, assign) CGFloat initialContentCenterY;
 @property (nonatomic, assign) CGPoint initialOpenMapButtonCenter;
 @property (nonatomic, assign) CLLocationCoordinate2D mapLocationCoordinate;
+
 @property (nonatomic, assign) BOOL mapMode;
 @property (nonatomic, assign) BOOL mapEnabled;
 
@@ -317,6 +326,16 @@
         [[NSUserDefaults standardUserDefaults] synchronize];
         
         [self importUserData];
+    }
+    
+    BOOL hasLaunched192 = NO;//[[NSUserDefaults standardUserDefaults] boolForKey:@"OLHasLaunched192"];
+    
+    if (!hasLaunched192) {
+//        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"OLHasLaunched192"];
+//        [[NSUserDefaults standardUserDefaults] synchronize];
+        
+        CFWhatsNewViewController *whatsNew = [CFWhatsNewViewController new];
+        [self presentViewController:whatsNew animated:YES completion:nil];
     }
 }
 
@@ -745,7 +764,7 @@
     pageTwoLabel.numberOfLines = 0;
     [self.mapFeaturesView addSubview:pageTwoLabel];
     
-    UIImageView *pageTwoImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"features-stops"]];
+    UIImageView *pageTwoImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"feature-stops"]];
     pageTwoImage.frame = CGRectOffset(pageTwoImage.frame, pageTwoOrigin + 20.0, floorf((self.mapFeaturesView.bounds.size.height - pageTwoImage.bounds.size.height) / 2));
     [self.mapFeaturesView addSubview:pageTwoImage];
     
@@ -759,7 +778,7 @@
     pageThreeLabel.numberOfLines = 0;
     [self.mapFeaturesView addSubview:pageThreeLabel];
     
-    UIImageView *pageThreeImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"features-bip"]];
+    UIImageView *pageThreeImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"feature-bip"]];
     pageThreeImage.frame = CGRectOffset(pageThreeImage.frame, pageThreeOrigin + 20.0, floorf((self.mapFeaturesView.bounds.size.height - pageThreeImage.bounds.size.height) / 2));
     [self.mapFeaturesView addSubview:pageThreeImage];
     
