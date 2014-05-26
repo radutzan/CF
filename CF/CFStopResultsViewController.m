@@ -516,6 +516,9 @@
     
     CFServiceRouteViewController *stopRoute = [[CFServiceRouteViewController alloc] initWithService:cell.serviceLabel.text directionString:cell.directionLabel.text];
     [self.navigationController pushViewController:stopRoute animated:YES];
+    
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    [mixpanel track:@"Service Route Requested" properties:@{@"Service": cell.serviceLabel.text, @"From": @"Stop Results"}];
 }
 
 - (void)sendComplaintTweetForService:(NSString *)service

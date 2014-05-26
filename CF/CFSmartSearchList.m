@@ -7,6 +7,13 @@
 //
 
 #import "CFSmartSearchList.h"
+#import "CFServiceSuggestionView.h"
+
+@interface CFSmartSearchList () <CFServiceSuggestionViewDelegate>
+
+@property (nonatomic, strong) CFServiceSuggestionView *serviceSuggestionView;
+
+@end
 
 @implementation CFSmartSearchList
 
@@ -14,7 +21,18 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        // Initialization code
+        _serviceSuggestionView = [[CFServiceSuggestionView alloc] initWithFrame:CGRectMake(20.0, 20.0, frame.size.width - 40.0, 52.0)];
+        _serviceSuggestionView.delegate = self;
+        _serviceSuggestionView.hidden = YES;
+        _serviceSuggestionView.clipsToBounds = NO;
+        _serviceSuggestionView.layer.backgroundColor = [UIColor colorWithWhite:1 alpha:.96].CGColor;
+        _serviceSuggestionView.layer.cornerRadius = 5.0;
+        _serviceSuggestionView.layer.shadowColor = [UIColor blackColor].CGColor;
+        _serviceSuggestionView.layer.shadowOffset = CGSizeZero;
+        _serviceSuggestionView.layer.shadowOpacity = 0.5;
+        _serviceSuggestionView.layer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:_serviceSuggestionView.bounds cornerRadius:_serviceSuggestionView.layer.cornerRadius].CGPath;
+        _serviceSuggestionView.layer.shadowRadius = 0.5;
+        [self addSubview:_serviceSuggestionView];
     }
     return self;
 }
@@ -51,7 +69,7 @@
                 serviceString = expandedServiceName;
             }
             
-            [self checkService:searchString];
+            [self checkService:serviceString];
         } else {
             [self clearServiceSuggestions];
         }
@@ -82,6 +100,8 @@
         if (result && [result lastObject]) {
             // win
             NSLog(@"service exists: %@", result);
+            NSDictionary *serviceInfo = [result firstObject];
+            [self showServiceSuggestionWithService:[serviceInfo objectForKey:@"servicio"] outwardString:[serviceInfo objectForKey:@"ida"] inwardString:[serviceInfo objectForKey:@"regreso"]];
         }
         
         if (error || ![result lastObject]) {
@@ -101,11 +121,43 @@
 - (void)clearServiceSuggestions
 {
     NSLog(@"clearing service suggestions");
+    [UIView animateWithDuration:0.1 animations:^{
+        self.serviceSuggestionView.alpha = 0;
+    } completion:^(BOOL finished) {
+        self.serviceSuggestionView.hidden = YES;
+        self.serviceSuggestionView.alpha = 1;
+    }];
 }
 
 - (void)clearStopSuggestions
 {
     NSLog(@"clearing stop suggestions");
+}
+
+- (void)showServiceSuggestionWithService:(NSString *)service outwardString:(NSString *)outwardString inwardString:(NSString *)inwardString
+{
+    NSLog(@"showing service suggestion for service: %@", service);
+    self.serviceSuggestionView.service = service;
+    self.serviceSuggestionView.outwardDirectionString = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"TO_DIRECTION", nil), [outwardString capitalizedString]];
+    self.serviceSuggestionView.inwardDirectionString = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"TO_DIRECTION", nil), [inwardString capitalizedString]];
+    self.serviceSuggestionView.hidden = NO;
+}
+
+- (void)serviceSuggestionViewDidSelectButtonAtIndex:(NSUInteger)index service:(NSString *)service
+{
+    CFDirection direction = (index == 0) ? CFDirectionOutward : CFDirectionInward;
+    [self.delegate smartSearchListDidSelectService:service direction:direction];
+}
+
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
+{
+    UIView *hitView = [super hitTest:point withEvent:event];
+    
+    if (![self.subviews containsObject:hitView]) {
+        return nil;
+    }
+    
+    return hitView;
 }
 
 @end

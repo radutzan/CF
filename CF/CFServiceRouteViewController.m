@@ -22,7 +22,6 @@
 @interface CFServiceRouteViewController () <MKMapViewDelegate, SMCalloutViewDelegate>
 
 @property (nonatomic, strong) MKMapView *mapView;
-@property (nonatomic, strong) UINavigationBar *notANavigationBar;
 @property (assign) CFStop *selectedStop;
 @property (nonatomic, strong) SMCalloutView *stopCalloutView;
 @property (nonatomic, strong) UISegmentedControl *directionSwitcher;

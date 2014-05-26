@@ -16,6 +16,7 @@
 #import "CFMapController.h"
 #import "CFSmartSearchList.h"
 #import "CFStopResultsViewController.h"
+#import "CFServiceRouteViewController.h"
 #import "CFEnterStopCodeView.h"
 #import "CFFavoritesViewController.h"
 #import "CFHistoryViewController.h"
@@ -91,7 +92,10 @@
     self.mapController.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     [self.view addSubview:self.mapController];
     
-    self.smartSearchList = [CFSmartSearchList new];
+    self.smartSearchList = [[CFSmartSearchList alloc] initWithFrame:CGRectMake(0, 64.0, self.view.bounds.size.width, 200.0)];
+    self.smartSearchList.delegate = self;
+    self.smartSearchList.hidden = YES;
+    [self.view addSubview:self.smartSearchList];
     
     self.localNavigationBar = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 45.0)];
     self.localNavigationBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
@@ -1032,7 +1036,7 @@
     }
 }
 
-#pragma mark - Push stop results
+#pragma mark - Push stop results and routes
 
 - (void)pushStopResultsWithStopCode:(NSString *)stopCode
 {
@@ -1062,7 +1066,6 @@
     [self pushStopResultsWithStopCode:stopCode];
     
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
-    
     [mixpanel track:@"Stop Requested" properties:@{@"Code": stopCode, @"From": @"Enter Stop Code"}];
 }
 
@@ -1071,7 +1074,6 @@
     [self pushStopResultsWithStopCode:stopCode];
     
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
-    
     [mixpanel track:@"Stop Requested" properties:@{@"Code": stopCode, @"From": @"History or Favorites"}];
 }
 
@@ -1080,8 +1082,24 @@
     [self pushStopResultsWithStopCode:stopCode];
     
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
-    
     [mixpanel track:@"Stop Requested" properties:@{@"Code": stopCode, @"From": @"Map"}];
+}
+
+- (void)smartSearchListDidSelectStop:(NSString *)stopCode
+{
+    [self pushStopResultsWithStopCode:stopCode];
+    
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    [mixpanel track:@"Stop Requested" properties:@{@"Code": stopCode, @"From": @"Smart Search Results"}];
+}
+
+- (void)smartSearchListDidSelectService:(NSString *)serviceName direction:(CFDirection)direction
+{
+    CFServiceRouteViewController *serviceRouteVC = [[CFServiceRouteViewController alloc] initWithService:serviceName direction:direction];
+    [self.navigationController pushViewController:serviceRouteVC animated:YES];
+    
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    [mixpanel track:@"Service Route Requested" properties:@{@"Service": serviceName, @"From": @"Smart Search Results"}];
 }
 
 #pragma mark - Other shit
@@ -1114,6 +1132,7 @@
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar
 {
     [self.mapController showDarkOverlay];
+    self.smartSearchList.hidden = NO;
 }
 
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
@@ -1129,6 +1148,16 @@
     
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     [mixpanel track:@"Searched in Map" properties:nil];
+}
+
+- (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar
+{
+    [UIView animateWithDuration:0.25 animations:^{
+        self.smartSearchList.alpha = 0;
+    } completion:^(BOOL finished) {
+        self.smartSearchList.hidden = YES;
+        self.smartSearchList.alpha = 1;
+    }];
 }
 
 - (void)keyboardWasShown:(NSNotification*)aNotification

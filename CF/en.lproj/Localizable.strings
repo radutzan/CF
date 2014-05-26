@@ -51,7 +51,7 @@
 "OUT_OF_SANTIAGO_WARNING_MESSAGE" = "Cuánto Falta only works in Santiago. Navigate to Santiago on the map to see stuff.";
 "ZOOM_LEVEL_WARNING_TITLE" = "You're too far away";
 "ZOOM_LEVEL_WARNING_MESSAGE" = "Zoom in to see stops on the map.";
-"MAP_SEARCHFIELD_PLACEHOLDER" = "Places or address";
+"MAP_SEARCHFIELD_PLACEHOLDER" = "Service or place";
 "SEARCH_ERROR_NOTFOUND_TITLE" = "Place not found";
 "SEARCH_ERROR_NOTFOUND_MESSAGE" = "Be more specific or look for the place directly on the map.";
 "SEARCH_ERROR_GENERIC_TITLE" = "Couldn't perform search";
