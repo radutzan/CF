@@ -83,6 +83,7 @@ static MKMapRect santiagoBounds;
     self.mapView.showsBuildings = YES;
     [self.view addSubview:self.mapView];
     
+    [self setInitialRegion];
     self.regionSet = NO;
     
     self.stopCalloutView = [SMCalloutView new];
@@ -112,7 +113,7 @@ static MKMapRect santiagoBounds;
         santiagoBounds = MKMapRectMake(upperLeft.x, upperLeft.y, lowerRight.x-upperLeft.x, lowerRight.y-upperLeft.y);
     });
     
-    [self drawPolylineForService:self.currentService direction:self.currentDirection];
+    if (self.currentDirection) [self drawPolylineForService:self.currentService direction:self.currentDirection];
     
     UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
     [self.navigationItem setBackBarButtonItem:backButtonItem];
@@ -165,6 +166,15 @@ static MKMapRect santiagoBounds;
     CLLocationCoordinate2D startCoordinate = CLLocationCoordinate2DMake(-33.444117, -70.651055);
     MKCoordinateRegion adjustedRegion = [self.mapView regionThatFits:MKCoordinateRegionMakeWithDistance(startCoordinate, 400, 400)];
     [self.mapView setRegion:adjustedRegion animated:NO];
+}
+
+- (void)setInitialRegion
+{
+    if (self.mapView.userLocation) {
+        self.mapView.region = [self.mapView regionThatFits:MKCoordinateRegionMakeWithDistance(self.mapView.userLocation.coordinate, 1400, 1400)];
+    } else {
+        [self setDefaultRegion];
+    }
 }
 
 - (void)loadMapBannerAd
@@ -270,6 +280,7 @@ static MKMapRect santiagoBounds;
             self.directionSwitcher.selectedSegmentIndex = finalDirection;
             self.currentDirection = finalDirection;
             
+            [self clearAnnotations];
             [self drawPolylineForService:self.currentService direction:self.currentDirection];
         }
     }];

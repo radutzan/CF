@@ -70,7 +70,7 @@
     
     for (NSDictionary *content in contentArray) {
         UIImageView *imageView = [[UIImageView alloc] initWithImage:[content objectForKey:@"image"]];
-        imageView.frame = CGRectOffset(imageView.frame, OUTER_MARGIN, itemOriginY);
+        imageView.frame = CGRectOffset(imageView.frame, OUTER_MARGIN, itemOriginY + 3.0);
         imageView.alpha = 0.8;
         [self.scrollView addSubview:imageView];
         

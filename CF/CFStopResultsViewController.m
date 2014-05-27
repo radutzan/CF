@@ -219,9 +219,11 @@
                                               [self.refreshControl endRefreshing];
                                               NSLog(@"Couldn't fetch stop. %@", error);
                                               
-                                              UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"STOP_ERROR_TITLE", nil) message:[NSString stringWithFormat:@"%@\n%@", error.localizedDescription, NSLocalizedString(@"ERROR_MESSAGE_TRY_AGAIN", nil)] delegate:self cancelButtonTitle:NSLocalizedString(@"ERROR_DISMISS", nil) otherButtonTitles:nil];
-                                              errorAlert.tag = 6009;
-                                              [errorAlert show];
+                                              if ([[self.navigationController topViewController] isEqual:self]) {
+                                                  UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"STOP_ERROR_TITLE", nil) message:[NSString stringWithFormat:@"%@\n%@", error.localizedDescription, NSLocalizedString(@"ERROR_MESSAGE_TRY_AGAIN", nil)] delegate:self cancelButtonTitle:NSLocalizedString(@"ERROR_DISMISS", nil) otherButtonTitles:nil];
+                                                  errorAlert.tag = 6009;
+                                                  [errorAlert show];
+                                              }
                                               
                                               Mixpanel *mixpanel = [Mixpanel sharedInstance];
                                               [mixpanel track:@"Failed Stop Data Request" properties:@{@"Code": stopCode, @"Error": error.debugDescription}];
@@ -285,8 +287,10 @@
                                                } else if (error) {
                                                    NSLog(@"Consulta falló. Error: %@", error.description);
                                                    
-                                                   UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"STOP_ERROR_TITLE", nil) message:[NSString stringWithFormat:@"%@\n%@", error.localizedDescription, NSLocalizedString(@"ERROR_MESSAGE_TRY_AGAIN", nil)] delegate:self cancelButtonTitle:NSLocalizedString(@"ERROR_DISMISS", nil) otherButtonTitles:nil];
-                                                   [errorAlert show];
+                                                   if ([[self.navigationController topViewController] isEqual:self]) {
+                                                       UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"STOP_ERROR_TITLE", nil) message:[NSString stringWithFormat:@"%@\n%@", error.localizedDescription, NSLocalizedString(@"ERROR_MESSAGE_TRY_AGAIN", nil)] delegate:self cancelButtonTitle:NSLocalizedString(@"ERROR_DISMISS", nil) otherButtonTitles:nil];
+                                                       [errorAlert show];
+                                                   }
                                                    
                                                    Mixpanel *mixpanel = [Mixpanel sharedInstance];
                                                    [mixpanel track:@"Failed Estimation Request" properties:@{@"Code": self.stop.code, @"Error": error.debugDescription}];
@@ -395,9 +399,9 @@
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
     if (alertView.tag == 6009) {
-        if ([[self.navigationController.viewControllers lastObject] isEqual:self]) {
-            [self.navigationController popToRootViewControllerAnimated:YES];
-        }
+//        if ([[self.navigationController.viewControllers lastObject] isEqual:self]) {
+//            [self.navigationController popToRootViewControllerAnimated:YES];
+//        }
     }
 }
 

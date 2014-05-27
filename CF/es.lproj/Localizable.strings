@@ -14,12 +14,12 @@
 "ERROR_MESSAGE_TRY_AGAIN_OR_REPORT" = "Por favor, inténtalo de nuevo, y si sigue fallando, repórtanoslo vía Twitter.";
 
 // map ad
-"ENABLE_MAP_WITH_ADS" = "Actívalo Gratis (con Publicidad)";
+"ENABLE_MAP_WITH_ADS" = "Actívalo Gratis, con Publicidad";
 "THE_MAP" = "El Mapa";
 "SLIDE_TO_LEARN_MORE_MAP" = "‹ desliza y conócelo";
-"MAP_FEATURE_STOPS" = "Encuentra todas las paradas de Santiago y revisa sus estimaciones.";
+"MAP_FEATURE_STOPS" = "Busca recorridos de servicios y revisa todas las paradas de Santiago.";
 "MAP_FEATURE_BIP" = "Ve todos los puntos Bip! y salta automáticamente al que esté más cerca tuyo.";
-"MAP_FEATURES_END" = "Es pulento.";
+"MAP_FEATURES_END" = "Te facilita la vida.";
 "ENABLE_MAP" = "Activar Mapa";
 "ENABLE_MAP_ALERT_MESSAGE" = "Al activar el Mapa con publicidad, verás un aviso intersitial cada vez que abras el Mapa, además de un banner bajo el Mapa.\n\nCuánto Falta Pro activa el Mapa y desactiva para siempre toda la publicidad de la app — USD $1.99.";
 "ENABLE_MAP_ALERT_BUTTON_FREE" = "Con Publicidad — Gratis";
@@ -78,14 +78,15 @@
 "SHARE_TWEET_TEXT" = "Mira @cuantofaltapp, una pulenta app para el Transantiago";
 
 // whats new
+"WHATS_NEW" = "Lo nuevo";
 "WHATS_NEW_TITLE" = "Lo nuevo en \nCuánto Falta";
 "WHATS_NEW_MAP_TITLE" = "Mapa Gratis, c/ Publicidad";
 "WHATS_NEW_MAP_DESCRIPTION" = "Ahora puedes activar el Mapa gratis, con publicidad.";
 "WHATS_NEW_ROUTES_TITLE" = "Rutas de Servicios";
-"WHATS_NEW_ROUTES_DESCRIPTION" = "Ve la ruta de los buses y sus paraderos. Ingresa el servicio en el buscador del Mapa o selecciónalo en el paradero.";
+"WHATS_NEW_ROUTES_DESCRIPTION" = "Ve la ruta de los buses y sus paraderos. Busca el servicio en el buscador del Mapa o selecciónalo en el paradero.";
 "WHATS_NEW_PRO_TITLE" = "Cuánto Falta Pro";
-"WHATS_NEW_PRO_DESCRIPTION" = "Pro elimina toda la publicidad y activa el Mapa. ¿Tenías el Mapa de antes? ¡Bacán! Ahora eres Pro.";
-"WHATS_NEW_DISMISS" = "Buena";
+"WHATS_NEW_PRO_DESCRIPTION" = "Pro elimina toda la publicidad y activa el Mapa. ¿Tenías el Mapa de antes? Felicidades, ahora tienes Pro.";
+"WHATS_NEW_DISMISS" = "Bacán";
 
 // store
 "USD" = "dólares";

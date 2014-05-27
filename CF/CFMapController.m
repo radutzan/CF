@@ -74,7 +74,6 @@ static MKMapRect santiagoBounds;
         self.zoomWarning = [[OLGhostAlertView alloc] initWithTitle:NSLocalizedString(@"ZOOM_LEVEL_WARNING_TITLE", nil) message:NSLocalizedString(@"ZOOM_LEVEL_WARNING_MESSAGE", nil) timeout:200.0 dismissible:YES];
         self.zoomWarning.style = OLGhostAlertViewStyleLight;
         self.zoomWarning.position = OLGhostAlertViewPositionCenter;
-        self.zoomWarning.userInteractionEnabled = NO;
         
         self.outOfSantiagoWarning = [[OLGhostAlertView alloc] initWithTitle:NSLocalizedString(@"OUT_OF_SANTIAGO_WARNING_TITLE", nil) message:NSLocalizedString(@"OUT_OF_SANTIAGO_WARNING_MESSAGE", nil) timeout:200.0 dismissible:NO];
         self.outOfSantiagoWarning.style = OLGhostAlertViewStyleLight;

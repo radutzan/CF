@@ -9,6 +9,7 @@
 #import <Mixpanel/Mixpanel.h>
 #import "CFMoreViewController.h"
 #import "CFMoreContentViewController.h"
+#import "CFWhatsNewViewController.h"
 #import "CFStoreViewController.h"
 #import "UIDevice+hardware.h"
 #import <OLGhostAlertView/OLGhostAlertView.h>
@@ -50,9 +51,10 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    if (section == 0) return 4;
     if (section == 1) return 1;
     
-    return 3;
+    return 2;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -75,6 +77,8 @@
     } else if (indexPath.row == 1 && indexPath.section == 0) {
         cell.textLabel.text = NSLocalizedString(@"ABOUT", nil);
     } else if (indexPath.row == 2 && indexPath.section == 0) {
+        cell.textLabel.text = NSLocalizedString(@"WHATS_NEW", nil);
+    } else if (indexPath.row == 3 && indexPath.section == 0) {
         cell.textLabel.text = NSLocalizedString(@"SEND_FEEDBACK", nil);
     } else if (indexPath.row == 0 && indexPath.section == 1) {
         cell.textLabel.text = NSLocalizedString(@"STORE", nil);
@@ -92,6 +96,8 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     CFMoreContentViewController *controller = [CFMoreContentViewController new];
+    
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
     
     NSURL *baseURL = [[NSBundle mainBundle] resourceURL];
     UIWebView *webView = nil;
@@ -116,7 +122,6 @@
         controller.title = NSLocalizedString(@"HELP", nil);
         [self.navigationController pushViewController:controller animated:YES];
         
-        Mixpanel *mixpanel = [Mixpanel sharedInstance];
         [mixpanel track:@"Opened Help"];
         
     } else if (indexPath.section == 0 && indexPath.row == 1) {
@@ -129,10 +134,15 @@
         controller.title = NSLocalizedString(@"ABOUT", nil);
         [self.navigationController pushViewController:controller animated:YES];
         
-        Mixpanel *mixpanel = [Mixpanel sharedInstance];
         [mixpanel track:@"Opened About"];
         
     } else if (indexPath.section == 0 && indexPath.row == 2) {
+        CFWhatsNewViewController *whatsNew = [CFWhatsNewViewController new];
+        [self presentViewController:whatsNew animated:YES completion:nil];
+        
+        [mixpanel track:@"Opened What's New"];
+        
+    } else if (indexPath.section == 0 && indexPath.row == 3) {
         NSString *appVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
         NSString *contactURL = [@"http://api.cuantofalta.mobi" stringByAppendingFormat:@"/contact?local=%@&UDID=NULL&osver=%@&appver=%@&device=%@", [[NSLocale preferredLanguages] objectAtIndex:0], [[UIDevice currentDevice] systemVersion], appVersion, [UIDevice platform]];
         
@@ -142,14 +152,12 @@
         controller.title = NSLocalizedString(@"SEND_FEEDBACK", nil);
         [self.navigationController pushViewController:controller animated:YES];
         
-        Mixpanel *mixpanel = [Mixpanel sharedInstance];
         [mixpanel track:@"Opened Send Feedback"];
         
     } else if (indexPath.section == 1 && indexPath.row == 0) {
         CFStoreViewController *storeController = [[CFStoreViewController alloc] initWithStyle:UITableViewStyleGrouped];
         [self.navigationController pushViewController:storeController animated:YES];
         
-        Mixpanel *mixpanel = [Mixpanel sharedInstance];
         [mixpanel track:@"Opened Store"];
         
     } else if (indexPath.section == 2 && indexPath.row == 0) {
@@ -161,7 +169,6 @@
         
         [self presentViewController:activityController animated:YES completion:NULL];
         
-        Mixpanel *mixpanel = [Mixpanel sharedInstance];
         [mixpanel track:@"Opened Share CF"];
         
     } else if (indexPath.section == 2 && indexPath.row == 1) {
@@ -177,12 +184,10 @@
         
         [[UIApplication sharedApplication] openURL:URL];
         
-        Mixpanel *mixpanel = [Mixpanel sharedInstance];
         [mixpanel track:@"Opened Follow Us link"];
         
     } else if (indexPath.section == 2 && indexPath.row == 2) {
         
-        Mixpanel *mixpanel = [Mixpanel sharedInstance];
         [mixpanel track:@"Opened Rate on the App Store"];
         
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms-apps://itunes.apple.com/app/id431174703"]];

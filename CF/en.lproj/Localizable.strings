@@ -8,18 +8,18 @@
 
 // general
 "DISMISS" = "Dismiss";
-"ERROR_DISMISS" = "Boo!";
+"ERROR_DISMISS" = "Bummer";
 "LOADING" = "Loading…";
 "ERROR_MESSAGE_TRY_AGAIN" = "Please try again.";
 "ERROR_MESSAGE_TRY_AGAIN_OR_REPORT" = "Please try again, and if it keeps failing, please report it to us via Twitter.";
 
 // map ad
-"ENABLE_MAP_WITH_ADS" = "Enable it for Free (with ads)";
+"ENABLE_MAP_WITH_ADS" = "Enable it for Free, with ads";
 "THE_MAP" = "The Map";
 "SLIDE_TO_LEARN_MORE_MAP" = "‹ slide to learn more";
-"MAP_FEATURE_STOPS" = "Find every bus stop in Santiago and check their estimations.";
+"MAP_FEATURE_STOPS" = "Search service routes and find every bus stop in Santiago.";
 "MAP_FEATURE_BIP" = "See every Bip! spot and jump quickly to your nearest one.";
-"MAP_FEATURES_END" = "It's awesome.";
+"MAP_FEATURES_END" = "It makes life a lot easier.";
 "ENABLE_MAP" = "Enable Map";
 "ENABLE_MAP_ALERT_MESSAGE" = "You can enable the Map for free, with Ads. Every time you open the Map you'll see an interstitial ad, plus a standard banner across the bottom.\n\nCuánto Falta Pro enables the Map and removes all ads forever — $1.99.";
 "ENABLE_MAP_ALERT_BUTTON_FREE" = "Enable with Ads — Free";
@@ -78,6 +78,7 @@
 "SHARE_TWEET_TEXT" = "Check out @cuantofaltapp, a great app for Transantiago";
 
 // whats new
+"WHATS_NEW" = "What's New";
 "WHATS_NEW_TITLE" = "What's New in \nCuánto Falta";
 "WHATS_NEW_MAP_TITLE" = "Free Map, with Ads";
 "WHATS_NEW_MAP_DESCRIPTION" = "The Map can now be activated for free, with an ad-supported experience.";
@@ -85,7 +86,7 @@
 "WHATS_NEW_ROUTES_DESCRIPTION" = "See the route of every bus service and their stops. Tap a service on a stop or search from the Map's search bar.";
 "WHATS_NEW_PRO_TITLE" = "Cuánto Falta Pro";
 "WHATS_NEW_PRO_DESCRIPTION" = "Pro removes all ads and enables the Map. Already had the Map? Great! You're now Pro!";
-"WHATS_NEW_DISMISS" = "Cool";
+"WHATS_NEW_DISMISS" = "Awesome";
 
 // store
 "USD" = "USD";
