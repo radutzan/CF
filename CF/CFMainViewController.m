@@ -170,26 +170,24 @@
     UILongPressGestureRecognizer *clearHistory = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressRecognized:)];
     [self.historyButton addGestureRecognizer:clearHistory];
     
-    // ese booleano po
-    if ([OLCashier hasProduct:@"CF01"] || [[NSUserDefaults standardUserDefaults] boolForKey:@"CFEnableMapWithAds"]) self.mapEnabled = YES;
-    
 #if TARGET_IPHONE_SIMULATOR
-    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"CFEnableMapWithAds"];
-    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"CF01"];
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"CFEnableMapWithAds"];
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"CF01"];
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"CF02"];
-    self.mapEnabled = YES;
     
 #ifdef DEV_VERSION
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"CFEnableMapWithAds"];
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"CF01"];
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"CF02"];
-    self.mapEnabled = NO;
 #endif
 #endif
     
 #ifdef DEV_VERSION
     NSLog(@"dev!");
 #endif
+    
+    // ese booleano po
+    if ([OLCashier hasProduct:@"CF01"] || [[NSUserDefaults standardUserDefaults] boolForKey:@"CFEnableMapWithAds"]) self.mapEnabled = YES;
     
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     
@@ -823,7 +821,7 @@
 
 - (void)enableMapWithAdsButtonTapped
 {
-    UIAlertView *enableMapWithAdsAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"ENABLE_MAP", nil) message:NSLocalizedString(@"ENABLE_MAP_ALERT_MESSAGE", nil) delegate:self cancelButtonTitle:NSLocalizedString(@"CANCEL", nil) otherButtonTitles:NSLocalizedString(@"ENABLE_MAP_ALERT_BUTTON_FREE", nil), NSLocalizedString(@"ENABLE_MAP_ALERT_BUTTON_PAID", nil), nil];
+    UIAlertView *enableMapWithAdsAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"ENABLE_MAP", nil) message:NSLocalizedString(@"ENABLE_MAP_ALERT_MESSAGE", nil) delegate:self cancelButtonTitle:NSLocalizedString(@"CANCEL", nil) otherButtonTitles:NSLocalizedString(@"ENABLE_MAP_ALERT_BUTTON_FREE", nil), NSLocalizedString(@"ENABLE_MAP_ALERT_BUTTON_PAID", nil), NSLocalizedString(@"STORE_RESTORE", nil), nil];
     enableMapWithAdsAlert.tag = 405;
     [enableMapWithAdsAlert show];
 }
@@ -838,6 +836,10 @@
                 
             case 2:
                 [self purchaseMap];
+                break;
+                
+            case 3:
+                [self restorePurchases];
                 break;
                 
             default:
@@ -883,6 +885,36 @@
         
         [mixpanel track:@"Purchased Map"];
         [mixpanel registerSuperProperties:@{@"Has Map": @"Yes"}];
+    }];
+}
+
+- (void)restorePurchases
+{
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    [mixpanel track:@"Triggered Restore Purchases"];
+    
+    OLGhostAlertView *wait = [[OLGhostAlertView alloc] initWithTitle:NSLocalizedString(@"STORE_WAIT_TITLE", nil) message:NSLocalizedString(@"STORE_WAIT_MESSAGE", nil) timeout:100.0 dismissible:NO];
+    wait.position = OLGhostAlertViewPositionCenter;
+    [wait show];
+    
+    [[OLCashier defaultCashier] restoreCompletedTransactions:^(NSError *error, NSArray *transactions, NSDictionary *userInfo) {
+        [wait hide];
+        
+        if (error) {
+            UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"STORE_ERROR_TITLE", nil) message:[NSString stringWithFormat:@"%@. %@", error.localizedDescription, NSLocalizedString(@"ERROR_MESSAGE_TRY_AGAIN", nil)] delegate:self cancelButtonTitle:NSLocalizedString(@"ERROR_DISMISS", nil) otherButtonTitles:nil];
+            [errorAlert show];
+            
+            [mixpanel track:@"Failed to Restore Purchases"];
+            
+            return;
+        }
+        
+        for (SKPaymentTransaction *transaction in transactions) {
+            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:transaction.payment.productIdentifier];
+            [transaction finish];
+        }
+        
+        [mixpanel track:@"Successfully Restored Purchases"];
     }];
 }
 

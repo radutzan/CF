@@ -93,8 +93,8 @@
 "CANCEL" = "Cancelar";
 "BUY" = "Comprar";
 "PURCHASED" = "Comprado";
-"STORE_RESTORE" = "Restaurar Compras";
-"STORE_RESTORE_DESCRIPTION" = "Si ya has comprado algunos o todos los ítems y no te aparecen, restaura tus compras.";
+"STORE_RESTORE" = "Restaurar Compras Anteriores";
+"STORE_RESTORE_DESCRIPTION" = "Si ya has comprado Pro y no te aparece, restaura tus compras anteriores.";
 "STORE_ERROR_TITLE" = "Hubo un error con la compra";
 "STORE_WAIT_TITLE" = "Espera un poco…";
 "STORE_WAIT_MESSAGE" = "Seguro se demora menos que la micro.";

@@ -93,8 +93,8 @@
 "CANCEL" = "Cancel";
 "BUY" = "Buy";
 "PURCHASED" = "Purchased";
-"STORE_RESTORE" = "Restore Purchases";
-"STORE_RESTORE_DESCRIPTION" = "If you've already purchased all or some of the items and they don't appear as purchased, restore them with this option.";
+"STORE_RESTORE" = "Restore Previous Purchases";
+"STORE_RESTORE_DESCRIPTION" = "If you've already purchased Pro and it doesn't appear as Purchased, restore it using this option.";
 "STORE_ERROR_TITLE" = "There was an error with your purchase";
 "STORE_WAIT_TITLE" = "Please wait…";
 "STORE_WAIT_MESSAGE" = "Give it a second. It's going to space!";
