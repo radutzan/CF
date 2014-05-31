@@ -320,6 +320,12 @@ static MKMapRect santiagoBounds;
 
 #pragma mark - MKMapViewDelegate
 
+- (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation
+{
+    self.defaultCenterCoordinate = self.mapView.userLocation.coordinate;
+    [self.delegate mapControllerDidUpdateLocation];
+}
+
 - (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated
 {
     if (!MKMapRectIntersectsRect(santiagoBounds, mapView.visibleMapRect)) {

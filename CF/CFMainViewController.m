@@ -875,6 +875,8 @@
         self.mapEnabled = [OLCashier hasProduct:@"CF01"];
         self.mapMode = YES;
         
+        [self.mapBannerAd removeFromSuperview];
+        
         OLGhostAlertView *thanks = [[OLGhostAlertView alloc] initWithTitle:NSLocalizedString(@"STORE_THANK_YOU_TITLE", nil) message:NSLocalizedString(@"STORE_THANK_YOU_MESSAGE_MAP", nil)];
         thanks.position = OLGhostAlertViewPositionCenter;
         [thanks show];
