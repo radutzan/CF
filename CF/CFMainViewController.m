@@ -63,6 +63,7 @@
 
 @property (nonatomic, assign) BOOL mapMode;
 @property (nonatomic, assign) BOOL mapEnabled;
+@property (nonatomic, assign) BOOL shouldDisplayAds;
 
 @property (nonatomic, strong) GADBannerView *mapBannerAd;
 @property (nonatomic, strong) GADInterstitial *interstitialAd;
@@ -173,7 +174,7 @@
     if ([OLCashier hasProduct:@"CF01"] || [[NSUserDefaults standardUserDefaults] boolForKey:@"CFEnableMapWithAds"]) self.mapEnabled = YES;
     
 #if TARGET_IPHONE_SIMULATOR
-    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"CFEnableMapWithAds"];
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"CFEnableMapWithAds"];
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"CF01"];
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"CF02"];
     self.mapEnabled = YES;
@@ -365,7 +366,7 @@
         self.mapMode = NO;
     }
     
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CFEnableMapWithAds"]) {
+    if (self.shouldDisplayAds) {
         self.interstitialLoaded = NO;
         [self loadInterstitialAd];
         [self loadMapBannerAd];
@@ -496,7 +497,7 @@
         
         [self.localNavigationBar pushNavigationItem:navItem animated:YES];
         
-        if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CFEnableMapWithAds"]) {
+        if (self.shouldDisplayAds) {
             if (self.interstitialLoaded) [self.interstitialAd presentFromRootViewController:self];
             [self.view insertSubview:self.mapBannerAd aboveSubview:self.mapController];
         }
@@ -896,6 +897,11 @@
 }
 
 #pragma mark - Ads
+
+- (BOOL)shouldDisplayAds
+{
+    return ([[NSUserDefaults standardUserDefaults] boolForKey:@"CFEnableMapWithAds"] && ![OLCashier hasProduct:@"CF01"]);
+}
 
 - (void)enableMapWithAds
 {
