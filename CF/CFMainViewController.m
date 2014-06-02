@@ -17,7 +17,6 @@
 #import "CFSmartSearchList.h"
 #import "CFStopResultsViewController.h"
 #import "CFServiceRouteViewController.h"
-#import "CFEnterStopCodeView.h"
 #import "CFFavoritesViewController.h"
 #import "CFHistoryViewController.h"
 #import "CFMoreViewController.h"
@@ -32,16 +31,10 @@
 #define TAB_BUTTON_WIDTH 75.0
 #define CONTENT_ORIGIN 160.0
 
-@interface CFMainViewController () <UIScrollViewDelegate, UISearchBarDelegate, CFEnterStopCodeViewDelegate, CFStopTableViewDelegate, CFMapControllerDelegate, CFSmartSearchListDelegate, UIActionSheetDelegate, UIAlertViewDelegate, GADInterstitialDelegate>
+@interface CFMainViewController () <UIScrollViewDelegate, UISearchBarDelegate, CFStopTableViewDelegate, CFMapControllerDelegate, CFSmartSearchListDelegate, UIActionSheetDelegate, UIAlertViewDelegate, GADInterstitialDelegate>
 
 @property (nonatomic, strong) CFMapController *mapController;
 @property (nonatomic, strong) CFSmartSearchList *smartSearchList;
-@property (nonatomic, strong) CFEnterStopCodeView *enterStopCodeView;
-@property (nonatomic, strong) CFFavoritesViewController *favoritesController;
-@property (nonatomic, strong) CFHistoryViewController *historyController;
-@property (nonatomic, strong) CFMoreViewController *moreController;
-@property (nonatomic, strong) UIView *favoritesPlaceholder;
-@property (nonatomic, strong) UIView *historyPlaceholder;
 
 @property (nonatomic, strong) UIView *contentView;
 @property (nonatomic, strong) UIScrollView *scrollView;
@@ -51,20 +44,21 @@
 @property (nonatomic, strong) UINavigationBar *localNavigationBar;
 @property (nonatomic, strong) UIImageView *logoView;
 
+@property (nonatomic, strong) NSArray *tabs;
 @property (nonatomic, strong) UIView *tabBar;
-@property (nonatomic, strong) OLShapeTintedButton *codeButton;
-@property (nonatomic, strong) OLShapeTintedButton *favoritesButton;
-@property (nonatomic, strong) OLShapeTintedButton *historyButton;
-@property (nonatomic, strong) OLShapeTintedButton *moreButton;
+@property (nonatomic, strong) CFFavoritesViewController *favoritesController;
+@property (nonatomic, strong) CFHistoryViewController *historyController;
+@property (nonatomic, strong) CFMoreViewController *moreController;
+@property (nonatomic, strong) UIView *favoritesPlaceholder;
+@property (nonatomic, strong) UIView *historyPlaceholder;
 
+@property (nonatomic, assign) BOOL mapMode;
+@property (nonatomic, assign) BOOL mapEnabled;
 @property (nonatomic, assign) CGFloat initialContentCenterY;
 @property (nonatomic, assign) CGPoint initialOpenMapButtonCenter;
 @property (nonatomic, assign) CLLocationCoordinate2D mapLocationCoordinate;
 
-@property (nonatomic, assign) BOOL mapMode;
-@property (nonatomic, assign) BOOL mapEnabled;
 @property (nonatomic, assign) BOOL shouldDisplayAds;
-
 @property (nonatomic, strong) GADBannerView *mapBannerAd;
 @property (nonatomic, strong) GADInterstitial *interstitialAd;
 @property (nonatomic, assign) BOOL interstitialLoaded;
@@ -117,10 +111,14 @@
     self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.contentView.bounds.size.width, self.contentView.bounds.size.height - TAB_BAR_HEIGHT)];
     self.scrollView.delegate = self;
     self.scrollView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
-    self.scrollView.contentSize = CGSizeMake(self.scrollView.bounds.size.width * 4, self.scrollView.bounds.size.height);
+    self.scrollView.contentSize = CGSizeMake(self.scrollView.bounds.size.width * 3, self.scrollView.bounds.size.height);
     self.scrollView.pagingEnabled = YES;
     self.scrollView.showsHorizontalScrollIndicator = NO;
     [self.contentView addSubview:self.scrollView];
+    
+    self.tabBar = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - TAB_BAR_HEIGHT, self.view.bounds.size.width, TAB_BAR_HEIGHT)];
+    self.tabBar.tintColor = [UIColor colorWithWhite:0.42 alpha:1];
+    [self.view addSubview:self.tabBar];
     
     [self initTabs];
     
@@ -135,44 +133,9 @@
     UIPanGestureRecognizer *gripDrag = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleGripDragGesture:)];
     [self.gripper addGestureRecognizer:gripDrag];
     
-    self.tabBar = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - TAB_BAR_HEIGHT, self.view.bounds.size.width, TAB_BAR_HEIGHT)];
-    self.tabBar.tintColor = [UIColor colorWithWhite:0.42 alpha:1];
-    [self.view addSubview:self.tabBar];
-    
-    self.codeButton = [OLShapeTintedButton buttonWithType:UIButtonTypeCustom];
-    self.codeButton.frame = CGRectMake(10.0, 0, TAB_BUTTON_WIDTH, TAB_BAR_HEIGHT);
-    [self.codeButton setImage:[UIImage imageNamed:@"button-code"] forState:UIControlStateNormal];
-    [self.codeButton setImage:[UIImage imageNamed:@"button-code-selected"] forState:UIControlStateSelected];
-    [self.codeButton addTarget:self action:@selector(tabButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-    [self.tabBar addSubview:self.codeButton];
-    
-    self.favoritesButton = [OLShapeTintedButton buttonWithType:UIButtonTypeCustom];
-    self.favoritesButton.frame = CGRectMake(10.0 + TAB_BUTTON_WIDTH, 0, TAB_BUTTON_WIDTH, TAB_BAR_HEIGHT);
-    [self.favoritesButton setImage:[UIImage imageNamed:@"button-favorites"] forState:UIControlStateNormal];
-    [self.favoritesButton setImage:[UIImage imageNamed:@"button-favorites-selected"] forState:UIControlStateSelected];
-    [self.favoritesButton addTarget:self action:@selector(tabButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-    [self.tabBar addSubview:self.favoritesButton];
-    
-    self.historyButton = [OLShapeTintedButton buttonWithType:UIButtonTypeCustom];
-    self.historyButton.frame = CGRectMake(10.0 + TAB_BUTTON_WIDTH * 2, 0, TAB_BUTTON_WIDTH, TAB_BAR_HEIGHT);
-    [self.historyButton setImage:[UIImage imageNamed:@"button-history"] forState:UIControlStateNormal];
-    [self.historyButton setImage:[UIImage imageNamed:@"button-history-selected"] forState:UIControlStateSelected];
-    [self.historyButton addTarget:self action:@selector(tabButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-    [self.tabBar addSubview:self.historyButton];
-    
-    self.moreButton = [OLShapeTintedButton buttonWithType:UIButtonTypeCustom];
-    self.moreButton.frame = CGRectMake(10.0 + TAB_BUTTON_WIDTH * 3, 0, TAB_BUTTON_WIDTH, TAB_BAR_HEIGHT);
-    [self.moreButton setImage:[UIImage imageNamed:@"button-more"] forState:UIControlStateNormal];
-    [self.moreButton setImage:[UIImage imageNamed:@"button-more-selected"] forState:UIControlStateSelected];
-    [self.moreButton addTarget:self action:@selector(tabButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-    [self.tabBar addSubview:self.moreButton];
-    
-    UILongPressGestureRecognizer *clearHistory = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressRecognized:)];
-    [self.historyButton addGestureRecognizer:clearHistory];
-    
 #if TARGET_IPHONE_SIMULATOR
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"CFEnableMapWithAds"];
-    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"CF01"];
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"CF01"];
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"CF02"];
     
 #ifdef DEV_VERSION
@@ -180,10 +143,6 @@
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"CF01"];
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"CF02"];
 #endif
-#endif
-    
-#ifdef DEV_VERSION
-    NSLog(@"dev!");
 #endif
     
     // ese booleano po
@@ -222,28 +181,28 @@
 
 - (void)initTabs
 {
-    self.enterStopCodeView = [[CFEnterStopCodeView alloc] initWithFrame:CGRectMake(0, 0, self.scrollView.bounds.size.width, self.scrollView.bounds.size.height)];
-    self.enterStopCodeView.delegate = self;
-    [self.scrollView addSubview:self.enterStopCodeView];
-    
     self.favoritesController = [[CFFavoritesViewController alloc] initWithStyle:UITableViewStyleGrouped];
-    self.favoritesController.view.frame = CGRectMake(self.scrollView.bounds.size.width, 0, self.scrollView.bounds.size.width, self.scrollView.bounds.size.height);
     self.favoritesController.delegate = self;
-    [self addChildViewController:self.favoritesController];
-    [self.scrollView addSubview:self.favoritesController.view];
     
     self.historyController = [[CFHistoryViewController alloc] initWithStyle:UITableViewStyleGrouped];
-    self.historyController.view.frame = CGRectMake(self.scrollView.bounds.size.width * 2, 0, self.scrollView.bounds.size.width, self.scrollView.bounds.size.height);
     self.historyController.delegate = self;
-    [self addChildViewController:self.historyController];
-    [self.scrollView addSubview:self.historyController.view];
-    
-    [self initPlaceholders];
     
     self.moreController = [[CFMoreViewController alloc] initWithStyle:UITableViewStyleGrouped];
-    self.moreController.view.frame = CGRectMake(self.scrollView.bounds.size.width * 3, 0, self.scrollView.bounds.size.width, self.scrollView.bounds.size.height);
-    [self addChildViewController:self.moreController];
-    [self.scrollView addSubview:self.moreController.view];
+    
+    self.tabs = @[@{@"controller": self.favoritesController,
+                    @"title": @"Favorites",
+                    @"button": [UIImage imageNamed:@"button-favorites"],
+                    @"button-selected": [UIImage imageNamed:@"button-favorites-selected"]},
+                  @{@"controller": self.historyController,
+                    @"title": @"History",
+                    @"button": [UIImage imageNamed:@"button-history"],
+                    @"button-selected": [UIImage imageNamed:@"button-history-selected"]},
+                  @{@"controller": self.moreController,
+                    @"title": @"More",
+                    @"button": [UIImage imageNamed:@"button-more"],
+                    @"button-selected": [UIImage imageNamed:@"button-more-selected"]}];
+    
+    [self initPlaceholders];
 }
 
 - (void)initPlaceholders
@@ -312,12 +271,6 @@
 
 - (void)viewDidLoad
 {
-    self.mapMode = NO;
-    
-    if (!self.mapMode) {
-        [self tabButtonTapped:self.codeButton];
-    }
-    
     if (self.mapEnabled) {
         self.openMapButton.hidden = NO;
         [self.openMapButton addTarget:self action:@selector(switchToMap) forControlEvents:UIControlEventTouchUpInside];
@@ -360,8 +313,7 @@
     [super viewDidAppear:animated];
     
     if (self.isMovingToParentViewController == YES) {
-        [self tabButtonTapped:self.codeButton];
-        self.mapMode = NO;
+        self.mapMode = YES;
     }
     
     if (self.shouldDisplayAds) {
@@ -459,6 +411,91 @@
     
     if ([OLCashier hasProduct:@"CF01"])
         self.mapEnabled = YES;
+}
+
+#pragma mark - Tabs
+
+- (void)setTabs:(NSArray *)tabs
+{
+    _tabs = tabs;
+    
+    self.scrollView.contentSize = CGSizeMake(self.scrollView.bounds.size.width * tabs.count, self.scrollView.bounds.size.height);
+    
+    CGFloat tabButtonWidth = floorf(300 / tabs.count);
+    
+    for (NSDictionary *tab in tabs) {
+        UIViewController *thisTabController = tab[@"controller"];
+        thisTabController.view.frame = CGRectMake(self.scrollView.bounds.size.width * [tabs indexOfObject:tab], 0, self.scrollView.bounds.size.width, self.scrollView.bounds.size.height);
+        [self addChildViewController:thisTabController];
+        [self.scrollView addSubview:thisTabController.view];
+        
+        OLShapeTintedButton *thisTabButton = [OLShapeTintedButton buttonWithType:UIButtonTypeCustom];
+        thisTabButton.frame = CGRectMake(10.0 + tabButtonWidth * [tabs indexOfObject:tab], 0, tabButtonWidth, TAB_BAR_HEIGHT);
+        [thisTabButton setImage:tab[@"button"] forState:UIControlStateNormal];
+        [thisTabButton setImage:tab[@"button-selected"] forState:UIControlStateSelected];
+        [thisTabButton addTarget:self action:@selector(tabButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        [self.tabBar addSubview:thisTabButton];
+    }
+    
+    UILongPressGestureRecognizer *clearHistory = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressRecognized:)];
+    [[self.tabBar.subviews objectAtIndex:1] addGestureRecognizer:clearHistory];
+}
+
+- (void)tabButtonTapped:(UIButton *)button
+{
+    [self selectTabButton:button];
+    self.mapMode = NO;
+    
+    NSUInteger index = [[self.tabBar subviews] indexOfObject:button];
+    
+    [self switchToTab:index];
+}
+
+- (void)selectTabButton:(UIButton *)button
+{
+    for (UIButton *b in self.tabBar.subviews) {
+        b.selected = NO;
+        b.tintColor = nil;
+    }
+    
+    button.selected = YES;
+    button.tintColor = [[UIApplication sharedApplication] keyWindow].tintColor;
+}
+
+- (void)switchToTab:(NSUInteger)tabIndex
+{
+    CGFloat newOffset = self.scrollView.frame.size.width * tabIndex;
+    self.scrollView.contentOffset = CGPointMake(newOffset, 0.0);
+    
+    switch (tabIndex) {
+        case 0:
+            [self.favoritesController.tableView flashScrollIndicators];
+            break;
+            
+        case 1:
+            [self.historyController.tableView flashScrollIndicators];
+            break;
+            
+        case 2:
+            [self.moreController.tableView flashScrollIndicators];
+            break;
+            
+        default:
+            break;
+    }
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)sender
+{
+    [self.view endEditing:YES];
+    
+    CGFloat pageWidth = self.scrollView.frame.size.width;
+    NSUInteger page = floor((self.scrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
+    
+    if (page <= 0 && page >= self.tabs.count - 1) {
+        UIButton *thisButton = (UIButton *)[[self.tabBar subviews] objectAtIndex:page];
+        [self selectTabButton:thisButton];
+    }
 }
 
 #pragma mark - Map mode switching
@@ -994,88 +1031,6 @@
     [self loadInterstitialAd];
 }
 
-#pragma mark - Tab switching
-
-- (void)tabButtonTapped:(UIButton *)button
-{
-    [self selectTabButton:button];
-    self.mapMode = NO;
-    
-    if ([button isEqual:self.codeButton]) {
-        [self switchToTab:1];
-    } else if ([button isEqual:self.favoritesButton]) {
-        [self switchToTab:2];
-    } else if ([button isEqual:self.historyButton]) {
-        [self switchToTab:3];
-    } else if ([button isEqual:self.moreButton]) {
-        [self switchToTab:4];
-    }
-}
-
-- (void)selectTabButton:(UIButton *)button
-{
-    for (UIButton *b in self.tabBar.subviews) {
-        b.selected = NO;
-        b.tintColor = nil;
-    }
-    
-    button.selected = YES;
-    button.tintColor = [[UIApplication sharedApplication] keyWindow].tintColor;
-}
-
-- (void)switchToTab:(int)tabNumber
-{
-    CGFloat newOffset = self.scrollView.frame.size.width * (1 - tabNumber);
-    self.scrollView.contentOffset = CGPointMake(-newOffset, 0.0);
-    
-    switch (tabNumber) {
-        case 2:
-            [self.favoritesController.tableView flashScrollIndicators];
-            break;
-            
-        case 3:
-            [self.historyController.tableView flashScrollIndicators];
-            break;
-            
-        case 4:
-            [self.moreController.tableView flashScrollIndicators];
-            break;
-            
-        case 1:
-        default:
-            break;
-    }
-}
-
-- (void)scrollViewDidScroll:(UIScrollView *)sender
-{
-    [self.view endEditing:YES];
-    
-    CGFloat pageWidth = self.scrollView.frame.size.width;
-    int page = floor((self.scrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
-    
-    switch (page) {
-        case 0:
-            [self selectTabButton:self.codeButton];
-            break;
-            
-        case 1:
-            [self selectTabButton:self.favoritesButton];
-            break;
-            
-        case 2:
-            [self selectTabButton:self.historyButton];
-            break;
-            
-        case 3:
-            [self selectTabButton:self.moreButton];
-            break;
-            
-        default:
-            break;
-    }
-}
-
 #pragma mark - Push stop results and routes
 
 - (void)pushStopResultsWithStopCode:(NSString *)stopCode
@@ -1099,14 +1054,6 @@
     stopResultsVC.stopCode = stopCode;
     
     [self.navigationController pushViewController:stopResultsVC animated:YES];
-}
-
-- (void)enterStopCodeViewDidEnterStopCode:(NSString *)stopCode
-{
-    [self pushStopResultsWithStopCode:stopCode];
-    
-    Mixpanel *mixpanel = [Mixpanel sharedInstance];
-    [mixpanel track:@"Stop Requested" properties:@{@"Code": stopCode, @"From": @"Enter Stop Code"}];
 }
 
 - (void)stopTableView:(UITableView *)tableView didSelectCellWithStop:(NSString *)stopCode
@@ -1215,9 +1162,9 @@
     CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
     
     [UIView animateKeyframesWithDuration:[[info objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue] delay:0.0 options:(7 << 16) animations:^{
-        CGPoint center = self.enterStopCodeView.center;
-        center.y -= kbSize.height - 70;
-        self.enterStopCodeView.center = center;
+//        CGPoint center = self.enterStopCodeView.center;
+//        center.y -= kbSize.height - 70;
+//        self.enterStopCodeView.center = center;
     } completion:nil];
 }
 
@@ -1226,7 +1173,7 @@
     NSDictionary* info = [aNotification userInfo];
     
     [UIView animateKeyframesWithDuration:[[info objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue] delay:0.0 options:(7 << 16) animations:^{
-        self.enterStopCodeView.center = self.scrollView.center;
+//        self.enterStopCodeView.center = self.scrollView.center;
     } completion:nil];
 }
 
