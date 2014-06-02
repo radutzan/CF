@@ -13,6 +13,7 @@
 
 - (void)smartSearchListDidSelectStop:(NSString *)stopCode;
 - (void)smartSearchListDidSelectService:(NSString *)serviceName direction:(CFDirection)direction;
+- (void)smartSearchListDidSelectService:(NSString *)serviceName directionString:(NSString *)directionString;
 
 @end
 

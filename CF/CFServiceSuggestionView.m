@@ -30,7 +30,7 @@
         _outwardButton = [UIButton buttonWithType:UIButtonTypeSystem];
         _outwardButton.frame = CGRectMake(_serviceLabel.frame.origin.x + _serviceLabel.bounds.size.width, 0, 90.0, frame.size.height);
         _outwardButton.titleLabel.font = [UIFont fontWithName:@"AvenirNextCondensed-Medium" size:14.0];
-        _outwardButton.titleLabel.numberOfLines = 0;
+        _outwardButton.titleLabel.numberOfLines = 2;
         _outwardButton.titleEdgeInsets = UIEdgeInsetsMake(0, 10.0, 0, 10.0);
         _outwardButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
         [_outwardButton addTarget:self action:@selector(buttonTapped:) forControlEvents:UIControlEventTouchUpInside];

@@ -1142,6 +1142,15 @@
     [mixpanel track:@"Service Route Requested" properties:@{@"Service": serviceName, @"From": @"Smart Search Results"}];
 }
 
+- (void)smartSearchListDidSelectService:(NSString *)serviceName directionString:(NSString *)directionString
+{
+    CFServiceRouteViewController *serviceRouteVC = [[CFServiceRouteViewController alloc] initWithService:serviceName directionString:directionString];
+    [self.navigationController pushViewController:serviceRouteVC animated:YES];
+    
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    [mixpanel track:@"Service Route Requested" properties:@{@"Service": serviceName, @"From": @"Smart Search Results"}];
+}
+
 #pragma mark - Other shit
 
 - (void)longPressRecognized:(UILongPressGestureRecognizer *)recognizer

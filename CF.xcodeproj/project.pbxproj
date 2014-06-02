@@ -123,6 +123,7 @@
 		7C7A15E11854E01F002EE4C5 /* CFNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C7A15E01854E01F002EE4C5 /* CFNavigationBar.m */; };
 		7C7A15E71854EF37002EE4C5 /* about.css in Resources */ = {isa = PBXBuildFile; fileRef = 7C7A15E41854EF37002EE4C5 /* about.css */; };
 		7C7A15E81854EF67002EE4C5 /* about.html in Resources */ = {isa = PBXBuildFile; fileRef = 7C7A15EA1854EF67002EE4C5 /* about.html */; };
+		7C915927193AA4AE004CFCFA /* CFStopSuggestionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C915926193AA4AE004CFCFA /* CFStopSuggestionView.m */; };
 		7C9A0F691852E9C60018ED1F /* NSDictionary+NSNullUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C9A0F681852E9C60018ED1F /* NSDictionary+NSNullUtility.m */; };
 		7C9BD16B1926B1FF003E9F8E /* OLShapeTintedButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CE0D9D7189DB34F00D9782E /* OLShapeTintedButton.m */; };
 		7C9BD16E1926BC7D003E9F8E /* CFElPeA.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C9BD16D1926BC7D003E9F8E /* CFElPeA.m */; };
@@ -280,6 +281,8 @@
 		7C7A15E41854EF37002EE4C5 /* about.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = about.css; sourceTree = "<group>"; };
 		7C7A15E91854EF67002EE4C5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = en; path = en.lproj/about.html; sourceTree = "<group>"; };
 		7C7A15EB1854EF6A002EE4C5 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = es; path = es.lproj/about.html; sourceTree = "<group>"; };
+		7C915925193AA4AE004CFCFA /* CFStopSuggestionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFStopSuggestionView.h; sourceTree = "<group>"; };
+		7C915926193AA4AE004CFCFA /* CFStopSuggestionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFStopSuggestionView.m; sourceTree = "<group>"; };
 		7C9A0F671852E9C60018ED1F /* NSDictionary+NSNullUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+NSNullUtility.h"; sourceTree = "<group>"; };
 		7C9A0F681852E9C60018ED1F /* NSDictionary+NSNullUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+NSNullUtility.m"; sourceTree = "<group>"; };
 		7C9BD16C1926BC7D003E9F8E /* CFElPeA.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFElPeA.h; sourceTree = "<group>"; };
@@ -447,6 +450,8 @@
 			children = (
 				7C062F301933BC9200342E4A /* CFServiceSuggestionView.h */,
 				7C062F311933BC9200342E4A /* CFServiceSuggestionView.m */,
+				7C915925193AA4AE004CFCFA /* CFStopSuggestionView.h */,
+				7C915926193AA4AE004CFCFA /* CFStopSuggestionView.m */,
 			);
 			name = "Smart Search List";
 			sourceTree = "<group>";
@@ -1056,6 +1061,7 @@
 				5A11D7771877A2BA001118F6 /* OLProductRequestDelegate.m in Sources */,
 				7CFF7E9D18382B1B006230CE /* NSString+Digest.m in Sources */,
 				7C5ACA5D1932856E00E20FD9 /* CFWhatsNewViewController.m in Sources */,
+				7C915927193AA4AE004CFCFA /* CFStopSuggestionView.m in Sources */,
 				7CFF7E5518381645006230CE /* CFAppDelegate.m in Sources */,
 				7C7A15D61853EBF0002EE4C5 /* OLTextField.m in Sources */,
 				7CFF7EC618387735006230CE /* CFStopResultsViewController.m in Sources */,

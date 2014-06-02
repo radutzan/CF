@@ -8,10 +8,16 @@
 
 #import "CFSmartSearchList.h"
 #import "CFServiceSuggestionView.h"
+#import "CFStopSuggestionView.h"
 
-@interface CFSmartSearchList () <CFServiceSuggestionViewDelegate>
+#define VERTICAL_MARGIN 20.0
+#define HORIZONTAL_MARGIN 20.0
 
+@interface CFSmartSearchList () <CFServiceSuggestionViewDelegate, CFStopSuggestionViewDelegate>
+
+@property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
 @property (nonatomic, strong) CFServiceSuggestionView *serviceSuggestionView;
+@property (nonatomic, strong) CFStopSuggestionView *stopSuggestionView;
 
 @end
 
@@ -21,7 +27,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        _serviceSuggestionView = [[CFServiceSuggestionView alloc] initWithFrame:CGRectMake(20.0, 20.0, frame.size.width - 40.0, 52.0)];
+        _serviceSuggestionView = [[CFServiceSuggestionView alloc] initWithFrame:CGRectMake(HORIZONTAL_MARGIN, VERTICAL_MARGIN, frame.size.width - HORIZONTAL_MARGIN * 2, 52.0)];
         _serviceSuggestionView.delegate = self;
         _serviceSuggestionView.hidden = YES;
         _serviceSuggestionView.clipsToBounds = NO;
@@ -33,6 +39,15 @@
         _serviceSuggestionView.layer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:_serviceSuggestionView.bounds cornerRadius:_serviceSuggestionView.layer.cornerRadius].CGPath;
         _serviceSuggestionView.layer.shadowRadius = 0.5;
         [self addSubview:_serviceSuggestionView];
+        
+        _stopSuggestionView = [[CFStopSuggestionView alloc] initWithFrame:CGRectMake(HORIZONTAL_MARGIN, VERTICAL_MARGIN, frame.size.width - HORIZONTAL_MARGIN * 2, 52.0)];
+        _stopSuggestionView.delegate = self;
+        _stopSuggestionView.hidden = YES;
+        [self addSubview:_stopSuggestionView];
+        
+        _activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+        _activityIndicator.frame = CGRectOffset(_activityIndicator.frame, (frame.size.width - _activityIndicator.frame.size.width) / 2, VERTICAL_MARGIN);
+        [self addSubview:_activityIndicator];
     }
     return self;
 }
@@ -96,7 +111,11 @@
 - (void)checkService:(NSString *)service
 {
     NSLog(@"checking possible service");
+    [self.activityIndicator startAnimating];
+    
     [[CFSapoClient sharedClient] serviceInfoForService:service handler:^(NSError *error, NSArray *result) {
+        [self.activityIndicator stopAnimating];
+        
         if (result && [result lastObject]) {
             // win
             NSLog(@"service exists: %@", result);
@@ -115,7 +134,29 @@
 - (void)checkStop:(NSString *)stop
 {
     NSLog(@"checking possible stop code");
-    // just a stub, this method will not ship in this version
+    [self.activityIndicator startAnimating];
+    [self clearStopSuggestions];
+    
+    [[CFSapoClient sharedClient] fetchBusStop:stop handler:^(NSError *error, id result) {
+        [self.activityIndicator stopAnimating];
+        NSLog(@"result: %@", result);
+        NSLog(@"error: %@", error);
+
+        if (result) {
+            NSLog(@"stop exists");
+            NSDictionary *stopData = [result firstObject];
+            CLLocationCoordinate2D coordinate;
+            coordinate.latitude = [[stopData objectForKey:@"latitude"] doubleValue];
+            coordinate.longitude = [[stopData objectForKey:@"longitude"] doubleValue];
+
+            CFStop *stop = [CFStop stopWithCoordinate:coordinate code:[stopData objectForKey:@"codigo"] name:[stopData objectForKey:@"nombre"] services:[stopData objectForKey:@"recorridos"]];
+            self.stopSuggestionView.stop = stop;
+            self.stopSuggestionView.hidden = NO;
+        } else {
+            NSLog(@"not a stop");
+            [self clearStopSuggestions];
+        }
+    }];
 }
 
 - (void)clearServiceSuggestions
@@ -132,6 +173,12 @@
 - (void)clearStopSuggestions
 {
     NSLog(@"clearing stop suggestions");
+    [UIView animateWithDuration:0.1 animations:^{
+        self.stopSuggestionView.alpha = 0;
+    } completion:^(BOOL finished) {
+        self.stopSuggestionView.hidden = YES;
+        self.stopSuggestionView.alpha = 1;
+    }];
 }
 
 - (void)showServiceSuggestionWithService:(NSString *)service outwardString:(NSString *)outwardString inwardString:(NSString *)inwardString
@@ -147,6 +194,16 @@
 {
     CFDirection direction = (index == 0) ? CFDirectionOutward : CFDirectionInward;
     [self.delegate smartSearchListDidSelectService:service direction:direction];
+}
+
+- (void)stopSuggestionViewDidSelectStop:(NSString *)stop
+{
+    [self.delegate smartSearchListDidSelectStop:stop];
+}
+
+- (void)stopSuggestionViewDidSelectService:(NSString *)service directionString:(NSString *)directionString
+{
+    [self.delegate smartSearchListDidSelectService:service directionString:directionString];
 }
 
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
