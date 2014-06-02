@@ -15,6 +15,7 @@
 
 @interface CFSmartSearchList () <CFServiceSuggestionViewDelegate, CFStopSuggestionViewDelegate>
 
+@property (nonatomic, strong) UIScrollView *scrollView;
 @property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
 @property (nonatomic, strong) CFServiceSuggestionView *serviceSuggestionView;
 @property (nonatomic, strong) CFStopSuggestionView *stopSuggestionView;
@@ -27,6 +28,12 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
+        _scrollView = [[UIScrollView alloc] initWithFrame:self.bounds];
+        _scrollView.clipsToBounds = NO;
+        _scrollView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
+        _scrollView.contentSize = self.bounds.size;
+        [self addSubview:_scrollView];
+        
         _serviceSuggestionView = [[CFServiceSuggestionView alloc] initWithFrame:CGRectMake(HORIZONTAL_MARGIN, VERTICAL_MARGIN, frame.size.width - HORIZONTAL_MARGIN * 2, 52.0)];
         _serviceSuggestionView.delegate = self;
         _serviceSuggestionView.hidden = YES;
@@ -38,16 +45,16 @@
         _serviceSuggestionView.layer.shadowOpacity = 0.5;
         _serviceSuggestionView.layer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:_serviceSuggestionView.bounds cornerRadius:_serviceSuggestionView.layer.cornerRadius].CGPath;
         _serviceSuggestionView.layer.shadowRadius = 0.5;
-        [self addSubview:_serviceSuggestionView];
+        [_scrollView addSubview:_serviceSuggestionView];
         
         _stopSuggestionView = [[CFStopSuggestionView alloc] initWithFrame:CGRectMake(HORIZONTAL_MARGIN, VERTICAL_MARGIN, frame.size.width - HORIZONTAL_MARGIN * 2, 52.0)];
         _stopSuggestionView.delegate = self;
         _stopSuggestionView.hidden = YES;
-        [self addSubview:_stopSuggestionView];
+        [_scrollView addSubview:_stopSuggestionView];
         
         _activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
         _activityIndicator.frame = CGRectOffset(_activityIndicator.frame, (frame.size.width - _activityIndicator.frame.size.width) / 2, VERTICAL_MARGIN);
-        [self addSubview:_activityIndicator];
+        [_scrollView addSubview:_activityIndicator];
     }
     return self;
 }
@@ -152,6 +159,8 @@
             CFStop *stop = [CFStop stopWithCoordinate:coordinate code:[stopData objectForKey:@"codigo"] name:[stopData objectForKey:@"nombre"] services:[stopData objectForKey:@"recorridos"]];
             self.stopSuggestionView.stop = stop;
             self.stopSuggestionView.hidden = NO;
+            
+            self.scrollView.contentSize = CGSizeMake(self.bounds.size.width, self.stopSuggestionView.bounds.size.height + VERTICAL_MARGIN * 2);
         } else {
             NSLog(@"not a stop");
             [self clearStopSuggestions];
@@ -162,6 +171,8 @@
 - (void)clearServiceSuggestions
 {
     NSLog(@"clearing service suggestions");
+    self.scrollView.contentSize = self.bounds.size;
+    
     [UIView animateWithDuration:0.1 animations:^{
         self.serviceSuggestionView.alpha = 0;
     } completion:^(BOOL finished) {
@@ -173,6 +184,8 @@
 - (void)clearStopSuggestions
 {
     NSLog(@"clearing stop suggestions");
+    self.scrollView.contentSize = self.bounds.size;
+    
     [UIView animateWithDuration:0.1 animations:^{
         self.stopSuggestionView.alpha = 0;
     } completion:^(BOOL finished) {
@@ -210,7 +223,7 @@
 {
     UIView *hitView = [super hitTest:point withEvent:event];
     
-    if ([hitView isEqual:self]) {
+    if ([hitView isEqual:self] || [hitView isEqual:self.scrollView]) {
         return nil;
     }
     

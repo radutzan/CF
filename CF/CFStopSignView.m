@@ -36,20 +36,20 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        _verticallyCenteredLabelY = floorf((self.bounds.size.height - LABEL_HEIGHT) / 2);
+        _verticallyCenteredLabelY = floorf((frame.size.height - LABEL_HEIGHT) / 2);
         
-        _contentViewWidth = self.bounds.size.width - HORIZONTAL_MARGIN * 2;
+        _contentViewWidth = frame.size.width - HORIZONTAL_MARGIN * 2;
         
         _busPictogram = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bus"]];
-        _busPictogram.frame = CGRectMake(HORIZONTAL_MARGIN, floorf((self.bounds.size.height - _busPictogram.bounds.size.height) / 2), _busPictogram.bounds.size.width, _busPictogram.bounds.size.height);
+        _busPictogram.frame = CGRectMake(HORIZONTAL_MARGIN, floorf((frame.size.height - _busPictogram.bounds.size.height) / 2), _busPictogram.bounds.size.width, _busPictogram.bounds.size.height);
         [self addSubview:_busPictogram];
         
         _horizontalMarginWithPictogram = _busPictogram.bounds.size.width + HORIZONTAL_MARGIN;
         
-        _contentView = [[UIView alloc] initWithFrame:CGRectMake(HORIZONTAL_MARGIN + _horizontalMarginWithPictogram, 0, _contentViewWidth - _horizontalMarginWithPictogram, self.bounds.size.height)];
+        _contentView = [[UIView alloc] initWithFrame:CGRectMake(HORIZONTAL_MARGIN + _horizontalMarginWithPictogram, 0, _contentViewWidth - _horizontalMarginWithPictogram, frame.size.height)];
         [self addSubview:_contentView];
         
-        _favoriteContentView = [[UIView alloc] initWithFrame:CGRectMake(HORIZONTAL_MARGIN + _horizontalMarginWithPictogram, 0, _contentViewWidth - _horizontalMarginWithPictogram, self.bounds.size.height)];
+        _favoriteContentView = [[UIView alloc] initWithFrame:CGRectMake(HORIZONTAL_MARGIN + _horizontalMarginWithPictogram, 0, _contentViewWidth - _horizontalMarginWithPictogram, frame.size.height)];
         _favoriteContentView.hidden = YES;
         _favoriteContentView.userInteractionEnabled = NO;
         [self addSubview:_favoriteContentView];

@@ -85,7 +85,7 @@
     self.mapController.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     [self.view addSubview:self.mapController];
     
-    self.smartSearchList = [[CFSmartSearchList alloc] initWithFrame:CGRectMake(0, 64.0, self.view.bounds.size.width, 200.0)];
+    self.smartSearchList = [[CFSmartSearchList alloc] initWithFrame:CGRectMake(0, 64.0, self.view.bounds.size.width, self.view.bounds.size.height - 64.0 - TAB_BAR_HEIGHT)];
     self.smartSearchList.delegate = self;
     self.smartSearchList.hidden = YES;
     [self.view addSubview:self.smartSearchList];
@@ -528,26 +528,6 @@
     [self.mapController.mapView setCenterCoordinate:center animated:YES];
 }
 
-- (void)centerMapLocationInTransition
-{
-    CGPoint targetCenter = CGPointMake(self.view.center.x, 102.0);
-    
-    CLLocationCoordinate2D userLocation = self.mapController.defaultCenterCoordinate;
-    CGPoint currentCenter = [self.mapController.mapView convertCoordinate:userLocation toPointToView:self.view];
-    CGPoint finalCenter = currentCenter;
-    
-    //    userLocation.latitude -= self.mapController.mapView.region.span.latitudeDelta * 0.36;
-    
-    CGSize offset = CGSizeMake(targetCenter.x - currentCenter.x, targetCenter.y - currentCenter.y);
-    
-    finalCenter.x -= offset.width;
-    finalCenter.y -= offset.height;
-    
-    CLLocationCoordinate2D coordinate = [self.mapController.mapView convertPoint:finalCenter toCoordinateFromView:self.view];
-    
-    [self.mapController.mapView setCenterCoordinate:coordinate animated:YES];
-}
-
 - (void)mapControllerDidUpdateLocation
 {
     [self centerMapLocationForClosedState];
@@ -659,6 +639,8 @@
         }
     }];
 }
+
+# pragma mark - Commerce
 
 - (void)showMapFeatures
 {
@@ -778,35 +760,6 @@
     }];
 }
 
-- (void)enableMapWithAdsButtonTapped
-{
-    UIAlertView *enableMapWithAdsAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"ENABLE_MAP", nil) message:NSLocalizedString(@"ENABLE_MAP_ALERT_MESSAGE", nil) delegate:self cancelButtonTitle:NSLocalizedString(@"CANCEL", nil) otherButtonTitles:NSLocalizedString(@"ENABLE_MAP_ALERT_BUTTON_FREE", nil), NSLocalizedString(@"ENABLE_MAP_ALERT_BUTTON_PAID", nil), NSLocalizedString(@"STORE_RESTORE", nil), nil];
-    enableMapWithAdsAlert.tag = 405;
-    [enableMapWithAdsAlert show];
-}
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    if (alertView.tag == 405) {
-        switch (buttonIndex) {
-            case 1:
-                [self enableMapWithAds];
-                break;
-                
-            case 2:
-                [self purchaseMap];
-                break;
-                
-            case 3:
-                [self restorePurchases];
-                break;
-                
-            default:
-                break;
-        }
-    }
-}
-
 - (void)purchaseMap
 {
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
@@ -894,6 +847,35 @@
 - (BOOL)shouldDisplayAds
 {
     return ([[NSUserDefaults standardUserDefaults] boolForKey:@"CFEnableMapWithAds"] && ![OLCashier hasProduct:@"CF01"]);
+}
+
+- (void)enableMapWithAdsButtonTapped
+{
+    UIAlertView *enableMapWithAdsAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"ENABLE_MAP", nil) message:NSLocalizedString(@"ENABLE_MAP_ALERT_MESSAGE", nil) delegate:self cancelButtonTitle:NSLocalizedString(@"CANCEL", nil) otherButtonTitles:NSLocalizedString(@"ENABLE_MAP_ALERT_BUTTON_FREE", nil), NSLocalizedString(@"ENABLE_MAP_ALERT_BUTTON_PAID", nil), NSLocalizedString(@"STORE_RESTORE", nil), nil];
+    enableMapWithAdsAlert.tag = 405;
+    [enableMapWithAdsAlert show];
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (alertView.tag == 405) {
+        switch (buttonIndex) {
+            case 1:
+                [self enableMapWithAds];
+                break;
+                
+            case 2:
+                [self purchaseMap];
+                break;
+                
+            case 3:
+                [self restorePurchases];
+                break;
+                
+            default:
+                break;
+        }
+    }
 }
 
 - (void)enableMapWithAds
@@ -1020,31 +1002,7 @@
     [mixpanel track:@"Service Route Requested" properties:@{@"Service": serviceName, @"From": @"Smart Search Results"}];
 }
 
-#pragma mark - Other shit
-
-- (void)longPressRecognized:(UILongPressGestureRecognizer *)recognizer
-{
-    if (recognizer.state == UIGestureRecognizerStateBegan) {
-        UIActionSheet *clearSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:NSLocalizedString(@"CANCEL", nil) destructiveButtonTitle:NSLocalizedString(@"CLEAR_ALL_HISTORY", nil) otherButtonTitles:nil];
-        [clearSheet showInView:self.view];
-    }
-}
-
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    if (buttonIndex == 0) {
-        NSArray *emptyArray = [NSArray new];
-        
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        [defaults setObject:emptyArray forKey:@"history"];
-        [defaults synchronize];
-        
-        [self.historyController.tableView reloadData];
-        
-        Mixpanel *mixpanel = [Mixpanel sharedInstance];
-        [mixpanel track:@"Cleared History" properties:nil];
-    }
-}
+#pragma mark - Search
 
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar
 {
@@ -1080,12 +1038,11 @@
 - (void)keyboardWasShown:(NSNotification*)aNotification
 {
     NSDictionary* info = [aNotification userInfo];
-    CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    CGRect keyboardRect = [[info objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    CGRect intersectRect = CGRectIntersection(self.smartSearchList.frame, keyboardRect);
     
     [UIView animateKeyframesWithDuration:[[info objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue] delay:0.0 options:(7 << 16) animations:^{
-//        CGPoint center = self.enterStopCodeView.center;
-//        center.y -= kbSize.height - 70;
-//        self.enterStopCodeView.center = center;
+        self.smartSearchList.frame = CGRectMake(self.smartSearchList.frame.origin.x, self.smartSearchList.frame.origin.y, self.smartSearchList.bounds.size.width, self.smartSearchList.bounds.size.height - intersectRect.size.height);
     } completion:nil];
 }
 
@@ -1094,8 +1051,34 @@
     NSDictionary* info = [aNotification userInfo];
     
     [UIView animateKeyframesWithDuration:[[info objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue] delay:0.0 options:(7 << 16) animations:^{
-//        self.enterStopCodeView.center = self.scrollView.center;
+        //        self.enterStopCodeView.center = self.scrollView.center;
     } completion:nil];
+}
+
+#pragma mark - Other shit
+
+- (void)longPressRecognized:(UILongPressGestureRecognizer *)recognizer
+{
+    if (recognizer.state == UIGestureRecognizerStateBegan) {
+        UIActionSheet *clearSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:NSLocalizedString(@"CANCEL", nil) destructiveButtonTitle:NSLocalizedString(@"CLEAR_ALL_HISTORY", nil) otherButtonTitles:nil];
+        [clearSheet showInView:self.view];
+    }
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 0) {
+        NSArray *emptyArray = [NSArray new];
+        
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        [defaults setObject:emptyArray forKey:@"history"];
+        [defaults synchronize];
+        
+        [self.historyController.tableView reloadData];
+        
+        Mixpanel *mixpanel = [Mixpanel sharedInstance];
+        [mixpanel track:@"Cleared History" properties:nil];
+    }
 }
 
 @end
