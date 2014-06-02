@@ -21,6 +21,9 @@
 {
     self = [super initWithStyle:style];
     if (self) {
+        self.placeholderImage = [UIImage imageNamed:@"placeholder-favorites"];
+        self.placeholderTitle = NSLocalizedString(@"FAVORITES_PLACEHOLDER_TITLE", nil);
+        self.placeholderMessage = NSLocalizedString(@"FAVORITES_PLACEHOLDER_MESSAGE", nil);
     }
     return self;
 }
@@ -59,7 +62,11 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [self.favoritesArray count];
+    self.placeholderVisible = (self.favoritesArray.count == 0) ? YES : NO;
+    if (self.favoritesArray.count == 0) {
+        NSLog(@"empty favs");
+    }
+    return self.favoritesArray.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -95,31 +102,5 @@
     
     return cell;
 }
-
-//- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-//{
-//    if (editingStyle == UITableViewCellEditingStyleDelete) {
-//        NSMutableArray *mutableFavoritesArray = [self.favoritesArray mutableCopy];
-//        
-//        NSInteger index = [mutableFavoritesArray count] - indexPath.row - 1;
-//        [mutableFavoritesArray removeObjectAtIndex:index];
-//        [self saveFavoritesWithArray:mutableFavoritesArray];
-//        
-//        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-//    }
-//}
-//
-//- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-//{
-//    NSMutableArray *mutableFavoritesArray = [self.favoritesArray mutableCopy];
-//    
-//    NSInteger oldIndex = [mutableFavoritesArray count] - fromIndexPath.row - 1;
-//    NSInteger newIndex = [mutableFavoritesArray count] - toIndexPath.row - 1;
-//    
-//    NSDictionary *movedStop = [mutableFavoritesArray objectAtIndex:oldIndex];
-//    
-//    [mutableFavoritesArray removeObjectAtIndex:oldIndex];
-//    [mutableFavoritesArray insertObject:movedStop atIndex:newIndex];
-//}
 
 @end

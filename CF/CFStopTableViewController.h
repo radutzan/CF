@@ -20,5 +20,9 @@
 @interface CFStopTableViewController : UITableViewController
 
 @property (nonatomic, weak) id<CFStopTableViewDelegate> delegate;
+@property (nonatomic, strong) UIImage *placeholderImage;
+@property (nonatomic, strong) NSString *placeholderTitle;
+@property (nonatomic, strong) NSString *placeholderMessage;
+@property (nonatomic, assign) BOOL placeholderVisible;
 
 @end

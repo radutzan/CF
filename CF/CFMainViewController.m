@@ -49,8 +49,6 @@
 @property (nonatomic, strong) CFFavoritesViewController *favoritesController;
 @property (nonatomic, strong) CFHistoryViewController *historyController;
 @property (nonatomic, strong) CFMoreViewController *moreController;
-@property (nonatomic, strong) UIView *favoritesPlaceholder;
-@property (nonatomic, strong) UIView *historyPlaceholder;
 
 @property (nonatomic, assign) BOOL mapMode;
 @property (nonatomic, assign) BOOL mapEnabled;
@@ -201,72 +199,6 @@
                     @"title": @"More",
                     @"button": [UIImage imageNamed:@"button-more"],
                     @"button-selected": [UIImage imageNamed:@"button-more-selected"]}];
-    
-    [self initPlaceholders];
-}
-
-- (void)initPlaceholders
-{
-    CGFloat verticalMargin = 12.0;
-    CGFloat imageOriginY = floorf((self.scrollView.bounds.size.height - 240.0) / 2);
-    
-    self.favoritesPlaceholder = [[UIView alloc] initWithFrame:self.favoritesController.view.frame];
-    UIImageView *favoritesPlaceholderImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"placeholder-favorites"]];
-    favoritesPlaceholderImage.frame = CGRectMake(
-                                                 floorf((self.favoritesPlaceholder.bounds.size.width - favoritesPlaceholderImage.bounds.size.width) / 2), imageOriginY,
-                                                 favoritesPlaceholderImage.bounds.size.width, favoritesPlaceholderImage.bounds.size.height);
-    [self.favoritesPlaceholder addSubview:favoritesPlaceholderImage];
-    
-    UILabel *favoritesPlaceholderTitle = [[UILabel alloc] initWithFrame:CGRectMake(0, favoritesPlaceholderImage.frame.origin.y + favoritesPlaceholderImage.bounds.size.height + verticalMargin, self.favoritesPlaceholder.bounds.size.width, 25)];
-    favoritesPlaceholderTitle.text = NSLocalizedString(@"FAVORITES_PLACEHOLDER_TITLE", nil);
-    favoritesPlaceholderTitle.textAlignment = NSTextAlignmentCenter;
-    favoritesPlaceholderTitle.font = [UIFont boldSystemFontOfSize:17.0];
-    favoritesPlaceholderTitle.textColor = [UIColor colorWithWhite:0 alpha:0.4];
-    [self.favoritesPlaceholder addSubview:favoritesPlaceholderTitle];
-    
-    UILabel *favoritesPlaceholderMessage = [[UILabel alloc] initWithFrame:CGRectMake(50, favoritesPlaceholderTitle.frame.origin.y + favoritesPlaceholderTitle.bounds.size.height + verticalMargin / 2, self.favoritesPlaceholder.bounds.size.width - 100, 62)];
-    favoritesPlaceholderMessage.text = NSLocalizedString(@"FAVORITES_PLACEHOLDER_MESSAGE", nil);
-    favoritesPlaceholderMessage.numberOfLines = 3;
-    favoritesPlaceholderMessage.textAlignment = NSTextAlignmentCenter;
-    favoritesPlaceholderMessage.font = [UIFont systemFontOfSize:15.0];
-    favoritesPlaceholderMessage.textColor = [UIColor colorWithWhite:0 alpha:0.4];
-    [self.favoritesPlaceholder addSubview:favoritesPlaceholderMessage];
-    
-    if (imageOriginY < 20) {
-        favoritesPlaceholderImage.transform = CGAffineTransformMakeScale(0.8, 0.8);
-        favoritesPlaceholderImage.center = CGPointMake(favoritesPlaceholderImage.center.x, favoritesPlaceholderImage.center.y + 15.0);
-    }
-    
-    [self.scrollView addSubview:self.favoritesPlaceholder];
-    
-    self.historyPlaceholder = [[UIView alloc] initWithFrame:self.historyController.view.frame];
-    UIImageView *historyPlaceholderImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"placeholder-history"]];
-    historyPlaceholderImage.frame = CGRectMake(
-                                                 floorf((self.historyPlaceholder.bounds.size.width - historyPlaceholderImage.bounds.size.width) / 2), imageOriginY,
-                                                 historyPlaceholderImage.bounds.size.width, historyPlaceholderImage.bounds.size.height);
-    [self.historyPlaceholder addSubview:historyPlaceholderImage];
-    
-    UILabel *historyPlaceholderTitle = [[UILabel alloc] initWithFrame:CGRectMake(0, historyPlaceholderImage.frame.origin.y + historyPlaceholderImage.bounds.size.height + verticalMargin, self.historyPlaceholder.bounds.size.width, 25)];
-    historyPlaceholderTitle.text = NSLocalizedString(@"HISTORY_PLACEHOLDER_TITLE", nil);
-    historyPlaceholderTitle.textAlignment = NSTextAlignmentCenter;
-    historyPlaceholderTitle.font = [UIFont boldSystemFontOfSize:17.0];
-    historyPlaceholderTitle.textColor = [UIColor colorWithWhite:0 alpha:0.4];
-    [self.historyPlaceholder addSubview:historyPlaceholderTitle];
-    
-    UILabel *historyPlaceholderMessage = [[UILabel alloc] initWithFrame:CGRectMake(favoritesPlaceholderMessage.frame.origin.x, historyPlaceholderTitle.frame.origin.y + historyPlaceholderTitle.bounds.size.height + verticalMargin / 2, favoritesPlaceholderMessage.bounds.size.width, favoritesPlaceholderMessage.bounds.size.height)];
-    historyPlaceholderMessage.text = NSLocalizedString(@"HISTORY_PLACEHOLDER_MESSAGE", nil);
-    historyPlaceholderMessage.numberOfLines = 3;
-    historyPlaceholderMessage.textAlignment = NSTextAlignmentCenter;
-    historyPlaceholderMessage.font = [UIFont systemFontOfSize:15.0];
-    historyPlaceholderMessage.textColor = [UIColor colorWithWhite:0 alpha:0.4];
-    [self.historyPlaceholder addSubview:historyPlaceholderMessage];
-    
-    if (imageOriginY < 20) {
-        historyPlaceholderImage.transform = CGAffineTransformMakeScale(0.8, 0.8);
-        historyPlaceholderImage.center = CGPointMake(historyPlaceholderImage.center.x, historyPlaceholderImage.center.y + 15.0);
-    }
-    
-    [self.scrollView addSubview:self.historyPlaceholder];
 }
 
 - (void)viewDidLoad
@@ -398,16 +330,6 @@
 {
     [self.favoritesController.tableView reloadData];
     [self.historyController.tableView reloadData];
-    
-    if ([self.favoritesController.tableView numberOfRowsInSection:0] == 0)
-        self.favoritesPlaceholder.hidden = NO;
-    else
-        self.favoritesPlaceholder.hidden = YES;
-    
-    if ([self.historyController.tableView numberOfRowsInSection:0] == 0)
-        self.historyPlaceholder.hidden = NO;
-    else
-        self.historyPlaceholder.hidden = YES;
     
     if ([OLCashier hasProduct:@"CF01"])
         self.mapEnabled = YES;
@@ -1118,7 +1040,6 @@
         [defaults synchronize];
         
         [self.historyController.tableView reloadData];
-        self.historyPlaceholder.hidden = NO;
         
         Mixpanel *mixpanel = [Mixpanel sharedInstance];
         [mixpanel track:@"Cleared History" properties:nil];

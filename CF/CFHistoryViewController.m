@@ -20,6 +20,9 @@
 {
     self = [super initWithStyle:style];
     if (self) {
+        self.placeholderImage = [UIImage imageNamed:@"placeholder-history"];
+        self.placeholderTitle = NSLocalizedString(@"HISTORY_PLACEHOLDER_TITLE", nil);
+        self.placeholderMessage = NSLocalizedString(@"HISTORY_PLACEHOLDER_MESSAGE", nil);
     }
     return self;
 }
@@ -48,7 +51,8 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    NSInteger rows = [self.historyArray count];
+    self.placeholderVisible = (self.historyArray.count == 0) ? YES : NO;
+    NSInteger rows = self.historyArray.count;
     if (rows > 10) rows = 10;
     return rows;
 }

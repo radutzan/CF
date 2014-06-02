@@ -10,6 +10,11 @@
 
 @interface CFStopTableViewController ()
 
+@property (nonatomic, strong) UIView *placeholderView;
+@property (nonatomic, strong) UIImageView *placeholderImageView;
+@property (nonatomic, strong) UILabel *placeholderTitleLabel;
+@property (nonatomic, strong) UILabel *placeholderMessageLabel;
+
 @end
 
 @implementation CFStopTableViewController
@@ -18,7 +23,24 @@
 {
     self = [super initWithStyle:style];
     if (self) {
-        // Custom initialization
+        _placeholderView = [[UIView alloc] initWithFrame:self.view.bounds];
+        [self.view addSubview:_placeholderView];
+        
+        _placeholderImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"placeholder-favorites"]];
+        [_placeholderView addSubview:_placeholderImageView];
+        
+        _placeholderTitleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+        _placeholderTitleLabel.textAlignment = NSTextAlignmentCenter;
+        _placeholderTitleLabel.font = [UIFont boldSystemFontOfSize:17.0];
+        _placeholderTitleLabel.textColor = [UIColor colorWithWhite:0 alpha:0.4];
+        [_placeholderView addSubview:_placeholderTitleLabel];
+        
+        _placeholderMessageLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+        _placeholderMessageLabel.numberOfLines = 3;
+        _placeholderMessageLabel.textAlignment = NSTextAlignmentCenter;
+        _placeholderMessageLabel.font = [UIFont systemFontOfSize:15.0];
+        _placeholderMessageLabel.textColor = [UIColor colorWithWhite:0 alpha:0.4];
+        [_placeholderView addSubview:_placeholderMessageLabel];
     }
     return self;
 }
@@ -30,6 +52,49 @@
     self.view.backgroundColor = [UIColor clearColor];
     
     [self.tableView reloadData];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    self.placeholderView.frame = self.view.bounds;
+    
+    CGFloat verticalMargin = 12.0;
+    CGFloat imageOriginY = floorf((self.view.bounds.size.height - 240.0) / 2);
+    
+    self.placeholderImageView.frame = CGRectOffset(self.placeholderImageView.frame, floorf((self.placeholderView.bounds.size.width - self.placeholderImageView.bounds.size.width) / 2), imageOriginY);
+    self.placeholderTitleLabel.frame = CGRectMake(0, self.placeholderImageView.frame.origin.y + self.placeholderImageView.bounds.size.height + verticalMargin, self.placeholderView.bounds.size.width, 25);
+    self.placeholderMessageLabel.frame = CGRectMake(50, self.placeholderTitleLabel.frame.origin.y + self.placeholderTitleLabel.bounds.size.height + verticalMargin / 2, self.placeholderView.bounds.size.width - 100, 62);
+    
+    if (imageOriginY < 20) {
+        self.placeholderImageView.transform = CGAffineTransformMakeScale(0.8, 0.8);
+        self.placeholderImageView.center = CGPointMake(_placeholderImageView.center.x, _placeholderImageView.center.y + 15.0);
+    }
+}
+
+- (void)setPlaceholderImage:(UIImage *)placeholderImage
+{
+    _placeholderImage = placeholderImage;
+    self.placeholderImageView.image = placeholderImage;
+}
+
+- (void)setPlaceholderTitle:(NSString *)placeholderTitle
+{
+    _placeholderTitle = placeholderTitle;
+    self.placeholderTitleLabel.text = placeholderTitle;
+}
+
+- (void)setPlaceholderMessage:(NSString *)placeholderMessage
+{
+    _placeholderMessage = placeholderMessage;
+    self.placeholderMessageLabel.text = placeholderMessage;
+}
+
+- (void)setPlaceholderVisible:(BOOL)placeholderVisible
+{
+    _placeholderVisible = placeholderVisible;
+    self.placeholderView.hidden = !placeholderVisible;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
