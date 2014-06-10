@@ -20,7 +20,11 @@
 @interface CFSmartSearchList : UIView
 
 - (void)processSearchString:(NSString *)searchString;
+- (void)show;
+- (void)hide;
 
 @property (nonatomic, weak) id<CFSmartSearchListDelegate> delegate;
+@property (nonatomic, readonly) BOOL suggesting;
+@property (nonatomic) UIEdgeInsets contentInset;
 
 @end

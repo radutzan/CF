@@ -15,10 +15,12 @@
 
 @interface CFSmartSearchList () <CFServiceSuggestionViewDelegate, CFStopSuggestionViewDelegate>
 
+@property (nonatomic, strong) UIView *darkOverlay;
 @property (nonatomic, strong) UIScrollView *scrollView;
 @property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
 @property (nonatomic, strong) CFServiceSuggestionView *serviceSuggestionView;
 @property (nonatomic, strong) CFStopSuggestionView *stopSuggestionView;
+@property (nonatomic, readwrite) BOOL suggesting;
 
 @end
 
@@ -28,11 +30,21 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
+        self.hidden = YES;
+        
         _scrollView = [[UIScrollView alloc] initWithFrame:self.bounds];
         _scrollView.clipsToBounds = NO;
         _scrollView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
         _scrollView.contentSize = self.bounds.size;
         [self addSubview:_scrollView];
+        
+        _darkOverlay = [[UIView alloc] initWithFrame:self.bounds];
+        _darkOverlay.backgroundColor = [UIColor colorWithWhite:0 alpha:0.2];
+        _darkOverlay.autoresizingMask = (UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth);
+        [self addSubview:_darkOverlay];
+        
+        UITapGestureRecognizer *overlayTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hide)];
+        [_darkOverlay addGestureRecognizer:overlayTap];
         
         _serviceSuggestionView = [[CFServiceSuggestionView alloc] initWithFrame:CGRectMake(HORIZONTAL_MARGIN, VERTICAL_MARGIN, frame.size.width - HORIZONTAL_MARGIN * 2, 52.0)];
         _serviceSuggestionView.delegate = self;
@@ -55,8 +67,31 @@
         _activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
         _activityIndicator.frame = CGRectOffset(_activityIndicator.frame, (frame.size.width - _activityIndicator.frame.size.width) / 2, VERTICAL_MARGIN);
         [_scrollView addSubview:_activityIndicator];
+        
+        _suggesting = NO;
     }
     return self;
+}
+
+- (void)show
+{
+    self.alpha = 0;
+    self.hidden = NO;
+    
+    [UIView animateWithDuration:0.33 delay:0.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+        self.alpha = 1;
+    } completion:nil];
+}
+
+- (void)hide
+{
+    [self.superview endEditing:YES];
+    
+    [UIView animateWithDuration:0.25 animations:^{
+        self.alpha = 0;
+    } completion:^(BOOL finished) {
+        self.hidden = YES;
+    }];
 }
 
 - (void)processSearchString:(NSString *)searchString
@@ -126,6 +161,8 @@
         if (result && [result lastObject]) {
             // win
             NSLog(@"service exists: %@", result);
+            self.suggesting = YES;
+            
             NSDictionary *serviceInfo = [result firstObject];
             [self showServiceSuggestionWithService:[serviceInfo objectForKey:@"servicio"] outwardString:[serviceInfo objectForKey:@"ida"] inwardString:[serviceInfo objectForKey:@"regreso"]];
         }
@@ -170,6 +207,7 @@
 
 - (void)clearServiceSuggestions
 {
+    self.suggesting = NO;
     NSLog(@"clearing service suggestions");
     self.scrollView.contentSize = self.bounds.size;
     
@@ -183,6 +221,7 @@
 
 - (void)clearStopSuggestions
 {
+    self.suggesting = NO;
     NSLog(@"clearing stop suggestions");
     self.scrollView.contentSize = self.bounds.size;
     
