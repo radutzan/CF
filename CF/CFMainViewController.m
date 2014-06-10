@@ -93,9 +93,9 @@
     self.mapController.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     [self.view addSubview:self.mapController];
     
-    self.smartSearchList = [[CFSmartSearchList alloc] initWithFrame:CGRectMake(0, 64.0, self.view.bounds.size.width, 200.0)];
+    self.smartSearchList = [[CFSmartSearchList alloc] initWithFrame:self.view.bounds];
     self.smartSearchList.delegate = self;
-    self.smartSearchList.hidden = YES;
+    self.smartSearchList.contentInset = UIEdgeInsetsMake(64.0, 0, TAB_BAR_HEIGHT, 0);
     [self.view addSubview:self.smartSearchList];
     
     self.localNavigationBar = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 45.0)];
@@ -1171,8 +1171,7 @@
 
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar
 {
-    [self.mapController showDarkOverlay];
-    self.smartSearchList.hidden = NO;
+    [self.smartSearchList show];
 }
 
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
@@ -1183,7 +1182,10 @@
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
 {
     [searchBar resignFirstResponder];
-    [self.mapController hideDarkOverlay];
+    
+    if (self.smartSearchList.suggesting) return;
+    
+    [self.smartSearchList hide];
     [self.mapController performSearchWithString:searchBar.text];
     
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
@@ -1192,12 +1194,9 @@
 
 - (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar
 {
-    [UIView animateWithDuration:0.25 animations:^{
-        self.smartSearchList.alpha = 0;
-    } completion:^(BOOL finished) {
-        self.smartSearchList.hidden = YES;
-        self.smartSearchList.alpha = 1;
-    }];
+    if (!self.smartSearchList.suggesting) {
+        [self.smartSearchList hide];
+    }
 }
 
 - (void)keyboardWasShown:(NSNotification*)aNotification

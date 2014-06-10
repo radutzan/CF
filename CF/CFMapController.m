@@ -63,14 +63,6 @@ static MKMapRect santiagoBounds;
         self.stopCalloutView.constrainedInsets = UIEdgeInsetsMake(64.0, 0, 60.0, 0);
         self.stopCalloutView.permittedArrowDirection = SMCalloutArrowDirectionDown;
         
-        self.darkOverlay = [[UIView alloc] initWithFrame:self.bounds];
-        self.darkOverlay.backgroundColor = [UIColor colorWithWhite:0 alpha:0.2];
-        self.darkOverlay.autoresizingMask = (UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth);
-        self.darkOverlay.alpha = 0;
-        
-        UITapGestureRecognizer *darkOverlayTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(darkOverlayTapped)];
-        [self.darkOverlay addGestureRecognizer:darkOverlayTap];
-        
         self.zoomWarning = [[OLGhostAlertView alloc] initWithTitle:NSLocalizedString(@"ZOOM_LEVEL_WARNING_TITLE", nil) message:NSLocalizedString(@"ZOOM_LEVEL_WARNING_MESSAGE", nil) timeout:200.0 dismissible:YES];
         self.zoomWarning.style = OLGhostAlertViewStyleLight;
         self.zoomWarning.position = OLGhostAlertViewPositionCenter;
@@ -152,31 +144,6 @@ static MKMapRect santiagoBounds;
 {
     [self.delegate mapControllerDidSelectStop:self.selectedStop.code];
 //    [self.mapView deselectAnnotation:self.selectedStop animated:NO];
-}
-
-- (void)showDarkOverlay
-{
-    [self addSubview:self.darkOverlay];
-    
-    [UIView animateWithDuration:0.33 delay:0.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-        self.darkOverlay.alpha = 1;
-    } completion:nil];
-}
-
-- (void)hideDarkOverlay
-{
-    [self.superview endEditing:YES];
-    
-    [UIView animateWithDuration:0.25 animations:^{
-        self.darkOverlay.alpha = 0;
-    } completion:^(BOOL finished) {
-        [self.darkOverlay removeFromSuperview];
-    }];
-}
-
-- (void)darkOverlayTapped
-{
-    [self hideDarkOverlay];
 }
 
 #pragma mark - Cuantofaltism

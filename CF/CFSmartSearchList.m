@@ -12,6 +12,8 @@
 @interface CFSmartSearchList () <CFServiceSuggestionViewDelegate>
 
 @property (nonatomic, strong) CFServiceSuggestionView *serviceSuggestionView;
+@property (nonatomic, readwrite) BOOL suggesting;
+@property (nonatomic, strong) UIView *darkOverlay;
 
 @end
 
@@ -21,7 +23,17 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        _serviceSuggestionView = [[CFServiceSuggestionView alloc] initWithFrame:CGRectMake(20.0, 20.0, frame.size.width - 40.0, 52.0)];
+        self.hidden = YES;
+        
+        _darkOverlay = [[UIView alloc] initWithFrame:self.bounds];
+        _darkOverlay.backgroundColor = [UIColor colorWithWhite:0 alpha:0.2];
+        _darkOverlay.autoresizingMask = (UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth);
+        [self addSubview:_darkOverlay];
+        
+        UITapGestureRecognizer *overlayTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hide)];
+        [_darkOverlay addGestureRecognizer:overlayTap];
+        
+        _serviceSuggestionView = [[CFServiceSuggestionView alloc] initWithFrame:CGRectMake(20.0, 64.0 + 20.0, frame.size.width - 40.0, 52.0)];
         _serviceSuggestionView.delegate = self;
         _serviceSuggestionView.hidden = YES;
         _serviceSuggestionView.clipsToBounds = NO;
@@ -33,8 +45,31 @@
         _serviceSuggestionView.layer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:_serviceSuggestionView.bounds cornerRadius:_serviceSuggestionView.layer.cornerRadius].CGPath;
         _serviceSuggestionView.layer.shadowRadius = 0.5;
         [self addSubview:_serviceSuggestionView];
+        
+        _suggesting = NO;
     }
     return self;
+}
+
+- (void)show
+{
+    self.alpha = 0;
+    self.hidden = NO;
+    
+    [UIView animateWithDuration:0.33 delay:0.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+        self.alpha = 1;
+    } completion:nil];
+}
+
+- (void)hide
+{
+    [self.superview endEditing:YES];
+    
+    [UIView animateWithDuration:0.25 animations:^{
+        self.alpha = 0;
+    } completion:^(BOOL finished) {
+        self.hidden = YES;
+    }];
 }
 
 - (void)processSearchString:(NSString *)searchString
@@ -100,6 +135,8 @@
         if (result && [result lastObject]) {
             // win
             NSLog(@"service exists: %@", result);
+            self.suggesting = YES;
+            
             NSDictionary *serviceInfo = [result firstObject];
             [self showServiceSuggestionWithService:[serviceInfo objectForKey:@"servicio"] outwardString:[serviceInfo objectForKey:@"ida"] inwardString:[serviceInfo objectForKey:@"regreso"]];
         }
@@ -120,6 +157,7 @@
 
 - (void)clearServiceSuggestions
 {
+    self.suggesting = NO;
     NSLog(@"clearing service suggestions");
     [UIView animateWithDuration:0.1 animations:^{
         self.serviceSuggestionView.alpha = 0;
@@ -131,6 +169,7 @@
 
 - (void)clearStopSuggestions
 {
+    self.suggesting = NO;
     NSLog(@"clearing stop suggestions");
 }
 
