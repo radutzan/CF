@@ -85,20 +85,28 @@
     self.mapController.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     [self.view addSubview:self.mapController];
     
-    self.smartSearchList = [[CFSmartSearchList alloc] initWithFrame:CGRectMake(0, 64.0, self.view.bounds.size.width, self.view.bounds.size.height - 64.0 - TAB_BAR_HEIGHT)];
-    self.smartSearchList.delegate = self;
-    self.smartSearchList.hidden = YES;
-    [self.view addSubview:self.smartSearchList];
-    
-    self.localNavigationBar = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 45.0)];
+    self.localNavigationBar = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 64.0)];
     self.localNavigationBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     [self.view addSubview:self.localNavigationBar];
     
-    self.logoView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"logo"]];
-    self.logoView.frame = CGRectMake(0, 26.0, self.localNavigationBar.bounds.size.width, self.logoView.bounds.size.height);
-    self.logoView.contentMode = UIViewContentModeCenter;
-    self.logoView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    [self.localNavigationBar addSubview:self.logoView];
+    UISearchBar *searchBar = [UISearchBar new];
+    searchBar.searchBarStyle = UISearchBarStyleMinimal;
+    searchBar.placeholder = NSLocalizedString(@"MAP_SEARCHFIELD_PLACEHOLDER", nil);
+    searchBar.delegate = self;
+    
+    UIBarButtonItem *bipButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"button-bip"] style:UIBarButtonItemStylePlain target:self.mapController action:@selector(goToNearestBipSpot)];
+    MKUserTrackingBarButtonItem *tracky = [[MKUserTrackingBarButtonItem alloc] initWithMapView:self.mapController.mapView];
+    
+    UINavigationItem *navItem = [UINavigationItem new];
+    navItem.titleView = searchBar;
+    navItem.rightBarButtonItems = @[tracky, bipButton];
+    
+    [self.localNavigationBar pushNavigationItem:navItem animated:NO];
+    
+    self.smartSearchList = [[CFSmartSearchList alloc] initWithFrame:CGRectMake(0, self.localNavigationBar.bounds.size.height, self.view.bounds.size.width, self.view.bounds.size.height - self.localNavigationBar.bounds.size.height - TAB_BAR_HEIGHT)];
+    self.smartSearchList.delegate = self;
+    self.smartSearchList.hidden = YES;
+    [self.view addSubview:self.smartSearchList];
     
     self.contentView = [[UIToolbar alloc] initWithFrame:CGRectMake(0, CONTENT_ORIGIN, self.view.bounds.size.width, self.view.bounds.size.height - CONTENT_ORIGIN)];
     self.contentView.layer.anchorPoint = CGPointMake(0.5, 1.0);
@@ -177,32 +185,10 @@
     
 }
 
-- (void)initTabs
-{
-    self.favoritesController = [[CFFavoritesViewController alloc] initWithStyle:UITableViewStyleGrouped];
-    self.favoritesController.delegate = self;
-    
-    self.historyController = [[CFHistoryViewController alloc] initWithStyle:UITableViewStyleGrouped];
-    self.historyController.delegate = self;
-    
-    self.moreController = [[CFMoreViewController alloc] initWithStyle:UITableViewStyleGrouped];
-    
-    self.tabs = @[@{@"controller": self.favoritesController,
-                    @"title": @"Favorites",
-                    @"button": [UIImage imageNamed:@"button-favorites"],
-                    @"button-selected": [UIImage imageNamed:@"button-favorites-selected"]},
-                  @{@"controller": self.historyController,
-                    @"title": @"History",
-                    @"button": [UIImage imageNamed:@"button-history"],
-                    @"button-selected": [UIImage imageNamed:@"button-history-selected"]},
-                  @{@"controller": self.moreController,
-                    @"title": @"More",
-                    @"button": [UIImage imageNamed:@"button-more"],
-                    @"button-selected": [UIImage imageNamed:@"button-more-selected"]}];
-}
-
 - (void)viewDidLoad
 {
+    self.mapMode = YES;
+    
     if (self.mapEnabled) {
         self.openMapButton.hidden = NO;
         [self.openMapButton addTarget:self action:@selector(switchToMap) forControlEvents:UIControlEventTouchUpInside];
@@ -243,10 +229,6 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    
-    if (self.isMovingToParentViewController == YES) {
-        self.mapMode = YES;
-    }
     
     if (self.shouldDisplayAds) {
         self.interstitialLoaded = NO;
@@ -337,6 +319,30 @@
 
 #pragma mark - Tabs
 
+- (void)initTabs
+{
+    self.favoritesController = [[CFFavoritesViewController alloc] initWithStyle:UITableViewStyleGrouped];
+    self.favoritesController.delegate = self;
+    
+    self.historyController = [[CFHistoryViewController alloc] initWithStyle:UITableViewStyleGrouped];
+    self.historyController.delegate = self;
+    
+    self.moreController = [[CFMoreViewController alloc] initWithStyle:UITableViewStyleGrouped];
+    
+    self.tabs = @[@{@"controller": self.favoritesController,
+                    @"title": @"Favorites",
+                    @"button": [UIImage imageNamed:@"button-favorites"],
+                    @"button-selected": [UIImage imageNamed:@"button-favorites-selected"]},
+                  @{@"controller": self.historyController,
+                    @"title": @"History",
+                    @"button": [UIImage imageNamed:@"button-history"],
+                    @"button-selected": [UIImage imageNamed:@"button-history-selected"]},
+                  @{@"controller": self.moreController,
+                    @"title": @"More",
+                    @"button": [UIImage imageNamed:@"button-more"],
+                    @"button-selected": [UIImage imageNamed:@"button-more-selected"]}];
+}
+
 - (void)setTabs:(NSArray *)tabs
 {
     _tabs = tabs;
@@ -414,7 +420,7 @@
     CGFloat pageWidth = self.scrollView.frame.size.width;
     NSUInteger page = floor((self.scrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
     
-    if (page <= 0 && page >= self.tabs.count - 1) {
+    if (page <= self.tabs.count - 1) {
         UIButton *thisButton = (UIButton *)[[self.tabBar subviews] objectAtIndex:page];
         [self selectTabButton:thisButton];
     }
@@ -427,7 +433,6 @@
     _mapMode = mapMode;
     
     CGFloat scrollViewAlpha = 0.0;
-    CGFloat localNavBarHeight = 0.0;
     
     if (mapMode) {
         if (self.scrollView.alpha > 0) {
@@ -438,21 +443,6 @@
         
         self.openMapButton.hidden = YES;
         scrollViewAlpha = 0.0;
-        localNavBarHeight = 64.0;
-        
-        UISearchBar *searchBar = [UISearchBar new];
-        searchBar.searchBarStyle = UISearchBarStyleMinimal;
-        searchBar.placeholder = NSLocalizedString(@"MAP_SEARCHFIELD_PLACEHOLDER", nil);
-        searchBar.delegate = self;
-        
-        UIBarButtonItem *bipButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"button-bip"] style:UIBarButtonItemStylePlain target:self.mapController action:@selector(goToNearestBipSpot)];
-        MKUserTrackingBarButtonItem *tracky = [[MKUserTrackingBarButtonItem alloc] initWithMapView:self.mapController.mapView];
-        
-        UINavigationItem *navItem = [UINavigationItem new];
-        navItem.titleView = searchBar;
-        navItem.rightBarButtonItems = @[tracky, bipButton];
-        
-        [self.localNavigationBar pushNavigationItem:navItem animated:YES];
         
         if (self.shouldDisplayAds) {
             if (self.interstitialLoaded) [self.interstitialAd presentFromRootViewController:self];
@@ -470,17 +460,12 @@
         }
         
         scrollViewAlpha = 1.0;
-        localNavBarHeight = 45.0;
         self.openMapButton.hidden = NO;
-        
-        [self.localNavigationBar popNavigationItemAnimated:YES];
         
         [self centerMapLocationForClosedState];
     }
     
     [UIView animateWithDuration:0.33 delay:0.0 options:(7 >> 16) animations:^{
-        self.logoView.alpha = scrollViewAlpha;
-        self.localNavigationBar.frame = CGRectMake(0, 0, self.localNavigationBar.bounds.size.width, localNavBarHeight);
         self.openMapButton.frame = CGRectMake(0, self.localNavigationBar.frame.size.height, self.view.bounds.size.width, CONTENT_ORIGIN - self.localNavigationBar.frame.size.height);
         self.openMapButton.alpha = 1;
     } completion:^(BOOL finished) {
