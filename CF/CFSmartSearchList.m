@@ -32,12 +32,6 @@
     if (self) {
         self.hidden = YES;
         
-        _scrollView = [[UIScrollView alloc] initWithFrame:self.bounds];
-        _scrollView.clipsToBounds = NO;
-        _scrollView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
-        _scrollView.contentSize = self.bounds.size;
-        [self addSubview:_scrollView];
-        
         _darkOverlay = [[UIView alloc] initWithFrame:self.bounds];
         _darkOverlay.backgroundColor = [UIColor colorWithWhite:0 alpha:0.2];
         _darkOverlay.autoresizingMask = (UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth);
@@ -45,6 +39,13 @@
         
         UITapGestureRecognizer *overlayTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hide)];
         [_darkOverlay addGestureRecognizer:overlayTap];
+        
+        _scrollView = [[UIScrollView alloc] initWithFrame:self.bounds];
+        _scrollView.clipsToBounds = NO;
+        _scrollView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
+        _scrollView.contentSize = self.bounds.size;
+        _scrollView.alwaysBounceVertical = YES;
+        [self addSubview:_scrollView];
         
         _serviceSuggestionView = [[CFServiceSuggestionView alloc] initWithFrame:CGRectMake(HORIZONTAL_MARGIN, VERTICAL_MARGIN, frame.size.width - HORIZONTAL_MARGIN * 2, 52.0)];
         _serviceSuggestionView.delegate = self;
@@ -71,6 +72,13 @@
         _suggesting = NO;
     }
     return self;
+}
+
+- (void)setContentInset:(UIEdgeInsets)contentInset
+{
+    _contentInset = contentInset;
+    self.scrollView.frame = CGRectMake(0, contentInset.top, self.bounds.size.width, self.bounds.size.height - contentInset.top - contentInset.bottom);
+    self.scrollView.contentInset = UIEdgeInsetsMake(0, contentInset.left, 0, contentInset.right);
 }
 
 - (void)show
@@ -188,6 +196,8 @@
 
         if (result) {
             NSLog(@"stop exists");
+            self.suggesting = YES;
+            
             NSDictionary *stopData = [result firstObject];
             CLLocationCoordinate2D coordinate;
             coordinate.latitude = [[stopData objectForKey:@"latitude"] doubleValue];
@@ -263,7 +273,7 @@
     UIView *hitView = [super hitTest:point withEvent:event];
     
     if ([hitView isEqual:self] || [hitView isEqual:self.scrollView]) {
-        return nil;
+        return self.darkOverlay;
     }
     
     return hitView;

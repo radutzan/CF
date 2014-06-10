@@ -85,6 +85,11 @@
     self.mapController.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     [self.view addSubview:self.mapController];
     
+    self.smartSearchList = [[CFSmartSearchList alloc] initWithFrame:self.view.bounds];
+    self.smartSearchList.delegate = self;
+    self.smartSearchList.contentInset = UIEdgeInsetsMake(64.0, 0, TAB_BAR_HEIGHT, 0);
+    [self.view addSubview:self.smartSearchList];
+    
     self.localNavigationBar = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 64.0)];
     self.localNavigationBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     [self.view addSubview:self.localNavigationBar];
@@ -102,11 +107,6 @@
     navItem.rightBarButtonItems = @[tracky, bipButton];
     
     [self.localNavigationBar pushNavigationItem:navItem animated:NO];
-    
-    self.smartSearchList = [[CFSmartSearchList alloc] initWithFrame:self.view.bounds];
-    self.smartSearchList.delegate = self;
-    self.smartSearchList.contentInset = UIEdgeInsetsMake(64.0, 0, TAB_BAR_HEIGHT, 0);
-    [self.view addSubview:self.smartSearchList];
     
     self.contentView = [[UIToolbar alloc] initWithFrame:CGRectMake(0, CONTENT_ORIGIN, self.view.bounds.size.width, self.view.bounds.size.height - CONTENT_ORIGIN)];
     self.contentView.layer.anchorPoint = CGPointMake(0.5, 1.0);
@@ -1023,10 +1023,9 @@
 {
     NSDictionary* info = [aNotification userInfo];
     CGRect keyboardRect = [[info objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
-    CGRect intersectRect = CGRectIntersection(self.smartSearchList.frame, keyboardRect);
     
     [UIView animateKeyframesWithDuration:[[info objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue] delay:0.0 options:(7 << 16) animations:^{
-        self.smartSearchList.frame = CGRectMake(self.smartSearchList.frame.origin.x, self.smartSearchList.frame.origin.y, self.smartSearchList.bounds.size.width, self.smartSearchList.bounds.size.height - intersectRect.size.height);
+        self.smartSearchList.contentInset = UIEdgeInsetsMake(self.smartSearchList.contentInset.top, self.smartSearchList.contentInset.left, keyboardRect.size.height, self.smartSearchList.contentInset.right);
     } completion:nil];
 }
 
@@ -1035,7 +1034,7 @@
     NSDictionary* info = [aNotification userInfo];
     
     [UIView animateKeyframesWithDuration:[[info objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue] delay:0.0 options:(7 << 16) animations:^{
-        //        self.enterStopCodeView.center = self.scrollView.center;
+        self.smartSearchList.contentInset = UIEdgeInsetsMake(self.smartSearchList.contentInset.top, self.smartSearchList.contentInset.left, TAB_BAR_HEIGHT, self.smartSearchList.contentInset.right);
     } completion:nil];
 }
 
