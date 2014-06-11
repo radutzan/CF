@@ -43,7 +43,7 @@
         _scrollView = [[UIScrollView alloc] initWithFrame:self.bounds];
         _scrollView.clipsToBounds = NO;
         _scrollView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
-        _scrollView.contentSize = self.bounds.size;
+        _scrollView.contentSize = CGSizeZero;
         _scrollView.alwaysBounceVertical = YES;
         [self addSubview:_scrollView];
         
@@ -219,7 +219,7 @@
 {
     self.suggesting = NO;
     NSLog(@"clearing service suggestions");
-    self.scrollView.contentSize = self.bounds.size;
+    self.scrollView.contentSize = CGSizeZero;
     
     [UIView animateWithDuration:0.1 animations:^{
         self.serviceSuggestionView.alpha = 0;
@@ -233,7 +233,7 @@
 {
     self.suggesting = NO;
     NSLog(@"clearing stop suggestions");
-    self.scrollView.contentSize = self.bounds.size;
+    self.scrollView.contentSize = CGSizeZero;
     
     [UIView animateWithDuration:0.1 animations:^{
         self.stopSuggestionView.alpha = 0;

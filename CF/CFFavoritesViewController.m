@@ -63,9 +63,6 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     self.placeholderVisible = (self.favoritesArray.count == 0) ? YES : NO;
-    if (self.favoritesArray.count == 0) {
-        NSLog(@"empty favs");
-    }
     return self.favoritesArray.count;
 }
 
