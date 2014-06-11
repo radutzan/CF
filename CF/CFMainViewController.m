@@ -591,7 +591,7 @@
 
 - (void)mapControllerDidUpdateLocation
 {
-    [self centerMapLocationForClosedState];
+    if (!self.mapMode) [self centerMapLocationForClosedState];
 }
 
 - (void)handleGripDragGesture:(UIPanGestureRecognizer *)recognizer
