@@ -186,13 +186,21 @@
     }
     
     NSMutableArray *mutableHistory = [history mutableCopy];
+    NSUInteger historyCount = 0;
     
     for (NSDictionary *stop in history) {
-        if ([[stop objectForKey:@"codigo"] isEqualToString:self.stop.code])
+        if ([stop[@"codigo"] isEqualToString:self.stop.code]) {
+            historyCount = [stop[@"count"] integerValue];
+//            NSLog(@"stop %@ has count: %d", stop[@"codigo"], historyCount);
             [mutableHistory removeObject:stop];
+        }
     }
     
-    [mutableHistory addObject:[self.stop asDictionary]];
+    historyCount++;
+    NSMutableDictionary *mutableStop = [[self.stop asDictionary] mutableCopy];
+    [mutableStop setValue:@(historyCount) forKey:@"count"];
+//    NSLog(@"recording count: %d", [mutableStop[@"count"] integerValue]);
+    [mutableHistory addObject:mutableStop];
     
     [defaults setObject:mutableHistory forKey:@"history"];
     [defaults synchronize];
