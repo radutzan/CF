@@ -152,6 +152,9 @@
 		7CC7EC4C1929BBA2002160E5 /* CFServiceRouteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CC7EC411929B5F6002160E5 /* CFServiceRouteViewController.m */; };
 		7CCA7469193248C200ADB397 /* CFForwardingTouchScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CCA7468193248C200ADB397 /* CFForwardingTouchScrollView.m */; };
 		7CCA746A19325C9D00ADB397 /* CFForwardingTouchScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CCA7468193248C200ADB397 /* CFForwardingTouchScrollView.m */; };
+		7CD35CA8194955EF007C36CA /* CFSearchField.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CD35CA7194955EF007C36CA /* CFSearchField.m */; };
+		7CD35CAA19495A44007C36CA /* searchfield-glyph@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CD35CA919495A44007C36CA /* searchfield-glyph@2x.png */; };
+		7CD35CAB19495A44007C36CA /* searchfield-glyph@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CD35CA919495A44007C36CA /* searchfield-glyph@2x.png */; };
 		7CE0D9D8189DB34F00D9782E /* OLShapeTintedButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CE0D9D7189DB34F00D9782E /* OLShapeTintedButton.m */; };
 		7CE0D9DA189DD2D800D9782E /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CE0D9D9189DD2D800D9782E /* Social.framework */; };
 		7CF7EE4F1852D790009B3F46 /* CFBipSpot.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CF7EE4E1852D790009B3F46 /* CFBipSpot.m */; };
@@ -313,6 +316,9 @@
 		7CC7EC481929B79C002160E5 /* HOFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HOFunctions.m; sourceTree = "<group>"; };
 		7CCA7467193248C200ADB397 /* CFForwardingTouchScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFForwardingTouchScrollView.h; sourceTree = "<group>"; };
 		7CCA7468193248C200ADB397 /* CFForwardingTouchScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFForwardingTouchScrollView.m; sourceTree = "<group>"; };
+		7CD35CA6194955EF007C36CA /* CFSearchField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFSearchField.h; sourceTree = "<group>"; };
+		7CD35CA7194955EF007C36CA /* CFSearchField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFSearchField.m; sourceTree = "<group>"; };
+		7CD35CA919495A44007C36CA /* searchfield-glyph@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "searchfield-glyph@2x.png"; sourceTree = "<group>"; };
 		7CE0D9D6189DB34F00D9782E /* OLShapeTintedButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLShapeTintedButton.h; sourceTree = "<group>"; };
 		7CE0D9D7189DB34F00D9782E /* OLShapeTintedButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLShapeTintedButton.m; sourceTree = "<group>"; };
 		7CE0D9D9189DD2D800D9782E /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
@@ -623,6 +629,7 @@
 				7C7A15D718540966002EE4C5 /* pin-favorite@2x.png */,
 				7CAFA3361842A206005A06BC /* placeholder-favorites@2x.png */,
 				7CAFA3371842A206005A06BC /* placeholder-history@2x.png */,
+				7CD35CA919495A44007C36CA /* searchfield-glyph@2x.png */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -662,6 +669,8 @@
 				7CE0D9D7189DB34F00D9782E /* OLShapeTintedButton.m */,
 				7C7A15D41853EBF0002EE4C5 /* OLTextField.h */,
 				7C7A15D51853EBF0002EE4C5 /* OLTextField.m */,
+				7CD35CA6194955EF007C36CA /* CFSearchField.h */,
+				7CD35CA7194955EF007C36CA /* CFSearchField.m */,
 				7CFF7EBD1838700F006230CE /* CFStopSignView.h */,
 				7CFF7EBE1838700F006230CE /* CFStopSignView.m */,
 				7CB337FC192AB27500234792 /* CFStopServicesButtonArrayView.h */,
@@ -862,6 +871,7 @@
 				7C2EED06188345F500AE78C2 /* bus@2x.png in Resources */,
 				7C2EED07188345F500AE78C2 /* button-more@2x.png in Resources */,
 				7C2EED08188345F500AE78C2 /* placeholder-favorites@2x.png in Resources */,
+				7CD35CAB19495A44007C36CA /* searchfield-glyph@2x.png in Resources */,
 				7C2EED09188345F500AE78C2 /* button-history@2x.png in Resources */,
 				7C2EED0A188345F500AE78C2 /* button-bip@2x.png in Resources */,
 				7C062F271933074D00342E4A /* feature-service@2x.png in Resources */,
@@ -901,6 +911,7 @@
 				7CFF7EC3183871F7006230CE /* bus@2x.png in Resources */,
 				7CFF7ECA183A639C006230CE /* button-more@2x.png in Resources */,
 				7CAFA3381842A206005A06BC /* placeholder-favorites@2x.png in Resources */,
+				7CD35CAA19495A44007C36CA /* searchfield-glyph@2x.png in Resources */,
 				7CFF7EB518384106006230CE /* button-history@2x.png in Resources */,
 				7CB64D7C18551C9C006422E0 /* button-bip@2x.png in Resources */,
 				7C062F261933074D00342E4A /* feature-service@2x.png in Resources */,
@@ -1060,6 +1071,7 @@
 				7CFF7E5118381645006230CE /* main.m in Sources */,
 				5A11D7771877A2BA001118F6 /* OLProductRequestDelegate.m in Sources */,
 				7CFF7E9D18382B1B006230CE /* NSString+Digest.m in Sources */,
+				7CD35CA8194955EF007C36CA /* CFSearchField.m in Sources */,
 				7C5ACA5D1932856E00E20FD9 /* CFWhatsNewViewController.m in Sources */,
 				7C915927193AA4AE004CFCFA /* CFStopSuggestionView.m in Sources */,
 				7CFF7E5518381645006230CE /* CFAppDelegate.m in Sources */,

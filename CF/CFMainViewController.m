@@ -14,6 +14,7 @@
 #import "CFSapoClient.h"
 
 #import "CFMapController.h"
+#import "CFSearchField.h"
 #import "CFSmartSearchList.h"
 #import "CFStopResultsViewController.h"
 #import "CFServiceRouteViewController.h"
@@ -27,11 +28,11 @@
 #import "GADInterstitial.h"
 #import "GADBannerView.h"
 
-#define TAB_BAR_HEIGHT 60.0
+#define TAB_BAR_HEIGHT 44.0
 #define TAB_BUTTON_WIDTH 75.0
 #define CONTENT_ORIGIN 160.0
 
-@interface CFMainViewController () <UIScrollViewDelegate, UISearchBarDelegate, CFStopTableViewDelegate, CFMapControllerDelegate, CFSmartSearchListDelegate, UIActionSheetDelegate, UIAlertViewDelegate, GADInterstitialDelegate>
+@interface CFMainViewController () <UIScrollViewDelegate, CFSearchFieldDelegate, CFStopTableViewDelegate, CFMapControllerDelegate, CFSmartSearchListDelegate, UIActionSheetDelegate, UIAlertViewDelegate, GADInterstitialDelegate>
 
 @property (nonatomic, strong) CFMapController *mapController;
 @property (nonatomic, strong) CFSmartSearchList *smartSearchList;
@@ -51,7 +52,6 @@
 @property (nonatomic, strong) CFMoreViewController *moreController;
 
 @property (nonatomic, assign) BOOL mapMode;
-@property (nonatomic, assign) BOOL mapEnabled;
 @property (nonatomic, assign) CGFloat initialContentCenterY;
 @property (nonatomic, assign) CGPoint initialOpenMapButtonCenter;
 @property (nonatomic, assign) CLLocationCoordinate2D mapLocationCoordinate;
@@ -94,24 +94,23 @@
     self.localNavigationBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     [self.view addSubview:self.localNavigationBar];
     
-    UISearchBar *searchBar = [UISearchBar new];
-    searchBar.searchBarStyle = UISearchBarStyleMinimal;
-    searchBar.placeholder = NSLocalizedString(@"MAP_SEARCHFIELD_PLACEHOLDER", nil);
-    searchBar.delegate = self;
+    CFSearchField *searchField = [[CFSearchField alloc] initWithFrame:CGRectMake(0, 0, 300, 44.0)];
+    searchField.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
+    searchField.placeholder = NSLocalizedString(@"MAP_SEARCHFIELD_PLACEHOLDER", nil);
+    searchField.delegate = self;
     
     UIBarButtonItem *bipButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"button-bip"] style:UIBarButtonItemStylePlain target:self.mapController action:@selector(goToNearestBipSpot)];
     MKUserTrackingBarButtonItem *tracky = [[MKUserTrackingBarButtonItem alloc] initWithMapView:self.mapController.mapView];
     
     UINavigationItem *navItem = [UINavigationItem new];
-    navItem.titleView = searchBar;
+    navItem.titleView = searchField;
     navItem.rightBarButtonItems = @[tracky, bipButton];
     
     [self.localNavigationBar pushNavigationItem:navItem animated:NO];
     
-    self.contentView = [[UIToolbar alloc] initWithFrame:CGRectMake(0, CONTENT_ORIGIN, self.view.bounds.size.width, self.view.bounds.size.height - CONTENT_ORIGIN)];
+    self.contentView = [[UIToolbar alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - TAB_BAR_HEIGHT, self.view.bounds.size.width, self.view.bounds.size.height - CONTENT_ORIGIN)];
     self.contentView.layer.anchorPoint = CGPointMake(0.5, 1.0);
-    self.contentView.frame = CGRectMake(0, CONTENT_ORIGIN, self.view.bounds.size.width, self.view.bounds.size.height - CONTENT_ORIGIN);
-    self.initialContentCenterY = self.contentView.center.y;
+    self.contentView.frame = CGRectMake(0, self.view.bounds.size.height - TAB_BAR_HEIGHT, self.view.bounds.size.width, self.view.bounds.size.height - CONTENT_ORIGIN);
     [self.view addSubview:self.contentView];
     
     self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.contentView.bounds.size.width, self.contentView.bounds.size.height - TAB_BAR_HEIGHT)];
@@ -120,6 +119,7 @@
     self.scrollView.contentSize = CGSizeMake(self.scrollView.bounds.size.width * 3, self.scrollView.bounds.size.height);
     self.scrollView.pagingEnabled = YES;
     self.scrollView.showsHorizontalScrollIndicator = NO;
+    self.scrollView.alpha = 0;
     [self.contentView addSubview:self.scrollView];
     
     self.tabBar = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - TAB_BAR_HEIGHT, self.view.bounds.size.width, TAB_BAR_HEIGHT)];
@@ -129,6 +129,7 @@
     [self initTabs];
     
     self.gripper = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.contentView.bounds.size.width, 30)];
+    self.gripper.alpha = 0;
     [self.contentView addSubview:self.gripper];
     
     UIImageView *gripImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"gripper"]];
@@ -151,12 +152,9 @@
 #endif
 #endif
     
-    // ese booleano po
-    if ([OLCashier hasProduct:@"CF01"] || [[NSUserDefaults standardUserDefaults] boolForKey:@"CFEnableMapWithAds"]) self.mapEnabled = YES;
-    
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     
-    NSString *mappy = (self.mapEnabled)? @"Yes" : @"No";
+    NSString *mappy = @"Yes";
     NSString *freeMap = ([[NSUserDefaults standardUserDefaults] boolForKey:@"CFEnableMapWithAds"])? @"Yes" : @"No";
     
     [mixpanel registerSuperProperties:@{@"Has Map": mappy}];
@@ -165,10 +163,13 @@
     self.openMapButton = [UIButton buttonWithType:UIButtonTypeCustom];
     self.openMapButton.frame = CGRectMake(0, self.localNavigationBar.frame.size.height, self.view.bounds.size.width, CONTENT_ORIGIN - self.localNavigationBar.frame.size.height);
     self.openMapButton.contentVerticalAlignment = UIControlContentVerticalAlignmentTop;
+    [self.openMapButton addTarget:self action:@selector(switchToMap) forControlEvents:UIControlEventTouchUpInside];
     [self.view insertSubview:self.openMapButton aboveSubview:self.mapController];
     
     UIPanGestureRecognizer *openMapButtonDrag = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleGripDragGesture:)];
     [self.openMapButton addGestureRecognizer:openMapButtonDrag];
+    
+    self.mapMode = YES;
     
     [self registerForKeyboardNotifications];
 }
@@ -187,15 +188,6 @@
 
 - (void)viewDidLoad
 {
-    self.mapMode = YES;
-    
-    if (self.mapEnabled) {
-        self.openMapButton.hidden = NO;
-        [self.openMapButton addTarget:self action:@selector(switchToMap) forControlEvents:UIControlEventTouchUpInside];
-    } else {
-        self.openMapButton.hidden = YES;
-        [self showMapFeatures];
-    }
     
     BOOL runBefore = [[NSUserDefaults standardUserDefaults] boolForKey:@"OLHasRunBefore"];
     
@@ -312,9 +304,6 @@
 {
     [self.favoritesController.tableView reloadData];
     [self.historyController.tableView reloadData];
-    
-    if ([OLCashier hasProduct:@"CF01"])
-        self.mapEnabled = YES;
 }
 
 #pragma mark - Tabs
@@ -481,7 +470,7 @@
 - (void)openMap
 {
     self.contentView.transform = CGAffineTransformIdentity;
-    self.contentView.center = CGPointMake(self.contentView.center.x, self.initialContentCenterY + self.contentView.bounds.size.height - TAB_BAR_HEIGHT);
+    self.contentView.frame = CGRectMake(0, self.view.bounds.size.height - TAB_BAR_HEIGHT, self.contentView.bounds.size.width, self.contentView.bounds.size.height);
     self.scrollView.alpha = 0;
     self.gripper.alpha = 0;
     self.openMapButton.alpha = 0;
@@ -499,7 +488,7 @@
 
 - (void)closeMap
 {
-    self.contentView.center = CGPointMake(self.contentView.center.x, self.initialContentCenterY);
+    self.contentView.frame = CGRectMake(0, CONTENT_ORIGIN, self.contentView.bounds.size.width, self.contentView.bounds.size.height);
     self.scrollView.alpha = 1;
     self.gripper.alpha = 1;
     self.openMapButton.alpha = 1.0;
@@ -567,20 +556,16 @@
         CGFloat slideFactor = gripTranslation / (self.contentView.bounds.size.height - TAB_BAR_HEIGHT);
         BOOL opening = [recognizer.view isEqual:self.gripper] || [recognizer.view isEqual:self.openMapButton];
         
-        if (self.mapEnabled) {
-            if (terminalVelocity > 250 || (opening && slideFactor >= 0.25)) {
-                [self openMapWithVelocity:terminalVelocity];
-            } else if (terminalVelocity < -40 || (!opening && slideFactor < 0.25)) {
+        if (terminalVelocity > 250 || (opening && slideFactor >= 0.25)) {
+            [self openMapWithVelocity:terminalVelocity];
+        } else if (terminalVelocity < -40 || (!opening && slideFactor < 0.25)) {
+            [self closeMapWithVelocity:terminalVelocity];
+        } else {
+            if (opening) {
                 [self closeMapWithVelocity:terminalVelocity];
             } else {
-                if (opening) {
-                    [self closeMapWithVelocity:terminalVelocity];
-                } else {
-                    [self closeMapWithVelocity:terminalVelocity];
-                }
+                [self closeMapWithVelocity:terminalVelocity];
             }
-        } else {
-            [self closeMapWithVelocity:terminalVelocity];
         }
     }
 }
@@ -623,301 +608,6 @@
             }];
         }
     }];
-}
-
-# pragma mark - Commerce
-
-- (void)showMapFeatures
-{
-    self.mapFeaturesView = [[UIScrollView alloc] initWithFrame:self.openMapButton.bounds];
-    self.mapFeaturesView.pagingEnabled = YES;
-    self.mapFeaturesView.contentSize = CGSizeMake(self.mapFeaturesView.bounds.size.width * 4, self.mapFeaturesView.bounds.size.height);
-    self.mapFeaturesView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.6];
-    self.mapFeaturesView.tag = 5674;
-    [self.openMapButton addSubview:self.mapFeaturesView];
-    
-    // page 1
-    UIButton *activateMapButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [activateMapButton setTitle:NSLocalizedString(@"ENABLE_MAP_WITH_ADS", nil) forState:UIControlStateNormal];
-    activateMapButton.frame = CGRectMake(0.0, self.mapFeaturesView.bounds.size.height - 45.0, self.mapFeaturesView.bounds.size.width, 45.0);
-    activateMapButton.titleLabel.font = [UIFont fontWithName:@"AvenirNext-Medium" size:19.0];
-    activateMapButton.layer.backgroundColor = [UIColor colorWithWhite:0 alpha:0.25].CGColor;
-    [activateMapButton addTarget:self action:@selector(enableMapWithAdsButtonTapped) forControlEvents:UIControlEventTouchUpInside];
-    [self.mapFeaturesView addSubview:activateMapButton];
-    
-    UILabel *pageOneTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, 0, self.mapFeaturesView.bounds.size.width - 40.0, self.mapFeaturesView.bounds.size.height - 45.0)];
-    pageOneTitleLabel.font = [UIFont fontWithName:@"AvenirNext-Medium" size:19.0];
-    pageOneTitleLabel.textColor = [UIColor whiteColor];
-    pageOneTitleLabel.text = NSLocalizedString(@"THE_MAP", nil);
-    [self.mapFeaturesView addSubview:pageOneTitleLabel];
-    
-    UILabel *pageOneSlideLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.mapFeaturesView.bounds.size.width - 20.0, self.mapFeaturesView.bounds.size.height - 45.0)];
-    pageOneSlideLabel.font = [UIFont fontWithName:@"AvenirNext-Regular" size:19.0];
-    pageOneSlideLabel.textColor = [UIColor colorWithWhite:0.6 alpha:1];
-    pageOneSlideLabel.text = NSLocalizedString(@"SLIDE_TO_LEARN_MORE_MAP", nil);
-    pageOneSlideLabel.textAlignment = NSTextAlignmentRight;
-    [self.mapFeaturesView addSubview:pageOneSlideLabel];
-    
-    UILabel *pageOneSlideLabelGradient = [[UILabel alloc] initWithFrame:pageOneSlideLabel.frame];
-    pageOneSlideLabelGradient.font = pageOneSlideLabel.font;
-    pageOneSlideLabelGradient.textColor = [UIColor whiteColor];
-    pageOneSlideLabelGradient.text = pageOneSlideLabel.text;
-    pageOneSlideLabelGradient.textAlignment = pageOneSlideLabel.textAlignment;
-    [self.mapFeaturesView addSubview:pageOneSlideLabelGradient];
-    
-    CGFloat gradientSize = 0.2;
-    
-    NSArray *startLocations = @[@1.0, [NSNumber numberWithFloat:1.0 + (gradientSize / 2)], [NSNumber numberWithFloat:1.0 + gradientSize]];
-    NSArray *endLocations = @[@0.0, [NSNumber numberWithFloat:gradientSize / 2], [NSNumber numberWithFloat:gradientSize]];
-    
-    CAGradientLayer *gradientMask = [CAGradientLayer layer];
-    gradientMask.frame = pageOneSlideLabel.bounds;
-    gradientMask.colors = @[(id)[UIColor clearColor].CGColor, (id)[UIColor whiteColor].CGColor, (id)[UIColor clearColor].CGColor];
-    gradientMask.locations = startLocations;
-    gradientMask.startPoint = CGPointMake(0 - (gradientSize * 2), .5);
-    gradientMask.endPoint = CGPointMake(1 + gradientSize, .5);
-    
-    pageOneSlideLabelGradient.layer.mask = gradientMask;
-    
-    CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"locations"];
-    animation.fromValue = startLocations;
-    animation.toValue = endLocations;
-    animation.repeatCount = 3.4e38f;
-    animation.duration  = 3.0f;
-    
-    [gradientMask addAnimation:animation forKey:@"animateGradient"];
-    
-    // page 2
-    CGFloat pageTwoOrigin = self.mapFeaturesView.bounds.size.width;
-    
-    UILabel *pageTwoLabel = [[UILabel alloc] initWithFrame:CGRectMake(pageTwoOrigin + 85.0, 0, self.mapFeaturesView.bounds.size.width - 105.0, self.mapFeaturesView.bounds.size.height)];
-    pageTwoLabel.font = [UIFont fontWithName:@"AvenirNext-Regular" size:16.0];
-    pageTwoLabel.textColor = [UIColor whiteColor];
-    pageTwoLabel.text = NSLocalizedString(@"MAP_FEATURE_STOPS", nil);
-    pageTwoLabel.numberOfLines = 0;
-    [self.mapFeaturesView addSubview:pageTwoLabel];
-    
-    UIImageView *pageTwoImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"feature-stops"]];
-    pageTwoImage.frame = CGRectOffset(pageTwoImage.frame, pageTwoOrigin + 20.0, floorf((self.mapFeaturesView.bounds.size.height - pageTwoImage.bounds.size.height) / 2));
-    [self.mapFeaturesView addSubview:pageTwoImage];
-    
-    // page 3
-    CGFloat pageThreeOrigin = self.mapFeaturesView.bounds.size.width * 2;
-    
-    UILabel *pageThreeLabel = [[UILabel alloc] initWithFrame:CGRectMake(pageThreeOrigin + 85.0, 0, self.mapFeaturesView.bounds.size.width - 105.0, self.mapFeaturesView.bounds.size.height)];
-    pageThreeLabel.font = [UIFont fontWithName:@"AvenirNext-Regular" size:16.0];
-    pageThreeLabel.textColor = [UIColor whiteColor];
-    pageThreeLabel.text = NSLocalizedString(@"MAP_FEATURE_BIP", nil);
-    pageThreeLabel.numberOfLines = 0;
-    [self.mapFeaturesView addSubview:pageThreeLabel];
-    
-    UIImageView *pageThreeImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"feature-bip"]];
-    pageThreeImage.frame = CGRectOffset(pageThreeImage.frame, pageThreeOrigin + 20.0, floorf((self.mapFeaturesView.bounds.size.height - pageThreeImage.bounds.size.height) / 2));
-    [self.mapFeaturesView addSubview:pageThreeImage];
-    
-    // page 4
-    CGFloat pageFourOrigin = self.mapFeaturesView.bounds.size.width * 3;
-    
-    UILabel *pageFourTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(pageFourOrigin, 0, self.mapFeaturesView.bounds.size.width, self.mapFeaturesView.bounds.size.height - 45.0)];
-    pageFourTitleLabel.font = [UIFont fontWithName:@"AvenirNext-Medium" size:19.0];
-    pageFourTitleLabel.textColor = [UIColor whiteColor];
-    pageFourTitleLabel.text = NSLocalizedString(@"MAP_FEATURES_END", nil);
-    pageFourTitleLabel.textAlignment = NSTextAlignmentCenter;
-    [self.mapFeaturesView addSubview:pageFourTitleLabel];
-    
-    UIButton *finalActivateMapButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [finalActivateMapButton setTitle:[activateMapButton titleForState:UIControlStateNormal] forState:UIControlStateNormal];
-    finalActivateMapButton.frame = CGRectOffset(activateMapButton.frame, pageFourOrigin, 0.0);
-    finalActivateMapButton.titleLabel.font = activateMapButton.titleLabel.font;
-    finalActivateMapButton.layer.backgroundColor = activateMapButton.layer.backgroundColor;
-    [finalActivateMapButton addTarget:self action:@selector(enableMapWithAdsButtonTapped) forControlEvents:UIControlEventTouchUpInside];
-    [self.mapFeaturesView addSubview:finalActivateMapButton];
-}
-
-- (void)hideMapFeatures
-{
-    UIScrollView *mapFeatures = (UIScrollView *)[self.view viewWithTag:5674];
-    
-    [UIView animateWithDuration:0.25 delay:0 options:0 animations:^{
-        mapFeatures.alpha = 0;
-    } completion:^(BOOL finished) {
-        [mapFeatures removeFromSuperview];
-    }];
-}
-
-- (void)purchaseMap
-{
-    Mixpanel *mixpanel = [Mixpanel sharedInstance];
-    [mixpanel track:@"Triggered Map Purchase"];
-    
-    NSString *mapIdentifier = @"CF01";
-    
-    OLGhostAlertView *wait = [[OLGhostAlertView alloc] initWithTitle:NSLocalizedString(@"STORE_WAIT_TITLE", nil) message:NSLocalizedString(@"STORE_WAIT_MESSAGE", nil) timeout:100.0 dismissible:NO];
-    wait.position = OLGhostAlertViewPositionCenter;
-    [wait show];
-    
-    [[OLCashier defaultCashier] buyProduct:mapIdentifier handler:^(NSError *error, NSArray *transactions, NSDictionary *userInfo) {
-        SKPaymentTransaction *transaction = transactions.firstObject;
-        [wait hide];
-        
-        if (error) {
-            UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"STORE_ERROR_TITLE", nil) message:[NSString stringWithFormat:@"%@. %@", error.localizedDescription, NSLocalizedString(@"ERROR_MESSAGE_TRY_AGAIN", nil)] delegate:self cancelButtonTitle:NSLocalizedString(@"ERROR_DISMISS", nil) otherButtonTitles:nil];
-            [errorAlert show];
-            
-            [mixpanel track:@"Failed to Purchase Map"];
-            return;
-        }
-        
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:mapIdentifier];
-        [transaction finish];
-        
-        self.mapEnabled = [OLCashier hasProduct:@"CF01"];
-        self.mapMode = YES;
-        
-        [self.mapBannerAd removeFromSuperview];
-        
-        OLGhostAlertView *thanks = [[OLGhostAlertView alloc] initWithTitle:NSLocalizedString(@"STORE_THANK_YOU_TITLE", nil) message:NSLocalizedString(@"STORE_THANK_YOU_MESSAGE_MAP", nil)];
-        thanks.position = OLGhostAlertViewPositionCenter;
-        [thanks show];
-        
-        [mixpanel track:@"Purchased Map"];
-        [mixpanel registerSuperProperties:@{@"Has Map": @"Yes"}];
-    }];
-}
-
-- (void)restorePurchases
-{
-    Mixpanel *mixpanel = [Mixpanel sharedInstance];
-    [mixpanel track:@"Triggered Restore Purchases"];
-    
-    OLGhostAlertView *wait = [[OLGhostAlertView alloc] initWithTitle:NSLocalizedString(@"STORE_WAIT_TITLE", nil) message:NSLocalizedString(@"STORE_WAIT_MESSAGE", nil) timeout:100.0 dismissible:NO];
-    wait.position = OLGhostAlertViewPositionCenter;
-    [wait show];
-    
-    [[OLCashier defaultCashier] restoreCompletedTransactions:^(NSError *error, NSArray *transactions, NSDictionary *userInfo) {
-        [wait hide];
-        
-        if (error) {
-            UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"STORE_ERROR_TITLE", nil) message:[NSString stringWithFormat:@"%@. %@", error.localizedDescription, NSLocalizedString(@"ERROR_MESSAGE_TRY_AGAIN", nil)] delegate:self cancelButtonTitle:NSLocalizedString(@"ERROR_DISMISS", nil) otherButtonTitles:nil];
-            [errorAlert show];
-            
-            [mixpanel track:@"Failed to Restore Purchases"];
-            
-            return;
-        }
-        
-        for (SKPaymentTransaction *transaction in transactions) {
-            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:transaction.payment.productIdentifier];
-            [transaction finish];
-        }
-        
-        [mixpanel track:@"Successfully Restored Purchases"];
-    }];
-}
-
-- (void)setMapEnabled:(BOOL)mapEnabled
-{
-    if (!_mapEnabled && mapEnabled) {
-        [self hideMapFeatures];
-        
-        [self.openMapButton removeTarget:self action:@selector(purchaseMap) forControlEvents:UIControlEventTouchUpInside];
-        [self.openMapButton addTarget:self action:@selector(switchToMap) forControlEvents:UIControlEventTouchUpInside];
-    }
-    
-    _mapEnabled = mapEnabled;
-}
-
-#pragma mark - Ads
-
-- (BOOL)shouldDisplayAds
-{
-    return ([[NSUserDefaults standardUserDefaults] boolForKey:@"CFEnableMapWithAds"] && ![OLCashier hasProduct:@"CF01"]);
-}
-
-- (void)enableMapWithAdsButtonTapped
-{
-    UIAlertView *enableMapWithAdsAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"ENABLE_MAP", nil) message:NSLocalizedString(@"ENABLE_MAP_ALERT_MESSAGE", nil) delegate:self cancelButtonTitle:NSLocalizedString(@"CANCEL", nil) otherButtonTitles:NSLocalizedString(@"ENABLE_MAP_ALERT_BUTTON_FREE", nil), NSLocalizedString(@"ENABLE_MAP_ALERT_BUTTON_PAID", nil), NSLocalizedString(@"STORE_RESTORE", nil), nil];
-    enableMapWithAdsAlert.tag = 405;
-    [enableMapWithAdsAlert show];
-}
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    if (alertView.tag == 405) {
-        switch (buttonIndex) {
-            case 1:
-                [self enableMapWithAds];
-                break;
-                
-            case 2:
-                [self purchaseMap];
-                break;
-                
-            case 3:
-                [self restorePurchases];
-                break;
-                
-            default:
-                break;
-        }
-    }
-}
-
-- (void)enableMapWithAds
-{
-    [self loadInterstitialAd];
-    [self loadMapBannerAd];
-    
-    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"CFEnableMapWithAds"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-    
-    self.mapEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"CFEnableMapWithAds"];
-    self.mapMode = YES;
-    
-    Mixpanel *mixpanel = [Mixpanel sharedInstance];
-    [mixpanel track:@"Enabled Map With Ads"];
-    [mixpanel registerSuperProperties:@{@"Has Map": @"Yes"}];
-    [mixpanel registerSuperProperties:@{@"Has Free Map": @"Yes"}];
-}
-
-- (void)loadInterstitialAd
-{
-    GADRequest *request = [GADRequest request];
-    request.testDevices = @[@"61abccb6c029497b02bef4224933c76b", GAD_SIMULATOR_ID];
-    
-    self.interstitialAd = [GADInterstitial new];
-    self.interstitialAd.delegate = self;
-    self.interstitialAd.adUnitID = @"ca-app-pub-6226087428684107/9858178470";
-    [self.interstitialAd loadRequest:request];
-}
-
-- (void)loadMapBannerAd
-{
-    GADRequest *request = [GADRequest request];
-    request.testDevices = @[@"61abccb6c029497b02bef4224933c76b", GAD_SIMULATOR_ID];
-    
-    self.mapBannerAd = [[GADBannerView alloc] initWithAdSize:kGADAdSizeBanner];
-    self.mapBannerAd.adUnitID = @"ca-app-pub-6226087428684107/9439376076";
-    self.mapBannerAd.rootViewController = self;
-    self.mapBannerAd.frame = CGRectMake(0, self.view.bounds.size.height - TAB_BAR_HEIGHT - self.mapBannerAd.bounds.size.height, self.mapBannerAd.bounds.size.width, self.mapBannerAd.bounds.size.height);
-    [self.mapBannerAd loadRequest:request];
-}
-
-- (void)interstitialDidReceiveAd:(GADInterstitial *)interstitial
-{
-    self.interstitialLoaded = YES;
-}
-
-- (void)interstitial:(GADInterstitial *)interstitial didFailToReceiveAdWithError:(GADRequestError *)error
-{
-    self.interstitialLoaded = NO;
-}
-
-- (void)interstitialDidDismissScreen:(GADInterstitial *)interstitial
-{
-    self.interstitialAd = nil;
-    self.interstitialLoaded = NO;
-    [self loadInterstitialAd];
 }
 
 #pragma mark - Push stop results and routes
@@ -989,30 +679,30 @@
 
 #pragma mark - Search
 
-- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar
+- (void)searchFieldDidBeginEditing:(CFSearchField *)searchField
 {
     [self.smartSearchList show];
 }
 
-- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
+- (void)searchField:(CFSearchField *)searchField textDidChange:(NSString *)searchText
 {
     [self.smartSearchList processSearchString:searchText];
 }
 
-- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
+- (void)searchFieldSearchButtonClicked:(CFSearchField *)searchField
 {
-    [searchBar resignFirstResponder];
+    [searchField resignFirstResponder];
     
     if (self.smartSearchList.suggesting) return;
     
     [self.smartSearchList hide];
-    [self.mapController performSearchWithString:searchBar.text];
+    [self.mapController performSearchWithString:searchField.text];
     
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     [mixpanel track:@"Searched in Map" properties:nil];
 }
 
-- (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar
+- (void)searchFieldDidEndEditing:(CFSearchField *)searchField
 {
     if (!self.smartSearchList.suggesting) {
         [self.smartSearchList hide];
@@ -1062,6 +752,169 @@
         Mixpanel *mixpanel = [Mixpanel sharedInstance];
         [mixpanel track:@"Cleared History" properties:nil];
     }
+}
+
+# pragma mark - Commerce
+
+- (void)purchaseMap
+{
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    [mixpanel track:@"Triggered Map Purchase"];
+    
+    NSString *mapIdentifier = @"CF01";
+    
+    OLGhostAlertView *wait = [[OLGhostAlertView alloc] initWithTitle:NSLocalizedString(@"STORE_WAIT_TITLE", nil) message:NSLocalizedString(@"STORE_WAIT_MESSAGE", nil) timeout:100.0 dismissible:NO];
+    wait.position = OLGhostAlertViewPositionCenter;
+    [wait show];
+    
+    [[OLCashier defaultCashier] buyProduct:mapIdentifier handler:^(NSError *error, NSArray *transactions, NSDictionary *userInfo) {
+        SKPaymentTransaction *transaction = transactions.firstObject;
+        [wait hide];
+        
+        if (error) {
+            UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"STORE_ERROR_TITLE", nil) message:[NSString stringWithFormat:@"%@. %@", error.localizedDescription, NSLocalizedString(@"ERROR_MESSAGE_TRY_AGAIN", nil)] delegate:self cancelButtonTitle:NSLocalizedString(@"ERROR_DISMISS", nil) otherButtonTitles:nil];
+            [errorAlert show];
+            
+            [mixpanel track:@"Failed to Purchase Map"];
+            return;
+        }
+        
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:mapIdentifier];
+        [transaction finish];
+        
+        self.mapMode = YES;
+        
+        [self.mapBannerAd removeFromSuperview];
+        
+        OLGhostAlertView *thanks = [[OLGhostAlertView alloc] initWithTitle:NSLocalizedString(@"STORE_THANK_YOU_TITLE", nil) message:NSLocalizedString(@"STORE_THANK_YOU_MESSAGE_MAP", nil)];
+        thanks.position = OLGhostAlertViewPositionCenter;
+        [thanks show];
+        
+        [mixpanel track:@"Purchased Map"];
+        [mixpanel registerSuperProperties:@{@"Has Map": @"Yes"}];
+    }];
+}
+
+- (void)restorePurchases
+{
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    [mixpanel track:@"Triggered Restore Purchases"];
+    
+    OLGhostAlertView *wait = [[OLGhostAlertView alloc] initWithTitle:NSLocalizedString(@"STORE_WAIT_TITLE", nil) message:NSLocalizedString(@"STORE_WAIT_MESSAGE", nil) timeout:100.0 dismissible:NO];
+    wait.position = OLGhostAlertViewPositionCenter;
+    [wait show];
+    
+    [[OLCashier defaultCashier] restoreCompletedTransactions:^(NSError *error, NSArray *transactions, NSDictionary *userInfo) {
+        [wait hide];
+        
+        if (error) {
+            UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"STORE_ERROR_TITLE", nil) message:[NSString stringWithFormat:@"%@. %@", error.localizedDescription, NSLocalizedString(@"ERROR_MESSAGE_TRY_AGAIN", nil)] delegate:self cancelButtonTitle:NSLocalizedString(@"ERROR_DISMISS", nil) otherButtonTitles:nil];
+            [errorAlert show];
+            
+            [mixpanel track:@"Failed to Restore Purchases"];
+            
+            return;
+        }
+        
+        for (SKPaymentTransaction *transaction in transactions) {
+            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:transaction.payment.productIdentifier];
+            [transaction finish];
+        }
+        
+        [mixpanel track:@"Successfully Restored Purchases"];
+    }];
+}
+
+#pragma mark - Ads
+
+- (BOOL)shouldDisplayAds
+{
+    return ([[NSUserDefaults standardUserDefaults] boolForKey:@"CFEnableMapWithAds"] && ![OLCashier hasProduct:@"CF01"]);
+}
+
+- (void)enableMapWithAdsButtonTapped
+{
+    UIAlertView *enableMapWithAdsAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"ENABLE_MAP", nil) message:NSLocalizedString(@"ENABLE_MAP_ALERT_MESSAGE", nil) delegate:self cancelButtonTitle:NSLocalizedString(@"CANCEL", nil) otherButtonTitles:NSLocalizedString(@"ENABLE_MAP_ALERT_BUTTON_FREE", nil), NSLocalizedString(@"ENABLE_MAP_ALERT_BUTTON_PAID", nil), NSLocalizedString(@"STORE_RESTORE", nil), nil];
+    enableMapWithAdsAlert.tag = 405;
+    [enableMapWithAdsAlert show];
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (alertView.tag == 405) {
+        switch (buttonIndex) {
+            case 1:
+                [self enableMapWithAds];
+                break;
+                
+            case 2:
+                [self purchaseMap];
+                break;
+                
+            case 3:
+                [self restorePurchases];
+                break;
+                
+            default:
+                break;
+        }
+    }
+}
+
+- (void)enableMapWithAds
+{
+    [self loadInterstitialAd];
+    [self loadMapBannerAd];
+    
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"CFEnableMapWithAds"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
+    self.mapMode = YES;
+    
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    [mixpanel track:@"Enabled Map With Ads"];
+    [mixpanel registerSuperProperties:@{@"Has Map": @"Yes"}];
+    [mixpanel registerSuperProperties:@{@"Has Free Map": @"Yes"}];
+}
+
+- (void)loadInterstitialAd
+{
+    GADRequest *request = [GADRequest request];
+    request.testDevices = @[@"61abccb6c029497b02bef4224933c76b", GAD_SIMULATOR_ID];
+    
+    self.interstitialAd = [GADInterstitial new];
+    self.interstitialAd.delegate = self;
+    self.interstitialAd.adUnitID = @"ca-app-pub-6226087428684107/9858178470";
+    [self.interstitialAd loadRequest:request];
+}
+
+- (void)loadMapBannerAd
+{
+    GADRequest *request = [GADRequest request];
+    request.testDevices = @[@"61abccb6c029497b02bef4224933c76b", GAD_SIMULATOR_ID];
+    
+    self.mapBannerAd = [[GADBannerView alloc] initWithAdSize:kGADAdSizeBanner];
+    self.mapBannerAd.adUnitID = @"ca-app-pub-6226087428684107/9439376076";
+    self.mapBannerAd.rootViewController = self;
+    self.mapBannerAd.frame = CGRectMake(0, self.view.bounds.size.height - TAB_BAR_HEIGHT - self.mapBannerAd.bounds.size.height, self.mapBannerAd.bounds.size.width, self.mapBannerAd.bounds.size.height);
+    [self.mapBannerAd loadRequest:request];
+}
+
+- (void)interstitialDidReceiveAd:(GADInterstitial *)interstitial
+{
+    self.interstitialLoaded = YES;
+}
+
+- (void)interstitial:(GADInterstitial *)interstitial didFailToReceiveAdWithError:(GADRequestError *)error
+{
+    self.interstitialLoaded = NO;
+}
+
+- (void)interstitialDidDismissScreen:(GADInterstitial *)interstitial
+{
+    self.interstitialAd = nil;
+    self.interstitialLoaded = NO;
+    [self loadInterstitialAd];
 }
 
 @end
