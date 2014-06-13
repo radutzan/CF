@@ -74,6 +74,8 @@
     return self;
 }
 
+#pragma mark - View handling
+
 - (void)setContentInset:(UIEdgeInsets)contentInset
 {
     _contentInset = contentInset;
@@ -101,6 +103,45 @@
         self.hidden = YES;
     }];
 }
+
+- (void)clearServiceSuggestions
+{
+    self.suggesting = NO;
+    NSLog(@"clearing service suggestions");
+    self.scrollView.contentSize = CGSizeZero;
+    
+    [UIView animateWithDuration:0.1 animations:^{
+        self.serviceSuggestionView.alpha = 0;
+    } completion:^(BOOL finished) {
+        self.serviceSuggestionView.hidden = YES;
+        self.serviceSuggestionView.alpha = 1;
+    }];
+}
+
+- (void)clearStopSuggestions
+{
+    self.suggesting = NO;
+    NSLog(@"clearing stop suggestions");
+    self.scrollView.contentSize = CGSizeZero;
+    
+    [UIView animateWithDuration:0.1 animations:^{
+        self.stopSuggestionView.alpha = 0;
+    } completion:^(BOOL finished) {
+        self.stopSuggestionView.hidden = YES;
+        self.stopSuggestionView.alpha = 1;
+    }];
+}
+
+- (void)showServiceSuggestionWithService:(NSString *)service outwardString:(NSString *)outwardString inwardString:(NSString *)inwardString
+{
+    NSLog(@"showing service suggestion for service: %@", service);
+    self.serviceSuggestionView.service = service;
+    self.serviceSuggestionView.outwardDirectionString = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"TO_DIRECTION", nil), [outwardString capitalizedString]];
+    self.serviceSuggestionView.inwardDirectionString = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"TO_DIRECTION", nil), [inwardString capitalizedString]];
+    self.serviceSuggestionView.hidden = NO;
+}
+
+#pragma mark - Search string processing
 
 - (void)processSearchString:(NSString *)searchString
 {
@@ -215,42 +256,7 @@
     }];
 }
 
-- (void)clearServiceSuggestions
-{
-    self.suggesting = NO;
-    NSLog(@"clearing service suggestions");
-    self.scrollView.contentSize = CGSizeZero;
-    
-    [UIView animateWithDuration:0.1 animations:^{
-        self.serviceSuggestionView.alpha = 0;
-    } completion:^(BOOL finished) {
-        self.serviceSuggestionView.hidden = YES;
-        self.serviceSuggestionView.alpha = 1;
-    }];
-}
-
-- (void)clearStopSuggestions
-{
-    self.suggesting = NO;
-    NSLog(@"clearing stop suggestions");
-    self.scrollView.contentSize = CGSizeZero;
-    
-    [UIView animateWithDuration:0.1 animations:^{
-        self.stopSuggestionView.alpha = 0;
-    } completion:^(BOOL finished) {
-        self.stopSuggestionView.hidden = YES;
-        self.stopSuggestionView.alpha = 1;
-    }];
-}
-
-- (void)showServiceSuggestionWithService:(NSString *)service outwardString:(NSString *)outwardString inwardString:(NSString *)inwardString
-{
-    NSLog(@"showing service suggestion for service: %@", service);
-    self.serviceSuggestionView.service = service;
-    self.serviceSuggestionView.outwardDirectionString = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"TO_DIRECTION", nil), [outwardString capitalizedString]];
-    self.serviceSuggestionView.inwardDirectionString = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"TO_DIRECTION", nil), [inwardString capitalizedString]];
-    self.serviceSuggestionView.hidden = NO;
-}
+#pragma mark - Delegates, etc
 
 - (void)serviceSuggestionViewDidSelectButtonAtIndex:(NSUInteger)index service:(NSString *)service
 {
