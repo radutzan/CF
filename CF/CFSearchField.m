@@ -31,6 +31,8 @@
         _textField.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
         _textField.returnKeyType = UIReturnKeySearch;
         _textField.clearButtonMode = UITextFieldViewModeWhileEditing;
+        _textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+        _textField.autocorrectionType = UITextAutocorrectionTypeNo;
         _textField.delegate = self;
         [self addSubview:_textField];
         
@@ -56,6 +58,11 @@
     NSString *searchString = [textField.text stringByReplacingCharactersInRange:range withString:string];
     self.text = searchString;
     [self.delegate searchField:self textDidChange:searchString];
+    return YES;
+}
+- (BOOL)textFieldShouldClear:(UITextField *)textField
+{
+    [self.delegate searchField:self textDidChange:@""];
     return YES;
 }
 

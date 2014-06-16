@@ -155,8 +155,13 @@
 		7CD35CA8194955EF007C36CA /* CFSearchField.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CD35CA7194955EF007C36CA /* CFSearchField.m */; };
 		7CD35CAA19495A44007C36CA /* searchfield-glyph@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CD35CA919495A44007C36CA /* searchfield-glyph@2x.png */; };
 		7CD35CAB19495A44007C36CA /* searchfield-glyph@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CD35CA919495A44007C36CA /* searchfield-glyph@2x.png */; };
+		7CD35CAC194AE551007C36CA /* CFSearchField.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CD35CA7194955EF007C36CA /* CFSearchField.m */; };
+		7CD35CAD194AE580007C36CA /* CFStopSuggestionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C915926193AA4AE004CFCFA /* CFStopSuggestionView.m */; };
+		7CD35CAE194AE58D007C36CA /* CFStopServicesButtonArrayView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CB337FD192AB27500234792 /* CFStopServicesButtonArrayView.m */; };
 		7CE0D9D8189DB34F00D9782E /* OLShapeTintedButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CE0D9D7189DB34F00D9782E /* OLShapeTintedButton.m */; };
 		7CE0D9DA189DD2D800D9782E /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CE0D9D9189DD2D800D9782E /* Social.framework */; };
+		7CEADD6B194C1E9500428ADE /* CFSearchSuggestionsCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CEADD6A194C1E9500428ADE /* CFSearchSuggestionsCard.m */; };
+		7CEADD6C194C200A00428ADE /* CFSearchSuggestionsCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CEADD6A194C1E9500428ADE /* CFSearchSuggestionsCard.m */; };
 		7CF7EE4F1852D790009B3F46 /* CFBipSpot.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CF7EE4E1852D790009B3F46 /* CFBipSpot.m */; };
 		7CFF7E4518381645006230CE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CFF7E4418381645006230CE /* Foundation.framework */; };
 		7CFF7E4718381645006230CE /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CFF7E4618381645006230CE /* CoreGraphics.framework */; };
@@ -322,6 +327,8 @@
 		7CE0D9D6189DB34F00D9782E /* OLShapeTintedButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLShapeTintedButton.h; sourceTree = "<group>"; };
 		7CE0D9D7189DB34F00D9782E /* OLShapeTintedButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLShapeTintedButton.m; sourceTree = "<group>"; };
 		7CE0D9D9189DD2D800D9782E /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
+		7CEADD69194C1E9500428ADE /* CFSearchSuggestionsCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFSearchSuggestionsCard.h; sourceTree = "<group>"; };
+		7CEADD6A194C1E9500428ADE /* CFSearchSuggestionsCard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFSearchSuggestionsCard.m; sourceTree = "<group>"; };
 		7CF7EE4D1852D790009B3F46 /* CFBipSpot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFBipSpot.h; sourceTree = "<group>"; };
 		7CF7EE4E1852D790009B3F46 /* CFBipSpot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFBipSpot.m; sourceTree = "<group>"; };
 		7CFF7E4118381645006230CE /* Cuánto Falta.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Cuánto Falta.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -454,6 +461,8 @@
 		7C062F341933BC9C00342E4A /* Smart Search List */ = {
 			isa = PBXGroup;
 			children = (
+				7CEADD69194C1E9500428ADE /* CFSearchSuggestionsCard.h */,
+				7CEADD6A194C1E9500428ADE /* CFSearchSuggestionsCard.m */,
 				7C062F301933BC9200342E4A /* CFServiceSuggestionView.h */,
 				7C062F311933BC9200342E4A /* CFServiceSuggestionView.m */,
 				7C915925193AA4AE004CFCFA /* CFStopSuggestionView.h */,
@@ -1015,12 +1024,14 @@
 				7C14644A193288C0009B0C94 /* CFWhatsNewViewController.m in Sources */,
 				7C2EECCD188345F500AE78C2 /* OLPaymentQueueDispatchObserver.m in Sources */,
 				7C2EECCE188345F500AE78C2 /* CFEnterStopCodeView.m in Sources */,
+				7CD35CAC194AE551007C36CA /* CFSearchField.m in Sources */,
 				7C2EECCF188345F500AE78C2 /* main.m in Sources */,
 				7CC7EC4A1929B79C002160E5 /* HOFunctions.m in Sources */,
 				7C2EECD0188345F500AE78C2 /* OLProductRequestDelegate.m in Sources */,
 				7C2EECD1188345F500AE78C2 /* NSString+Digest.m in Sources */,
 				7C2EECD2188345F500AE78C2 /* CFAppDelegate.m in Sources */,
 				7C2EECD3188345F500AE78C2 /* OLTextField.m in Sources */,
+				7CD35CAD194AE580007C36CA /* CFStopSuggestionView.m in Sources */,
 				7C2EECD4188345F500AE78C2 /* CFStopResultsViewController.m in Sources */,
 				7C2EECD5188345F500AE78C2 /* CFClipView.m in Sources */,
 				7C062F331933BC9200342E4A /* CFServiceSuggestionView.m in Sources */,
@@ -1030,11 +1041,13 @@
 				7C9BD16B1926B1FF003E9F8E /* OLShapeTintedButton.m in Sources */,
 				7C2EECD9188345F500AE78C2 /* CFColorBadgeView.m in Sources */,
 				7C2EECDA188345F500AE78C2 /* CFStopCell.m in Sources */,
+				7CEADD6C194C200A00428ADE /* CFSearchSuggestionsCard.m in Sources */,
 				7CCA746A19325C9D00ADB397 /* CFForwardingTouchScrollView.m in Sources */,
 				7C062F2F1933B07600342E4A /* CFSmartSearchList.m in Sources */,
 				7CC7EC4C1929BBA2002160E5 /* CFServiceRouteViewController.m in Sources */,
 				7C2EECDB188345F500AE78C2 /* CFMapController.m in Sources */,
 				7C2EECDC188345F500AE78C2 /* CFSapoClient.m in Sources */,
+				7CD35CAE194AE58D007C36CA /* CFStopServicesButtonArrayView.m in Sources */,
 				7C2EECDD188345F500AE78C2 /* CFResultCell.m in Sources */,
 				7C2EECDE188345F500AE78C2 /* CFHistoryViewController.m in Sources */,
 				7C2EECDF188345F500AE78C2 /* CFFavoriteCell.m in Sources */,
@@ -1082,6 +1095,7 @@
 				7C062F2E1933B07600342E4A /* CFSmartSearchList.m in Sources */,
 				7C10B96F183ADD200086B650 /* CFFavoritesViewController.m in Sources */,
 				7CFF7E7818381D6E006230CE /* CFMainViewController.m in Sources */,
+				7CEADD6B194C1E9500428ADE /* CFSearchSuggestionsCard.m in Sources */,
 				7CE0D9D8189DB34F00D9782E /* OLShapeTintedButton.m in Sources */,
 				7C6CE7CF187751FB00DDEF54 /* CFColorBadgeView.m in Sources */,
 				7CB337FE192AB27500234792 /* CFStopServicesButtonArrayView.m in Sources */,

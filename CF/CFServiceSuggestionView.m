@@ -27,8 +27,10 @@
         _serviceLabel.textColor = [UIColor colorWithWhite:0 alpha:.8];
         [self addSubview:_serviceLabel];
         
+        CGFloat buttonWidth = floorf((self.frame.size.width - _serviceLabel.bounds.size.width - _serviceLabel.frame.origin.x) / 2);
+        
         _outwardButton = [UIButton buttonWithType:UIButtonTypeSystem];
-        _outwardButton.frame = CGRectMake(_serviceLabel.frame.origin.x + _serviceLabel.bounds.size.width, 0, 90.0, frame.size.height);
+        _outwardButton.frame = CGRectMake(_serviceLabel.frame.origin.x + _serviceLabel.bounds.size.width, 0, buttonWidth, frame.size.height);
         _outwardButton.titleLabel.font = [UIFont fontWithName:@"AvenirNextCondensed-Medium" size:14.0];
         _outwardButton.titleLabel.numberOfLines = 2;
         _outwardButton.titleEdgeInsets = UIEdgeInsetsMake(0, 10.0, 0, 10.0);

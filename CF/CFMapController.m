@@ -260,7 +260,7 @@ static MKMapRect santiagoBounds;
     self.mapView.region = region;
     
     self.defaultCenterCoordinate = currentLocation.coordinate;
-    [self.delegate mapControllerDidUpdateLocation];
+    if ([self.delegate respondsToSelector:@selector(mapControllerDidUpdateLocation)]) [self.delegate mapControllerDidUpdateLocation];
     
     [manager stopUpdatingLocation];
 }
@@ -290,7 +290,7 @@ static MKMapRect santiagoBounds;
 - (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation
 {
     self.defaultCenterCoordinate = self.mapView.userLocation.coordinate;
-    [self.delegate mapControllerDidUpdateLocation];
+    if ([self.delegate respondsToSelector:@selector(mapControllerDidUpdateLocation)]) [self.delegate mapControllerDidUpdateLocation];
 }
 
 - (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated

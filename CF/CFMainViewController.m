@@ -28,9 +28,9 @@
 #import "GADInterstitial.h"
 #import "GADBannerView.h"
 
-#define TAB_BAR_HEIGHT 44.0
+#define TAB_BAR_HEIGHT 50.0
 #define TAB_BUTTON_WIDTH 75.0
-#define CONTENT_ORIGIN 160.0
+#define CONTENT_ORIGIN 180.0
 
 @interface CFMainViewController () <UIScrollViewDelegate, CFSearchFieldDelegate, CFStopTableViewDelegate, CFMapControllerDelegate, CFSmartSearchListDelegate, UIActionSheetDelegate, UIAlertViewDelegate, GADInterstitialDelegate>
 
@@ -358,12 +358,22 @@
         thisTabButton.frame = CGRectMake(10.0 + tabButtonWidth * [tabs indexOfObject:tab], 0, tabButtonWidth, TAB_BAR_HEIGHT);
         [thisTabButton setImage:tab[@"button"] forState:UIControlStateNormal];
         [thisTabButton setImage:tab[@"button-selected"] forState:UIControlStateSelected];
+        [thisTabButton addTarget:self action:@selector(tabButtonPressed:) forControlEvents:UIControlEventTouchDown];
         [thisTabButton addTarget:self action:@selector(tabButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self.tabBar addSubview:thisTabButton];
     }
     
     UILongPressGestureRecognizer *clearHistory = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressRecognized:)];
     [[self.tabBar.subviews objectAtIndex:1] addGestureRecognizer:clearHistory];
+}
+
+- (void)tabButtonPressed:(UIButton *)button
+{
+    [self selectTabButton:button];
+    
+    NSUInteger index = [[self.tabBar subviews] indexOfObject:button];
+    
+    [self switchToTab:index];
 }
 
 - (void)tabButtonTapped:(UIButton *)button
@@ -470,6 +480,11 @@
 {
     // opening refers to the drawer, not the map
     BOOL opening = !([recognizer.view isEqual:self.gripper] || [recognizer.view isEqual:self.openMapButton]);
+    
+    if (opening && !self.mapMode) {
+        return;
+    }
+    
     CGFloat draggableHeight = self.drawer.bounds.size.height - TAB_BAR_HEIGHT;
     CGFloat moveDiff = [recognizer translationInView:self.drawer].y;
     
@@ -489,13 +504,13 @@
         
         // alphaFactor provides a normalized factor for fading drawer contents from 0 to 1 while opening and 1 to 0 while closing
         CGFloat alphaFactor = (opening) ? fabs(dragFactor) : 1.0 - fabs(dragFactor);
-//        NSLog(@"%f, drag: %f, alpha: %f", moveDiff, dragFactor, alphaFactor);
+        NSLog(@"%f, drag: %f, alpha: %f", moveDiff, dragFactor, alphaFactor);
         
         if ((!opening && (dragFactor >= 0 && dragFactor <= 1.0)) || (opening && (dragFactor <= 0 && dragFactor >= -1.0))) {
             self.drawer.center = newCenter;
             self.scrollView.alpha = alphaFactor;
             self.gripper.alpha = alphaFactor;
-        } else if (dragFactor < 1.0) {
+        } else if ((opening && dragFactor < 0) || dragFactor < 1.0) {
             CGFloat scaleFactor = 1.0 + fabs((moveDiff + draggableHeight * opening) / draggableHeight) * 0.25;
             self.drawer.transform = CGAffineTransformMakeScale(1.0, scaleFactor);
         }
@@ -504,7 +519,6 @@
         CGFloat terminalVelocity = [recognizer velocityInView:self.view].y;
         
         if (terminalVelocity < -250 || (opening && dragFactor <= -0.25)) {
-            NSLog(@"opening drawer 1");
             [self openDrawerWithVelocity:terminalVelocity];
         } else if (terminalVelocity > 40 || (!opening && dragFactor > 0.25)) {
             [self closeDrawerWithVelocity:terminalVelocity];
@@ -667,7 +681,7 @@
 
 - (void)searchFieldSearchButtonClicked:(CFSearchField *)searchField
 {
-    [searchField resignFirstResponder];
+    [searchField endEditing:YES];
     [self.localNavigationBar.topItem setRightBarButtonItems:self.rightBarButtonItems animated:YES];
     
     if (self.smartSearchList.suggesting) return;
