@@ -14,6 +14,7 @@
 @property (nonatomic, strong) UIImageView *placeholderImageView;
 @property (nonatomic, strong) UILabel *placeholderTitleLabel;
 @property (nonatomic, strong) UILabel *placeholderMessageLabel;
+@property (nonatomic, assign) BOOL placeholderViewWasLaidOut;
 
 @end
 
@@ -41,6 +42,8 @@
         _placeholderMessageLabel.font = [UIFont systemFontOfSize:15.0];
         _placeholderMessageLabel.textColor = [UIColor colorWithWhite:0 alpha:0.4];
         [_placeholderView addSubview:_placeholderMessageLabel];
+        
+        _placeholderViewWasLaidOut = NO;
     }
     return self;
 }
@@ -58,18 +61,22 @@
 {
     [super viewDidAppear:animated];
     
-    self.placeholderView.frame = self.view.bounds;
-    
-    CGFloat verticalMargin = 12.0;
-    CGFloat imageOriginY = floorf((self.view.bounds.size.height - 240.0) / 2);
-    
-    self.placeholderImageView.frame = CGRectOffset(self.placeholderImageView.frame, floorf((self.placeholderView.bounds.size.width - self.placeholderImageView.bounds.size.width) / 2), imageOriginY);
-    self.placeholderTitleLabel.frame = CGRectMake(0, self.placeholderImageView.frame.origin.y + self.placeholderImageView.bounds.size.height + verticalMargin, self.placeholderView.bounds.size.width, 25);
-    self.placeholderMessageLabel.frame = CGRectMake(50, self.placeholderTitleLabel.frame.origin.y + self.placeholderTitleLabel.bounds.size.height + verticalMargin / 2, self.placeholderView.bounds.size.width - 100, 62);
-    
-    if (imageOriginY < 20) {
-        self.placeholderImageView.transform = CGAffineTransformMakeScale(0.8, 0.8);
-        self.placeholderImageView.center = CGPointMake(_placeholderImageView.center.x, _placeholderImageView.center.y + 15.0);
+    if (!self.placeholderViewWasLaidOut) {
+        self.placeholderView.frame = self.view.bounds;
+        
+        CGFloat verticalMargin = 12.0;
+        CGFloat imageOriginY = floorf((self.view.bounds.size.height - 240.0) / 2);
+        
+        self.placeholderImageView.center = CGPointMake(self.placeholderView.bounds.size.width / 2, imageOriginY + self.placeholderImageView.image.size.height / 2);//.frame = CGRectMake(floorf((self.placeholderView.bounds.size.width - self.placeholderImageView.bounds.size.width) / 2), imageOriginY, self.placeholderImageView.bounds.size.width, self.placeholderImageView.bounds.size.height);
+        self.placeholderTitleLabel.frame = CGRectMake(0, self.placeholderImageView.frame.origin.y + self.placeholderImageView.bounds.size.height + verticalMargin, self.placeholderView.bounds.size.width, 25);
+        self.placeholderMessageLabel.frame = CGRectMake(50, self.placeholderTitleLabel.frame.origin.y + self.placeholderTitleLabel.bounds.size.height + verticalMargin / 2, self.placeholderView.bounds.size.width - 100, 62);
+        
+        if (imageOriginY < 20) {
+            self.placeholderImageView.transform = CGAffineTransformMakeScale(0.8, 0.8);
+            self.placeholderImageView.center = CGPointMake(_placeholderImageView.center.x, _placeholderImageView.center.y + 15.0);
+        }
+        
+        self.placeholderViewWasLaidOut = YES;
     }
 }
 

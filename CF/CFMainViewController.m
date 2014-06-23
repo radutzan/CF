@@ -439,8 +439,6 @@
 {
     _mapMode = mapMode;
     
-    CGFloat scrollViewAlpha = 0.0;
-    
     if (mapMode) {
         if (self.scrollView.alpha > 0) {
             [UIView animateWithDuration:0.33 delay:0.0 options:(7 >> 16) animations:^{
@@ -449,7 +447,6 @@
         }
         
         self.openMapButton.hidden = YES;
-        scrollViewAlpha = 0.0;
         
         if (self.shouldDisplayAds) {
             if (self.interstitialLoaded) [self.interstitialAd presentFromRootViewController:self];
@@ -466,7 +463,6 @@
             } completion:nil];
         }
         
-        scrollViewAlpha = 1.0;
         self.openMapButton.hidden = NO;
     }
 }
@@ -550,8 +546,6 @@
     self.openMapButton.hidden = YES;
     
     [self.view endEditing:YES];
-    
-    [self.mapController.mapView setCenterCoordinate:self.mapController.defaultCenterCoordinate];
     
     for (UIButton *b in self.tabBar.subviews) {
         b.selected = NO;
