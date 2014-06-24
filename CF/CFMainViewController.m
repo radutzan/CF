@@ -25,14 +25,13 @@
 
 #import "OLShapeTintedButton.h"
 
-#import "GADInterstitial.h"
 #import "GADBannerView.h"
 
 #define TAB_BAR_HEIGHT 60.0
 #define TAB_BUTTON_WIDTH 75.0
 #define CONTENT_ORIGIN 160.0
 
-@interface CFMainViewController () <UIScrollViewDelegate, UISearchBarDelegate, CFEnterStopCodeViewDelegate, CFStopTableViewDelegate, CFMapControllerDelegate, CFSmartSearchListDelegate, UIActionSheetDelegate, UIAlertViewDelegate, GADInterstitialDelegate>
+@interface CFMainViewController () <UIScrollViewDelegate, UISearchBarDelegate, CFEnterStopCodeViewDelegate, CFStopTableViewDelegate, CFMapControllerDelegate, CFSmartSearchListDelegate, UIActionSheetDelegate, UIAlertViewDelegate>
 
 @property (nonatomic, strong) CFMapController *mapController;
 @property (nonatomic, strong) CFSmartSearchList *smartSearchList;
@@ -66,8 +65,6 @@
 @property (nonatomic, assign) BOOL shouldDisplayAds;
 
 @property (nonatomic, strong) GADBannerView *mapBannerAd;
-@property (nonatomic, strong) GADInterstitial *interstitialAd;
-@property (nonatomic, assign) BOOL interstitialLoaded;
 
 @end
 
@@ -365,8 +362,6 @@
     }
     
     if (self.shouldDisplayAds) {
-        self.interstitialLoaded = NO;
-        [self loadInterstitialAd];
         [self loadMapBannerAd];
     }
 }
@@ -496,7 +491,6 @@
         [self.localNavigationBar pushNavigationItem:navItem animated:YES];
         
         if (self.shouldDisplayAds) {
-            if (self.interstitialLoaded) [self.interstitialAd presentFromRootViewController:self];
             [self.view insertSubview:self.mapBannerAd aboveSubview:self.mapController];
         }
         
@@ -939,7 +933,6 @@
 
 - (void)enableMapWithAds
 {
-    [self loadInterstitialAd];
     [self loadMapBannerAd];
     
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"CFEnableMapWithAds"];
@@ -954,17 +947,6 @@
     [mixpanel registerSuperProperties:@{@"Has Free Map": @"Yes"}];
 }
 
-- (void)loadInterstitialAd
-{
-    GADRequest *request = [GADRequest request];
-    request.testDevices = @[@"61abccb6c029497b02bef4224933c76b", GAD_SIMULATOR_ID];
-    
-    self.interstitialAd = [GADInterstitial new];
-    self.interstitialAd.delegate = self;
-    self.interstitialAd.adUnitID = @"ca-app-pub-6226087428684107/9858178470";
-    [self.interstitialAd loadRequest:request];
-}
-
 - (void)loadMapBannerAd
 {
     GADRequest *request = [GADRequest request];
@@ -975,23 +957,6 @@
     self.mapBannerAd.rootViewController = self;
     self.mapBannerAd.frame = CGRectMake(0, self.view.bounds.size.height - TAB_BAR_HEIGHT - self.mapBannerAd.bounds.size.height, self.mapBannerAd.bounds.size.width, self.mapBannerAd.bounds.size.height);
     [self.mapBannerAd loadRequest:request];
-}
-
-- (void)interstitialDidReceiveAd:(GADInterstitial *)interstitial
-{
-    self.interstitialLoaded = YES;
-}
-
-- (void)interstitial:(GADInterstitial *)interstitial didFailToReceiveAdWithError:(GADRequestError *)error
-{
-    self.interstitialLoaded = NO;
-}
-
-- (void)interstitialDidDismissScreen:(GADInterstitial *)interstitial
-{
-    self.interstitialAd = nil;
-    self.interstitialLoaded = NO;
-    [self loadInterstitialAd];
 }
 
 #pragma mark - Tab switching

@@ -21,7 +21,7 @@
 "MAP_FEATURE_BIP" = "Ve todos los puntos Bip! y salta automáticamente al que esté más cerca tuyo.";
 "MAP_FEATURES_END" = "Te facilita la vida.";
 "ENABLE_MAP" = "Activar Mapa";
-"ENABLE_MAP_ALERT_MESSAGE" = "Al activar el Mapa con publicidad, verás un aviso intersitial cada vez que abras el Mapa, además de un banner bajo el Mapa.\n\nCuánto Falta Pro activa el Mapa y desactiva para siempre toda la publicidad de la app — USD $1.99.";
+"ENABLE_MAP_ALERT_MESSAGE" = "Puedes activar el Mapa con publicidad, y verás un banner bajo el Mapa.\n\nCuánto Falta Pro activa el Mapa y desactiva para siempre toda la publicidad de la app — USD $1.99.";
 "ENABLE_MAP_ALERT_BUTTON_FREE" = "Con Publicidad — Gratis";
 "ENABLE_MAP_ALERT_BUTTON_PAID" = "Comprar Pro — USD $1.99";
 
