@@ -15,7 +15,7 @@
 
 #import "CFMapController.h"
 #import "CFSearchField.h"
-#import "CFSmartSearchList.h"
+#import "CFSearchController.h"
 #import "CFStopResultsViewController.h"
 #import "CFServiceRouteViewController.h"
 #import "CFFavoritesViewController.h"
@@ -32,10 +32,10 @@
 #define TAB_BUTTON_WIDTH 75.0
 #define CONTENT_ORIGIN 180.0
 
-@interface CFMainViewController () <UIScrollViewDelegate, CFSearchFieldDelegate, CFStopTableViewDelegate, CFMapControllerDelegate, CFSmartSearchListDelegate, UIActionSheetDelegate, UIAlertViewDelegate, GADInterstitialDelegate>
+@interface CFMainViewController () <UIScrollViewDelegate, CFStopTableViewDelegate, CFMapControllerDelegate, CFSearchControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate, GADInterstitialDelegate>
 
 @property (nonatomic, strong) CFMapController *mapController;
-@property (nonatomic, strong) CFSmartSearchList *smartSearchList;
+@property (nonatomic, strong) CFSearchController *searchController;
 
 @property (nonatomic, strong) UIView *drawer;
 @property (nonatomic, strong) UIScrollView *scrollView;
@@ -86,10 +86,10 @@
     self.mapController.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     [self.view addSubview:self.mapController];
     
-    self.smartSearchList = [[CFSmartSearchList alloc] initWithFrame:self.view.bounds];
-    self.smartSearchList.delegate = self;
-    self.smartSearchList.contentInset = UIEdgeInsetsMake(64.0, 0, TAB_BAR_HEIGHT, 0);
-    [self.view addSubview:self.smartSearchList];
+    self.searchController = [[CFSearchController alloc] initWithFrame:self.view.bounds];
+    self.searchController.delegate = self;
+    self.searchController.contentInset = UIEdgeInsetsMake(64.0, 0, TAB_BAR_HEIGHT, 0);
+    [self.view addSubview:self.searchController];
     
     self.localNavigationBar = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 64.0)];
     self.localNavigationBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
@@ -98,7 +98,7 @@
     CFSearchField *searchField = [[CFSearchField alloc] initWithFrame:CGRectMake(0, 0, 300, 44.0)];
     searchField.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     searchField.placeholder = NSLocalizedString(@"MAP_SEARCHFIELD_PLACEHOLDER", nil);
-    searchField.delegate = self;
+    self.searchController.searchField = searchField;
     
     UIBarButtonItem *bipButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"button-bip"] style:UIBarButtonItemStylePlain target:self.mapController action:@selector(goToNearestBipSpot)];
     MKUserTrackingBarButtonItem *tracky = [[MKUserTrackingBarButtonItem alloc] initWithMapView:self.mapController.mapView];
@@ -593,6 +593,68 @@
     }];
 }
 
+#pragma mark - Search
+
+- (void)searchControllerDidBeginSearching
+{
+    [self.localNavigationBar.topItem setRightBarButtonItems:@[] animated:YES];
+}
+
+- (void)searchControllerDidEndSearching
+{
+    [self.localNavigationBar.topItem setRightBarButtonItems:self.rightBarButtonItems animated:YES];
+}
+
+- (void)searchControllerRequestedLocalSearch:(NSString *)searchString
+{
+    [self.mapController performSearchWithString:searchString];
+}
+
+- (void)searchControllerDidSelectStop:(NSString *)stopCode
+{
+    [self pushStopResultsWithStopCode:stopCode];
+    
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    [mixpanel track:@"Stop Requested" properties:@{@"Code": stopCode, @"From": @"Smart Search Results"}];
+}
+
+- (void)searchControllerDidSelectService:(NSString *)serviceName direction:(CFDirection)direction
+{
+    CFServiceRouteViewController *serviceRouteVC = [[CFServiceRouteViewController alloc] initWithService:serviceName direction:direction];
+    [self.navigationController pushViewController:serviceRouteVC animated:YES];
+    
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    [mixpanel track:@"Service Route Requested" properties:@{@"Service": serviceName, @"From": @"Smart Search Results"}];
+}
+
+- (void)searchControllerDidSelectService:(NSString *)serviceName directionString:(NSString *)directionString
+{
+    CFServiceRouteViewController *serviceRouteVC = [[CFServiceRouteViewController alloc] initWithService:serviceName directionString:directionString];
+    [self.navigationController pushViewController:serviceRouteVC animated:YES];
+    
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    [mixpanel track:@"Service Route Requested" properties:@{@"Service": serviceName, @"From": @"Smart Search Results"}];
+}
+
+- (void)keyboardWasShown:(NSNotification*)aNotification
+{
+    NSDictionary* info = [aNotification userInfo];
+    CGRect keyboardRect = [[info objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    
+    [UIView animateKeyframesWithDuration:[[info objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue] delay:0.0 options:(7 << 16) animations:^{
+        self.searchController.contentInset = UIEdgeInsetsMake(self.searchController.contentInset.top, self.searchController.contentInset.left, keyboardRect.size.height, self.searchController.contentInset.right);
+    } completion:nil];
+}
+
+- (void)keyboardWillBeHidden:(NSNotification*)aNotification
+{
+    NSDictionary* info = [aNotification userInfo];
+    
+    [UIView animateKeyframesWithDuration:[[info objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue] delay:0.0 options:(7 << 16) animations:^{
+        self.searchController.contentInset = UIEdgeInsetsMake(self.searchController.contentInset.top, self.searchController.contentInset.left, TAB_BAR_HEIGHT, self.searchController.contentInset.right);
+    } completion:nil];
+}
+
 #pragma mark - Push stop results and routes
 
 - (void)pushStopResultsWithStopCode:(NSString *)stopCode
@@ -632,87 +694,6 @@
     
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     [mixpanel track:@"Stop Requested" properties:@{@"Code": stopCode, @"From": @"Map"}];
-}
-
-- (void)smartSearchListDidSelectStop:(NSString *)stopCode
-{
-    [self pushStopResultsWithStopCode:stopCode];
-    
-    Mixpanel *mixpanel = [Mixpanel sharedInstance];
-    [mixpanel track:@"Stop Requested" properties:@{@"Code": stopCode, @"From": @"Smart Search Results"}];
-}
-
-- (void)smartSearchListDidSelectService:(NSString *)serviceName direction:(CFDirection)direction
-{
-    CFServiceRouteViewController *serviceRouteVC = [[CFServiceRouteViewController alloc] initWithService:serviceName direction:direction];
-    [self.navigationController pushViewController:serviceRouteVC animated:YES];
-    
-    Mixpanel *mixpanel = [Mixpanel sharedInstance];
-    [mixpanel track:@"Service Route Requested" properties:@{@"Service": serviceName, @"From": @"Smart Search Results"}];
-}
-
-- (void)smartSearchListDidSelectService:(NSString *)serviceName directionString:(NSString *)directionString
-{
-    CFServiceRouteViewController *serviceRouteVC = [[CFServiceRouteViewController alloc] initWithService:serviceName directionString:directionString];
-    [self.navigationController pushViewController:serviceRouteVC animated:YES];
-    
-    Mixpanel *mixpanel = [Mixpanel sharedInstance];
-    [mixpanel track:@"Service Route Requested" properties:@{@"Service": serviceName, @"From": @"Smart Search Results"}];
-}
-
-#pragma mark - Search
-
-- (void)searchFieldDidBeginEditing:(CFSearchField *)searchField
-{
-    [self.smartSearchList show];
-    [self.localNavigationBar.topItem setRightBarButtonItems:@[] animated:YES];
-}
-
-- (void)searchField:(CFSearchField *)searchField textDidChange:(NSString *)searchText
-{
-    [self.smartSearchList processSearchString:searchText];
-}
-
-- (void)searchFieldSearchButtonClicked:(CFSearchField *)searchField
-{
-    [searchField endEditing:YES];
-    [self.localNavigationBar.topItem setRightBarButtonItems:self.rightBarButtonItems animated:YES];
-    
-    if (self.smartSearchList.suggesting) return;
-    
-    [self.smartSearchList hide];
-    [self.mapController performSearchWithString:searchField.text];
-    
-    Mixpanel *mixpanel = [Mixpanel sharedInstance];
-    [mixpanel track:@"Searched in Map" properties:nil];
-}
-
-- (void)searchFieldDidEndEditing:(CFSearchField *)searchField
-{
-    [self.localNavigationBar.topItem setRightBarButtonItems:self.rightBarButtonItems animated:YES];
-    
-    if (!self.smartSearchList.suggesting) {
-        [self.smartSearchList hide];
-    }
-}
-
-- (void)keyboardWasShown:(NSNotification*)aNotification
-{
-    NSDictionary* info = [aNotification userInfo];
-    CGRect keyboardRect = [[info objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
-    
-    [UIView animateKeyframesWithDuration:[[info objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue] delay:0.0 options:(7 << 16) animations:^{
-        self.smartSearchList.contentInset = UIEdgeInsetsMake(self.smartSearchList.contentInset.top, self.smartSearchList.contentInset.left, keyboardRect.size.height, self.smartSearchList.contentInset.right);
-    } completion:nil];
-}
-
-- (void)keyboardWillBeHidden:(NSNotification*)aNotification
-{
-    NSDictionary* info = [aNotification userInfo];
-    
-    [UIView animateKeyframesWithDuration:[[info objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue] delay:0.0 options:(7 << 16) animations:^{
-        self.smartSearchList.contentInset = UIEdgeInsetsMake(self.smartSearchList.contentInset.top, self.smartSearchList.contentInset.left, TAB_BAR_HEIGHT, self.smartSearchList.contentInset.right);
-    } completion:nil];
 }
 
 #pragma mark - Other shit

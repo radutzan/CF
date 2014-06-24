@@ -6,15 +6,16 @@
 //  Copyright (c) 2014 Onda. All rights reserved.
 //
 
-#import "CFSmartSearchList.h"
+#import "CFSearchController.h"
 #import "CFSearchSuggestionsCard.h"
 #import "CFServiceSuggestionView.h"
 #import "CFStopSuggestionView.h"
+#import <Mixpanel/Mixpanel.h>
 
 #define VERTICAL_MARGIN 0.0
 #define HORIZONTAL_MARGIN 0.0
 
-@interface CFSmartSearchList () <CFServiceSuggestionViewDelegate, CFStopSuggestionViewDelegate>
+@interface CFSearchController () <CFServiceSuggestionViewDelegate, CFStopSuggestionViewDelegate, CFSearchFieldDelegate>
 
 @property (nonatomic, strong) UIView *overlay;
 @property (nonatomic, strong) UIScrollView *scrollView;
@@ -29,7 +30,7 @@
 
 @end
 
-@implementation CFSmartSearchList
+@implementation CFSearchController
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -204,6 +205,48 @@
     self.currentCard = self.serviceSuggestionView;
 }
 
+#pragma mark - Search field
+
+- (void)setSearchField:(CFSearchField *)searchField
+{
+    _searchField = searchField;
+    _searchField.delegate = self;
+}
+
+- (void)searchFieldDidBeginEditing:(CFSearchField *)searchField
+{
+    [self show];
+    [self.delegate searchControllerDidBeginSearching];
+}
+
+- (void)searchField:(CFSearchField *)searchField textDidChange:(NSString *)searchText
+{
+    [self processSearchString:searchText];
+}
+
+- (void)searchFieldSearchButtonClicked:(CFSearchField *)searchField
+{
+    [searchField endEditing:YES];
+    [self.delegate searchControllerDidEndSearching];
+    
+    if (self.suggesting) return;
+    
+    [self hide];
+    [self.delegate searchControllerRequestedLocalSearch:searchField.text];
+    
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    [mixpanel track:@"Searched in Map" properties:nil];
+}
+
+- (void)searchFieldDidEndEditing:(CFSearchField *)searchField
+{
+    [self.delegate searchControllerDidEndSearching];
+    
+    if (!self.suggesting) {
+        [self hide];
+    }
+}
+
 #pragma mark - Search string processing
 
 - (void)processSearchString:(NSString *)searchString
@@ -320,17 +363,17 @@
 - (void)serviceSuggestionViewDidSelectButtonAtIndex:(NSUInteger)index service:(NSString *)service
 {
     CFDirection direction = (index == 0) ? CFDirectionOutward : CFDirectionInward;
-    [self.delegate smartSearchListDidSelectService:service direction:direction];
+    [self.delegate searchControllerDidSelectService:service direction:direction];
 }
 
 - (void)stopSuggestionViewDidSelectStop:(NSString *)stop
 {
-    [self.delegate smartSearchListDidSelectStop:stop];
+    [self.delegate searchControllerDidSelectStop:stop];
 }
 
 - (void)stopSuggestionViewDidSelectService:(NSString *)service directionString:(NSString *)directionString
 {
-    [self.delegate smartSearchListDidSelectService:service directionString:directionString];
+    [self.delegate searchControllerDidSelectService:service directionString:directionString];
 }
 
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event

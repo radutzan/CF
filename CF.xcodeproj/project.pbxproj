@@ -19,8 +19,8 @@
 		7C062F271933074D00342E4A /* feature-service@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7C062F211933074D00342E4A /* feature-service@2x.png */; };
 		7C062F2A19330DF000342E4A /* UIImage+ImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C062F2919330DF000342E4A /* UIImage+ImageEffects.m */; };
 		7C062F2B19330DF000342E4A /* UIImage+ImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C062F2919330DF000342E4A /* UIImage+ImageEffects.m */; };
-		7C062F2E1933B07600342E4A /* CFSmartSearchList.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C062F2D1933B07600342E4A /* CFSmartSearchList.m */; };
-		7C062F2F1933B07600342E4A /* CFSmartSearchList.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C062F2D1933B07600342E4A /* CFSmartSearchList.m */; };
+		7C062F2E1933B07600342E4A /* CFSearchController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C062F2D1933B07600342E4A /* CFSearchController.m */; };
+		7C062F2F1933B07600342E4A /* CFSearchController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C062F2D1933B07600342E4A /* CFSearchController.m */; };
 		7C062F321933BC9200342E4A /* CFServiceSuggestionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C062F311933BC9200342E4A /* CFServiceSuggestionView.m */; };
 		7C062F331933BC9200342E4A /* CFServiceSuggestionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C062F311933BC9200342E4A /* CFServiceSuggestionView.m */; };
 		7C10B96F183ADD200086B650 /* CFFavoritesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C10B96E183ADD200086B650 /* CFFavoritesViewController.m */; };
@@ -225,8 +225,8 @@
 		7C062F211933074D00342E4A /* feature-service@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "feature-service@2x.png"; sourceTree = "<group>"; };
 		7C062F2819330DF000342E4A /* UIImage+ImageEffects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ImageEffects.h"; sourceTree = "<group>"; };
 		7C062F2919330DF000342E4A /* UIImage+ImageEffects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ImageEffects.m"; sourceTree = "<group>"; };
-		7C062F2C1933B07600342E4A /* CFSmartSearchList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFSmartSearchList.h; sourceTree = "<group>"; };
-		7C062F2D1933B07600342E4A /* CFSmartSearchList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFSmartSearchList.m; sourceTree = "<group>"; };
+		7C062F2C1933B07600342E4A /* CFSearchController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFSearchController.h; sourceTree = "<group>"; };
+		7C062F2D1933B07600342E4A /* CFSearchController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFSearchController.m; sourceTree = "<group>"; };
 		7C062F301933BC9200342E4A /* CFServiceSuggestionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFServiceSuggestionView.h; sourceTree = "<group>"; };
 		7C062F311933BC9200342E4A /* CFServiceSuggestionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFServiceSuggestionView.m; sourceTree = "<group>"; };
 		7C10B96D183ADD200086B650 /* CFFavoritesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFFavoritesViewController.h; sourceTree = "<group>"; };
@@ -710,8 +710,8 @@
 				7C6CE7FF1877D04A00DDEF54 /* CFStoreViewController.m */,
 				7C5ACA5B1932856E00E20FD9 /* CFWhatsNewViewController.h */,
 				7C5ACA5C1932856E00E20FD9 /* CFWhatsNewViewController.m */,
-				7C062F2C1933B07600342E4A /* CFSmartSearchList.h */,
-				7C062F2D1933B07600342E4A /* CFSmartSearchList.m */,
+				7C062F2C1933B07600342E4A /* CFSearchController.h */,
+				7C062F2D1933B07600342E4A /* CFSearchController.m */,
 				7C3B27C5183B1A6300818A3B /* Tabs */,
 			);
 			name = Controllers;
@@ -1043,7 +1043,7 @@
 				7C2EECDA188345F500AE78C2 /* CFStopCell.m in Sources */,
 				7CEADD6C194C200A00428ADE /* CFSearchSuggestionsCard.m in Sources */,
 				7CCA746A19325C9D00ADB397 /* CFForwardingTouchScrollView.m in Sources */,
-				7C062F2F1933B07600342E4A /* CFSmartSearchList.m in Sources */,
+				7C062F2F1933B07600342E4A /* CFSearchController.m in Sources */,
 				7CC7EC4C1929BBA2002160E5 /* CFServiceRouteViewController.m in Sources */,
 				7C2EECDB188345F500AE78C2 /* CFMapController.m in Sources */,
 				7C2EECDC188345F500AE78C2 /* CFSapoClient.m in Sources */,
@@ -1092,7 +1092,7 @@
 				7CFF7EC618387735006230CE /* CFStopResultsViewController.m in Sources */,
 				7C6CE7CC1877450D00DDEF54 /* CFClipView.m in Sources */,
 				7C7A15DB18540E08002EE4C5 /* CFMoreContentViewController.m in Sources */,
-				7C062F2E1933B07600342E4A /* CFSmartSearchList.m in Sources */,
+				7C062F2E1933B07600342E4A /* CFSearchController.m in Sources */,
 				7C10B96F183ADD200086B650 /* CFFavoritesViewController.m in Sources */,
 				7CFF7E7818381D6E006230CE /* CFMainViewController.m in Sources */,
 				7CEADD6B194C1E9500428ADE /* CFSearchSuggestionsCard.m in Sources */,
