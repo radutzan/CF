@@ -249,7 +249,7 @@ static MKMapRect santiagoBounds;
 
 - (void)setCurrentDirection:(CFDirection)currentDirection
 {
-    if (currentDirection != _currentDirection) {
+    if (currentDirection != _currentDirection || !_currentDirection) {
         [self clearAnnotations];
         [self drawPolylineForService:self.currentService direction:currentDirection];
     }
