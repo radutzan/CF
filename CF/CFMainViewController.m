@@ -361,6 +361,18 @@
         self.mapMode = NO;
     }
     
+    BOOL shouldEnableAds = (![[NSUserDefaults standardUserDefaults] boolForKey:@"CFEnableMapWithAds"] && ![OLCashier hasProduct:@"CF01"]);
+    
+    if (shouldEnableAds) {
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"CFEnableMapWithAds"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        self.mapEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"CFEnableMapWithAds"];
+        
+        Mixpanel *mixpanel = [Mixpanel sharedInstance];
+        [mixpanel registerSuperProperties:@{@"Has Map": @"Yes"}];
+        [mixpanel registerSuperProperties:@{@"Has Free Map": @"Yes"}];
+    }
+    
     if (self.shouldDisplayAds) {
         [self loadMapBannerAd];
     }
