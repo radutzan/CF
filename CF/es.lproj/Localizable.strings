@@ -52,6 +52,7 @@
 "ZOOM_LEVEL_WARNING_TITLE" = "Estás muy lejos";
 "ZOOM_LEVEL_WARNING_MESSAGE" = "Acércate para ver paradas en el mapa.";
 "MAP_SEARCHFIELD_PLACEHOLDER" = "Servicio o dirección";
+"ROUTES_SEARCHFIELD_PLACEHOLDER" = "Busca lugares o direcciones";
 "SEARCH_ERROR_NOTFOUND_TITLE" = "Lugar no encontrado";
 "SEARCH_ERROR_NOTFOUND_MESSAGE" = "Especifica más tu búsqueda o busca directamente en el mapa.";
 "SEARCH_ERROR_GENERIC_TITLE" = "Imposible buscar";

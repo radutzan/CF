@@ -52,8 +52,9 @@
 "ZOOM_LEVEL_WARNING_TITLE" = "You're too far away";
 "ZOOM_LEVEL_WARNING_MESSAGE" = "Zoom in to see stops on the map.";
 "MAP_SEARCHFIELD_PLACEHOLDER" = "Service or address";
+"ROUTES_SEARCHFIELD_PLACEHOLDER" = "Search for places or enter an address";
 "SEARCH_ERROR_NOTFOUND_TITLE" = "Place not found";
-"SEARCH_ERROR_NOTFOUND_MESSAGE" = "Be more specific or look for the place directly on the map.";
+"SEARCH_ERROR_NOTFOUND_MESSAGE" = "Be more specific, or look for the place directly on the map.";
 "SEARCH_ERROR_GENERIC_TITLE" = "Couldn't perform search";
 "SEARCH_ERROR_GENERIC_MESSAGE" = "It's impossible to search for places at the moment. Try again later.";
 "SERVICE_ROUTE_ERROR_ALERT_TITLE" = "Couldn't find the route for this service";
