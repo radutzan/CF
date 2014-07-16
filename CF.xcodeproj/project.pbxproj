@@ -11,6 +11,9 @@
 		5A11D7761877A2BA001118F6 /* OLPaymentQueueDispatchObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A11D7721877A2BA001118F6 /* OLPaymentQueueDispatchObserver.m */; };
 		5A11D7771877A2BA001118F6 /* OLProductRequestDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A11D7741877A2BA001118F6 /* OLProductRequestDelegate.m */; };
 		638E7104AF714820AFC7F0D0 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 87FD0B9EF07342C68E7A06CC /* libPods.a */; };
+		7C01EDAF1974938E00DE7EAB /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CDC85C019746DE3008106FC /* NotificationCenter.framework */; };
+		7C01EDB51974938E00DE7EAB /* TodayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C01EDB41974938E00DE7EAB /* TodayViewController.m */; };
+		7C01EDBA1974938E00DE7EAB /* Today Favorites.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 7C01EDAE1974938E00DE7EAB /* Today Favorites.appex */; };
 		7C062F221933074D00342E4A /* feature-map@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7C062F1F1933074D00342E4A /* feature-map@2x.png */; };
 		7C062F231933074D00342E4A /* feature-map@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7C062F1F1933074D00342E4A /* feature-map@2x.png */; };
 		7C062F241933074D00342E4A /* feature-pro@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7C062F201933074D00342E4A /* feature-pro@2x.png */; };
@@ -204,6 +207,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		7C01EDB81974938E00DE7EAB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7CFF7E3918381645006230CE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7C01EDAD1974938E00DE7EAB;
+			remoteInfo = "Today Favorites";
+		};
+		7C01EDBB1974938E00DE7EAB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7CFF7E3918381645006230CE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7C01EDAD1974938E00DE7EAB;
+			remoteInfo = "Today Favorites";
+		};
 		7CFF7E6118381645006230CE /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 7CFF7E3918381645006230CE /* Project object */;
@@ -213,6 +230,30 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		7CDC85D119746DE3008106FC /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				7C01EDBA1974938E00DE7EAB /* Today Favorites.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7CDC85FD19747F32008106FC /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		5A11D76F1877A2BA001118F6 /* OLCashier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLCashier.h; sourceTree = "<group>"; };
 		5A11D7701877A2BA001118F6 /* OLCashier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLCashier.m; sourceTree = "<group>"; };
@@ -220,6 +261,10 @@
 		5A11D7721877A2BA001118F6 /* OLPaymentQueueDispatchObserver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPaymentQueueDispatchObserver.m; sourceTree = "<group>"; };
 		5A11D7731877A2BA001118F6 /* OLProductRequestDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLProductRequestDelegate.h; sourceTree = "<group>"; };
 		5A11D7741877A2BA001118F6 /* OLProductRequestDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLProductRequestDelegate.m; sourceTree = "<group>"; };
+		7C01EDAE1974938E00DE7EAB /* Today Favorites.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Today Favorites.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7C01EDB21974938E00DE7EAB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7C01EDB31974938E00DE7EAB /* TodayViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TodayViewController.h; sourceTree = "<group>"; };
+		7C01EDB41974938E00DE7EAB /* TodayViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TodayViewController.m; sourceTree = "<group>"; };
 		7C062F1F1933074D00342E4A /* feature-map@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "feature-map@2x.png"; sourceTree = "<group>"; };
 		7C062F201933074D00342E4A /* feature-pro@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "feature-pro@2x.png"; sourceTree = "<group>"; };
 		7C062F211933074D00342E4A /* feature-service@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "feature-service@2x.png"; sourceTree = "<group>"; };
@@ -301,6 +346,7 @@
 		7C9BD17319272726003E9F8E /* feature-bip@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "feature-bip@2x.png"; sourceTree = "<group>"; };
 		7C9BD17419272726003E9F8E /* feature-stops@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "feature-stops@2x.png"; sourceTree = "<group>"; };
 		7C9BD17919282BEB003E9F8E /* libCrittercism_v4_3_3.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libCrittercism_v4_3_3.a; sourceTree = "<group>"; };
+		7CA23FF31974957F006D1CA7 /* Cuánta Beta.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Cuánta Beta.entitlements"; sourceTree = "<group>"; };
 		7CAFA3361842A206005A06BC /* placeholder-favorites@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-favorites@2x.png"; sourceTree = "<group>"; };
 		7CAFA3371842A206005A06BC /* placeholder-history@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-history@2x.png"; sourceTree = "<group>"; };
 		7CAFA33A1842C359005A06BC /* gripper@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "gripper@2x.png"; sourceTree = "<group>"; };
@@ -313,6 +359,7 @@
 		7CB64D7A18550699006422E0 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = es; path = es.lproj/help.html; sourceTree = "<group>"; };
 		7CB64D7B18551C9C006422E0 /* button-bip@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-bip@2x.png"; sourceTree = "<group>"; };
 		7CB64D7D18552648006422E0 /* icon-about@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-about@2x.png"; sourceTree = "<group>"; };
+		7CC4F8D4197722BC00D40B88 /* Today Favorites.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Today Favorites.entitlements"; sourceTree = "<group>"; };
 		7CC7EC401929B5F6002160E5 /* CFServiceRouteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = CFServiceRouteViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		7CC7EC411929B5F6002160E5 /* CFServiceRouteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CFServiceRouteViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		7CC7EC431929B74B002160E5 /* CFRoute.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFRoute.m; sourceTree = "<group>"; };
@@ -324,6 +371,7 @@
 		7CD35CA6194955EF007C36CA /* CFSearchField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFSearchField.h; sourceTree = "<group>"; };
 		7CD35CA7194955EF007C36CA /* CFSearchField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFSearchField.m; sourceTree = "<group>"; };
 		7CD35CA919495A44007C36CA /* searchfield-glyph@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "searchfield-glyph@2x.png"; sourceTree = "<group>"; };
+		7CDC85C019746DE3008106FC /* NotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NotificationCenter.framework; path = System/Library/Frameworks/NotificationCenter.framework; sourceTree = SDKROOT; };
 		7CE0D9D6189DB34F00D9782E /* OLShapeTintedButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLShapeTintedButton.h; sourceTree = "<group>"; };
 		7CE0D9D7189DB34F00D9782E /* OLShapeTintedButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLShapeTintedButton.m; sourceTree = "<group>"; };
 		7CE0D9D9189DD2D800D9782E /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
@@ -389,6 +437,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		7C01EDAB1974938E00DE7EAB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7C01EDAF1974938E00DE7EAB /* NotificationCenter.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		7C2EECE2188345F500AE78C2 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -456,6 +512,25 @@
 				5A11D7741877A2BA001118F6 /* OLProductRequestDelegate.m */,
 			);
 			name = Cashier;
+			sourceTree = "<group>";
+		};
+		7C01EDB01974938E00DE7EAB /* Today Favorites */ = {
+			isa = PBXGroup;
+			children = (
+				7CC4F8D4197722BC00D40B88 /* Today Favorites.entitlements */,
+				7C01EDB31974938E00DE7EAB /* TodayViewController.h */,
+				7C01EDB41974938E00DE7EAB /* TodayViewController.m */,
+				7C01EDB11974938E00DE7EAB /* Supporting Files */,
+			);
+			path = "Today Favorites";
+			sourceTree = "<group>";
+		};
+		7C01EDB11974938E00DE7EAB /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				7C01EDB21974938E00DE7EAB /* Info.plist */,
+			);
+			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 		7C062F341933BC9C00342E4A /* Smart Search List */ = {
@@ -547,8 +622,10 @@
 		7CFF7E3818381645006230CE = {
 			isa = PBXGroup;
 			children = (
+				7CA23FF31974957F006D1CA7 /* Cuánta Beta.entitlements */,
 				7CFF7E4A18381645006230CE /* CF */,
 				7CFF7E6318381645006230CE /* CFTests */,
+				7C01EDB01974938E00DE7EAB /* Today Favorites */,
 				7CFF7E4318381645006230CE /* Frameworks */,
 				7CFF7E4218381645006230CE /* Products */,
 				F62BD801ED374EB1AD8B82CE /* Pods.xcconfig */,
@@ -562,6 +639,7 @@
 				7CFF7E4118381645006230CE /* Cuánto Falta.app */,
 				7CFF7E5C18381645006230CE /* CFTests.xctest */,
 				7C2EED11188345F500AE78C2 /* Cuánta Beta.app */,
+				7C01EDAE1974938E00DE7EAB /* Today Favorites.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -583,6 +661,7 @@
 				7CFF7E4818381645006230CE /* UIKit.framework */,
 				7CFF7E5D18381645006230CE /* XCTest.framework */,
 				87FD0B9EF07342C68E7A06CC /* libPods.a */,
+				7CDC85C019746DE3008106FC /* NotificationCenter.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -757,6 +836,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		7C01EDAD1974938E00DE7EAB /* Today Favorites */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7C01EDBD1974938E00DE7EAB /* Build configuration list for PBXNativeTarget "Today Favorites" */;
+			buildPhases = (
+				7C01EDAA1974938E00DE7EAB /* Sources */,
+				7C01EDAB1974938E00DE7EAB /* Frameworks */,
+				7C01EDAC1974938E00DE7EAB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Today Favorites";
+			productName = "Today Favorites";
+			productReference = 7C01EDAE1974938E00DE7EAB /* Today Favorites.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		7C2EECBE188345F500AE78C2 /* Cuánto Falta Dev */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 7C2EED0E188345F500AE78C2 /* Build configuration list for PBXNativeTarget "Cuánto Falta Dev" */;
@@ -766,10 +862,13 @@
 				7C2EECE2188345F500AE78C2 /* Frameworks */,
 				7C2EECF1188345F500AE78C2 /* Resources */,
 				7C2EED0D188345F500AE78C2 /* Copy Pods Resources */,
+				7CDC85D119746DE3008106FC /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				7C01EDB91974938E00DE7EAB /* PBXTargetDependency */,
+				7C01EDBC1974938E00DE7EAB /* PBXTargetDependency */,
 			);
 			name = "Cuánto Falta Dev";
 			productName = CF;
@@ -785,6 +884,7 @@
 				7CFF7E3E18381645006230CE /* Frameworks */,
 				7CFF7E3F18381645006230CE /* Resources */,
 				D71244BFE50B46799ACED80E /* Copy Pods Resources */,
+				7CDC85FD19747F32008106FC /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
@@ -823,6 +923,23 @@
 				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = Onda;
 				TargetAttributes = {
+					7C01EDAD1974938E00DE7EAB = {
+						CreatedOnToolsVersion = 6.0;
+						DevelopmentTeam = CTBFW5535W;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
+						};
+					};
+					7C2EECBE188345F500AE78C2 = {
+						DevelopmentTeam = CTBFW5535W;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
+						};
+					};
 					7CFF7E5B18381645006230CE = {
 						TestTargetID = 7CFF7E4018381645006230CE;
 					};
@@ -843,12 +960,20 @@
 			targets = (
 				7CFF7E4018381645006230CE /* Cuánto Falta */,
 				7C2EECBE188345F500AE78C2 /* Cuánto Falta Dev */,
+				7C01EDAD1974938E00DE7EAB /* Today Favorites */,
 				7CFF7E5B18381645006230CE /* CFTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		7C01EDAC1974938E00DE7EAB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		7C2EECF1188345F500AE78C2 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1003,6 +1128,14 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		7C01EDAA1974938E00DE7EAB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7C01EDB51974938E00DE7EAB /* TodayViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		7C2EECC0188345F500AE78C2 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1122,6 +1255,16 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		7C01EDB91974938E00DE7EAB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7C01EDAD1974938E00DE7EAB /* Today Favorites */;
+			targetProxy = 7C01EDB81974938E00DE7EAB /* PBXContainerItemProxy */;
+		};
+		7C01EDBC1974938E00DE7EAB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7C01EDAD1974938E00DE7EAB /* Today Favorites */;
+			targetProxy = 7C01EDBB1974938E00DE7EAB /* PBXContainerItemProxy */;
+		};
 		7CFF7E6218381645006230CE /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 7CFF7E4018381645006230CE /* Cuánto Falta */;
@@ -1178,6 +1321,48 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		7C01EDBE1974938E00DE7EAB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_ENTITLEMENTS = "Today Favorites/Today Favorites.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = "Today Favorites/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		7C01EDBF1974938E00DE7EAB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_ENTITLEMENTS = "Today Favorites/Today Favorites.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = "Today Favorites/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
 		7C2EED0F188345F500AE78C2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F62BD801ED374EB1AD8B82CE /* Pods.xcconfig */;
@@ -1185,6 +1370,9 @@
 				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_ENTITLEMENTS = "Cuánta Beta.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "CF/CF-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -1200,6 +1388,7 @@
 					"$(PROJECT_DIR)/CF/CrittercismSDK",
 				);
 				PRODUCT_NAME = "Cuánta Beta";
+				PROVISIONING_PROFILE = "";
 				VALID_ARCHS = "armv7 armv7s arm64";
 				WRAPPER_EXTENSION = app;
 			};
@@ -1212,6 +1401,9 @@
 				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_ENTITLEMENTS = "Cuánta Beta.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "CF/CF-Prefix.pch";
 				INFOPLIST_FILE = "Cuánto Falta copy-Info.plist";
@@ -1222,6 +1414,7 @@
 					"$(PROJECT_DIR)/CF/CrittercismSDK",
 				);
 				PRODUCT_NAME = "Cuánta Beta";
+				PROVISIONING_PROFILE = "";
 				VALID_ARCHS = "armv7 armv7s arm64";
 				WRAPPER_EXTENSION = app;
 			};
@@ -1388,6 +1581,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		7C01EDBD1974938E00DE7EAB /* Build configuration list for PBXNativeTarget "Today Favorites" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7C01EDBE1974938E00DE7EAB /* Debug */,
+				7C01EDBF1974938E00DE7EAB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		7C2EED0E188345F500AE78C2 /* Build configuration list for PBXNativeTarget "Cuánto Falta Dev" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

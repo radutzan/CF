@@ -37,6 +37,11 @@
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSArray *favsArray = [defaults arrayForKey:@"favorites"];
+    [defaults synchronize];
+    
+    NSUserDefaults *sharedDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.ondalabs.cfbetagroup"];
+    [sharedDefaults setObject:favsArray forKey:@"favorites"];
+    [sharedDefaults synchronize];
     
     return favsArray;
 }
@@ -46,6 +51,10 @@
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [defaults setObject:array forKey:@"favorites"];
     [defaults synchronize];
+    
+    NSUserDefaults *sharedDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.ondalabs.cfbetagroup"];
+    [sharedDefaults setObject:array forKey:@"favorites"];
+    [sharedDefaults synchronize];
 }
 
 - (void)longPressRecognized:(UILongPressGestureRecognizer *)recognizer
