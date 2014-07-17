@@ -147,6 +147,13 @@
 		7CB64D7718550695006422E0 /* help.html in Resources */ = {isa = PBXBuildFile; fileRef = 7CB64D7918550695006422E0 /* help.html */; };
 		7CB64D7C18551C9C006422E0 /* button-bip@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CB64D7B18551C9C006422E0 /* button-bip@2x.png */; };
 		7CB64D7E18552648006422E0 /* icon-about@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CB64D7D18552648006422E0 /* icon-about@2x.png */; };
+		7CC343C519772AD7003E8555 /* CuantoFaltaKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 7CC343C419772AD7003E8555 /* CuantoFaltaKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7CC343CB19772AD7003E8555 /* CuantoFaltaKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CC343C019772AD7003E8555 /* CuantoFaltaKit.framework */; };
+		7CC343D219772AD8003E8555 /* CuantoFaltaKitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CC343D119772AD8003E8555 /* CuantoFaltaKitTests.m */; };
+		7CC343D519772AD8003E8555 /* CuantoFaltaKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CC343C019772AD7003E8555 /* CuantoFaltaKit.framework */; };
+		7CC343D619772AD8003E8555 /* CuantoFaltaKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7CC343C019772AD7003E8555 /* CuantoFaltaKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		7CC4F8D51977274300D40B88 /* CFStopCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C426413184AE87300A8968F /* CFStopCell.m */; };
+		7CC4F8D61977274600D40B88 /* CFFavoriteCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C426419184AF3E300A8968F /* CFFavoriteCell.m */; };
 		7CC7EC421929B5F6002160E5 /* CFServiceRouteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CC7EC411929B5F6002160E5 /* CFServiceRouteViewController.m */; };
 		7CC7EC451929B74B002160E5 /* CFRoute.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CC7EC431929B74B002160E5 /* CFRoute.m */; };
 		7CC7EC461929B74B002160E5 /* CFRoute.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CC7EC431929B74B002160E5 /* CFRoute.m */; };
@@ -221,6 +228,34 @@
 			remoteGlobalIDString = 7C01EDAD1974938E00DE7EAB;
 			remoteInfo = "Today Favorites";
 		};
+		7CC343CC19772AD8003E8555 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7CFF7E3918381645006230CE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7CC343BF19772AD7003E8555;
+			remoteInfo = CuantoFaltaKit;
+		};
+		7CC343D319772AD8003E8555 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7CFF7E3918381645006230CE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7CC343BF19772AD7003E8555;
+			remoteInfo = CuantoFaltaKit;
+		};
+		7CC343D719772AD8003E8555 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7CFF7E3918381645006230CE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7CC343BF19772AD7003E8555;
+			remoteInfo = CuantoFaltaKit;
+		};
+		7CC343E019772AD9003E8555 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7CFF7E3918381645006230CE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7CC343BF19772AD7003E8555;
+			remoteInfo = CuantoFaltaKit;
+		};
 		7CFF7E6118381645006230CE /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 7CFF7E3918381645006230CE /* Project object */;
@@ -231,6 +266,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		7CC343DE19772AD8003E8555 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				7CC343D619772AD8003E8555 /* CuantoFaltaKit.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		7CDC85D119746DE3008106FC /* Embed App Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -359,6 +405,12 @@
 		7CB64D7A18550699006422E0 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = es; path = es.lproj/help.html; sourceTree = "<group>"; };
 		7CB64D7B18551C9C006422E0 /* button-bip@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-bip@2x.png"; sourceTree = "<group>"; };
 		7CB64D7D18552648006422E0 /* icon-about@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-about@2x.png"; sourceTree = "<group>"; };
+		7CC343C019772AD7003E8555 /* CuantoFaltaKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CuantoFaltaKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7CC343C319772AD7003E8555 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7CC343C419772AD7003E8555 /* CuantoFaltaKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CuantoFaltaKit.h; sourceTree = "<group>"; };
+		7CC343CA19772AD7003E8555 /* CuantoFaltaKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CuantoFaltaKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		7CC343D019772AD8003E8555 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7CC343D119772AD8003E8555 /* CuantoFaltaKitTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CuantoFaltaKitTests.m; sourceTree = "<group>"; };
 		7CC4F8D4197722BC00D40B88 /* Today Favorites.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Today Favorites.entitlements"; sourceTree = "<group>"; };
 		7CC7EC401929B5F6002160E5 /* CFServiceRouteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = CFServiceRouteViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		7CC7EC411929B5F6002160E5 /* CFServiceRouteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CFServiceRouteViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
@@ -466,6 +518,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7CC343BC19772AD7003E8555 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7CC343C719772AD7003E8555 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7CC343CB19772AD7003E8555 /* CuantoFaltaKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		7CFF7E3E18381645006230CE /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -484,6 +551,7 @@
 				7CFF7E4918381645006230CE /* UIKit.framework in Frameworks */,
 				7C6CE7F21877B77100DDEF54 /* libGoogleAdMobAds.a in Frameworks */,
 				7CFF7E4518381645006230CE /* Foundation.framework in Frameworks */,
+				7CC343D519772AD8003E8555 /* CuantoFaltaKit.framework in Frameworks */,
 				638E7104AF714820AFC7F0D0 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -619,6 +687,40 @@
 			name = AdMob;
 			sourceTree = "<group>";
 		};
+		7CC343C119772AD7003E8555 /* CuantoFaltaKit */ = {
+			isa = PBXGroup;
+			children = (
+				7CC343C419772AD7003E8555 /* CuantoFaltaKit.h */,
+				7CC343C219772AD7003E8555 /* Supporting Files */,
+			);
+			path = CuantoFaltaKit;
+			sourceTree = "<group>";
+		};
+		7CC343C219772AD7003E8555 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				7CC343C319772AD7003E8555 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		7CC343CE19772AD8003E8555 /* CuantoFaltaKitTests */ = {
+			isa = PBXGroup;
+			children = (
+				7CC343D119772AD8003E8555 /* CuantoFaltaKitTests.m */,
+				7CC343CF19772AD8003E8555 /* Supporting Files */,
+			);
+			path = CuantoFaltaKitTests;
+			sourceTree = "<group>";
+		};
+		7CC343CF19772AD8003E8555 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				7CC343D019772AD8003E8555 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		7CFF7E3818381645006230CE = {
 			isa = PBXGroup;
 			children = (
@@ -626,6 +728,8 @@
 				7CFF7E4A18381645006230CE /* CF */,
 				7CFF7E6318381645006230CE /* CFTests */,
 				7C01EDB01974938E00DE7EAB /* Today Favorites */,
+				7CC343C119772AD7003E8555 /* CuantoFaltaKit */,
+				7CC343CE19772AD8003E8555 /* CuantoFaltaKitTests */,
 				7CFF7E4318381645006230CE /* Frameworks */,
 				7CFF7E4218381645006230CE /* Products */,
 				F62BD801ED374EB1AD8B82CE /* Pods.xcconfig */,
@@ -640,6 +744,8 @@
 				7CFF7E5C18381645006230CE /* CFTests.xctest */,
 				7C2EED11188345F500AE78C2 /* Cuánta Beta.app */,
 				7C01EDAE1974938E00DE7EAB /* Today Favorites.appex */,
+				7CC343C019772AD7003E8555 /* CuantoFaltaKit.framework */,
+				7CC343CA19772AD7003E8555 /* CuantoFaltaKitTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -835,6 +941,17 @@
 		};
 /* End PBXGroup section */
 
+/* Begin PBXHeadersBuildPhase section */
+		7CC343BD19772AD7003E8555 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7CC343C519772AD7003E8555 /* CuantoFaltaKit.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
 /* Begin PBXNativeTarget section */
 		7C01EDAD1974938E00DE7EAB /* Today Favorites */ = {
 			isa = PBXNativeTarget;
@@ -875,6 +992,43 @@
 			productReference = 7C2EED11188345F500AE78C2 /* Cuánta Beta.app */;
 			productType = "com.apple.product-type.application";
 		};
+		7CC343BF19772AD7003E8555 /* CuantoFaltaKit */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7CC343DD19772AD8003E8555 /* Build configuration list for PBXNativeTarget "CuantoFaltaKit" */;
+			buildPhases = (
+				7CC343BB19772AD7003E8555 /* Sources */,
+				7CC343BC19772AD7003E8555 /* Frameworks */,
+				7CC343BD19772AD7003E8555 /* Headers */,
+				7CC343BE19772AD7003E8555 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CuantoFaltaKit;
+			productName = CuantoFaltaKit;
+			productReference = 7CC343C019772AD7003E8555 /* CuantoFaltaKit.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		7CC343C919772AD7003E8555 /* CuantoFaltaKitTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7CC343DF19772AD8003E8555 /* Build configuration list for PBXNativeTarget "CuantoFaltaKitTests" */;
+			buildPhases = (
+				7CC343C619772AD7003E8555 /* Sources */,
+				7CC343C719772AD7003E8555 /* Frameworks */,
+				7CC343C819772AD7003E8555 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7CC343CD19772AD8003E8555 /* PBXTargetDependency */,
+				7CC343E119772AD9003E8555 /* PBXTargetDependency */,
+			);
+			name = CuantoFaltaKitTests;
+			productName = CuantoFaltaKitTests;
+			productReference = 7CC343CA19772AD7003E8555 /* CuantoFaltaKitTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		7CFF7E4018381645006230CE /* Cuánto Falta */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 7CFF7E6D18381645006230CE /* Build configuration list for PBXNativeTarget "Cuánto Falta" */;
@@ -885,10 +1039,13 @@
 				7CFF7E3F18381645006230CE /* Resources */,
 				D71244BFE50B46799ACED80E /* Copy Pods Resources */,
 				7CDC85FD19747F32008106FC /* Embed App Extensions */,
+				7CC343DE19772AD8003E8555 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				7CC343D419772AD8003E8555 /* PBXTargetDependency */,
+				7CC343D819772AD8003E8555 /* PBXTargetDependency */,
 			);
 			name = "Cuánto Falta";
 			productName = CF;
@@ -940,6 +1097,13 @@
 							};
 						};
 					};
+					7CC343BF19772AD7003E8555 = {
+						CreatedOnToolsVersion = 6.0;
+					};
+					7CC343C919772AD7003E8555 = {
+						CreatedOnToolsVersion = 6.0;
+						TestTargetID = 7CC343BF19772AD7003E8555;
+					};
 					7CFF7E5B18381645006230CE = {
 						TestTargetID = 7CFF7E4018381645006230CE;
 					};
@@ -962,6 +1126,8 @@
 				7C2EECBE188345F500AE78C2 /* Cuánto Falta Dev */,
 				7C01EDAD1974938E00DE7EAB /* Today Favorites */,
 				7CFF7E5B18381645006230CE /* CFTests */,
+				7CC343BF19772AD7003E8555 /* CuantoFaltaKit */,
+				7CC343C919772AD7003E8555 /* CuantoFaltaKitTests */,
 			);
 		};
 /* End PBXProject section */
@@ -1011,6 +1177,20 @@
 				7C062F271933074D00342E4A /* feature-service@2x.png in Resources */,
 				7C2EED0B188345F500AE78C2 /* button-code-selected@2x.png in Resources */,
 				7C2EED0C188345F500AE78C2 /* pin-stop@2x.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7CC343BE19772AD7003E8555 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7CC343C819772AD7003E8555 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1132,6 +1312,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7CC4F8D51977274300D40B88 /* CFStopCell.m in Sources */,
+				7CC4F8D61977274600D40B88 /* CFFavoriteCell.m in Sources */,
 				7C01EDB51974938E00DE7EAB /* TodayViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1187,6 +1369,21 @@
 				7C2EECE0188345F500AE78C2 /* CFNavigationBar.m in Sources */,
 				7C062F2B19330DF000342E4A /* UIImage+ImageEffects.m in Sources */,
 				7C2EECE1188345F500AE78C2 /* CLLocation+UTMUtilities.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7CC343BB19772AD7003E8555 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7CC343C619772AD7003E8555 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7CC343D219772AD8003E8555 /* CuantoFaltaKitTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1264,6 +1461,26 @@
 			isa = PBXTargetDependency;
 			target = 7C01EDAD1974938E00DE7EAB /* Today Favorites */;
 			targetProxy = 7C01EDBB1974938E00DE7EAB /* PBXContainerItemProxy */;
+		};
+		7CC343CD19772AD8003E8555 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7CC343BF19772AD7003E8555 /* CuantoFaltaKit */;
+			targetProxy = 7CC343CC19772AD8003E8555 /* PBXContainerItemProxy */;
+		};
+		7CC343D419772AD8003E8555 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7CC343BF19772AD7003E8555 /* CuantoFaltaKit */;
+			targetProxy = 7CC343D319772AD8003E8555 /* PBXContainerItemProxy */;
+		};
+		7CC343D819772AD8003E8555 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7CC343BF19772AD7003E8555 /* CuantoFaltaKit */;
+			targetProxy = 7CC343D719772AD8003E8555 /* PBXContainerItemProxy */;
+		};
+		7CC343E119772AD9003E8555 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7CC343BF19772AD7003E8555 /* CuantoFaltaKit */;
+			targetProxy = 7CC343E019772AD9003E8555 /* PBXContainerItemProxy */;
 		};
 		7CFF7E6218381645006230CE /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1420,6 +1637,98 @@
 			};
 			name = Release;
 		};
+		7CC343D919772AD8003E8555 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = CuantoFaltaKit/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		7CC343DA19772AD8003E8555 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = CuantoFaltaKit/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		7CC343DB19772AD8003E8555 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = CuantoFaltaKitTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		7CC343DC19772AD8003E8555 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = CuantoFaltaKitTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		7CFF7E6B18381645006230CE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1502,6 +1811,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "CF/CF-Prefix.pch";
 				INFOPLIST_FILE = "CF/CF-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					../CF/CF,
@@ -1524,6 +1834,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "CF/CF-Prefix.pch";
 				INFOPLIST_FILE = "CF/CF-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					../CF/CF,
@@ -1598,6 +1909,22 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		7CC343DD19772AD8003E8555 /* Build configuration list for PBXNativeTarget "CuantoFaltaKit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7CC343D919772AD8003E8555 /* Debug */,
+				7CC343DA19772AD8003E8555 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		7CC343DF19772AD8003E8555 /* Build configuration list for PBXNativeTarget "CuantoFaltaKitTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7CC343DB19772AD8003E8555 /* Debug */,
+				7CC343DC19772AD8003E8555 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 		7CFF7E3C18381645006230CE /* Build configuration list for PBXProject "CF" */ = {
 			isa = XCConfigurationList;
