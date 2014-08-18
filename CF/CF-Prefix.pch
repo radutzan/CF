@@ -13,4 +13,7 @@
 #ifdef __OBJC__
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
+
+    #define TAB_BAR_HEIGHT 50.0
+    #define DRAWER_ORIGIN_Y 180.0
 #endif

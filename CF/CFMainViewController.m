@@ -14,47 +14,23 @@
 #import "CFSapoClient.h"
 
 #import "CFMapController.h"
+#import "CFDrawerController.h"
 #import "CFSearchField.h"
 #import "CFSearchController.h"
 #import "CFStopResultsViewController.h"
 #import "CFServiceRouteViewController.h"
-#import "CFFavoritesViewController.h"
-#import "CFHistoryViewController.h"
-#import "CFMoreViewController.h"
 #import "CFWhatsNewViewController.h"
 
 #import "OLShapeTintedButton.h"
-
 #import "GADBannerView.h"
 
-#define TAB_BAR_HEIGHT 50.0
-#define TAB_BUTTON_WIDTH 75.0
-#define CONTENT_ORIGIN 180.0
-
-@interface CFMainViewController () <UIScrollViewDelegate, CFStopTableViewDelegate, CFMapControllerDelegate, CFSearchControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate>
+@interface CFMainViewController () <CFMapControllerDelegate, CFDrawerControllerDelegate, CFSearchControllerDelegate, UIAlertViewDelegate>
 
 @property (nonatomic, strong) CFMapController *mapController;
+@property (nonatomic, strong) CFDrawerController *drawerController;
 @property (nonatomic, strong) CFSearchController *searchController;
-
-@property (nonatomic, strong) UIView *drawer;
-@property (nonatomic, strong) UIScrollView *scrollView;
-@property (nonatomic, strong) UIView *gripper;
-@property (nonatomic, strong) UIButton *openMapButton;
-@property (nonatomic, strong) UIScrollView *mapFeaturesView;
 @property (nonatomic, strong) UINavigationBar *localNavigationBar;
 @property (nonatomic, strong) NSArray *rightBarButtonItems;
-
-@property (nonatomic, strong) NSArray *tabs;
-@property (nonatomic, strong) UIView *tabBar;
-@property (nonatomic, strong) CFFavoritesViewController *favoritesController;
-@property (nonatomic, strong) CFHistoryViewController *historyController;
-@property (nonatomic, strong) CFMoreViewController *moreController;
-
-@property (nonatomic, assign) BOOL mapMode;
-@property (nonatomic, assign) CGFloat drawerCurrentDragCenterY;
-@property (nonatomic, assign) CGFloat drawerOpenCenterY;
-@property (nonatomic, assign) CGPoint initialOpenMapButtonCenter;
-@property (nonatomic, assign) CLLocationCoordinate2D mapLocationCoordinate;
 
 @property (nonatomic, assign) BOOL shouldDisplayAds;
 @property (nonatomic, strong) GADBannerView *mapBannerAd;
@@ -108,50 +84,16 @@
     
     [self.localNavigationBar pushNavigationItem:navItem animated:NO];
     
-    self.drawer = [[UIToolbar alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - TAB_BAR_HEIGHT, self.view.bounds.size.width, self.view.bounds.size.height - CONTENT_ORIGIN)];
-    self.drawer.layer.anchorPoint = CGPointMake(0.5, 1.0);
-    self.drawer.frame = CGRectMake(10.0, self.view.bounds.size.height - TAB_BAR_HEIGHT, self.view.bounds.size.width - 20.0, self.view.bounds.size.height - CONTENT_ORIGIN);
-    [self.view addSubview:self.drawer];
-    
-    self.drawerOpenCenterY = CONTENT_ORIGIN + self.drawer.bounds.size.height;
-    
-    self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.drawer.bounds.size.width, self.drawer.bounds.size.height - TAB_BAR_HEIGHT)];
-    self.scrollView.delegate = self;
-    self.scrollView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
-    self.scrollView.contentSize = CGSizeMake(self.scrollView.bounds.size.width * 3, self.scrollView.bounds.size.height);
-    self.scrollView.pagingEnabled = YES;
-    self.scrollView.showsHorizontalScrollIndicator = NO;
-    self.scrollView.alpha = 0;
-    [self.drawer addSubview:self.scrollView];
-    
-    self.tabBar = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - TAB_BAR_HEIGHT, self.view.bounds.size.width, TAB_BAR_HEIGHT)];
-    self.tabBar.tintColor = [UIColor colorWithWhite:0.42 alpha:1];
-    [self.view addSubview:self.tabBar];
-    
-    UIPanGestureRecognizer *openDrawerDrag = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleDrawerDragGesture:)];
-    [self.tabBar addGestureRecognizer:openDrawerDrag];
-    
-    [self initTabs];
-    
-    self.gripper = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"gripper"]];
-    self.gripper.frame = CGRectMake(0, 0, self.drawer.bounds.size.width, 30);
-    self.gripper.alpha = 0;
-    self.gripper.contentMode = UIViewContentModeCenter;
-    [self.drawer addSubview:self.gripper];
-    
-    UIPanGestureRecognizer *gripDrag = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleDrawerDragGesture:)];
-    [self.gripper addGestureRecognizer:gripDrag];
-    
 #if TARGET_IPHONE_SIMULATOR
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"CFEnableMapWithAds"];
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"CF01"];
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"CF02"];
+#endif
     
 #ifdef DEV_VERSION
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"CFEnableMapWithAds"];
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"CF01"];
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"CF02"];
-#endif
 #endif
     
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
@@ -162,16 +104,10 @@
     [mixpanel registerSuperProperties:@{@"Has Map": mappy}];
     [mixpanel registerSuperProperties:@{@"Has Free Map": freeMap}];
     
-    self.openMapButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.openMapButton.frame = CGRectMake(0, self.localNavigationBar.frame.size.height, self.view.bounds.size.width, CONTENT_ORIGIN - self.localNavigationBar.frame.size.height);
-    self.openMapButton.hidden = YES;
-    [self.openMapButton addTarget:self action:@selector(switchToMap) forControlEvents:UIControlEventTouchUpInside];
-    [self.view insertSubview:self.openMapButton aboveSubview:self.mapController];
-    
-    UIPanGestureRecognizer *openMapButtonDrag = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleDrawerDragGesture:)];
-    [self.openMapButton addGestureRecognizer:openMapButtonDrag];
-    
-    self.mapMode = YES;
+    self.drawerController = [CFDrawerController new];
+    self.drawerController.delegate = self;
+    [self addChildViewController:self.drawerController];
+    [self.view addSubview:self.drawerController.view];
     
     [self registerForKeyboardNotifications];
 }
@@ -185,7 +121,6 @@
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardWillBeHidden:)
                                                  name:UIKeyboardWillHideNotification object:nil];
-    
 }
 
 - (void)viewDidLoad
@@ -214,9 +149,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
     [self.navigationController setNavigationBarHidden:YES animated:YES];
-    
     [self reloadUserData];
 }
 
@@ -302,286 +235,7 @@
 
 - (void)reloadUserData
 {
-    [self.favoritesController.tableView reloadData];
-    [self.historyController.tableView reloadData];
-}
-
-#pragma mark - Tabs
-
-- (void)initTabs
-{
-    self.favoritesController = [[CFFavoritesViewController alloc] initWithStyle:UITableViewStyleGrouped];
-    self.favoritesController.delegate = self;
-    
-    self.historyController = [[CFHistoryViewController alloc] initWithStyle:UITableViewStyleGrouped];
-    self.historyController.delegate = self;
-    
-    self.moreController = [[CFMoreViewController alloc] initWithStyle:UITableViewStyleGrouped];
-    
-    self.tabs = @[@{@"controller": self.favoritesController,
-                    @"title": @"Favorites",
-                    @"button": [UIImage imageNamed:@"button-favorites"],
-                    @"button-selected": [UIImage imageNamed:@"button-favorites-selected"]},
-                  @{@"controller": self.historyController,
-                    @"title": @"History",
-                    @"button": [UIImage imageNamed:@"button-history"],
-                    @"button-selected": [UIImage imageNamed:@"button-history-selected"]},
-                  @{@"controller": self.moreController,
-                    @"title": @"More",
-                    @"button": [UIImage imageNamed:@"button-more"],
-                    @"button-selected": [UIImage imageNamed:@"button-more-selected"]}];
-}
-
-- (void)setTabs:(NSArray *)tabs
-{
-    _tabs = tabs;
-    
-    self.scrollView.contentSize = CGSizeMake(self.scrollView.bounds.size.width * tabs.count, self.scrollView.bounds.size.height);
-    
-    CGFloat tabButtonWidth = floorf(300 / tabs.count);
-    
-    for (NSDictionary *tab in tabs) {
-        UIViewController *thisTabController = tab[@"controller"];
-        thisTabController.view.frame = CGRectMake(self.scrollView.bounds.size.width * [tabs indexOfObject:tab], 0, self.scrollView.bounds.size.width, self.scrollView.bounds.size.height);
-        [self addChildViewController:thisTabController];
-        [self.scrollView addSubview:thisTabController.view];
-        
-        OLShapeTintedButton *thisTabButton = [OLShapeTintedButton buttonWithType:UIButtonTypeCustom];
-        thisTabButton.frame = CGRectMake(10.0 + tabButtonWidth * [tabs indexOfObject:tab], 0, tabButtonWidth, TAB_BAR_HEIGHT);
-        [thisTabButton setImage:tab[@"button"] forState:UIControlStateNormal];
-        [thisTabButton setImage:tab[@"button-selected"] forState:UIControlStateSelected];
-        [thisTabButton addTarget:self action:@selector(tabButtonPressed:) forControlEvents:UIControlEventTouchDown];
-        [thisTabButton addTarget:self action:@selector(tabButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-        [self.tabBar addSubview:thisTabButton];
-    }
-    
-    UILongPressGestureRecognizer *clearHistory = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressRecognized:)];
-    [[self.tabBar.subviews objectAtIndex:1] addGestureRecognizer:clearHistory];
-}
-
-- (void)tabButtonPressed:(UIButton *)button
-{
-    [self selectTabButton:button];
-    
-    NSUInteger index = [[self.tabBar subviews] indexOfObject:button];
-    
-    [self switchToTab:index];
-}
-
-- (void)tabButtonTapped:(UIButton *)button
-{
-    [self selectTabButton:button];
-    self.mapMode = NO;
-    
-    NSUInteger index = [[self.tabBar subviews] indexOfObject:button];
-    
-    [self switchToTab:index];
-}
-
-- (void)selectTabButton:(UIButton *)button
-{
-    for (UIButton *b in self.tabBar.subviews) {
-        b.selected = NO;
-        b.tintColor = nil;
-    }
-    
-    button.selected = YES;
-    button.tintColor = [[UIApplication sharedApplication] keyWindow].tintColor;
-}
-
-- (void)switchToTab:(NSUInteger)tabIndex
-{
-    CGFloat newOffset = self.scrollView.frame.size.width * tabIndex;
-    self.scrollView.contentOffset = CGPointMake(newOffset, 0.0);
-    
-    switch (tabIndex) {
-        case 0:
-            [self.favoritesController.tableView flashScrollIndicators];
-            break;
-            
-        case 1:
-            [self.historyController.tableView flashScrollIndicators];
-            break;
-            
-        case 2:
-            [self.moreController.tableView flashScrollIndicators];
-            break;
-            
-        default:
-            break;
-    }
-}
-
-- (void)scrollViewDidScroll:(UIScrollView *)sender
-{
-    [self.view endEditing:YES];
-    
-    CGFloat pageWidth = self.scrollView.frame.size.width;
-    NSUInteger page = floor((self.scrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
-    
-    if (page <= self.tabs.count - 1) {
-        UIButton *thisButton = (UIButton *)[[self.tabBar subviews] objectAtIndex:page];
-        [self selectTabButton:thisButton];
-    }
-}
-
-#pragma mark - Map mode switching
-
-- (void)setMapMode:(BOOL)mapMode
-{
-    _mapMode = mapMode;
-    
-    if (mapMode) {
-        if (self.scrollView.alpha > 0) {
-            [UIView animateWithDuration:0.33 delay:0.0 options:(7 >> 16) animations:^{
-                [self closeDrawer];
-            } completion:nil];
-        }
-        
-        self.openMapButton.hidden = YES;
-        
-        if (self.shouldDisplayAds) {
-            [self.view insertSubview:self.mapBannerAd aboveSubview:self.mapController];
-        }
-        
-        Mixpanel *mixpanel = [Mixpanel sharedInstance];
-        [mixpanel track:@"Entered Map Mode" properties:nil];
-        
-    } else {
-        if (self.scrollView.alpha < 1) {
-            [UIView animateWithDuration:0.33 delay:0.0 options:(7 >> 16) animations:^{
-                [self openDrawer];
-            } completion:nil];
-        }
-        
-        self.openMapButton.hidden = NO;
-    }
-}
-
-- (void)switchToMap
-{
-    self.mapMode = YES;
-}
-
-- (void)handleDrawerDragGesture:(UIPanGestureRecognizer *)recognizer
-{
-    // opening refers to the drawer, not the map
-    BOOL opening = !([recognizer.view isEqual:self.gripper] || [recognizer.view isEqual:self.openMapButton]);
-    
-    if (opening && !self.mapMode) {
-        return;
-    }
-    
-    CGFloat draggableHeight = self.drawer.bounds.size.height - TAB_BAR_HEIGHT;
-    CGFloat moveDiff = [recognizer translationInView:self.drawer].y;
-    
-    // dragFactor: opening is negative / closing is positive
-    CGFloat dragFactor = moveDiff / draggableHeight;
-    
-    if (recognizer.state == UIGestureRecognizerStateBegan) {
-        self.drawerCurrentDragCenterY = self.drawer.center.y;
-        
-        [self.view endEditing:YES];
-        
-        Mixpanel *mixpanel = [Mixpanel sharedInstance];
-        [mixpanel track:@"Used Map Drag Gesture" properties:nil];
-        
-    } else if (recognizer.state == UIGestureRecognizerStateChanged) {
-        CGPoint newCenter = CGPointMake(self.drawer.center.x, self.drawerCurrentDragCenterY + moveDiff);
-        
-        // alphaFactor provides a normalized factor for fading drawer contents from 0 to 1 while opening and 1 to 0 while closing
-        CGFloat alphaFactor = (opening) ? fabs(dragFactor) : 1.0 - fabs(dragFactor);
-        NSLog(@"%f, drag: %f, alpha: %f", moveDiff, dragFactor, alphaFactor);
-        
-        if ((!opening && (dragFactor >= 0 && dragFactor <= 1.0)) || (opening && (dragFactor <= 0 && dragFactor >= -1.0))) {
-            self.drawer.center = newCenter;
-            self.scrollView.alpha = alphaFactor;
-            self.gripper.alpha = alphaFactor;
-        } else if ((opening && dragFactor < 0) || dragFactor < 1.0) {
-            CGFloat scaleFactor = 1.0 + fabs((moveDiff + draggableHeight * opening) / draggableHeight) * 0.25;
-            self.drawer.transform = CGAffineTransformMakeScale(1.0, scaleFactor);
-        }
-        
-    } else {
-        CGFloat terminalVelocity = [recognizer velocityInView:self.view].y;
-        
-        if (terminalVelocity < -250 || (opening && dragFactor <= -0.25)) {
-            [self openDrawerWithVelocity:terminalVelocity];
-        } else if (terminalVelocity > 40 || (!opening && dragFactor > 0.25)) {
-            [self closeDrawerWithVelocity:terminalVelocity];
-        } else {
-            // you didn't want it enough
-            if (opening) {
-                [self closeDrawerWithVelocity:terminalVelocity];
-            } else {
-                [self openDrawerWithVelocity:terminalVelocity];
-            }
-        }
-    }
-}
-
-- (void)openDrawer
-{
-    self.drawer.center = CGPointMake(self.drawer.center.x, self.drawerOpenCenterY);
-    self.scrollView.alpha = 1;
-    self.gripper.alpha = 1;
-    self.openMapButton.hidden = NO;
-}
-
-- (void)closeDrawer
-{
-    self.drawer.transform = CGAffineTransformIdentity;
-    self.drawer.frame = CGRectMake(self.drawer.frame.origin.x, self.view.bounds.size.height - TAB_BAR_HEIGHT, self.drawer.bounds.size.width, self.drawer.bounds.size.height);
-    self.scrollView.alpha = 0;
-    self.gripper.alpha = 0;
-    self.openMapButton.hidden = YES;
-    
-    [self.view endEditing:YES];
-    
-    for (UIButton *b in self.tabBar.subviews) {
-        b.selected = NO;
-        b.tintColor = nil;
-    }
-}
-
-- (void)openDrawerWithVelocity:(CGFloat)velocity
-{
-    velocity = MIN(abs(velocity), 3500);
-    CGFloat velocityFactor = velocity / 3500;
-    CGFloat animationDuration = 0.3 * (1 - velocityFactor);
-    CGFloat scaleFactor = 1 + velocityFactor * 0.2;
-    
-    [UIView animateWithDuration:animationDuration delay:0 options:0 animations:^{
-        [self openDrawer];
-        
-        if (CGAffineTransformIsIdentity(self.drawer.transform)) {
-            self.drawer.transform = CGAffineTransformMakeScale(1.0, scaleFactor);
-        }
-        
-    } completion:^(BOOL finished) {
-        if (CGAffineTransformIsIdentity(self.drawer.transform)) {
-            self.mapMode = NO;
-        } else {
-            [UIView animateWithDuration:0.7 delay:0 usingSpringWithDamping:0.25 initialSpringVelocity:0 options:UIViewAnimationOptionAllowUserInteraction animations:^{
-                self.drawer.transform = CGAffineTransformIdentity;
-            } completion:^(BOOL finished) {
-                self.mapMode = NO;
-            }];
-        }
-    }];
-}
-
-- (void)closeDrawerWithVelocity:(CGFloat)velocity
-{
-    velocity = MIN(abs(velocity), 3500);
-    CGFloat velocityFactor = velocity / 3500;
-    CGFloat animationDuration = 0.3 * (1 - velocityFactor);
-    
-    [UIView animateWithDuration:animationDuration delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-        [self closeDrawer];
-    } completion:^(BOOL finished) {
-        self.mapMode = YES;
-    }];
+    [self.drawerController reloadUserData];
 }
 
 #pragma mark - Search
@@ -670,7 +324,7 @@
     [stopResultsVC presentFromViewController:self];
 }
 
-- (void)stopTableView:(UITableView *)tableView didSelectCellWithStop:(NSString *)stopCode
+- (void)drawerDidSelectCellWithStop:(NSString *)stopCode
 {
     [self pushStopResultsWithStopCode:stopCode];
     
@@ -686,33 +340,7 @@
     [mixpanel track:@"Stop Requested" properties:@{@"Code": stopCode, @"From": @"Map"}];
 }
 
-#pragma mark - Other shit
-
-- (void)longPressRecognized:(UILongPressGestureRecognizer *)recognizer
-{
-    if (recognizer.state == UIGestureRecognizerStateBegan) {
-        UIActionSheet *clearSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:NSLocalizedString(@"CANCEL", nil) destructiveButtonTitle:NSLocalizedString(@"CLEAR_ALL_HISTORY", nil) otherButtonTitles:nil];
-        [clearSheet showInView:self.view];
-    }
-}
-
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    if (buttonIndex == 0) {
-        NSArray *emptyArray = [NSArray new];
-        
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        [defaults setObject:emptyArray forKey:@"history"];
-        [defaults synchronize];
-        
-        [self.historyController.tableView reloadData];
-        
-        Mixpanel *mixpanel = [Mixpanel sharedInstance];
-        [mixpanel track:@"Cleared History" properties:nil];
-    }
-}
-
-# pragma mark - Commerce
+#pragma mark - Commerce and Ads
 
 - (void)purchaseMap
 {
@@ -739,8 +367,6 @@
         
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:mapIdentifier];
         [transaction finish];
-        
-        self.mapMode = YES;
         
         [self.mapBannerAd removeFromSuperview];
         
@@ -783,8 +409,6 @@
     }];
 }
 
-#pragma mark - Ads
-
 - (BOOL)shouldDisplayAds
 {
     return ([[NSUserDefaults standardUserDefaults] boolForKey:@"CFEnableMapWithAds"] && ![OLCashier hasProduct:@"CF01"]);
@@ -825,8 +449,6 @@
     
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"CFEnableMapWithAds"];
     [[NSUserDefaults standardUserDefaults] synchronize];
-    
-    self.mapMode = YES;
     
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     [mixpanel track:@"Enabled Map With Ads"];

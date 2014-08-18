@@ -112,6 +112,8 @@
 		7C5FD9CE184F8B140099FEE2 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7C5FD9CC184F8B140099FEE2 /* Localizable.strings */; };
 		7C66C54E19A1C6AF00DDA6DF /* CFStopTransitionAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C66C54D19A1C6AF00DDA6DF /* CFStopTransitionAnimator.m */; };
 		7C66C54F19A1C6AF00DDA6DF /* CFStopTransitionAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C66C54D19A1C6AF00DDA6DF /* CFStopTransitionAnimator.m */; };
+		7C66C55219A2809300DDA6DF /* CFDrawerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C66C55119A2809300DDA6DF /* CFDrawerController.m */; };
+		7C66C55319A2809300DDA6DF /* CFDrawerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C66C55119A2809300DDA6DF /* CFDrawerController.m */; };
 		7C6CE7CC1877450D00DDEF54 /* CFClipView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C6CE7CB1877450D00DDEF54 /* CFClipView.m */; };
 		7C6CE7CF187751FB00DDEF54 /* CFColorBadgeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C6CE7CE187751FB00DDEF54 /* CFColorBadgeView.m */; };
 		7C6CE7F21877B77100DDEF54 /* libGoogleAdMobAds.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C6CE7F11877B77100DDEF54 /* libGoogleAdMobAds.a */; };
@@ -351,6 +353,8 @@
 		7C5FD9D1184F8B5F0099FEE2 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		7C66C54C19A1C6AF00DDA6DF /* CFStopTransitionAnimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFStopTransitionAnimator.h; sourceTree = "<group>"; };
 		7C66C54D19A1C6AF00DDA6DF /* CFStopTransitionAnimator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFStopTransitionAnimator.m; sourceTree = "<group>"; };
+		7C66C55019A2809300DDA6DF /* CFDrawerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFDrawerController.h; sourceTree = "<group>"; };
+		7C66C55119A2809300DDA6DF /* CFDrawerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFDrawerController.m; sourceTree = "<group>"; };
 		7C6CE7CA1877450D00DDEF54 /* CFClipView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFClipView.h; sourceTree = "<group>"; };
 		7C6CE7CB1877450D00DDEF54 /* CFClipView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFClipView.m; sourceTree = "<group>"; };
 		7C6CE7CD187751FB00DDEF54 /* CFColorBadgeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFColorBadgeView.h; sourceTree = "<group>"; };
@@ -629,6 +633,10 @@
 				7C10B971183ADD2A0086B650 /* CFHistoryViewController.m */,
 				7C10B973183ADD320086B650 /* CFMoreViewController.h */,
 				7C10B974183ADD320086B650 /* CFMoreViewController.m */,
+				7C7A15D918540E08002EE4C5 /* CFMoreContentViewController.h */,
+				7C7A15DA18540E08002EE4C5 /* CFMoreContentViewController.m */,
+				7C6CE7FE1877D04A00DDEF54 /* CFStoreViewController.h */,
+				7C6CE7FF1877D04A00DDEF54 /* CFStoreViewController.m */,
 			);
 			name = Tabs;
 			sourceTree = "<group>";
@@ -887,20 +895,18 @@
 				7C7A15DD1854DF54002EE4C5 /* CFNavigationController.m */,
 				7CFF7E7618381D6E006230CE /* CFMainViewController.h */,
 				7CFF7E7718381D6E006230CE /* CFMainViewController.m */,
+				7C66C55019A2809300DDA6DF /* CFDrawerController.h */,
+				7C66C55119A2809300DDA6DF /* CFDrawerController.m */,
 				7CFF7E7B18382448006230CE /* CFMapController.h */,
 				7CFF7E7C18382448006230CE /* CFMapController.m */,
-				7CFF7EC418387735006230CE /* CFStopResultsViewController.h */,
-				7CFF7EC518387735006230CE /* CFStopResultsViewController.m */,
-				7C7A15D918540E08002EE4C5 /* CFMoreContentViewController.h */,
-				7C7A15DA18540E08002EE4C5 /* CFMoreContentViewController.m */,
-				7CC7EC401929B5F6002160E5 /* CFServiceRouteViewController.h */,
-				7CC7EC411929B5F6002160E5 /* CFServiceRouteViewController.m */,
-				7C6CE7FE1877D04A00DDEF54 /* CFStoreViewController.h */,
-				7C6CE7FF1877D04A00DDEF54 /* CFStoreViewController.m */,
-				7C5ACA5B1932856E00E20FD9 /* CFWhatsNewViewController.h */,
-				7C5ACA5C1932856E00E20FD9 /* CFWhatsNewViewController.m */,
 				7C062F2C1933B07600342E4A /* CFSearchController.h */,
 				7C062F2D1933B07600342E4A /* CFSearchController.m */,
+				7CFF7EC418387735006230CE /* CFStopResultsViewController.h */,
+				7CFF7EC518387735006230CE /* CFStopResultsViewController.m */,
+				7CC7EC401929B5F6002160E5 /* CFServiceRouteViewController.h */,
+				7CC7EC411929B5F6002160E5 /* CFServiceRouteViewController.m */,
+				7C5ACA5B1932856E00E20FD9 /* CFWhatsNewViewController.h */,
+				7C5ACA5C1932856E00E20FD9 /* CFWhatsNewViewController.m */,
 				7C3B27C5183B1A6300818A3B /* Tabs */,
 			);
 			name = Controllers;
@@ -1356,6 +1362,7 @@
 				7C2EECD4188345F500AE78C2 /* CFStopResultsViewController.m in Sources */,
 				7C66C54F19A1C6AF00DDA6DF /* CFStopTransitionAnimator.m in Sources */,
 				7C2EECD5188345F500AE78C2 /* CFClipView.m in Sources */,
+				7C66C55319A2809300DDA6DF /* CFDrawerController.m in Sources */,
 				7C062F331933BC9200342E4A /* CFServiceSuggestionView.m in Sources */,
 				7C2EECD6188345F500AE78C2 /* CFMoreContentViewController.m in Sources */,
 				7C2EECD7188345F500AE78C2 /* CFFavoritesViewController.m in Sources */,
@@ -1426,6 +1433,7 @@
 				7C915927193AA4AE004CFCFA /* CFStopSuggestionView.m in Sources */,
 				7C66C54E19A1C6AF00DDA6DF /* CFStopTransitionAnimator.m in Sources */,
 				7CFF7E5518381645006230CE /* CFAppDelegate.m in Sources */,
+				7C66C55219A2809300DDA6DF /* CFDrawerController.m in Sources */,
 				7C7A15D61853EBF0002EE4C5 /* OLTextField.m in Sources */,
 				7CFF7EC618387735006230CE /* CFStopResultsViewController.m in Sources */,
 				7C6CE7CC1877450D00DDEF54 /* CFClipView.m in Sources */,
