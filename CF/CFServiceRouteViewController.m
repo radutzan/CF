@@ -302,10 +302,8 @@ static MKMapRect santiagoBounds;
 
 - (void)stopCalloutTapped
 {
-    CFStopResultsViewController *stopResultsVC = [[CFStopResultsViewController alloc] initWithStyle:UITableViewStylePlain];
-    stopResultsVC.stopCode = self.selectedStop.code;
-    
-    [self.navigationController pushViewController:stopResultsVC animated:YES];
+    CFStopResultsViewController *stopResultsVC = [[CFStopResultsViewController alloc] initWithStopCode:self.selectedStop.code];
+    [stopResultsVC presentFromRect:self.stopCalloutView.frame fromViewController:self];
 }
 
 #pragma mark - MKMapViewDelegate

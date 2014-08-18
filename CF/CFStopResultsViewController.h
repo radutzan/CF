@@ -9,7 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "CFStop.h"
 
-@interface CFStopResultsViewController : UITableViewController
+@interface CFStopResultsViewController : UIViewController
+
+- (instancetype)initWithStopCode:(NSString *)stopCode;
+- (void)presentFromViewController:(UIViewController *)fromViewController;
+- (void)presentFromRect:(CGRect)rect fromViewController:(UIViewController *)fromViewController;
+- (void)dismiss;
 
 @property (nonatomic, strong) NSString *stopCode;
 @property (nonatomic, strong) CFStop *stop;

@@ -18,14 +18,19 @@
 #import "GADBannerView.h"
 #import "OLCashier.h"
 #import "CFServiceRouteViewController.h"
+#import "CFStopTransitionAnimator.h"
 
-@interface CFStopResultsViewController () <CFStopSignViewDelegate, UIAlertViewDelegate, CFResultCellDelegate>
+@interface CFStopResultsViewController () <CFStopSignViewDelegate, UIAlertViewDelegate, CFResultCellDelegate, UITableViewDelegate, UITableViewDataSource, UIViewControllerTransitioningDelegate>
 
+@property (nonatomic, strong) UINavigationBar *localNavigationBar;
 @property (nonatomic, strong) CFStopSignView *stopInfoView;
 @property (nonatomic, strong) OLShapeTintedButton *favoriteButton;
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic, strong) UILabel *timerLabel;
 @property (nonatomic, assign) NSUInteger timerCount;
+
+@property (nonatomic, retain) UITableView *tableView;
+@property (nonatomic, retain) UIRefreshControl *refreshControl;
 @property (nonatomic, strong) NSMutableArray *responseEstimation;
 @property (nonatomic, strong) NSMutableArray *finalData;
 @property (nonatomic, strong) GADBannerView *bannerView;
@@ -33,33 +38,68 @@
 @property (nonatomic, assign) BOOL removedAds;
 @property (nonatomic) CGFloat initialBannerCenterX;
 
+@property (nonatomic, strong) CFStopTransitionAnimator *transitionAnimator;
+
 @end
 
 @implementation CFStopResultsViewController
 
-- (id)initWithStyle:(UITableViewStyle)style
+- (instancetype)initWithStopCode:(NSString *)stopCode
 {
-    self = [super initWithStyle:style];
+    self = [super initWithNibName:nil bundle:nil];
     if (self) {
         _responseEstimation = [NSMutableArray new];
         _finalData = [NSMutableArray new];
         _refreshing = YES;
         
         self.title = @"Stop Results";
-        
-        self.tableView.separatorInset = UIEdgeInsetsZero;
-        
+        self.stopCode = stopCode;
         self.removedAds = ([OLCashier hasProduct:@"CF01"] || [OLCashier hasProduct:@"CF02"]);
+        self.transitionAnimator = [CFStopTransitionAnimator new];
     }
     return self;
+}
+
+- (void)loadView
+{
+    self.view = [[UIView alloc] initWithFrame:CGRectInset([UIApplication sharedApplication].keyWindow.bounds, 15.0, 25.0)];
+    self.view.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
+    self.view.backgroundColor = [UIColor colorWithWhite:0 alpha:.5];
+    
+    self.localNavigationBar = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 54.0)];
+    self.localNavigationBar.barStyle = UIBarStyleBlack;
+    [self.view addSubview:self.localNavigationBar];
+    
+    self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
+    self.tableView.delegate = self;
+    self.tableView.dataSource = self;
+    self.tableView.separatorInset = UIEdgeInsetsZero;
+    self.tableView.separatorColor = [UIColor clearColor];
+    self.tableView.contentInset = UIEdgeInsetsMake(self.localNavigationBar.bounds.size.height, 0, 0, 0);
+    self.tableView.backgroundColor = [UIColor clearColor];
+    [self.view insertSubview:self.tableView belowSubview:self.localNavigationBar];
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
-    self.view.backgroundColor = [UIColor blackColor];
-    self.tableView.separatorColor = [UIColor clearColor];
+    self.stopInfoView = [[CFStopSignView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.localNavigationBar.bounds.size.width - 33.0, 52.0)];
+    self.stopInfoView.delegate = self;
+    self.stopInfoView.stopCodeLabel.hidden = YES;
+    self.stopInfoView.favoriteContentView.userInteractionEnabled = YES;
+    [self.localNavigationBar addSubview:self.stopInfoView];
+    
+    self.favoriteButton = [OLShapeTintedButton buttonWithType:UIButtonTypeCustom];
+    self.favoriteButton.frame = CGRectMake(self.localNavigationBar.bounds.size.width - 38.0, 5.0, 42.0, 42.0);
+    self.favoriteButton.enabled = NO;
+    [self.favoriteButton setImage:[UIImage imageNamed:@"button-favorites"] forState:UIControlStateNormal];
+    [self.favoriteButton setImage:[UIImage imageNamed:@"button-favorites-selected"] forState:UIControlStateSelected];
+    [self.favoriteButton addTarget:self action:@selector(favButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+    [self.localNavigationBar addSubview:self.favoriteButton];
+    
+//    UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
+//    [self.navigationItem setBackBarButtonItem:backButtonItem];
     
     self.refreshControl = [UIRefreshControl new];
     self.refreshControl.tintColor = [UIColor whiteColor];
@@ -70,34 +110,14 @@
     self.timerLabel.alpha = 0.5;
     self.timerLabel.textAlignment = NSTextAlignmentRight;
     self.timerLabel.text = NSLocalizedString(@"REFRESHING", nil);
-    
-    UIView *earFuck = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 270, 44.0)];
-    self.navigationItem.titleView = earFuck;
-    
-    self.stopInfoView = [[CFStopSignView alloc] initWithFrame:CGRectMake(-25.0, -11.0, 280.0, 52.0)];
-    self.stopInfoView.delegate = self;
-    self.stopInfoView.stopCodeLabel.hidden = YES;
-    self.stopInfoView.favoriteContentView.userInteractionEnabled = YES;
-    [earFuck addSubview:self.stopInfoView];
-    
-    self.favoriteButton = [OLShapeTintedButton buttonWithType:UIButtonTypeCustom];
-    self.favoriteButton.frame = CGRectMake(earFuck.bounds.size.width - 38.0, -5.0, 42.0, 42.0);
-    self.favoriteButton.enabled = NO;
-    [self.favoriteButton setImage:[UIImage imageNamed:@"button-favorites"] forState:UIControlStateNormal];
-    [self.favoriteButton setImage:[UIImage imageNamed:@"button-favorites-selected"] forState:UIControlStateSelected];
-    [self.favoriteButton addTarget:self action:@selector(favButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-    [earFuck addSubview:self.favoriteButton];
-    
-    UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
-    [self.navigationItem setBackBarButtonItem:backButtonItem];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     
-    self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
-    [self.navigationController setNavigationBarHidden:NO animated:YES];
+//    self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
+    [self.navigationController setNavigationBarHidden:YES animated:YES];
     
     if (self.refreshing) {
         [self.refreshControl beginRefreshing];
@@ -111,7 +131,7 @@
 {
     [super viewDidAppear:animated];
     
-    [self.navigationController setNavigationBarHidden:NO animated:YES];
+    [self.navigationController setNavigationBarHidden:YES animated:YES];
     if (self.stop) [self performStopRequest];
 }
 
@@ -128,6 +148,51 @@
     [self.view endEditing:YES];
     
     [self.navigationController setNavigationBarHidden:NO];
+}
+
+#pragma mark - Presentation
+
+- (void)presentFromViewController:(UIViewController *)fromViewController
+{
+    [self presentFromRect:CGRectZero fromViewController:fromViewController];
+}
+
+- (void)presentFromRect:(CGRect)rect fromViewController:(UIViewController *)fromViewController
+{
+    if (CGRectIsEmpty(rect)) {
+        
+    }
+    
+    self.transitionAnimator.originRect = rect;
+    self.transitioningDelegate = self;
+    self.modalPresentationStyle = UIModalPresentationCustom;
+    [fromViewController presentViewController:self animated:YES completion:nil];
+}
+
+- (void)dismiss
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)dismissFromRect:(CGRect)rect withVelocity:(CGFloat)velocity
+{
+    self.transitionAnimator.originRect = rect;
+    self.transitionAnimator.initialVelocity = velocity;
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented
+                                                                  presentingController:(UIViewController *)presenting
+                                                                      sourceController:(UIViewController *)source
+{
+    self.transitionAnimator.presenting = YES;
+    return self.transitionAnimator;
+}
+
+- (id<UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed
+{
+    self.transitionAnimator.presenting = NO;
+    return self.transitionAnimator;
 }
 
 #pragma mark - Favorites and history

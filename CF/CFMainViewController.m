@@ -25,14 +25,13 @@
 
 #import "OLShapeTintedButton.h"
 
-#import "GADInterstitial.h"
 #import "GADBannerView.h"
 
 #define TAB_BAR_HEIGHT 50.0
 #define TAB_BUTTON_WIDTH 75.0
 #define CONTENT_ORIGIN 180.0
 
-@interface CFMainViewController () <UIScrollViewDelegate, CFStopTableViewDelegate, CFMapControllerDelegate, CFSearchControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate, GADInterstitialDelegate>
+@interface CFMainViewController () <UIScrollViewDelegate, CFStopTableViewDelegate, CFMapControllerDelegate, CFSearchControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate>
 
 @property (nonatomic, strong) CFMapController *mapController;
 @property (nonatomic, strong) CFSearchController *searchController;
@@ -59,8 +58,6 @@
 
 @property (nonatomic, assign) BOOL shouldDisplayAds;
 @property (nonatomic, strong) GADBannerView *mapBannerAd;
-@property (nonatomic, strong) GADInterstitial *interstitialAd;
-@property (nonatomic, assign) BOOL interstitialLoaded;
 
 @end
 
@@ -113,7 +110,7 @@
     
     self.drawer = [[UIToolbar alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - TAB_BAR_HEIGHT, self.view.bounds.size.width, self.view.bounds.size.height - CONTENT_ORIGIN)];
     self.drawer.layer.anchorPoint = CGPointMake(0.5, 1.0);
-    self.drawer.frame = CGRectMake(0, self.view.bounds.size.height - TAB_BAR_HEIGHT, self.view.bounds.size.width, self.view.bounds.size.height - CONTENT_ORIGIN);
+    self.drawer.frame = CGRectMake(10.0, self.view.bounds.size.height - TAB_BAR_HEIGHT, self.view.bounds.size.width - 20.0, self.view.bounds.size.height - CONTENT_ORIGIN);
     [self.view addSubview:self.drawer];
     
     self.drawerOpenCenterY = CONTENT_ORIGIN + self.drawer.bounds.size.height;
@@ -136,14 +133,11 @@
     
     [self initTabs];
     
-    self.gripper = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.drawer.bounds.size.width, 30)];
+    self.gripper = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"gripper"]];
+    self.gripper.frame = CGRectMake(0, 0, self.drawer.bounds.size.width, 30);
     self.gripper.alpha = 0;
+    self.gripper.contentMode = UIViewContentModeCenter;
     [self.drawer addSubview:self.gripper];
-    
-    UIImageView *gripImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"gripper"]];
-    gripImage.frame = self.gripper.bounds;
-    gripImage.contentMode = UIViewContentModeCenter;
-    [self.gripper addSubview:gripImage];
     
     UIPanGestureRecognizer *gripDrag = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleDrawerDragGesture:)];
     [self.gripper addGestureRecognizer:gripDrag];
@@ -231,8 +225,6 @@
     [super viewDidAppear:animated];
     
     if (self.shouldDisplayAds) {
-        self.interstitialLoaded = NO;
-        [self loadInterstitialAd];
         [self loadMapBannerAd];
     }
 }
@@ -449,7 +441,6 @@
         self.openMapButton.hidden = YES;
         
         if (self.shouldDisplayAds) {
-            if (self.interstitialLoaded) [self.interstitialAd presentFromRootViewController:self];
             [self.view insertSubview:self.mapBannerAd aboveSubview:self.mapController];
         }
         
@@ -540,7 +531,7 @@
 - (void)closeDrawer
 {
     self.drawer.transform = CGAffineTransformIdentity;
-    self.drawer.frame = CGRectMake(0, self.view.bounds.size.height - TAB_BAR_HEIGHT, self.drawer.bounds.size.width, self.drawer.bounds.size.height);
+    self.drawer.frame = CGRectMake(self.drawer.frame.origin.x, self.view.bounds.size.height - TAB_BAR_HEIGHT, self.drawer.bounds.size.width, self.drawer.bounds.size.height);
     self.scrollView.alpha = 0;
     self.gripper.alpha = 0;
     self.openMapButton.hidden = YES;
@@ -674,10 +665,9 @@
         return;
     }
     
-    CFStopResultsViewController *stopResultsVC = [[CFStopResultsViewController alloc] initWithStyle:UITableViewStylePlain];
-    stopResultsVC.stopCode = stopCode;
+    CFStopResultsViewController *stopResultsVC = [[CFStopResultsViewController alloc] initWithStopCode:stopCode];
     
-    [self.navigationController pushViewController:stopResultsVC animated:YES];
+    [stopResultsVC presentFromViewController:self];
 }
 
 - (void)stopTableView:(UITableView *)tableView didSelectCellWithStop:(NSString *)stopCode
@@ -831,7 +821,6 @@
 
 - (void)enableMapWithAds
 {
-    [self loadInterstitialAd];
     [self loadMapBannerAd];
     
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"CFEnableMapWithAds"];
@@ -845,17 +834,6 @@
     [mixpanel registerSuperProperties:@{@"Has Free Map": @"Yes"}];
 }
 
-- (void)loadInterstitialAd
-{
-    GADRequest *request = [GADRequest request];
-    request.testDevices = @[@"61abccb6c029497b02bef4224933c76b", GAD_SIMULATOR_ID];
-    
-    self.interstitialAd = [GADInterstitial new];
-    self.interstitialAd.delegate = self;
-    self.interstitialAd.adUnitID = @"ca-app-pub-6226087428684107/9858178470";
-    [self.interstitialAd loadRequest:request];
-}
-
 - (void)loadMapBannerAd
 {
     GADRequest *request = [GADRequest request];
@@ -866,23 +844,6 @@
     self.mapBannerAd.rootViewController = self;
     self.mapBannerAd.frame = CGRectMake(0, self.view.bounds.size.height - TAB_BAR_HEIGHT - self.mapBannerAd.bounds.size.height, self.mapBannerAd.bounds.size.width, self.mapBannerAd.bounds.size.height);
     [self.mapBannerAd loadRequest:request];
-}
-
-- (void)interstitialDidReceiveAd:(GADInterstitial *)interstitial
-{
-    self.interstitialLoaded = YES;
-}
-
-- (void)interstitial:(GADInterstitial *)interstitial didFailToReceiveAdWithError:(GADRequestError *)error
-{
-    self.interstitialLoaded = NO;
-}
-
-- (void)interstitialDidDismissScreen:(GADInterstitial *)interstitial
-{
-    self.interstitialAd = nil;
-    self.interstitialLoaded = NO;
-    [self loadInterstitialAd];
 }
 
 @end
