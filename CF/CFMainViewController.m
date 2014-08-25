@@ -267,6 +267,7 @@
 {
     CFServiceRouteViewController *serviceRouteVC = [[CFServiceRouteViewController alloc] initWithService:serviceName direction:direction];
     [self.navigationController pushViewController:serviceRouteVC animated:YES];
+//    [self.mapController displayServiceRoute:serviceName direction:direction];
     
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     [mixpanel track:@"Service Route Requested" properties:@{@"Service": serviceName, @"From": @"Smart Search Results"}];

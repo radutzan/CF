@@ -12,10 +12,6 @@
 
 - (void)drawerDidSelectCellWithStop:(NSString *)stopCode;
 
-@optional
-- (void)drawerDidOpen;
-- (void)drawerDidClose;
-
 @end
 
 @interface CFDrawerController : UIViewController

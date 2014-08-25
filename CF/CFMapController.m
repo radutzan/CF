@@ -10,6 +10,7 @@
 #import "NSDictionary+NSNullUtility.h"
 #import "CFSapoClient.h"
 #import "CFStop.h"
+#import "CFRoute.h"
 #import "CFBipSpot.h"
 
 #import <OLGhostAlertView/OLGhostAlertView.h>
@@ -28,6 +29,9 @@
 @property (nonatomic) BOOL showZoomWarning;
 @property (nonatomic) BOOL showOutOfSantiagoWarning;
 @property (nonatomic, strong) CLLocationManager *locationManager;
+
+@property (nonatomic, assign, readwrite) CFMapMode mapMode;
+@property (nonatomic, assign) BOOL routeRegionSet;
 
 @end
 
@@ -52,10 +56,17 @@ static MKMapRect santiagoBounds;
         self.mapView.pitchEnabled = NO;
         [self addSubview:self.mapView];
         
+        self.mapMode = CFMapModeStops;
+        self.routeRegionSet = NO;
+        [self setInitialRegion];
+        
         self.locationManager = [[CLLocationManager alloc] init];
         self.locationManager.delegate = self;
         self.locationManager.distanceFilter = kCLDistanceFilterNone;
         self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+        if ([self.locationManager respondsToSelector:@selector(requestWhenInUseAuthorization)]) {
+            [self.locationManager requestWhenInUseAuthorization];
+        }
         [self.locationManager startUpdatingLocation];
         
         self.stopCalloutView = [SMCalloutView new];
@@ -82,6 +93,8 @@ static MKMapRect santiagoBounds;
     }
     return self;
 }
+
+#pragma mark - Helpers
 
 - (void)clearStopAnnotations
 {
@@ -112,6 +125,37 @@ static MKMapRect santiagoBounds;
     
     [self.mapView removeAnnotations:pins];
     pins = nil;
+}
+
+- (void)clearRouteOverlays
+{
+    NSMutableArray *pins = [NSMutableArray new];
+    
+    for (id annotation in [self.mapView annotations]) {
+        if ([annotation isKindOfClass:[CFStop class]] || [annotation isKindOfClass:[CFBipSpot class]])
+            [pins addObject:annotation];
+    }
+    
+    [self.mapView removeAnnotations:pins];
+    pins = nil;
+}
+
+- (void)setInitialRegion
+{
+    if (!self.mapView.userLocation) {
+        [self setDefaultRegion];
+    } else {
+        self.mapView.region = [self.mapView regionThatFits:MKCoordinateRegionMakeWithDistance(self.mapView.userLocation.coordinate, 1400, 1400)];
+    }
+}
+
+- (void)setDefaultRegion
+{
+    CLLocationCoordinate2D startCoordinate = CLLocationCoordinate2DMake(-33.444117, -70.651055);
+    MKCoordinateRegion adjustedRegion = [self.mapView regionThatFits:MKCoordinateRegionMakeWithDistance(startCoordinate, 400, 400)];
+    [self.mapView setRegion:adjustedRegion animated:NO];
+    
+    self.defaultCenterCoordinate = startCoordinate;
 }
 
 - (void)setShowZoomWarning:(BOOL)showZoomWarning
@@ -146,7 +190,55 @@ static MKMapRect santiagoBounds;
 //    [self.mapView deselectAnnotation:self.selectedStop animated:NO];
 }
 
-#pragma mark - Cuantofaltism
+#pragma mark - Map Mode Switching
+
+- (void)setMapMode:(CFMapMode)mapMode
+{
+    if (_mapMode == mapMode) return;
+    
+    if (mapMode == CFMapModeStops) {
+        [self loadStopAnnotations];
+    } else {
+        [self clearStopAnnotations];
+    }
+    
+    if (mapMode == CFMapModeServiceRoute) {
+        
+    } else if (_mapMode == CFMapModeServiceRoute && mapMode != CFMapModeServiceRoute) {
+        [self.mapView removeOverlays:self.mapView.overlays];
+        [self clearStopAnnotations];
+        self.routeRegionSet = NO;
+    }
+    
+    _mapMode = mapMode;
+}
+
+#pragma mark - CFMapModeStops
+
+- (void)displayStops
+{
+    self.mapMode = CFMapModeStops;
+}
+
+- (void)loadStopAnnotations
+{
+    MKCoordinateRegion region = self.mapView.region;
+    
+    float radio = floorf(MIN(region.span.longitudeDelta, region.span.latitudeDelta) * 111000) - 50;
+    radio = MIN(950, radio);
+    radio = radio + 50;
+    
+    if (radio > 800) {
+        [self clearStopAnnotations];
+        self.showZoomWarning = YES;
+        return;
+    } else {
+        self.showZoomWarning = NO;
+    }
+    
+    [self placeBipAnnotationsInRegion:region withRadius:radio];
+    [self placeStopAnnotationsInRegion:region withRadius:radio];
+}
 
 - (void)placeStopAnnotationsInRegion:(MKCoordinateRegion)region withRadius:(float)radius
 {
@@ -250,6 +342,98 @@ static MKMapRect santiagoBounds;
     return spot;
 }
 
+#pragma mark - CFMapModeServiceRoute
+
+- (void)displayServiceRoute:(NSString *)serviceName direction:(CFDirection)direction
+{
+    self.mapMode = CFMapModeServiceRoute;
+    if (!direction) direction = CFDirectionOutward;
+    [self drawPolylineForService:serviceName direction:direction];
+}
+
+- (void)displayServiceRoute:(NSString *)serviceName directionString:(NSString *)directionString
+{
+    [[CFSapoClient sharedClient] serviceInfoForService:serviceName handler:^(NSError *error, NSArray *result) {
+        if (result) {
+            CFDirection finalDirection;
+            NSDictionary *resultDictionary = [result objectAtIndex:0];
+            NSString *responseIda = [resultDictionary objectForKey:@"ida"];
+//            NSString *responseRegreso = [resultDictionary objectForKey:@"regreso"];
+            NSString *localizedTo = NSLocalizedString(@"TO_DIRECTION", nil);
+            NSString *comparableDirectionString = [[directionString stringByReplacingCharactersInRange:NSMakeRange(0, localizedTo.length + 1) withString:@""] uppercaseString];
+//            NSLog(@"%@", responseIda);
+//            NSLog(@"%@", responseRegreso);
+//            NSLog(@"%@", comparableDirectionString);
+            
+            if ([comparableDirectionString isEqualToString:responseIda]) {
+                finalDirection = CFDirectionOutward;//NSLog(@"CFDirectionOutward");
+            } else {
+                finalDirection = CFDirectionInward;//NSLog(@"CFDirectionInward");
+            }
+            
+//            self.directionSwitcher.selectedSegmentIndex = finalDirection;
+//            self.currentDirection = finalDirection;
+            
+            [self displayServiceRoute:serviceName direction:finalDirection];
+        }
+    }];
+}
+
+- (void)drawPolylineForService:(NSString *)service direction:(CFDirection)direction
+{
+    [self.mapView removeOverlays:self.mapView.overlays];
+    [self clearStopAnnotations];
+    
+    [[CFSapoClient sharedClient] routeForBusService:service direction:direction handler:^(NSError *error, NSArray *result) {
+        if (error || [result count] == 0) {
+            UIAlertView *nope = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"SERVICE_ROUTE_ERROR_ALERT_TITLE", nil) message:NSLocalizedString(@"ERROR_MESSAGE_TRY_AGAIN", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"ERROR_DISMISS", nil) otherButtonTitles:nil];
+            [nope show];
+            return;
+        }
+        
+        NSMutableArray *stops = [NSMutableArray arrayWithCapacity:result.count];
+        CLLocationCoordinate2D *coordinates = malloc(sizeof(CLLocationCoordinate2D) * result.count);
+        NSUInteger i = 0;
+        
+        for (NSDictionary *dataPoint in result) {
+            CLLocationCoordinate2D coordinate;
+            coordinate.latitude = [[dataPoint objectForKey:@"latitude"] doubleValue];
+            coordinate.longitude = [[dataPoint objectForKey:@"longitude"] doubleValue];
+            NSString *name = [dataPoint objectForKey:@"nombre"];
+            
+            if (name != nil) {
+                // it's a bus stop
+                CFStop *stop = [CFStop stopWithCoordinate:coordinate code:[dataPoint objectForKey:@"codigo"] name:name services:[dataPoint objectForKey:@"recorridos"]];
+                [stops addObject:stop];
+            }
+            
+            coordinates[i] = coordinate;
+            i++;
+        }
+        
+        CFRoute *route = [CFRoute routeWithServiceName:service stops:stops routeCoordinates:coordinates count:result.count];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.mapView addOverlay:[route polyline] level:MKOverlayLevelAboveRoads];
+            [self.mapView addAnnotations:stops];
+            
+            if (i == result.count && !self.routeRegionSet) {
+                MKCoordinateRegion adjustedRegion;
+                
+                if (self.mapView.userLocation && MKMapRectContainsPoint(santiagoBounds, MKMapPointForCoordinate(self.mapView.userLocation.coordinate))) {
+                    adjustedRegion = [self.mapView regionThatFits:MKCoordinateRegionMakeWithDistance(self.mapView.userLocation.coordinate, 1400, 1400)];
+                } else {
+                    CFStop *middleAnnotation = [stops objectAtIndex:floorf(stops.count / 2)];
+                    adjustedRegion = [self.mapView regionThatFits:MKCoordinateRegionMakeWithDistance(middleAnnotation.coordinate, 1400, 1400)];
+                }
+                
+                [self.mapView setRegion:adjustedRegion];
+                self.routeRegionSet = YES;
+            }
+        });
+    }];
+}
+
 #pragma mark - CLLocationManagerDelegate
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
@@ -276,15 +460,6 @@ static MKMapRect santiagoBounds;
     }
 }
 
-- (void)setDefaultRegion
-{
-    CLLocationCoordinate2D startCoordinate = CLLocationCoordinate2DMake(-33.437671, -70.636461);
-    MKCoordinateRegion adjustedRegion = [self.mapView regionThatFits:MKCoordinateRegionMakeWithDistance(startCoordinate, 400, 400)];
-    [self.mapView setRegion:adjustedRegion animated:NO];
-    
-    self.defaultCenterCoordinate = startCoordinate;
-}
-
 #pragma mark - MKMapViewDelegate
 
 - (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation
@@ -302,27 +477,7 @@ static MKMapRect santiagoBounds;
         self.showOutOfSantiagoWarning = NO;
     }
     
-    [self loadStopAnnotations];
-}
-
-- (void)loadStopAnnotations
-{
-    MKCoordinateRegion region = self.mapView.region;
-    
-    float radio = floorf(MIN(region.span.longitudeDelta, region.span.latitudeDelta) * 111000) - 50;
-    radio = MIN(950, radio);
-    radio = radio + 50;
-    
-    if (radio > 800) {
-        [self clearStopAnnotations];
-        self.showZoomWarning = YES;
-        return;
-    } else {
-        self.showZoomWarning = NO;
-    }
-    
-    [self placeBipAnnotationsInRegion:region withRadius:radio];
-    [self placeStopAnnotationsInRegion:region withRadius:radio];
+    if (self.mapMode == CFMapModeStops) [self loadStopAnnotations];
 }
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
@@ -437,7 +592,7 @@ static MKMapRect santiagoBounds;
 - (MKOverlayRenderer *)mapView:(MKMapView *)mapView rendererForOverlay:(id<MKOverlay>)overlay
 {
     MKPolylineRenderer *renderer = [[MKPolylineRenderer alloc] initWithPolyline:overlay];
-    renderer.strokeColor = [UIColor colorWithHue:260.0/360.0 saturation:1 brightness:0.85 alpha:0.75];
+    renderer.strokeColor = [UIColor colorWithHue:133.0/360.0 saturation:0.74 brightness:0.87 alpha:0.8];
     renderer.lineWidth = 5.0;
     return renderer;
 }

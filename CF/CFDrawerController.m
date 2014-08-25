@@ -65,14 +65,17 @@
     CGSize windowSize = [UIApplication sharedApplication].keyWindow.bounds.size;
     
     self.view = [[CFTransparentView alloc] initWithFrame:[UIApplication sharedApplication].keyWindow.bounds];
-//    self.view.userInteractionEnabled = NO;
     
     self.drawer = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, windowSize.height - TAB_BAR_HEIGHT, windowSize.width, windowSize.height - DRAWER_ORIGIN_Y)];
     self.drawer.layer.anchorPoint = CGPointMake(0.5, 1.0);
     self.drawer.frame = CGRectMake(10.0, windowSize.height - TAB_BAR_HEIGHT, windowSize.width - 20.0, windowSize.height - DRAWER_ORIGIN_Y);
-    self.drawer.layer.borderWidth = 0.5;
-    self.drawer.layer.borderColor = [UIColor colorWithWhite:0 alpha:0.3].CGColor;
     [self.view addSubview:self.drawer];
+    
+    CALayer *borderLayer = [CALayer layer];
+    borderLayer.frame = CGRectInset(self.drawer.bounds, -0.5, -0.5);
+    borderLayer.borderWidth = 0.5;
+    borderLayer.borderColor = [UIColor colorWithWhite:0 alpha:0.3].CGColor;
+    [self.drawer.layer addSublayer:borderLayer];
     
     self.drawerOpenCenterY = DRAWER_ORIGIN_Y + self.drawer.bounds.size.height;
     
@@ -186,7 +189,6 @@
 {
     [self selectTabButton:button];
     self.drawerOpen = YES;
-    [self.delegate drawerDidOpen];
     
     NSUInteger index = [[self.tabBar subviews] indexOfObject:button];
     

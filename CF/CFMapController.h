@@ -9,6 +9,13 @@
 @import UIKit;
 @import MapKit;
 
+typedef NS_ENUM(NSInteger, CFMapMode) {
+    CFMapModeStops,
+    CFMapModeServiceRoute,
+    CFMapModeDirections
+};
+
+#import "CFSapoClient.h"
 #import "CustomPinAnnotationView.h"
 
 @protocol CFMapControllerDelegate <NSObject>
@@ -25,9 +32,13 @@
 
 - (void)performSearchWithString:(NSString *)searchString;
 - (void)goToNearestBipSpot;
+- (void)displayStops;
+- (void)displayServiceRoute:(NSString *)serviceName direction:(CFDirection)direction;
+- (void)displayServiceRoute:(NSString *)serviceName directionString:(NSString *)directionString;
 
 @property (nonatomic, strong) MKMapView *mapView;
 @property (nonatomic, weak) id<CFMapControllerDelegate> delegate;
 @property (nonatomic, assign) CLLocationCoordinate2D defaultCenterCoordinate;
+@property (nonatomic, assign, readonly) CFMapMode mapMode;
 
 @end

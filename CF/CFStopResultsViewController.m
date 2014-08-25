@@ -66,6 +66,12 @@
     self.view.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     self.view.backgroundColor = [UIColor colorWithWhite:0 alpha:.5];
     
+    CALayer *borderLayer = [CALayer layer];
+    borderLayer.frame = CGRectInset(self.view.bounds, -0.5, -0.5);
+    borderLayer.borderWidth = 0.5;
+    borderLayer.borderColor = [UIColor colorWithWhite:0 alpha:0.3].CGColor;
+    [self.view.layer addSublayer:borderLayer];
+    
     self.localNavigationBar = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 54.0)];
     self.localNavigationBar.barStyle = UIBarStyleBlack;
     [self.view addSubview:self.localNavigationBar];

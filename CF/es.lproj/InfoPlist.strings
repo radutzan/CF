@@ -1,3 +1,4 @@
 /* Localized versions of Info.plist keys */
 
-NSLocationUsageDescription = "Para mostrarte los paraderos y puntos Bip! más cercanos. Tu ubicación nunca se enviará a ningún servidor, sólo se usará dentro de tu dispositivo.";
+NSLocationUsageDescription = "Tu ubicación se usa para mostrarte los paraderos y puntos Bip! más cercanos.  Nunca se enviará a ningún servidor, sólo se usará dentro de tu dispositivo.";
+NSLocationWhenInUseUsageDescription = "Tu ubicación se usa para mostrarte los paraderos y puntos Bip! más cercanos.  Nunca se enviará a ningún servidor, sólo se usará dentro de tu dispositivo.";
