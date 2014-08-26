@@ -58,7 +58,7 @@ static MKMapRect santiagoBounds;
         
         self.mapMode = CFMapModeStops;
         self.routeRegionSet = NO;
-        [self setInitialRegion];
+        [self setInitialRegionAnimated:NO];
         
         self.locationManager = [[CLLocationManager alloc] init];
         self.locationManager.delegate = self;
@@ -140,20 +140,20 @@ static MKMapRect santiagoBounds;
     pins = nil;
 }
 
-- (void)setInitialRegion
+- (void)setInitialRegionAnimated:(BOOL)animated
 {
-    if (!self.mapView.userLocation) {
-        [self setDefaultRegion];
+    if (!self.locationManager.location) {
+        [self setDefaultRegionAnimated:animated];
     } else {
-        self.mapView.region = [self.mapView regionThatFits:MKCoordinateRegionMakeWithDistance(self.mapView.userLocation.coordinate, 1400, 1400)];
+        [self.mapView setRegion:[self.mapView regionThatFits:MKCoordinateRegionMakeWithDistance(self.locationManager.location.coordinate, 1400, 1400)] animated:animated];
     }
 }
 
-- (void)setDefaultRegion
+- (void)setDefaultRegionAnimated:(BOOL)animated
 {
     CLLocationCoordinate2D startCoordinate = CLLocationCoordinate2DMake(-33.444117, -70.651055);
     MKCoordinateRegion adjustedRegion = [self.mapView regionThatFits:MKCoordinateRegionMakeWithDistance(startCoordinate, 400, 400)];
-    [self.mapView setRegion:adjustedRegion animated:NO];
+    [self.mapView setRegion:adjustedRegion animated:animated];
     
     self.defaultCenterCoordinate = startCoordinate;
 }
@@ -197,6 +197,7 @@ static MKMapRect santiagoBounds;
     if (_mapMode == mapMode) return;
     
     if (mapMode == CFMapModeStops) {
+        [self setInitialRegionAnimated:YES];
         [self loadStopAnnotations];
     } else {
         [self clearStopAnnotations];
@@ -225,10 +226,10 @@ static MKMapRect santiagoBounds;
     MKCoordinateRegion region = self.mapView.region;
     
     float radio = floorf(MIN(region.span.longitudeDelta, region.span.latitudeDelta) * 111000) - 50;
-    radio = MIN(950, radio);
+    radio = MIN(1750, radio);
     radio = radio + 50;
     
-    if (radio > 800) {
+    if (radio > 1750) {
         [self clearStopAnnotations];
         self.showZoomWarning = YES;
         return;
@@ -452,7 +453,7 @@ static MKMapRect santiagoBounds;
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
 {
     NSLog(@"location manager failure: %@", error);
-    [self setDefaultRegion];
+    [self setDefaultRegionAnimated:NO];
     
     if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied) {
         UIAlertView *locationDenied = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"LOCATION_DENIED_ALERT_TITLE", nil) message:NSLocalizedString(@"LOCATION_DENIED_ALERT_MESSAGE", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"DISMISS", nil) otherButtonTitles:nil];

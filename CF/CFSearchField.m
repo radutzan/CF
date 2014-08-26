@@ -12,6 +12,7 @@
 
 @property (nonatomic, strong) UIImageView *glyphView;
 @property (nonatomic, strong) UITextField *textField;
+@property (nonatomic, copy, readwrite) NSString *text;
 
 @end
 
@@ -60,6 +61,7 @@
     [self.delegate searchField:self textDidChange:searchString];
     return YES;
 }
+
 - (BOOL)textFieldShouldClear:(UITextField *)textField
 {
     [self.delegate searchField:self textDidChange:@""];
@@ -76,6 +78,11 @@
 {
     _placeholder = placeholder;
     self.textField.placeholder = placeholder;
+}
+
+- (void)clear
+{
+    self.textField.text = @"";
 }
 
 @end

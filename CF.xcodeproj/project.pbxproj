@@ -24,8 +24,8 @@
 		7C062F2B19330DF000342E4A /* UIImage+ImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C062F2919330DF000342E4A /* UIImage+ImageEffects.m */; };
 		7C062F2E1933B07600342E4A /* CFSearchController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C062F2D1933B07600342E4A /* CFSearchController.m */; };
 		7C062F2F1933B07600342E4A /* CFSearchController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C062F2D1933B07600342E4A /* CFSearchController.m */; };
-		7C062F321933BC9200342E4A /* CFServiceSuggestionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C062F311933BC9200342E4A /* CFServiceSuggestionView.m */; };
-		7C062F331933BC9200342E4A /* CFServiceSuggestionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C062F311933BC9200342E4A /* CFServiceSuggestionView.m */; };
+		7C062F321933BC9200342E4A /* CFServiceRouteBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C062F311933BC9200342E4A /* CFServiceRouteBar.m */; };
+		7C062F331933BC9200342E4A /* CFServiceRouteBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C062F311933BC9200342E4A /* CFServiceRouteBar.m */; };
 		7C10B96F183ADD200086B650 /* CFFavoritesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C10B96E183ADD200086B650 /* CFFavoritesViewController.m */; };
 		7C10B972183ADD2A0086B650 /* CFHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C10B971183ADD2A0086B650 /* CFHistoryViewController.m */; };
 		7C10B975183ADD320086B650 /* CFMoreViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C10B974183ADD320086B650 /* CFMoreViewController.m */; };
@@ -102,6 +102,8 @@
 		7C2EED0A188345F500AE78C2 /* button-bip@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CB64D7B18551C9C006422E0 /* button-bip@2x.png */; };
 		7C2EED0B188345F500AE78C2 /* button-code-selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CFF7EAA18384106006230CE /* button-code-selected@2x.png */; };
 		7C2EED0C188345F500AE78C2 /* pin-stop@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CFF7EA61838362E006230CE /* pin-stop@2x.png */; };
+		7C36D72719ABA6C600CBFDBA /* CFService.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C36D72619ABA6C600CBFDBA /* CFService.m */; };
+		7C36D72819ABB32600CBFDBA /* CFService.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C36D72619ABA6C600CBFDBA /* CFService.m */; };
 		7C3B27C4183B194A00818A3B /* CFStopTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C3B27C3183B194A00818A3B /* CFStopTableViewController.m */; };
 		7C426414184AE87300A8968F /* CFStopCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C426413184AE87300A8968F /* CFStopCell.m */; };
 		7C426417184AE88000A8968F /* CFResultCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C426416184AE88000A8968F /* CFResultCell.m */; };
@@ -322,8 +324,8 @@
 		7C062F2919330DF000342E4A /* UIImage+ImageEffects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ImageEffects.m"; sourceTree = "<group>"; };
 		7C062F2C1933B07600342E4A /* CFSearchController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFSearchController.h; sourceTree = "<group>"; };
 		7C062F2D1933B07600342E4A /* CFSearchController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFSearchController.m; sourceTree = "<group>"; };
-		7C062F301933BC9200342E4A /* CFServiceSuggestionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFServiceSuggestionView.h; sourceTree = "<group>"; };
-		7C062F311933BC9200342E4A /* CFServiceSuggestionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFServiceSuggestionView.m; sourceTree = "<group>"; };
+		7C062F301933BC9200342E4A /* CFServiceRouteBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFServiceRouteBar.h; sourceTree = "<group>"; };
+		7C062F311933BC9200342E4A /* CFServiceRouteBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFServiceRouteBar.m; sourceTree = "<group>"; };
 		7C10B96D183ADD200086B650 /* CFFavoritesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFFavoritesViewController.h; sourceTree = "<group>"; };
 		7C10B96E183ADD200086B650 /* CFFavoritesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFFavoritesViewController.m; sourceTree = "<group>"; };
 		7C10B970183ADD2A0086B650 /* CFHistoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFHistoryViewController.h; sourceTree = "<group>"; };
@@ -332,6 +334,8 @@
 		7C10B974183ADD320086B650 /* CFMoreViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFMoreViewController.m; sourceTree = "<group>"; };
 		7C2EED11188345F500AE78C2 /* Cuánta Beta.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Cuánta Beta.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7C2EED12188345F500AE78C2 /* Cuánto Falta copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Cuánto Falta copy-Info.plist"; path = "/Users/radutzan/Proyectos/Onda/sources/CF/Cuánto Falta copy-Info.plist"; sourceTree = "<absolute>"; };
+		7C36D72519ABA6C600CBFDBA /* CFService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFService.h; sourceTree = "<group>"; };
+		7C36D72619ABA6C600CBFDBA /* CFService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFService.m; sourceTree = "<group>"; };
 		7C3B27C2183B194A00818A3B /* CFStopTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFStopTableViewController.h; sourceTree = "<group>"; };
 		7C3B27C3183B194A00818A3B /* CFStopTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFStopTableViewController.m; sourceTree = "<group>"; };
 		7C426412184AE87300A8968F /* CFStopCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFStopCell.h; sourceTree = "<group>"; };
@@ -614,8 +618,8 @@
 			children = (
 				7CEADD69194C1E9500428ADE /* CFSearchSuggestionsCard.h */,
 				7CEADD6A194C1E9500428ADE /* CFSearchSuggestionsCard.m */,
-				7C062F301933BC9200342E4A /* CFServiceSuggestionView.h */,
-				7C062F311933BC9200342E4A /* CFServiceSuggestionView.m */,
+				7C062F301933BC9200342E4A /* CFServiceRouteBar.h */,
+				7C062F311933BC9200342E4A /* CFServiceRouteBar.m */,
 				7C915925193AA4AE004CFCFA /* CFStopSuggestionView.h */,
 				7C915926193AA4AE004CFCFA /* CFStopSuggestionView.m */,
 			);
@@ -919,6 +923,8 @@
 				7C66C54D19A1C6AF00DDA6DF /* CFStopTransitionAnimator.m */,
 				7CFF7EA418382D55006230CE /* CFStop.h */,
 				7CFF7EA318382D55006230CE /* CFStop.m */,
+				7C36D72519ABA6C600CBFDBA /* CFService.h */,
+				7C36D72619ABA6C600CBFDBA /* CFService.m */,
 				7CC7EC441929B74B002160E5 /* CFRoute.h */,
 				7CC7EC431929B74B002160E5 /* CFRoute.m */,
 				7CF7EE4D1852D790009B3F46 /* CFBipSpot.h */,
@@ -1363,7 +1369,7 @@
 				7C66C54F19A1C6AF00DDA6DF /* CFStopTransitionAnimator.m in Sources */,
 				7C2EECD5188345F500AE78C2 /* CFClipView.m in Sources */,
 				7C66C55319A2809300DDA6DF /* CFDrawerController.m in Sources */,
-				7C062F331933BC9200342E4A /* CFServiceSuggestionView.m in Sources */,
+				7C062F331933BC9200342E4A /* CFServiceRouteBar.m in Sources */,
 				7C2EECD6188345F500AE78C2 /* CFMoreContentViewController.m in Sources */,
 				7C2EECD7188345F500AE78C2 /* CFFavoritesViewController.m in Sources */,
 				7C2EECD8188345F500AE78C2 /* CFMainViewController.m in Sources */,
@@ -1376,6 +1382,7 @@
 				7CC7EC4C1929BBA2002160E5 /* CFServiceRouteViewController.m in Sources */,
 				7C2EECDB188345F500AE78C2 /* CFMapController.m in Sources */,
 				7C2EECDC188345F500AE78C2 /* CFSapoClient.m in Sources */,
+				7C36D72819ABB32600CBFDBA /* CFService.m in Sources */,
 				7CD35CAE194AE58D007C36CA /* CFStopServicesButtonArrayView.m in Sources */,
 				7C2EECDD188345F500AE78C2 /* CFResultCell.m in Sources */,
 				7C2EECDE188345F500AE78C2 /* CFHistoryViewController.m in Sources */,
@@ -1410,7 +1417,7 @@
 				7C062F2A19330DF000342E4A /* UIImage+ImageEffects.m in Sources */,
 				7CB337FA1929BF5C00234792 /* CustomPinAnnotationView.m in Sources */,
 				7CF7EE4F1852D790009B3F46 /* CFBipSpot.m in Sources */,
-				7C062F321933BC9200342E4A /* CFServiceSuggestionView.m in Sources */,
+				7C062F321933BC9200342E4A /* CFServiceRouteBar.m in Sources */,
 				7C10B975183ADD320086B650 /* CFMoreViewController.m in Sources */,
 				7CFF7E811838288C006230CE /* SMCalloutView.m in Sources */,
 				7C9BD16E1926BC7D003E9F8E /* CFElPeA.m in Sources */,
@@ -1447,6 +1454,7 @@
 				7CB337FE192AB27500234792 /* CFStopServicesButtonArrayView.m in Sources */,
 				7C426414184AE87300A8968F /* CFStopCell.m in Sources */,
 				7CFF7E7D18382448006230CE /* CFMapController.m in Sources */,
+				7C36D72719ABA6C600CBFDBA /* CFService.m in Sources */,
 				7CFF7EA218382B4D006230CE /* CFSapoClient.m in Sources */,
 				7C426417184AE88000A8968F /* CFResultCell.m in Sources */,
 				7C10B972183ADD2A0086B650 /* CFHistoryViewController.m in Sources */,

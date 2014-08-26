@@ -6,9 +6,9 @@
 //  Copyright (c) 2014 Onda. All rights reserved.
 //
 
-#import "CFServiceSuggestionView.h"
+#import "CFServiceRouteBar.h"
 
-@interface CFServiceSuggestionView ()
+@interface CFServiceRouteBar ()
 
 @property (nonatomic, strong) UILabel *serviceLabel;
 @property (nonatomic, strong) UIButton *outwardButton;
@@ -16,7 +16,7 @@
 
 @end
 
-@implementation CFServiceSuggestionView
+@implementation CFServiceRouteBar
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -62,26 +62,28 @@
     return self;
 }
 
-- (void)setService:(NSString *)service
+- (void)setService:(CFService *)service
 {
     _service = service;
-    self.serviceLabel.text = [service uppercaseString];
+    self.serviceLabel.text = [service.name uppercaseString];
+    self.outwardDirectionString = service.outwardDirectionName;
+    self.inwardDirectionString = service.inwardDirectionName;
 }
 
 - (void)setOutwardDirectionString:(NSString *)outwardDirectionString
 {
-    [self.outwardButton setTitle:outwardDirectionString forState:UIControlStateNormal];
+    [self.outwardButton setTitle:[NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"TO_DIRECTION", nil), [outwardDirectionString capitalizedString]] forState:UIControlStateNormal];
 }
 
 - (void)setInwardDirectionString:(NSString *)inwardDirectionString
 {
-    [self.inwardButton setTitle:inwardDirectionString forState:UIControlStateNormal];
+    [self.inwardButton setTitle:[NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"TO_DIRECTION", nil), [inwardDirectionString capitalizedString]] forState:UIControlStateNormal];
 }
 
 - (void)buttonTapped:(UIButton *)button
 {
     NSUInteger index = ([button isEqual:self.outwardButton]) ? 0 : 1;
-    [self.delegate serviceSuggestionViewDidSelectButtonAtIndex:index service:self.service];
+    [self.delegate serviceRouteBarSelectedButtonAtIndex:index service:self.service];
 }
 
 @end

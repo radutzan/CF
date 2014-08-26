@@ -62,7 +62,7 @@
 
 - (void)loadView
 {
-    self.view = [[UIView alloc] initWithFrame:CGRectInset([UIApplication sharedApplication].keyWindow.bounds, 15.0, 25.0)];
+    self.view = [[UIView alloc] initWithFrame:CGRectInset([UIApplication sharedApplication].keyWindow.bounds, 10.0, 25.0)];
     self.view.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     self.view.backgroundColor = [UIColor colorWithWhite:0 alpha:.5];
     
@@ -89,6 +89,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    UIPanGestureRecognizer *horizontalPanRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleHorizontalPanGesture:)];
+    [horizontalPanRecognizer requireGestureRecognizerToFail:self.tableView.panGestureRecognizer];
+    [self.view addGestureRecognizer:horizontalPanRecognizer];
     
     self.stopInfoView = [[CFStopSignView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.localNavigationBar.bounds.size.width - 33.0, 52.0)];
     self.stopInfoView.delegate = self;
@@ -123,7 +127,7 @@
     [super viewWillAppear:animated];
     
 //    self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
-    [self.navigationController setNavigationBarHidden:YES animated:YES];
+//    [self.navigationController setNavigationBarHidden:YES animated:YES];
     
     if (self.refreshing) {
         [self.refreshControl beginRefreshing];
@@ -137,7 +141,7 @@
 {
     [super viewDidAppear:animated];
     
-    [self.navigationController setNavigationBarHidden:YES animated:YES];
+//    [self.navigationController setNavigationBarHidden:YES animated:YES];
     if (self.stop) [self performStopRequest];
 }
 
@@ -153,7 +157,7 @@
 {
     [self.view endEditing:YES];
     
-    [self.navigationController setNavigationBarHidden:NO];
+//    [self.navigationController setNavigationBarHidden:NO];
 }
 
 #pragma mark - Presentation
@@ -169,15 +173,20 @@
         
     }
     
-    self.transitionAnimator.originRect = rect;
-    self.transitioningDelegate = self;
-    self.modalPresentationStyle = UIModalPresentationCustom;
-    [fromViewController presentViewController:self animated:YES completion:nil];
+    [fromViewController addChildViewController:self];
+    [fromViewController.view addSubview:self.view];
+    
+//    self.transitionAnimator.originRect = rect;
+//    self.transitioningDelegate = self;
+//    self.modalPresentationStyle = UIModalPresentationCustom;
+//    [fromViewController presentViewController:self animated:YES completion:nil];
 }
 
 - (void)dismiss
 {
-    [self dismissViewControllerAnimated:YES completion:nil];
+//    [self dismissViewControllerAnimated:YES completion:nil];
+    [self.view removeFromSuperview];
+    [self removeFromParentViewController];
 }
 
 - (void)dismissFromRect:(CGRect)rect withVelocity:(CGFloat)velocity
@@ -199,6 +208,17 @@
 {
     self.transitionAnimator.presenting = NO;
     return self.transitionAnimator;
+}
+
+- (void)handleHorizontalPanGesture:(UIPanGestureRecognizer *)recognizer
+{
+    if (recognizer.state == UIGestureRecognizerStateBegan) {
+        
+    } else if (recognizer.state == UIGestureRecognizerStateChanged) {
+        
+    } else {
+        [self dismiss];
+    }
 }
 
 #pragma mark - Favorites and history
@@ -245,6 +265,7 @@
 - (void)stopSignView:(UIView *)signView didEditFavoriteNameWithString:(NSString *)string
 {
     [self.stop setFavoriteName:string];
+    [self.delegate stopResultsViewControllerDidUpdateFavoriteName];
 }
 
 - (void)updateHistory
@@ -281,6 +302,7 @@
 
 - (void)setStopCode:(NSString *)stopCode
 {
+    self.stop = nil;
     _stopCode = stopCode;
     
     [[CFSapoClient sharedClient] fetchBusStop:stopCode
@@ -315,25 +337,29 @@
     _stop = stop;
     
     self.stopInfoView.stop = stop;
-    self.favoriteButton.enabled = YES;
-    if (stop.isFavorite) self.favoriteButton.selected = YES;
     
-    if (!self.removedAds) {
-        self.bannerView = [[GADBannerView alloc] initWithAdSize:kGADAdSizeSmartBannerPortrait];
-        self.bannerView.rootViewController = self;
-        self.bannerView.adUnitID = @"ca-app-pub-6226087428684107/3340545274";
+    if (stop) {
+        self.favoriteButton.enabled = YES;
+        if (stop.isFavorite) self.favoriteButton.selected = YES;
         
-        GADRequest *adRequest = [GADRequest request];
-        adRequest.testDevices = @[GAD_SIMULATOR_ID];
-        [adRequest setLocationWithLatitude:stop.coordinate.latitude longitude:stop.coordinate.longitude accuracy:0];
-        [self.bannerView loadRequest:adRequest];
+        if (!self.removedAds) {
+            self.bannerView = [[GADBannerView alloc] initWithAdSize:kGADAdSizeSmartBannerPortrait];
+            self.bannerView.rootViewController = self;
+            self.bannerView.adUnitID = @"ca-app-pub-6226087428684107/3340545274";
+            
+            GADRequest *adRequest = [GADRequest request];
+            adRequest.testDevices = @[GAD_SIMULATOR_ID];
+            [adRequest setLocationWithLatitude:stop.coordinate.latitude longitude:stop.coordinate.longitude accuracy:0];
+            [self.bannerView loadRequest:adRequest];
+        }
+        
+        [self updateHistory];
+        [self performStopRequest];
+        [self.refreshControl beginRefreshing];
     }
     
     [self.responseEstimation removeAllObjects];
-    [self updateHistory];
     [self.tableView reloadData];
-    [self performStopRequest];
-    [self.refreshControl beginRefreshing];
 }
 
 - (void)performStopRequest
@@ -597,8 +623,11 @@
 {
     CFResultCell *cell = (CFResultCell *)[self.tableView cellForRowAtIndexPath:indexPath];
     
-    CFServiceRouteViewController *stopRoute = [[CFServiceRouteViewController alloc] initWithService:cell.serviceLabel.text directionString:cell.directionLabel.text];
-    [self.navigationController pushViewController:stopRoute animated:YES];
+//    CFServiceRouteViewController *stopRoute = [[CFServiceRouteViewController alloc] initWithService:cell.serviceLabel.text directionString:cell.directionLabel.text];
+//    [self.navigationController pushViewController:stopRoute animated:YES];
+    
+    [self.delegate stopResultsViewControllerDidRequestServiceRoute:cell.serviceLabel.text directionString:cell.directionLabel.text];
+    [self dismiss];
     
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     [mixpanel track:@"Service Route Requested" properties:@{@"Service": cell.serviceLabel.text, @"From": @"Stop Results"}];

@@ -50,7 +50,7 @@
         [UIView animateWithDuration:[self transitionDuration:transitionContext] animations:^{
             toViewController.view.tintAdjustmentMode = UIViewTintAdjustmentModeAutomatic;
             overlayView.alpha = 0;
-            fromViewController.view.center = CGPointMake(fromViewController.view.center.x * 2, fromViewController.view.center.y);
+            fromViewController.view.center = CGPointMake(fromViewController.view.center.x * 3, fromViewController.view.center.y);
         } completion:^(BOOL finished) {
             [overlayView removeFromSuperview];
             [transitionContext completeTransition:YES];

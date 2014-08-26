@@ -8,20 +8,21 @@
 
 #import "CFSearchController.h"
 #import "CFSearchSuggestionsCard.h"
-#import "CFServiceSuggestionView.h"
+#import "CFServiceRouteBar.h"
 #import "CFStopSuggestionView.h"
 #import <Mixpanel/Mixpanel.h>
 
 #define VERTICAL_MARGIN 0.0
 #define HORIZONTAL_MARGIN 0.0
+#define ANIMATION_OFFSET 20.0
 
-@interface CFSearchController () <CFServiceSuggestionViewDelegate, CFStopSuggestionViewDelegate, CFSearchFieldDelegate>
+@interface CFSearchController () <CFServiceRouteBarDelegate, CFStopSuggestionViewDelegate, CFSearchFieldDelegate>
 
 @property (nonatomic, strong) UIView *overlay;
-@property (nonatomic, strong) UIScrollView *scrollView;
+@property (nonatomic, strong) UIView *containerView;
 @property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
 @property (nonatomic, strong) CFSearchSuggestionsCard *searchSuggestionsCard;
-@property (nonatomic, strong) CFServiceSuggestionView *serviceSuggestionView;
+@property (nonatomic, strong) CFServiceRouteBar *serviceSuggestionView;
 @property (nonatomic, strong) CFStopSuggestionView *stopSuggestionView;
 
 @property (nonatomic, strong) UIView *currentCard;
@@ -46,37 +47,27 @@
         UITapGestureRecognizer *overlayTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hide)];
         [_overlay addGestureRecognizer:overlayTap];
         
-        _searchSuggestionsCard = [[CFSearchSuggestionsCard alloc] initWithFrame:CGRectMake(HORIZONTAL_MARGIN, VERTICAL_MARGIN + 64.0, frame.size.width - HORIZONTAL_MARGIN * 2, 150.0)];
-        [self addSubview:_searchSuggestionsCard];
+        _containerView = [[UIView alloc] initWithFrame:self.bounds];
+        [self addSubview:_containerView];
         
-        _scrollView = [[UIScrollView alloc] initWithFrame:self.bounds];
-        _scrollView.clipsToBounds = NO;
-        _scrollView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
-        _scrollView.contentSize = CGSizeZero;
-        _scrollView.alwaysBounceVertical = YES;
-        [self addSubview:_scrollView];
+        _searchSuggestionsCard = [[CFSearchSuggestionsCard alloc] initWithFrame:CGRectMake(HORIZONTAL_MARGIN, VERTICAL_MARGIN, frame.size.width - HORIZONTAL_MARGIN * 2, 150.0)];
+        [_containerView addSubview:_searchSuggestionsCard];
         
-        _serviceSuggestionView = [[CFServiceSuggestionView alloc] initWithFrame:CGRectMake(HORIZONTAL_MARGIN, VERTICAL_MARGIN, frame.size.width - HORIZONTAL_MARGIN * 2, 64.0)];
+        _serviceSuggestionView = [[CFServiceRouteBar alloc] initWithFrame:CGRectMake(HORIZONTAL_MARGIN, VERTICAL_MARGIN, frame.size.width - HORIZONTAL_MARGIN * 2, 44.0)];
         _serviceSuggestionView.delegate = self;
         _serviceSuggestionView.hidden = YES;
         _serviceSuggestionView.clipsToBounds = NO;
         _serviceSuggestionView.layer.backgroundColor = [UIColor colorWithWhite:1 alpha:.96].CGColor;
-//        _serviceSuggestionView.layer.cornerRadius = 5.0;
-//        _serviceSuggestionView.layer.shadowColor = [UIColor blackColor].CGColor;
-//        _serviceSuggestionView.layer.shadowOffset = CGSizeZero;
-//        _serviceSuggestionView.layer.shadowOpacity = 0.5;
-//        _serviceSuggestionView.layer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:_serviceSuggestionView.bounds cornerRadius:_serviceSuggestionView.layer.cornerRadius].CGPath;
-//        _serviceSuggestionView.layer.shadowRadius = 0.5;
-        [_scrollView addSubview:_serviceSuggestionView];
+        [_containerView addSubview:_serviceSuggestionView];
         
         _stopSuggestionView = [[CFStopSuggestionView alloc] initWithFrame:CGRectMake(HORIZONTAL_MARGIN, VERTICAL_MARGIN, frame.size.width - HORIZONTAL_MARGIN * 2, 52.0)];
         _stopSuggestionView.delegate = self;
         _stopSuggestionView.hidden = YES;
-        [_scrollView addSubview:_stopSuggestionView];
+        [_containerView addSubview:_stopSuggestionView];
         
         _activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-        _activityIndicator.frame = CGRectOffset(_activityIndicator.frame, (frame.size.width - _activityIndicator.frame.size.width) / 2, VERTICAL_MARGIN);
-        [_scrollView addSubview:_activityIndicator];
+        _activityIndicator.frame = CGRectOffset(_activityIndicator.frame, (frame.size.width - _activityIndicator.frame.size.width) / 2, VERTICAL_MARGIN + 10.0);
+        [_containerView addSubview:_activityIndicator];
         
         _suggesting = NO;
     }
@@ -88,19 +79,26 @@
 - (void)setContentInset:(UIEdgeInsets)contentInset
 {
     _contentInset = contentInset;
-    self.scrollView.frame = CGRectMake(0, contentInset.top, self.bounds.size.width, self.bounds.size.height - contentInset.top - contentInset.bottom);
-    self.scrollView.contentInset = UIEdgeInsetsMake(0, contentInset.left, 0, contentInset.right);
-//    self.searchSuggestionsCard.frame = CGRectInset(self.searchSuggestionsCard.frame, 0, contentInset.top);
+    self.containerView.frame = CGRectMake(0, contentInset.top, self.bounds.size.width, self.bounds.size.height - contentInset.top - contentInset.bottom);
 }
 
 - (void)show
 {
-    self.overlay.alpha = 0;
+    self.alpha = 0;
     self.hidden = NO;
+    self.searchSuggestionsCard.alpha = 0;
+    self.searchSuggestionsCard.center = CGPointMake(self.searchSuggestionsCard.center.x, self.searchSuggestionsCard.center.y - ANIMATION_OFFSET);
     
-    [UIView animateWithDuration:0.33 delay:0.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-        self.overlay.alpha = 1;
-    } completion:nil];
+    [UIView animateWithDuration:0.25 delay:0.0 usingSpringWithDamping:1 initialSpringVelocity:0 options:0 animations:^{
+        self.alpha = 1;
+    } completion:^(BOOL finished) {
+        if (!self.suggesting) {
+            [UIView animateWithDuration:0.25 delay:0.0 usingSpringWithDamping:1 initialSpringVelocity:0 options:0 animations:^{
+                self.searchSuggestionsCard.alpha = 1;
+                self.searchSuggestionsCard.center = CGPointMake(self.searchSuggestionsCard.center.x, self.searchSuggestionsCard.center.y + ANIMATION_OFFSET);
+            } completion:nil];
+        }
+    }];
 }
 
 - (void)hide
@@ -108,7 +106,7 @@
     [self.superview endEditing:YES];
     
     [UIView animateWithDuration:0.25 animations:^{
-        self.overlay.alpha = 0;
+        self.alpha = 0;
     } completion:^(BOOL finished) {
         self.hidden = YES;
     }];
@@ -118,11 +116,11 @@
 {
     _suggesting = suggesting;
     
-//    [UIView animateWithDuration:0.2 animations:^{
-//        self.searchSuggestionsCard.alpha = (suggesting) ? 0 : 1;
-//    } completion:^(BOOL finished) {
+    [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+        self.searchSuggestionsCard.alpha = (suggesting) ? 0 : 1;
+    } completion:^(BOOL finished) {
         self.searchSuggestionsCard.hidden = suggesting;
-//    }];
+    }];
 }
 
 - (void)setThinking:(BOOL)thinking
@@ -140,16 +138,14 @@
 
 - (void)setCurrentCard:(UIView *)currentCard
 {
-    NSLog(@"_curr: %@, curr: %@", _currentCard, currentCard);
-    if (_currentCard) NSLog(@"passed old value existance");
-    if (currentCard) NSLog(@"passed new value existance");
-    
-    CGFloat animationOffset = 20.0;
+//    NSLog(@"_curr: %@, curr: %@", _currentCard, currentCard);
+//    if (_currentCard) NSLog(@"passed old value existance");
+//    if (currentCard) NSLog(@"passed new value existance");
+    CGFloat animationOffset = ANIMATION_OFFSET;
     
     if ((_currentCard && !currentCard)) {
-        NSLog(@"passed exit animation check");
-        
-        [UIView animateWithDuration:0.35 delay:0 usingSpringWithDamping:1 initialSpringVelocity:0 options:0 animations:^{
+//        NSLog(@"passed exit animation check");
+        [UIView animateWithDuration:0.25 delay:0 usingSpringWithDamping:1 initialSpringVelocity:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
             _currentCard.center = CGPointMake(_currentCard.center.x, _currentCard.center.y - animationOffset);
             _currentCard.alpha = 0;
         } completion:^(BOOL finished) {
@@ -160,18 +156,16 @@
     }
     
     if (currentCard && ![currentCard isKindOfClass:[_currentCard class]]) {
-        NSLog(@"passed intro animation check");
-        currentCard.center = CGPointMake(currentCard.center.x, currentCard.center.y - animationOffset);
+//        NSLog(@"passed intro animation check");
+        currentCard.frame = CGRectMake(0, -animationOffset, currentCard.bounds.size.width, currentCard.bounds.size.height);
         currentCard.alpha = 0;
         currentCard.hidden = NO;
         
-        self.scrollView.contentSize = CGSizeMake(self.bounds.size.width, currentCard.bounds.size.height + VERTICAL_MARGIN * 2);
-        
-        [UIView animateWithDuration:0.35 delay:0 usingSpringWithDamping:1 initialSpringVelocity:0 options:0 animations:^{
+        [UIView animateWithDuration:0.35 delay:0 usingSpringWithDamping:1 initialSpringVelocity:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
             currentCard.alpha = 1;
             currentCard.center = CGPointMake(currentCard.center.x, currentCard.center.y + animationOffset);
         } completion:^(BOOL finished) {
-            
+            currentCard.alpha = 1;
         }];
     }
     
@@ -180,7 +174,7 @@
 
 - (void)clearServiceSuggestions
 {
-    NSLog(@"clearing service suggestions");
+//    NSLog(@"clearing service suggestions");
     if ([self.currentCard isKindOfClass:[self.serviceSuggestionView class]]) {
         self.currentCard = nil;
     };
@@ -189,19 +183,17 @@
 
 - (void)clearStopSuggestions
 {
-    NSLog(@"clearing stop suggestions");
+//    NSLog(@"clearing stop suggestions");
     if ([self.currentCard isKindOfClass:[self.stopSuggestionView class]]) {
         self.currentCard = nil;
     };
     self.suggesting = NO;
 }
 
-- (void)showServiceSuggestionWithService:(NSString *)service outwardString:(NSString *)outwardString inwardString:(NSString *)inwardString
+- (void)showServiceSuggestionWithService:(CFService *)service
 {
-    NSLog(@"showing service suggestion for service: %@", service);
+//    NSLog(@"showing service suggestion for service: %@", service);
     self.serviceSuggestionView.service = service;
-    self.serviceSuggestionView.outwardDirectionString = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"TO_DIRECTION", nil), [outwardString capitalizedString]];
-    self.serviceSuggestionView.inwardDirectionString = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"TO_DIRECTION", nil), [inwardString capitalizedString]];
     self.currentCard = self.serviceSuggestionView;
 }
 
@@ -271,11 +263,11 @@
         NSTextCheckingResult *result = [expression firstMatchInString:searchString options:0 range:NSMakeRange(0, searchString.length)];
         
         if (result) {
-            NSLog(@"possible service");
+//            NSLog(@"possible service");
             NSString *serviceString = searchString;
             
             if (searchString.length == 2) {
-                NSLog(@"…which is shortened");
+//                NSLog(@"…which is shortened");
                 NSMutableString *expandedServiceName = [NSMutableString stringWithString:searchString];
                 [expandedServiceName insertString:@"0" atIndex:1];
                 serviceString = expandedServiceName;
@@ -307,7 +299,7 @@
 
 - (void)checkService:(NSString *)service
 {
-    NSLog(@"checking possible service");
+//    NSLog(@"checking possible service");
     self.thinking = YES;
     
     [[CFSapoClient sharedClient] serviceInfoForService:service handler:^(NSError *error, NSArray *result) {
@@ -315,16 +307,16 @@
         
         if (result && [result lastObject]) {
             // win
-            NSLog(@"service exists: %@", result);
+//            NSLog(@"service exists: %@", result);
             self.suggesting = YES;
             
             NSDictionary *serviceInfo = [result firstObject];
-            [self showServiceSuggestionWithService:[serviceInfo objectForKey:@"servicio"] outwardString:[serviceInfo objectForKey:@"ida"] inwardString:[serviceInfo objectForKey:@"regreso"]];
+            [self showServiceSuggestionWithService:[CFService serviceWithName:[serviceInfo objectForKey:@"servicio"] outwardDirectionName:[serviceInfo objectForKey:@"ida"] inwardDirectionName:[serviceInfo objectForKey:@"regreso"]]];
         }
         
         if (error || ![result lastObject]) {
             // quit
-            NSLog(@"not a service");
+//            NSLog(@"not a service");
             [self clearServiceSuggestions];
         }
     }];
@@ -332,7 +324,7 @@
 
 - (void)checkStop:(NSString *)stop
 {
-    NSLog(@"checking possible stop code");
+//    NSLog(@"checking possible stop code");
     self.thinking = YES;
     
     [[CFSapoClient sharedClient] fetchBusStop:stop handler:^(NSError *error, id result) {
@@ -352,7 +344,7 @@
             self.currentCard = self.stopSuggestionView;
             
         } else {
-            NSLog(@"not a stop");
+//            NSLog(@"not a stop");
             [self clearStopSuggestions];
         }
     }];
@@ -360,10 +352,12 @@
 
 #pragma mark - Delegates, etc
 
-- (void)serviceSuggestionViewDidSelectButtonAtIndex:(NSUInteger)index service:(NSString *)service
+- (void)serviceRouteBarSelectedButtonAtIndex:(NSUInteger)index service:(CFService *)service
 {
     CFDirection direction = (index == 0) ? CFDirectionOutward : CFDirectionInward;
     [self.delegate searchControllerDidSelectService:service direction:direction];
+    [self hide];
+    [self.searchField clear];
 }
 
 - (void)stopSuggestionViewDidSelectStop:(NSString *)stop
@@ -371,16 +365,17 @@
     [self.delegate searchControllerDidSelectStop:stop];
 }
 
+// deprecated
 - (void)stopSuggestionViewDidSelectService:(NSString *)service directionString:(NSString *)directionString
 {
-    [self.delegate searchControllerDidSelectService:service directionString:directionString];
+//    [self.delegate searchControllerDidSelectService:service directionString:directionString];
 }
 
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
 {
     UIView *hitView = [super hitTest:point withEvent:event];
     
-    if ([hitView isEqual:self] || [hitView isEqual:self.scrollView]) {
+    if ([hitView isEqual:self] || [hitView isEqual:self.containerView]) {
         return self.overlay;
     }
     

@@ -21,16 +21,24 @@
 #import "CFServiceRouteViewController.h"
 #import "CFWhatsNewViewController.h"
 
+#import "CFService.h"
+#import "CFServiceRouteBar.h"
+
 #import "OLShapeTintedButton.h"
 #import "GADBannerView.h"
 
-@interface CFMainViewController () <CFMapControllerDelegate, CFDrawerControllerDelegate, CFSearchControllerDelegate, UIAlertViewDelegate>
+@interface CFMainViewController () <CFMapControllerDelegate, CFDrawerControllerDelegate, CFSearchControllerDelegate, CFStopResultsViewControllerDelegate, CFServiceRouteBarDelegate, UIAlertViewDelegate>
 
 @property (nonatomic, strong) CFMapController *mapController;
 @property (nonatomic, strong) CFDrawerController *drawerController;
 @property (nonatomic, strong) CFSearchController *searchController;
+@property (nonatomic, strong) CFStopResultsViewController *stopResultsController;
+
 @property (nonatomic, strong) UINavigationBar *localNavigationBar;
 @property (nonatomic, strong) NSArray *rightBarButtonItems;
+
+@property (nonatomic, assign) CGFloat topContentMargin;
+@property (nonatomic, assign) CGFloat bottomContentMargin;
 
 @property (nonatomic, assign) BOOL shouldDisplayAds;
 @property (nonatomic, strong) GADBannerView *mapBannerAd;
@@ -73,12 +81,15 @@
     searchField.placeholder = NSLocalizedString(@"MAP_SEARCHFIELD_PLACEHOLDER", nil);
     self.searchController.searchField = searchField;
     
+    self.topContentMargin = self.localNavigationBar.bounds.size.height;
+    self.bottomContentMargin = TAB_BAR_HEIGHT;
+    
     UIBarButtonItem *bipButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"button-bip"] style:UIBarButtonItemStylePlain target:self.mapController action:@selector(goToNearestBipSpot)];
     MKUserTrackingBarButtonItem *tracky = [[MKUserTrackingBarButtonItem alloc] initWithMapView:self.mapController.mapView];
     
     UINavigationItem *navItem = [UINavigationItem new];
     navItem.titleView = searchField;
-    navItem.rightBarButtonItems = @[tracky, bipButton];
+    navItem.rightBarButtonItems = @[tracky];
     
     self.rightBarButtonItems = navItem.rightBarButtonItems;
     
@@ -108,6 +119,9 @@
     self.drawerController.delegate = self;
     [self addChildViewController:self.drawerController];
     [self.view addSubview:self.drawerController.view];
+    
+    self.stopResultsController = [CFStopResultsViewController new];
+    self.stopResultsController.delegate = self;
     
     [self registerForKeyboardNotifications];
 }
@@ -263,23 +277,20 @@
     [mixpanel track:@"Stop Requested" properties:@{@"Code": stopCode, @"From": @"Smart Search Results"}];
 }
 
-- (void)searchControllerDidSelectService:(NSString *)serviceName direction:(CFDirection)direction
+- (void)searchControllerDidSelectService:(CFService *)service direction:(CFDirection)direction
 {
-    CFServiceRouteViewController *serviceRouteVC = [[CFServiceRouteViewController alloc] initWithService:serviceName direction:direction];
-    [self.navigationController pushViewController:serviceRouteVC animated:YES];
-//    [self.mapController displayServiceRoute:serviceName direction:direction];
+    [self showServiceRouteForService:service direction:direction];
     
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
-    [mixpanel track:@"Service Route Requested" properties:@{@"Service": serviceName, @"From": @"Smart Search Results"}];
+    [mixpanel track:@"Service Route Requested" properties:@{@"Service": service.name, @"From": @"Smart Search Results"}];
 }
 
-- (void)searchControllerDidSelectService:(NSString *)serviceName directionString:(NSString *)directionString
+- (void)searchControllerDidSelectService:(CFService *)service directionString:(NSString *)directionString
 {
-    CFServiceRouteViewController *serviceRouteVC = [[CFServiceRouteViewController alloc] initWithService:serviceName directionString:directionString];
-    [self.navigationController pushViewController:serviceRouteVC animated:YES];
+    [self showServiceRoute:service.name directionString:directionString];
     
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
-    [mixpanel track:@"Service Route Requested" properties:@{@"Service": serviceName, @"From": @"Smart Search Results"}];
+    [mixpanel track:@"Service Route Requested" properties:@{@"Service": service.name, @"From": @"Smart Search Results"}];
 }
 
 - (void)keyboardWasShown:(NSNotification*)aNotification
@@ -301,7 +312,7 @@
     } completion:nil];
 }
 
-#pragma mark - Push stop results and routes
+#pragma mark - Push stop results
 
 - (void)pushStopResultsWithStopCode:(NSString *)stopCode
 {
@@ -320,9 +331,8 @@
         return;
     }
     
-    CFStopResultsViewController *stopResultsVC = [[CFStopResultsViewController alloc] initWithStopCode:stopCode];
-    
-    [stopResultsVC presentFromViewController:self];
+    self.stopResultsController.stopCode = stopCode;
+    [self.stopResultsController presentFromViewController:self];
 }
 
 - (void)drawerDidSelectCellWithStop:(NSString *)stopCode
@@ -339,6 +349,83 @@
     
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     [mixpanel track:@"Stop Requested" properties:@{@"Code": stopCode, @"From": @"Map"}];
+}
+
+- (void)stopResultsViewControllerDidUpdateFavoriteName
+{
+    [self reloadUserData];
+}
+
+#pragma mark - Push service routes
+
+- (void)stopResultsViewControllerDidRequestServiceRoute:(NSString *)serviceName directionString:(NSString *)directionString
+{
+    [self showServiceRoute:serviceName directionString:directionString];
+}
+
+- (void)showServiceRoute:(NSString *)serviceName directionString:(NSString *)directionString
+{
+    [[CFSapoClient sharedClient] serviceInfoForService:serviceName handler:^(NSError *error, NSArray *result) {
+        if (result) {
+            CFDirection finalDirection;
+            NSDictionary *serviceInfo = [result objectAtIndex:0];
+            NSString *responseIda = [serviceInfo objectForKey:@"ida"];
+            NSString *localizedTo = NSLocalizedString(@"TO_DIRECTION", nil);
+            NSString *comparableDirectionString = [[directionString stringByReplacingCharactersInRange:NSMakeRange(0, localizedTo.length + 1) withString:@""] uppercaseString];
+            
+            if ([comparableDirectionString isEqualToString:responseIda]) {
+                finalDirection = CFDirectionOutward;//NSLog(@"CFDirectionOutward");
+            } else {
+                finalDirection = CFDirectionInward;//NSLog(@"CFDirectionInward");
+            }
+            
+            [self showServiceRouteForService:[CFService serviceWithName:serviceName outwardDirectionName:[serviceInfo objectForKey:@"ida"] inwardDirectionName:[serviceInfo objectForKey:@"regreso"]] direction:finalDirection];
+        }
+    }];
+}
+
+- (void)showServiceRouteForService:(CFService *)service direction:(CFDirection)direction
+{
+    [self.mapController displayServiceRoute:service.name direction:direction];
+    
+    for (UIView *subview in self.view.subviews) {
+        if ([subview isKindOfClass:[CFServiceRouteBar class]]) {
+            [subview removeFromSuperview];
+        }
+    }
+    
+    [self showServiceRouteBarWithService:service];
+}
+
+- (void)showServiceRouteBarWithService:(CFService *)service
+{
+    CFServiceRouteBar *serviceBar = [[CFServiceRouteBar alloc] initWithFrame:CGRectMake(0, self.localNavigationBar.bounds.size.height, self.view.bounds.size.width, 44.0)];
+    serviceBar.service = service;
+    serviceBar.delegate = self;
+    [self.view insertSubview:serviceBar belowSubview:self.searchController];
+    
+    UINavigationBar *serviceBarBackground = [[UINavigationBar alloc] initWithFrame:serviceBar.bounds];
+    [serviceBar insertSubview:serviceBarBackground atIndex:0];
+    
+    UIButton *clearServiceRouteButton = [UIButton buttonWithType:UIButtonTypeInfoLight];
+    [clearServiceRouteButton addTarget:self action:@selector(clearServiceRoute) forControlEvents:UIControlEventTouchUpInside];
+    [serviceBar addSubview:clearServiceRouteButton];
+}
+
+- (void)serviceRouteBarSelectedButtonAtIndex:(NSUInteger)index service:(CFService *)service
+{
+    [self showServiceRouteForService:service direction:(index ? CFDirectionInward : CFDirectionOutward)];
+}
+
+- (void)clearServiceRoute
+{
+    for (UIView *subview in self.view.subviews) {
+        if ([subview isKindOfClass:[CFServiceRouteBar class]]) {
+            [subview removeFromSuperview];
+        }
+    }
+    
+    [self.mapController displayStops];
 }
 
 #pragma mark - Commerce and Ads

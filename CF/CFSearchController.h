@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "CFSapoClient.h"
 #import "CFSearchField.h"
+#import "CFService.h"
 
 @protocol CFSearchControllerDelegate <NSObject>
 
@@ -16,8 +17,8 @@
 - (void)searchControllerDidEndSearching;
 - (void)searchControllerRequestedLocalSearch:(NSString *)searchString;
 - (void)searchControllerDidSelectStop:(NSString *)stopCode;
-- (void)searchControllerDidSelectService:(NSString *)serviceName direction:(CFDirection)direction;
-- (void)searchControllerDidSelectService:(NSString *)serviceName directionString:(NSString *)directionString;
+- (void)searchControllerDidSelectService:(CFService *)service direction:(CFDirection)direction;
+- (void)searchControllerDidSelectService:(CFService *)service directionString:(NSString *)directionString __attribute__((deprecated));
 
 @end
 

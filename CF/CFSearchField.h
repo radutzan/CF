@@ -11,9 +11,11 @@
 @protocol CFSearchFieldDelegate;
 @interface CFSearchField : UIView
 
+- (void)clear;
+
 @property (nonatomic, copy) NSString *placeholder;
 @property (nonatomic, weak) id<CFSearchFieldDelegate> delegate;
-@property (nonatomic, copy) NSString *text;
+@property (nonatomic, copy, readonly) NSString *text;
 
 @end
 
