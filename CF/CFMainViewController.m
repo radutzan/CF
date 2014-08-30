@@ -81,7 +81,7 @@
     searchField.placeholder = NSLocalizedString(@"MAP_SEARCHFIELD_PLACEHOLDER", nil);
     self.searchController.searchField = searchField;
     
-    self.topContentMargin = self.localNavigationBar.bounds.size.height;
+    self.topContentMargin = 64.0;
     self.bottomContentMargin = TAB_BAR_HEIGHT;
     
     UIBarButtonItem *bipButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"button-bip"] style:UIBarButtonItemStylePlain target:self.mapController action:@selector(goToNearestBipSpot)];
@@ -299,7 +299,7 @@
     CGRect keyboardRect = [[info objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
     
     [UIView animateKeyframesWithDuration:[[info objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue] delay:0.0 options:(7 << 16) animations:^{
-        self.searchController.contentInset = UIEdgeInsetsMake(self.searchController.contentInset.top, self.searchController.contentInset.left, keyboardRect.size.height, self.searchController.contentInset.right);
+        self.bottomContentMargin = keyboardRect.size.height;
     } completion:nil];
 }
 
@@ -308,8 +308,22 @@
     NSDictionary* info = [aNotification userInfo];
     
     [UIView animateKeyframesWithDuration:[[info objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue] delay:0.0 options:(7 << 16) animations:^{
-        self.searchController.contentInset = UIEdgeInsetsMake(self.searchController.contentInset.top, self.searchController.contentInset.left, TAB_BAR_HEIGHT, self.searchController.contentInset.right);
+        self.bottomContentMargin = TAB_BAR_HEIGHT;
     } completion:nil];
+}
+
+- (void)setTopContentMargin:(CGFloat)topContentMargin
+{
+    _topContentMargin = topContentMargin;
+    
+    self.searchController.contentInset = UIEdgeInsetsMake(topContentMargin, self.searchController.contentInset.left, self.searchController.contentInset.bottom, self.searchController.contentInset.right);
+}
+
+- (void)setBottomContentMargin:(CGFloat)bottomContentMargin
+{
+    _bottomContentMargin = bottomContentMargin;
+    
+    self.searchController.contentInset = UIEdgeInsetsMake(self.searchController.contentInset.top, self.searchController.contentInset.left, bottomContentMargin, self.searchController.contentInset.right);
 }
 
 #pragma mark - Push stop results
@@ -410,6 +424,8 @@
     UIButton *clearServiceRouteButton = [UIButton buttonWithType:UIButtonTypeInfoLight];
     [clearServiceRouteButton addTarget:self action:@selector(clearServiceRoute) forControlEvents:UIControlEventTouchUpInside];
     [serviceBar addSubview:clearServiceRouteButton];
+    
+    self.topContentMargin += serviceBar.bounds.size.height;
 }
 
 - (void)serviceRouteBarSelectedButtonAtIndex:(NSUInteger)index service:(CFService *)service
@@ -421,6 +437,7 @@
 {
     for (UIView *subview in self.view.subviews) {
         if ([subview isKindOfClass:[CFServiceRouteBar class]]) {
+            self.topContentMargin -= subview.bounds.size.height;
             [subview removeFromSuperview];
         }
     }

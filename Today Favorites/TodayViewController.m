@@ -15,8 +15,6 @@
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, assign) UIEdgeInsets marginInsets;
 
-@property (nonatomic, strong) UILabel *helloLabel;
-
 @property (nonatomic, strong) NSArray *favorites;
 @property (nonatomic, strong) NSArray *storedFavorites;
 
@@ -43,26 +41,24 @@
 {
     [super viewDidLoad];
     
-    self.helloLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 25.0)];
-    self.helloLabel.textColor = [UIColor lightTextColor];
-//    [self.view addSubview:self.helloLabel];
-    
-    UIButton *openCFButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    openCFButton.frame = CGRectMake(0, 25.0, self.view.bounds.size.width, 25.0);
-    [openCFButton setTitle:@"open CF!" forState:UIControlStateNormal];
-    [openCFButton addTarget:self action:@selector(openCF) forControlEvents:UIControlEventTouchUpInside];
-//    [self.view addSubview:openCFButton];
-    
     self.storedFavorites = self.favorites;
     [self updateContent];
+}
+
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
+{
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+        self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y, size.width, size.height);
+        self.tableView.frame = self.view.bounds;
+    } completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+        
+    }];
 }
 
 #pragma mark - Content updating
 
 - (void)updateContent
 {
-    self.helloLabel.text = [NSString stringWithFormat:@"%d Favorites", self.favorites.count];
-    
     [self.tableView reloadData];
     self.tableView.frame = CGRectMake(0, 0, self.tableView.contentSize.width, self.tableView.contentSize.height);
     
@@ -138,8 +134,7 @@
     cell.nameLabel.textColor = [UIColor lightTextColor];
     cell.nameLabel.alpha = 1;
     
-    cell.favoriteNameLabel.frame = CGRectMake(self.marginInsets.left, cell.favoriteNameLabel.frame.origin.y, cell.bounds.size.width - self.marginInsets.left - self.marginInsets.right, cell.favoriteNameLabel.bounds.size.height);
-    cell.nameLabel.frame = CGRectMake(self.marginInsets.left, cell.nameLabel.frame.origin.y, cell.bounds.size.width - self.marginInsets.left - self.marginInsets.right, cell.nameLabel.bounds.size.height);
+    cell.contentInsets = UIEdgeInsetsMake(0, self.marginInsets.left, 0, self.marginInsets.right);
     
     //    cell.backgroundColor = [UIColor clearColor];
     

@@ -24,7 +24,7 @@
     if (self) {
         _glyphView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 16.0, frame.size.height - 1.0)];
         _glyphView.contentMode = UIViewContentModeCenter;
-        _glyphView.tintColor = [UIColor colorWithWhite:0 alpha:.2];
+//        _glyphView.tintColor = [UIColor colorWithWhite:0 alpha:.2];
         _glyphView.image = [[UIImage imageNamed:@"searchfield-glyph"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
         [self addSubview:_glyphView];
         
@@ -35,6 +35,7 @@
         _textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
         _textField.autocorrectionType = UITextAutocorrectionTypeNo;
         _textField.delegate = self;
+        _textField.font = [UIFont fontWithName:DEFAULT_FONT_NAME_REGULAR size:18.0];
         [self addSubview:_textField];
         
         _text = @"";
@@ -50,7 +51,7 @@
 
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
-    self.glyphView.tintColor = [UIColor colorWithWhite:0 alpha:.2];
+//    self.glyphView.tintColor = [UIColor colorWithWhite:0 alpha:.2];
     [self.delegate searchFieldDidEndEditing:self];
 }
 
@@ -78,6 +79,11 @@
 {
     _placeholder = placeholder;
     self.textField.placeholder = placeholder;
+}
+
+- (BOOL)isEditing
+{
+    return self.textField.editing;
 }
 
 - (void)clear

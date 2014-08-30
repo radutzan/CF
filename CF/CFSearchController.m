@@ -86,27 +86,26 @@
 {
     self.alpha = 0;
     self.hidden = NO;
-    self.searchSuggestionsCard.alpha = 0;
-    self.searchSuggestionsCard.center = CGPointMake(self.searchSuggestionsCard.center.x, self.searchSuggestionsCard.center.y - ANIMATION_OFFSET);
+    if (!self.suggesting) {
+        self.searchSuggestionsCard.frame = CGRectMake(self.searchSuggestionsCard.frame.origin.x, - ANIMATION_OFFSET, self.searchSuggestionsCard.bounds.size.width, self.searchSuggestionsCard.bounds.size.height);
+    }
     
-    [UIView animateWithDuration:0.25 delay:0.0 usingSpringWithDamping:1 initialSpringVelocity:0 options:0 animations:^{
+    [UIView animateWithDuration:0.25 delay:0.0 usingSpringWithDamping:1 initialSpringVelocity:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
         self.alpha = 1;
-    } completion:^(BOOL finished) {
         if (!self.suggesting) {
-            [UIView animateWithDuration:0.25 delay:0.0 usingSpringWithDamping:1 initialSpringVelocity:0 options:0 animations:^{
-                self.searchSuggestionsCard.alpha = 1;
-                self.searchSuggestionsCard.center = CGPointMake(self.searchSuggestionsCard.center.x, self.searchSuggestionsCard.center.y + ANIMATION_OFFSET);
-            } completion:nil];
+            self.searchSuggestionsCard.frame = CGRectMake(self.searchSuggestionsCard.frame.origin.x, 0, self.searchSuggestionsCard.bounds.size.width, self.searchSuggestionsCard.bounds.size.height);
         }
+    } completion:^(BOOL finished) {
     }];
 }
 
 - (void)hide
 {
-    [self.superview endEditing:YES];
+    self.hidden = NO;
     
     [UIView animateWithDuration:0.25 animations:^{
         self.alpha = 0;
+        if (self.searchField.editing) [self.searchField endEditing:YES];
     } completion:^(BOOL finished) {
         self.hidden = YES;
     }];
@@ -114,10 +113,18 @@
 
 - (void)setSuggesting:(BOOL)suggesting
 {
-    _suggesting = suggesting;
+    if (_suggesting == suggesting) return;
     
-    [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-        self.searchSuggestionsCard.alpha = (suggesting) ? 0 : 1;
+    _suggesting = suggesting;
+    NSLog(@"%d", suggesting);
+    
+    self.searchSuggestionsCard.hidden = suggesting;
+    self.searchSuggestionsCard.alpha = suggesting;
+    self.searchSuggestionsCard.frame = CGRectMake(self.searchSuggestionsCard.frame.origin.x, - (ANIMATION_OFFSET * (1 - suggesting)), self.searchSuggestionsCard.bounds.size.width, self.searchSuggestionsCard.bounds.size.height);
+    
+    [UIView animateWithDuration:0.25 delay:0 usingSpringWithDamping:1 initialSpringVelocity:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+        self.searchSuggestionsCard.alpha = 1 - suggesting;
+        self.searchSuggestionsCard.frame = CGRectMake(self.searchSuggestionsCard.frame.origin.x, - (ANIMATION_OFFSET * suggesting), self.searchSuggestionsCard.bounds.size.width, self.searchSuggestionsCard.bounds.size.height);
     } completion:^(BOOL finished) {
         self.searchSuggestionsCard.hidden = suggesting;
     }];
@@ -132,8 +139,6 @@
     } else {
         [self.activityIndicator stopAnimating];
     }
-    
-    self.searchSuggestionsCard.hidden = thinking;
 }
 
 - (void)setCurrentCard:(UIView *)currentCard

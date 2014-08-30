@@ -66,9 +66,17 @@
     
     self.view = [[CFTransparentView alloc] initWithFrame:[UIApplication sharedApplication].keyWindow.bounds];
     
-    self.drawer = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, windowSize.height - TAB_BAR_HEIGHT, windowSize.width, windowSize.height - DRAWER_ORIGIN_Y)];
+    CGRect drawerFrame = CGRectMake(10.0, windowSize.height - TAB_BAR_HEIGHT, windowSize.width - 20.0, windowSize.height - DRAWER_ORIGIN_Y);
+    
+    if (NSClassFromString(@"UIVisualEffectView")) {
+        self.drawer = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleLight]];
+        self.drawer.frame = drawerFrame;
+    } else {
+        self.drawer = [[UINavigationBar alloc] initWithFrame:drawerFrame];
+    }
+    
     self.drawer.layer.anchorPoint = CGPointMake(0.5, 1.0);
-    self.drawer.frame = CGRectMake(10.0, windowSize.height - TAB_BAR_HEIGHT, windowSize.width - 20.0, windowSize.height - DRAWER_ORIGIN_Y);
+    self.drawer.frame = drawerFrame;
     [self.view addSubview:self.drawer];
     
     CALayer *borderLayer = [CALayer layer];

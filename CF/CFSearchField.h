@@ -16,6 +16,7 @@
 @property (nonatomic, copy) NSString *placeholder;
 @property (nonatomic, weak) id<CFSearchFieldDelegate> delegate;
 @property (nonatomic, copy, readonly) NSString *text;
+@property (nonatomic, readonly, getter=isEditing) BOOL editing;
 
 @end
 

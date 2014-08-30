@@ -17,5 +17,7 @@
 @property (nonatomic, strong) UILabel *numberLabel;
 @property (nonatomic, strong) UILabel *codeLabel;
 @property (nonatomic, strong) UIImageView *metroBadge;
+@property (nonatomic, assign) UIEdgeInsets contentInsets;
+@property (nonatomic, strong) UIView *containerView;
 
 @end

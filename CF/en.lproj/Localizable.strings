@@ -45,13 +45,16 @@
 "NO_INFO_COMPLAINT_TWEET" = "@transantiago No hay información para el servicio %@ en el paradero %@. ¿Qué sucede?";
 
 // map
+"MAP_SEARCHFIELD_PLACEHOLDER" = "Stop code, service or place";
+"SEARCH_SUGGESTION_CARD_STOP_CODE_TITLE" = "Stop Code";
+"SEARCH_SUGGESTION_CARD_SERVICE_TITLE" = "Service";
+"SEARCH_SUGGESTION_CARD_PLACE_TITLE" = "Place";
 "LOCATION_DENIED_ALERT_TITLE" = "Location Disabled";
 "LOCATION_DENIED_ALERT_MESSAGE" = "Cuánto Falta needs your permission to use Location Services in order to show you the nearest stops and Bip! spots. Your location is kept private at all times, it never leaves your device, and it never will.\n\nTo allow Cuánto Falta to use your Location, go to the Settings app > Privacy > Location Services and turn on Cuánto Falta.";
 "OUT_OF_SANTIAGO_WARNING_TITLE" = "You're not in Santiago";
 "OUT_OF_SANTIAGO_WARNING_MESSAGE" = "Cuánto Falta only works in Santiago. Navigate to Santiago on the map to see stuff.";
 "ZOOM_LEVEL_WARNING_TITLE" = "You're too far away";
 "ZOOM_LEVEL_WARNING_MESSAGE" = "Zoom in to see stops on the map.";
-"MAP_SEARCHFIELD_PLACEHOLDER" = "Stop code, service or place";
 "SEARCH_ERROR_NOTFOUND_TITLE" = "Place not found";
 "SEARCH_ERROR_NOTFOUND_MESSAGE" = "Be more specific or look for the place directly on the map.";
 "SEARCH_ERROR_GENERIC_TITLE" = "Couldn't perform search";

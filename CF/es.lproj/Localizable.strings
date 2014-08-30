@@ -45,13 +45,16 @@
 "NO_INFO_COMPLAINT_TWEET" = "@transantiago No hay información para el servicio %@ en el paradero %@. ¿Qué sucede?";
 
 // map
+"MAP_SEARCHFIELD_PLACEHOLDER" = "Código, servicio o lugar";
+"SEARCH_SUGGESTION_CARD_STOP_CODE_TITLE" = "Código";
+"SEARCH_SUGGESTION_CARD_SERVICE_TITLE" = "Servicio";
+"SEARCH_SUGGESTION_CARD_PLACE_TITLE" = "Lugar";
 "LOCATION_DENIED_ALERT_TITLE" = "Ubicación Desactivada";
 "LOCATION_DENIED_ALERT_MESSAGE" = "Cuánto Falta necesita tu ubicación para mostrarte los paraderos y puntos Bip! más cercanos. Tu ubicación se mantendrá completamente privada, nunca se enviará a ningún servidor, y sólo se usará dentro de tu dispositivo.\n\nPara permitir el uso de la ubicación, anda a la app de Ajustes > Privacidad > Ubicación y activa Cuánto Falta.";
 "OUT_OF_SANTIAGO_WARNING_TITLE" = "Estás fuera de Santiago";
 "OUT_OF_SANTIAGO_WARNING_MESSAGE" = "Cuánto Falta sólo funciona en Santiago. Navega hacia Santiago en el mapa para ver cosas.";
 "ZOOM_LEVEL_WARNING_TITLE" = "Estás muy lejos";
 "ZOOM_LEVEL_WARNING_MESSAGE" = "Acércate para ver paradas en el mapa.";
-"MAP_SEARCHFIELD_PLACEHOLDER" = "Código, servicio o lugar";
 "SEARCH_ERROR_NOTFOUND_TITLE" = "Lugar no encontrado";
 "SEARCH_ERROR_NOTFOUND_MESSAGE" = "Especifica más tu búsqueda o busca directamente en el mapa.";
 "SEARCH_ERROR_GENERIC_TITLE" = "Imposible buscar";
