@@ -18,10 +18,12 @@
 #import "GADBannerView.h"
 #import "OLCashier.h"
 #import "CFServiceRouteViewController.h"
-#import "CFStopTransitionAnimator.h"
 
-@interface CFStopResultsViewController () <CFStopSignViewDelegate, UIAlertViewDelegate, CFResultCellDelegate, UITableViewDelegate, UITableViewDataSource, UIViewControllerTransitioningDelegate>
+@interface CFStopResultsViewController () <CFStopSignViewDelegate, UIAlertViewDelegate, CFResultCellDelegate, UITableViewDelegate, UITableViewDataSource>
 
+@property (nonatomic, strong) UIView *stopResultsView;
+@property (nonatomic, strong) UIView *overlay;
+@property (nonatomic, assign) CGPoint stopResultsViewPresentedCenter;
 @property (nonatomic, strong) UINavigationBar *localNavigationBar;
 @property (nonatomic, strong) CFStopSignView *stopInfoView;
 @property (nonatomic, strong) OLShapeTintedButton *favoriteButton;
@@ -33,12 +35,10 @@
 @property (nonatomic, retain) UIRefreshControl *refreshControl;
 @property (nonatomic, strong) NSMutableArray *responseEstimation;
 @property (nonatomic, strong) NSMutableArray *finalData;
+
 @property (nonatomic, strong) GADBannerView *bannerView;
 @property (nonatomic, assign) BOOL refreshing;
 @property (nonatomic, assign) BOOL removedAds;
-@property (nonatomic) CGFloat initialBannerCenterX;
-
-@property (nonatomic, strong) CFStopTransitionAnimator *transitionAnimator;
 
 @end
 
@@ -55,44 +55,59 @@
         self.title = @"Stop Results";
         self.stopCode = stopCode;
         self.removedAds = ([OLCashier hasProduct:@"CF01"] || [OLCashier hasProduct:@"CF02"]);
-        self.transitionAnimator = [CFStopTransitionAnimator new];
     }
     return self;
 }
 
 - (void)loadView
 {
-    self.view = [[UIView alloc] initWithFrame:CGRectInset([UIApplication sharedApplication].keyWindow.bounds, 10.0, 25.0)];
+    self.view = [[UIView alloc] initWithFrame:[UIApplication sharedApplication].keyWindow.bounds];
     self.view.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
-    self.view.backgroundColor = [UIColor colorWithWhite:0 alpha:.5];
+    
+    self.overlay = [[UIView alloc] initWithFrame:self.view.bounds];
+    self.overlay.backgroundColor = [UIColor colorWithWhite:0 alpha:.3];
+    [self.view addSubview:self.overlay];
+    
+    self.stopResultsView = [[UIView alloc] initWithFrame:CGRectOffset(CGRectInset(self.view.bounds, 10.0, 20.0), 0, 10.0)];
+    self.stopResultsView.backgroundColor = [UIColor colorWithWhite:0 alpha:.5];
+    [self.view addSubview:self.stopResultsView];
+    
+    self.stopResultsViewPresentedCenter = self.stopResultsView.center;
     
     CALayer *borderLayer = [CALayer layer];
-    borderLayer.frame = CGRectInset(self.view.bounds, -0.5, -0.5);
+    borderLayer.frame = CGRectInset(self.stopResultsView.bounds, -0.5, -0.5);
     borderLayer.borderWidth = 0.5;
     borderLayer.borderColor = [UIColor colorWithWhite:0 alpha:0.3].CGColor;
-    [self.view.layer addSublayer:borderLayer];
+    [self.stopResultsView.layer addSublayer:borderLayer];
     
-    self.localNavigationBar = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 54.0)];
+    self.localNavigationBar = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, self.stopResultsView.bounds.size.width, 54.0)];
     self.localNavigationBar.barStyle = UIBarStyleBlack;
-    [self.view addSubview:self.localNavigationBar];
+    [self.stopResultsView addSubview:self.localNavigationBar];
     
-    self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
+    self.tableView = [[UITableView alloc] initWithFrame:self.stopResultsView.bounds style:UITableViewStylePlain];
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     self.tableView.separatorInset = UIEdgeInsetsZero;
     self.tableView.separatorColor = [UIColor clearColor];
     self.tableView.contentInset = UIEdgeInsetsMake(self.localNavigationBar.bounds.size.height, 0, 0, 0);
     self.tableView.backgroundColor = [UIColor clearColor];
-    [self.view insertSubview:self.tableView belowSubview:self.localNavigationBar];
+    [self.stopResultsView insertSubview:self.tableView belowSubview:self.localNavigationBar];
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
+    UITapGestureRecognizer *overlayTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismiss)];
+    [self.overlay addGestureRecognizer:overlayTap];
+    
+    UIPanGestureRecognizer *overlayPan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleHorizontalPanGesture:)];
+    [overlayPan requireGestureRecognizerToFail:self.tableView.panGestureRecognizer];
+    [self.overlay addGestureRecognizer:overlayPan];
+    
     UIPanGestureRecognizer *horizontalPanRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleHorizontalPanGesture:)];
     [horizontalPanRecognizer requireGestureRecognizerToFail:self.tableView.panGestureRecognizer];
-    [self.view addGestureRecognizer:horizontalPanRecognizer];
+    [self.stopResultsView addGestureRecognizer:horizontalPanRecognizer];
     
     self.stopInfoView = [[CFStopSignView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.localNavigationBar.bounds.size.width - 33.0, 52.0)];
     self.stopInfoView.delegate = self;
@@ -115,7 +130,7 @@
     self.refreshControl.tintColor = [UIColor whiteColor];
     [self.refreshControl addTarget:self action:@selector(performStopRequest) forControlEvents:UIControlEventValueChanged];
     
-    self.timerLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.view.bounds.size.width - 100.0 - 15.0, 0, 100.0, 20.0)];
+    self.timerLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.stopResultsView.bounds.size.width - 100.0 - 15.0, 0, 100.0, 20.0)];
     self.timerLabel.font = [UIFont fontWithName:@"AvenirNext-MediumItalic" size:13.0];
     self.timerLabel.alpha = 0.5;
     self.timerLabel.textAlignment = NSTextAlignmentRight;
@@ -141,7 +156,6 @@
 {
     [super viewDidAppear:animated];
     
-//    [self.navigationController setNavigationBarHidden:YES animated:YES];
     if (self.stop) [self performStopRequest];
 }
 
@@ -156,8 +170,6 @@
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     [self.view endEditing:YES];
-    
-//    [self.navigationController setNavigationBarHidden:NO];
 }
 
 #pragma mark - Presentation
@@ -169,55 +181,82 @@
 
 - (void)presentFromRect:(CGRect)rect fromViewController:(UIViewController *)fromViewController
 {
-    if (CGRectIsEmpty(rect)) {
-        
-    }
-    
     [fromViewController addChildViewController:self];
     [fromViewController.view addSubview:self.view];
     
-//    self.transitionAnimator.originRect = rect;
-//    self.transitioningDelegate = self;
-//    self.modalPresentationStyle = UIModalPresentationCustom;
-//    [fromViewController presentViewController:self animated:YES completion:nil];
+    self.overlay.alpha = 0;
+    
+    CGRect finalFrame = self.stopResultsView.frame;
+    
+    if (CGRectIsEmpty(rect)) {
+        self.stopResultsView.alpha = 0;
+        self.stopResultsView.frame = CGRectOffset(finalFrame, 0, 40.0);
+    } else {
+        self.stopResultsView.frame = rect;
+    }
+    
+    [UIView animateWithDuration:0.45 delay:0 usingSpringWithDamping:1 initialSpringVelocity:1 options:0 animations:^{
+        self.overlay.alpha = 1;
+        self.stopResultsView.alpha = 1;
+        self.stopResultsView.frame = finalFrame;
+    } completion:^(BOOL finished) {
+        
+    }];
 }
 
 - (void)dismiss
 {
-//    [self dismissViewControllerAnimated:YES completion:nil];
-    [self.view removeFromSuperview];
-    [self removeFromParentViewController];
+    [self dismissFromCenter:CGPointZero withVelocityFactor:0.0];
 }
 
-- (void)dismissFromRect:(CGRect)rect withVelocity:(CGFloat)velocity
+- (void)dismissFromCenter:(CGPoint)center withVelocityFactor:(CGFloat)velocityFactor
 {
-    self.transitionAnimator.originRect = rect;
-    self.transitionAnimator.initialVelocity = velocity;
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
-
-- (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented
-                                                                  presentingController:(UIViewController *)presenting
-                                                                      sourceController:(UIViewController *)source
-{
-    self.transitionAnimator.presenting = YES;
-    return self.transitionAnimator;
-}
-
-- (id<UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed
-{
-    self.transitionAnimator.presenting = NO;
-    return self.transitionAnimator;
+    CGFloat animationDuration = 0.45 * (1 - velocityFactor);
+    
+    [UIView animateWithDuration:animationDuration delay:0 usingSpringWithDamping:1 initialSpringVelocity:velocityFactor options:0 animations:^{
+        self.overlay.alpha = 0;
+        self.stopResultsView.center = CGPointMake(self.stopResultsView.center.x + self.view.bounds.size.width, self.stopResultsView.center.y
+                                                  );
+    } completion:^(BOOL finished) {
+        [self.view removeFromSuperview];
+        [self removeFromParentViewController];
+        self.stopResultsView.center = self.stopResultsViewPresentedCenter;
+    }];
 }
 
 - (void)handleHorizontalPanGesture:(UIPanGestureRecognizer *)recognizer
 {
+    // a simplified implementation based on the drawer panning method
+    
+    CGFloat draggableDistance = self.view.bounds.size.width;
+    CGFloat moveDiff = [recognizer translationInView:self.stopResultsView].x;
+    
+    // dragFactor: opening is negative / closing is positive
+    CGFloat dragFactor = moveDiff / draggableDistance;
+    
     if (recognizer.state == UIGestureRecognizerStateBegan) {
         
     } else if (recognizer.state == UIGestureRecognizerStateChanged) {
+        if (moveDiff >= 0) {
+            // moving to the right
+            self.stopResultsView.center = CGPointMake(self.stopResultsViewPresentedCenter.x + moveDiff, self.stopResultsView.center.y);
+            self.overlay.alpha = 1.0 - fabs(dragFactor);
+        } else {
+            self.stopResultsView.center = CGPointMake(self.stopResultsViewPresentedCenter.x + moveDiff * 0.25, self.stopResultsView.center.y);
+        }
         
     } else {
-        [self dismiss];
+        CGFloat terminalVelocity = MIN([recognizer velocityInView:self.view].x, 3500);
+        CGFloat velocityFactor = abs(terminalVelocity) / 3500;
+        
+        if (terminalVelocity > 250 || moveDiff > 80) {
+            [self dismissFromCenter:self.stopResultsView.center withVelocityFactor:velocityFactor];
+        } else {
+            [UIView animateWithDuration:0.45 delay:0 usingSpringWithDamping:0.6 initialSpringVelocity:velocityFactor options:0 animations:^{
+                self.stopResultsView.center = self.stopResultsViewPresentedCenter;
+                self.overlay.alpha = 1;
+            } completion:nil];
+        }
     }
 }
 
@@ -265,7 +304,7 @@
 - (void)stopSignView:(UIView *)signView didEditFavoriteNameWithString:(NSString *)string
 {
     [self.stop setFavoriteName:string];
-    [self.delegate stopResultsViewControllerDidUpdateFavoriteName];
+    [self.delegate stopResultsViewControllerDidUpdateUserData];
 }
 
 - (void)updateHistory
@@ -296,6 +335,8 @@
     
     [defaults setObject:mutableHistory forKey:@"history"];
     [defaults synchronize];
+    
+    [self.delegate stopResultsViewControllerDidUpdateUserData];
 }
 
 #pragma mark - Stop logic
@@ -594,7 +635,7 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    UIView *headerView = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 20.0)];
+    UIView *headerView = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, self.stopResultsView.bounds.size.width, 20.0)];
     
     UILabel *service = [[UILabel alloc] initWithFrame:CGRectMake(15.0, 0, 90.0, 20.0)];
     service.text = NSLocalizedString(@"SERVICE", nil);

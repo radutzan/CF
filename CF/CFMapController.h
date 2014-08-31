@@ -36,6 +36,7 @@ typedef NS_ENUM(NSInteger, CFMapMode) {
 - (void)displayServiceRoute:(NSString *)serviceName direction:(CFDirection)direction;
 - (void)displayServiceRoute:(NSString *)serviceName directionString:(NSString *)directionString;
 
+@property (nonatomic, strong) SMCalloutView *stopCalloutView;
 @property (nonatomic, strong) MKMapView *mapView;
 @property (nonatomic, weak) id<CFMapControllerDelegate> delegate;
 @property (nonatomic, assign) CLLocationCoordinate2D defaultCenterCoordinate;

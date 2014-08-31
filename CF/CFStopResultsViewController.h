@@ -11,7 +11,7 @@
 
 @protocol CFStopResultsViewControllerDelegate <NSObject>
 
-- (void)stopResultsViewControllerDidUpdateFavoriteName;
+- (void)stopResultsViewControllerDidUpdateUserData;
 - (void)stopResultsViewControllerDidRequestServiceRoute:(NSString *)serviceName directionString:(NSString *)directionString;
 
 @end

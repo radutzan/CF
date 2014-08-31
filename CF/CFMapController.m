@@ -19,7 +19,6 @@
 
 @interface CFMapController () <CLLocationManagerDelegate, SMCalloutViewDelegate>
 
-@property (nonatomic, strong) SMCalloutView *stopCalloutView;
 @property (nonatomic, strong) OLGhostAlertView *zoomWarning;
 @property (nonatomic, strong) OLGhostAlertView *outOfSantiagoWarning;
 
