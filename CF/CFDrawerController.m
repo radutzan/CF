@@ -115,7 +115,7 @@
     [self.tabBar addGestureRecognizer:openDrawerDrag];
     
     self.closeDrawerButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.closeDrawerButton.frame = CGRectMake(0, 64.0, self.view.bounds.size.width, DRAWER_ORIGIN_Y - 64.0);
+    self.closeDrawerButton.frame = self.view.bounds;
     self.closeDrawerButton.hidden = YES;
     [self.closeDrawerButton addTarget:self action:@selector(closeDrawerWithAnimation) forControlEvents:UIControlEventTouchUpInside];
     [self.view insertSubview:self.closeDrawerButton atIndex:0];
@@ -139,8 +139,12 @@
 
 - (void)viewWillLayoutSubviews
 {
-    self.drawer.frame = CGRectMake(10.0, self.drawer.frame.origin.y, self.view.bounds.size.width - 20.0, self.view.bounds.size.height - DRAWER_ORIGIN_Y);
+    CGFloat drawerOriginY = (self.drawerOpen) ? DRAWER_ORIGIN_Y : self.view.bounds.size.height - TAB_BAR_HEIGHT;
+    self.drawer.frame = CGRectMake(10.0, drawerOriginY, self.view.bounds.size.width - 20.0, self.view.bounds.size.height - DRAWER_ORIGIN_Y);
     self.borderLayer.frame = CGRectInset(self.drawer.bounds, -0.5, -0.5);
+    self.drawerOpenCenterY = DRAWER_ORIGIN_Y + self.drawer.bounds.size.height;
+    self.scrollView.contentSize = CGSizeMake(self.scrollView.bounds.size.width * 3, self.scrollView.bounds.size.height);
+    self.tabBar.frame = CGRectMake(0, self.view.bounds.size.height - TAB_BAR_HEIGHT, self.view.bounds.size.width, TAB_BAR_HEIGHT);
     
     for (UIView *subview in self.scrollView.subviews) {
         if (![subview isKindOfClass:[UIImageView class]]) {
@@ -149,8 +153,11 @@
     }
     
     CGFloat tabButtonWidth = floorf(self.drawer.bounds.size.width / self.tabs.count);
-    for (UIView *subview in self.tabBar.subviews) {
+    for (UIButton *subview in self.tabBar.subviews) {
         subview.frame = CGRectMake(10.0 + tabButtonWidth * [self.tabBar.subviews indexOfObject:subview], 0, tabButtonWidth, TAB_BAR_HEIGHT);
+        if (subview.selected) {
+            [self tabButtonPressed:subview];
+        }
     }
 }
 

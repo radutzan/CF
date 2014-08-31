@@ -67,6 +67,11 @@
     self.mapController.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     [self.view addSubview:self.mapController];
     
+    self.drawerController = [CFDrawerController new];
+    self.drawerController.delegate = self;
+    [self addChildViewController:self.drawerController];
+    [self.view addSubview:self.drawerController.view];
+    
     self.searchController = [[CFSearchController alloc] initWithFrame:self.view.bounds];
     self.searchController.delegate = self;
     self.searchController.contentInset = UIEdgeInsetsMake(64.0, 0, TAB_BAR_HEIGHT, 0);
@@ -114,11 +119,6 @@
     
     [mixpanel registerSuperProperties:@{@"Has Map": mappy}];
     [mixpanel registerSuperProperties:@{@"Has Free Map": freeMap}];
-    
-    self.drawerController = [CFDrawerController new];
-    self.drawerController.delegate = self;
-    [self addChildViewController:self.drawerController];
-    [self.view addSubview:self.drawerController.view];
     
     self.stopResultsController = [CFStopResultsViewController new];
     self.stopResultsController.delegate = self;
