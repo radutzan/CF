@@ -20,10 +20,10 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         self.frame = CGRectMake(0, 0, self.bounds.size.width, CELL_HEIGHT);
-        self.containerView = [[UIView alloc] initWithFrame:CGRectMake(15.0, 0, self.contentView.bounds.size.width - 40.0, CELL_HEIGHT)];
+        self.containerView = [[UIView alloc] initWithFrame:CGRectMake(15.0, 0, self.bounds.size.width - 40.0, CELL_HEIGHT)];
         [self.contentView addSubview:self.containerView];
         
-        self.contentInsets = UIEdgeInsetsMake(0, 15.0, 0, 25.0);
+        self.contentInsets = UIEdgeInsetsMake(0, 15.0, 0, 0.0);
         
         self.nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.containerView.bounds.size.width - HORIZONTAL_MARGIN * 2, self.containerView.bounds.size.height)];
         self.nameLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
@@ -43,6 +43,11 @@
 
 - (void)layoutSubviews
 {
+    [super layoutSubviews];
+    
+    self.containerView.frame = CGRectMake(self.contentInsets.left, 0, self.contentView.bounds.size.width - self.contentInsets.left - self.contentInsets.right, CELL_HEIGHT);
+    self.codeLabel.frame = CGRectMake(self.containerView.bounds.size.width - 60.0, 0, 60.0, self.containerView.bounds.size.height);
+    
     CGFloat nameLabelStartPosition = 0;
     
     if (!self.numberLabel.hidden) {
@@ -53,6 +58,7 @@
     
     if (!self.metroBadge.hidden) {
         self.metroBadge.frame = CGRectMake(nameLabelStartPosition, 0, self.metroBadge.bounds.size.width, self.metroBadge.bounds.size.height);
+        self.metroBadge.tintColor = self.nameLabel.textColor;
         
         nameLabelStartPosition += self.metroBadge.frame.size.width + HORIZONTAL_MARGIN;
     }
@@ -65,19 +71,13 @@
     _contentInsets = contentInsets;
     
     self.containerView.frame = CGRectMake(contentInsets.left, 0, self.contentView.bounds.size.width - contentInsets.left - contentInsets.right, CELL_HEIGHT);
-}
-
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated
-{
-    [super setSelected:selected animated:animated];
-
-    // Configure the view for the selected state
+    [self layoutIfNeeded];
 }
 
 - (UILabel *)numberLabel
 {
     if (!_numberLabel) {
-        CGFloat originY = (self.contentView.bounds.size.height - 26.0) / 2;
+        CGFloat originY = (self.containerView.bounds.size.height - 26.0) / 2;
         _numberLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, originY, 26.0, 26.0)];
         _numberLabel.font = [UIFont systemFontOfSize:15];
         _numberLabel.textAlignment = NSTextAlignmentCenter;
@@ -100,7 +100,7 @@
         
         _metroBadge = [[UIImageView alloc] initWithImage:metroImage];
         _metroBadge.contentMode = UIViewContentModeCenter;
-        _metroBadge.frame = CGRectMake(0, 0, _metroBadge.bounds.size.width, self.contentView.bounds.size.height);
+        _metroBadge.frame = CGRectMake(0, 0, _metroBadge.bounds.size.width, self.containerView.bounds.size.height);
         _metroBadge.tintColor = self.nameLabel.textColor;
         _metroBadge.hidden = YES;
         [self.containerView addSubview:_metroBadge];
@@ -115,7 +115,7 @@
     [self.metroBadge removeFromSuperview];
     self.numberLabel = nil;
     self.metroBadge = nil;
-    self.contentInsets = UIEdgeInsetsMake(0, 15.0, 0, 25.0);
+    self.contentInsets = UIEdgeInsetsMake(0, 15.0, 0, 0.0);
 }
 
 @end

@@ -257,6 +257,7 @@
 - (void)searchControllerDidBeginSearching
 {
     [self.localNavigationBar.topItem setRightBarButtonItems:@[] animated:YES];
+    self.drawerController.drawerOpen = NO;
 }
 
 - (void)searchControllerDidEndSearching
@@ -347,6 +348,7 @@
     
     self.stopResultsController.stopCode = stopCode;
     [self.stopResultsController presentFromViewController:self];
+    self.drawerController.drawerOpen = NO;
 }
 
 - (void)drawerDidSelectCellWithStop:(NSString *)stopCode
@@ -416,7 +418,7 @@
     CFServiceRouteBar *serviceBar = [[CFServiceRouteBar alloc] initWithFrame:CGRectMake(0, self.localNavigationBar.bounds.size.height, self.view.bounds.size.width, 44.0)];
     serviceBar.service = service;
     serviceBar.delegate = self;
-    [self.view insertSubview:serviceBar belowSubview:self.searchController];
+    [self.view insertSubview:serviceBar aboveSubview:self.searchController];
     
     UINavigationBar *serviceBarBackground = [[UINavigationBar alloc] initWithFrame:serviceBar.bounds];
     [serviceBar insertSubview:serviceBarBackground atIndex:0];

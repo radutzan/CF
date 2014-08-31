@@ -22,13 +22,17 @@
         self.nameLabel.font = [UIFont boldSystemFontOfSize:11.0];
         self.nameLabel.alpha = 0.6;
         self.nameLabel.numberOfLines = 1;
-        self.nameLabel.frame = CGRectMake(0, 32.0, self.contentView.bounds.size.width, 12.0);
     }
     return self;
 }
 
 - (void)layoutSubviews
 {
+    [super layoutSubviews];
+    
+    self.favoriteNameLabel.frame = CGRectMake(0, 9.0, self.contentView.bounds.size.width, 22.0);
+    self.nameLabel.frame = CGRectMake(0, 32.0, self.contentView.bounds.size.width, 12.0);
+    
     self.numberLabel.hidden = YES;
     self.metroBadge.hidden = YES;
     self.codeLabel.hidden = YES;

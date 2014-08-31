@@ -32,6 +32,7 @@
 @interface CFDrawerController () <UIScrollViewDelegate, CFStopTableViewDelegate, UIActionSheetDelegate>
 
 @property (nonatomic, strong) UIView *drawer;
+@property (nonatomic, strong) CALayer *borderLayer;
 @property (nonatomic, strong) UIScrollView *scrollView;
 @property (nonatomic, strong) UIButton *closeDrawerButton;
 @property (nonatomic, strong) UIView *gripper;
@@ -44,8 +45,6 @@
 
 @property (nonatomic, assign) CGFloat drawerCurrentDragCenterY;
 @property (nonatomic, assign) CGFloat drawerOpenCenterY;
-
-@property (nonatomic, assign) BOOL drawerOpen;
 
 @end
 
@@ -62,9 +61,10 @@
 
 - (void)loadView
 {
-    CGSize windowSize = [UIApplication sharedApplication].keyWindow.bounds.size;
+    CGRect windowBounds = [UIApplication sharedApplication].keyWindow.rootViewController.view.bounds;
+    CGSize windowSize = windowBounds.size;
     
-    self.view = [[CFTransparentView alloc] initWithFrame:[UIApplication sharedApplication].keyWindow.bounds];
+    self.view = [[CFTransparentView alloc] initWithFrame:windowBounds];
     
     CGRect drawerFrame = CGRectMake(10.0, windowSize.height - TAB_BAR_HEIGHT, windowSize.width - 20.0, windowSize.height - DRAWER_ORIGIN_Y);
     
@@ -79,11 +79,11 @@
     self.drawer.frame = drawerFrame;
     [self.view addSubview:self.drawer];
     
-    CALayer *borderLayer = [CALayer layer];
-    borderLayer.frame = CGRectInset(self.drawer.bounds, -0.5, -0.5);
-    borderLayer.borderWidth = 0.5;
-    borderLayer.borderColor = [UIColor colorWithWhite:0 alpha:0.3].CGColor;
-    [self.drawer.layer addSublayer:borderLayer];
+    self.borderLayer = [CALayer layer];
+    self.borderLayer.frame = CGRectInset(self.drawer.bounds, -0.5, -0.5);
+    self.borderLayer.borderWidth = 0.5;
+    self.borderLayer.borderColor = [UIColor colorWithWhite:0 alpha:0.3].CGColor;
+    [self.drawer.layer addSublayer:self.borderLayer];
     
     self.drawerOpenCenterY = DRAWER_ORIGIN_Y + self.drawer.bounds.size.height;
     
@@ -99,6 +99,7 @@
     self.gripper = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"gripper"]];
     self.gripper.userInteractionEnabled = YES;
     self.gripper.frame = CGRectMake(0, 0, self.drawer.bounds.size.width, 30);
+    self.gripper.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     self.gripper.alpha = 0;
     self.gripper.contentMode = UIViewContentModeCenter;
     [self.drawer addSubview:self.gripper];
@@ -129,6 +130,28 @@
 {
     [self.favoritesController.tableView reloadData];
     [self.historyController.tableView reloadData];
+}
+
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
+{
+    self.view.frame = CGRectMake(0, 0, size.width, size.height);
+}
+
+- (void)viewWillLayoutSubviews
+{
+    self.drawer.frame = CGRectMake(10.0, self.drawer.frame.origin.y, self.view.bounds.size.width - 20.0, self.view.bounds.size.height - DRAWER_ORIGIN_Y);
+    self.borderLayer.frame = CGRectInset(self.drawer.bounds, -0.5, -0.5);
+    
+    for (UIView *subview in self.scrollView.subviews) {
+        if (![subview isKindOfClass:[UIImageView class]]) {
+            subview.frame = CGRectMake(self.scrollView.bounds.size.width * [self.scrollView.subviews indexOfObject:subview], 0, self.scrollView.bounds.size.width, self.scrollView.bounds.size.height);
+        }
+    }
+    
+    CGFloat tabButtonWidth = floorf(self.drawer.bounds.size.width / self.tabs.count);
+    for (UIView *subview in self.tabBar.subviews) {
+        subview.frame = CGRectMake(10.0 + tabButtonWidth * [self.tabBar.subviews indexOfObject:subview], 0, tabButtonWidth, TAB_BAR_HEIGHT);
+    }
 }
 
 #pragma mark - Tabs
@@ -168,6 +191,7 @@
     for (NSDictionary *tab in tabs) {
         UIViewController *thisTabController = tab[@"controller"];
         thisTabController.view.frame = CGRectMake(self.scrollView.bounds.size.width * [tabs indexOfObject:tab], 0, self.scrollView.bounds.size.width, self.scrollView.bounds.size.height);
+        thisTabController.view.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
         [self addChildViewController:thisTabController];
         [self.scrollView addSubview:thisTabController.view];
         

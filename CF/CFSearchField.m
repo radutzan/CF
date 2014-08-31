@@ -89,6 +89,7 @@
 - (void)clear
 {
     self.textField.text = @"";
+    [self.delegate searchField:self textDidChange:@""];
 }
 
 @end

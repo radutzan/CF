@@ -116,7 +116,6 @@
     if (_suggesting == suggesting) return;
     
     _suggesting = suggesting;
-    NSLog(@"%d", suggesting);
     
     self.searchSuggestionsCard.hidden = suggesting;
     self.searchSuggestionsCard.alpha = suggesting;
@@ -361,8 +360,8 @@
 {
     CFDirection direction = (index == 0) ? CFDirectionOutward : CFDirectionInward;
     [self.delegate searchControllerDidSelectService:service direction:direction];
-    [self hide];
     [self.searchField clear];
+    [self hide];
 }
 
 - (void)stopSuggestionViewDidSelectStop:(NSString *)stop

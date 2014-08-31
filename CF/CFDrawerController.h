@@ -18,6 +18,7 @@
 
 - (void)reloadUserData;
 
+@property (nonatomic, assign) BOOL drawerOpen;
 @property (nonatomic, weak) id<CFDrawerControllerDelegate> delegate;
 
 @end

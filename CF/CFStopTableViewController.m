@@ -67,7 +67,7 @@
         CGFloat verticalMargin = 12.0;
         CGFloat imageOriginY = floorf((self.view.bounds.size.height - 240.0) / 2);
         
-        self.placeholderImageView.center = CGPointMake(self.placeholderView.bounds.size.width / 2, imageOriginY + self.placeholderImageView.image.size.height / 2);//.frame = CGRectMake(floorf((self.placeholderView.bounds.size.width - self.placeholderImageView.bounds.size.width) / 2), imageOriginY, self.placeholderImageView.bounds.size.width, self.placeholderImageView.bounds.size.height);
+        self.placeholderImageView.center = CGPointMake(self.placeholderView.bounds.size.width / 2, imageOriginY + self.placeholderImageView.image.size.height / 2);
         self.placeholderTitleLabel.frame = CGRectMake(0, self.placeholderImageView.frame.origin.y + self.placeholderImageView.bounds.size.height + verticalMargin, self.placeholderView.bounds.size.width, 25);
         self.placeholderMessageLabel.frame = CGRectMake(50, self.placeholderTitleLabel.frame.origin.y + self.placeholderTitleLabel.bounds.size.height + verticalMargin / 2, self.placeholderView.bounds.size.width - 100, 62);
         
