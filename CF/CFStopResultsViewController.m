@@ -128,7 +128,7 @@
     
     self.refreshControl = [UIRefreshControl new];
     self.refreshControl.tintColor = [UIColor whiteColor];
-    [self.refreshControl addTarget:self action:@selector(performStopRequest) forControlEvents:UIControlEventValueChanged];
+    [self.refreshControl addTarget:self action:@selector(performStopRequestQuietly:) forControlEvents:UIControlEventValueChanged];
     
     self.timerLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.stopResultsView.bounds.size.width - 100.0 - 15.0, 0, 100.0, 20.0)];
     self.timerLabel.font = [UIFont fontWithName:@"AvenirNext-MediumItalic" size:13.0];
@@ -156,7 +156,7 @@
 {
     [super viewDidAppear:animated];
     
-    if (self.stop) [self performStopRequest];
+    if (self.stop) [self performStopRequestQuietly:YES];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -395,7 +395,7 @@
         }
         
         [self updateHistory];
-        [self performStopRequest];
+        [self performStopRequestQuietly:NO];
         [self.refreshControl beginRefreshing];
     } else {
         self.favoriteButton.enabled = NO;
@@ -406,7 +406,7 @@
     [self.tableView reloadData];
 }
 
-- (void)performStopRequest
+- (void)performStopRequestQuietly:(BOOL)quietly
 {
     self.refreshing = YES;
     
@@ -436,7 +436,7 @@
                                                } else if (error) {
                                                    NSLog(@"Consulta falló. Error: %@", error.description);
                                                    
-                                                   if ([[self.navigationController topViewController] isEqual:self]) {
+                                                   if ([[self.navigationController topViewController] isEqual:self] && !quietly) {
                                                        UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"STOP_ERROR_TITLE", nil) message:[NSString stringWithFormat:@"%@\n%@", error.localizedDescription, NSLocalizedString(@"ERROR_MESSAGE_TRY_AGAIN", nil)] delegate:self cancelButtonTitle:NSLocalizedString(@"ERROR_DISMISS", nil) otherButtonTitles:nil];
                                                        [errorAlert show];
                                                    }
@@ -525,7 +525,7 @@
     [self.tableView reloadData];
     [self.refreshControl endRefreshing];
     
-    [self performSelector:@selector(performStopRequest) withObject:nil afterDelay:16.0];
+    [self performSelector:@selector(performStopRequestQuietly:) withObject:NO afterDelay:16.0];
     
     if (!self.timer.isValid) {
         NSTimer *newTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(refreshTimerLabel) userInfo:nil repeats:YES];
@@ -541,16 +541,13 @@
         self.timerLabel.text = NSLocalizedString(@"REFRESHING", nil);
         self.timerCount = 15;
     } else {
-        self.timerLabel.text = [NSString stringWithFormat:@"%d", self.timerCount--];
+        self.timerLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)self.timerCount--];
     }
 }
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
     if (alertView.tag == 6009) {
-//        if ([[self.navigationController.viewControllers lastObject] isEqual:self]) {
-//            [self.navigationController popToRootViewControllerAnimated:YES];
-//        }
     }
 }
 
