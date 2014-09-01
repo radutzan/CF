@@ -19,13 +19,16 @@
 
 @import MapKit;
 
-@interface CFServiceRouteViewController () <MKMapViewDelegate, SMCalloutViewDelegate>
+@interface CFServiceRouteViewController () <MKMapViewDelegate, SMCalloutViewDelegate, UISearchBarDelegate>
 
 @property (nonatomic, strong) MKMapView *mapView;
 @property (assign) CFStop *selectedStop;
 @property (nonatomic, strong) SMCalloutView *stopCalloutView;
 @property (nonatomic, strong) UISegmentedControl *directionSwitcher;
 @property (nonatomic, assign) BOOL regionSet;
+@property (nonatomic, strong) UIView *overlay;
+@property (nonatomic, strong) UIView *searchView;
+@property (nonatomic, strong) UISearchBar *searchBar;
 
 @property (nonatomic, strong) NSString *currentService;
 @property (nonatomic, assign) CFDirection currentDirection;
@@ -102,8 +105,30 @@ static MKMapRect santiagoBounds;
     UIBarButtonItem *spaceItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
     self.toolbarItems = @[spaceItem, segmentedControlItem, spaceItem];
     
+    self.overlay = [[UIView alloc] initWithFrame:CGRectZero];
+    self.overlay.backgroundColor = [UIColor colorWithWhite:0 alpha:0.2];
+    self.overlay.autoresizingMask = (UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth);
+    self.overlay.alpha = 0;
+    
+    UITapGestureRecognizer *overlayTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(overlayTapped)];
+    [self.overlay addGestureRecognizer:overlayTap];
+    
     MKUserTrackingBarButtonItem *tracky = [[MKUserTrackingBarButtonItem alloc] initWithMapView:self.mapView];
-    self.navigationItem.rightBarButtonItem = tracky;
+    UIBarButtonItem *searchButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:self action:@selector(showSearchBar)];
+    self.navigationItem.rightBarButtonItems = @[tracky, searchButtonItem];
+    
+    self.searchView = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 64.0, self.view.bounds.size.width, 34.0)];
+    self.searchView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    self.searchView.alpha = 0;
+    self.searchView.hidden = YES;
+    [self.view addSubview:self.searchView];
+    
+    self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 44.0)];
+    self.searchBar.placeholder = NSLocalizedString(@"ROUTES_SEARCHFIELD_PLACEHOLDER", nil);
+    self.searchBar.searchBarStyle = UISearchBarStyleMinimal;
+    self.searchBar.delegate = self;
+    self.searchBar.tag = 9002;
+    [self.searchView addSubview:self.searchBar];
     
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -189,6 +214,115 @@ static MKMapRect santiagoBounds;
     [self.mapBannerAd loadRequest:request];
 }
 
+#pragma mark - Search
+
+- (void)showSearchBar
+{
+    UIBarButtonItem *searchButtonItem = self.navigationItem.rightBarButtonItems[1];
+    searchButtonItem.action = @selector(hideSearchBar);
+    
+    [self.searchBar becomeFirstResponder];
+    
+    self.searchView.hidden = NO;
+    [UIView animateWithDuration:0.33 animations:^{
+        self.searchView.alpha = 1;
+        self.searchView.frame = CGRectMake(0, 64.0, self.view.bounds.size.width, 44.0);
+    }];
+}
+
+- (void)hideSearchBar
+{
+    UIBarButtonItem *searchButtonItem = self.navigationItem.rightBarButtonItems[1];
+    searchButtonItem.action = @selector(showSearchBar);
+    
+    [self.searchView endEditing:YES];
+    [self hideOverlay];
+    
+    [UIView animateWithDuration:0.33 animations:^{
+        self.searchView.frame = CGRectMake(0, 64.0, self.view.bounds.size.width, 34.0);
+        self.searchView.alpha = 0;
+    } completion:^(BOOL finished) {
+        self.searchView.hidden = YES;
+    }];
+}
+
+- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar
+{
+    [self showOverlay];
+}
+
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
+{
+    [searchBar resignFirstResponder];
+    [self hideOverlay];
+
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+    
+    MKLocalSearchRequest *searchRequest = [MKLocalSearchRequest new];
+    searchRequest.naturalLanguageQuery = searchBar.text;
+    searchRequest.region = self.mapView.region;
+    
+    MKLocalSearch *search = [[MKLocalSearch alloc] initWithRequest:searchRequest];
+    [search startWithCompletionHandler:^(MKLocalSearchResponse *response, NSError *error) {
+        [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+        
+        if (response) {
+            [self clearSearchAnnotations];
+            [self.mapView setRegion:response.boundingRegion animated:YES];
+            
+            for (MKMapItem *item in response.mapItems) {
+                MKPointAnnotation *annotation = [[MKPointAnnotation alloc] init];
+                annotation.coordinate = item.placemark.coordinate;
+                annotation.title      = item.name;
+                annotation.subtitle   = item.placemark.title;
+                [self.mapView addAnnotation:annotation];
+            }
+        } else {
+            if (error.code == 4) {
+                UIAlertView *notFound = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"SEARCH_ERROR_NOTFOUND_TITLE", nil) message:NSLocalizedString(@"SEARCH_ERROR_NOTFOUND_MESSAGE", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"DISMISS", nil) otherButtonTitles:nil];
+                [notFound show];
+            } else {
+                UIAlertView *shitHappens = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"SEARCH_ERROR_GENERIC_TITLE", nil) message:NSLocalizedString(@"SEARCH_ERROR_GENERIC_MESSAGE", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"DISMISS", nil) otherButtonTitles:nil];
+                [shitHappens show];
+            }
+        }
+    }];
+}
+
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
+{
+    if ([searchText isEqual:@""]) {
+        [self clearSearchAnnotations];
+    }
+}
+
+- (void)showOverlay
+{
+    self.overlay.frame = self.view.bounds;
+    
+    [self.view insertSubview:self.overlay aboveSubview:self.mapView];
+    
+    [UIView animateWithDuration:0.33 delay:0.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+        self.overlay.alpha = 1;
+    } completion:nil];
+}
+
+- (void)hideOverlay
+{
+    [self.view endEditing:YES];
+    
+    [UIView animateWithDuration:0.25 animations:^{
+        self.overlay.alpha = 0;
+    } completion:^(BOOL finished) {
+        [self.overlay removeFromSuperview];
+    }];
+}
+
+- (void)overlayTapped
+{
+    [self hideOverlay];
+}
+
 #pragma mark - Cuantofaltism
 
 - (void)drawPolylineForService:(NSString *)service direction:(CFDirection)direction
@@ -249,7 +383,7 @@ static MKMapRect santiagoBounds;
 
 - (void)setCurrentDirection:(CFDirection)currentDirection
 {
-    if (currentDirection != _currentDirection) {
+    if (currentDirection != _currentDirection || !_currentDirection) {
         [self clearAnnotations];
         [self drawPolylineForService:self.currentService direction:currentDirection];
     }
@@ -294,6 +428,24 @@ static MKMapRect santiagoBounds;
     
     if (userLocation) {
         [pins removeObject:userLocation];
+    }
+    
+    [self.mapView removeAnnotations:pins];
+    pins = nil;
+}
+
+- (void)clearSearchAnnotations
+{
+    id userLocation = [self.mapView userLocation];
+    
+    NSMutableArray *pins = [[NSMutableArray alloc] initWithArray:[self.mapView annotations]];
+    
+    if (userLocation)
+        [pins removeObject:userLocation];
+    
+    for (id annotation in [self.mapView annotations]) {
+        if ([annotation isKindOfClass:[CFStop class]])
+            [pins removeObject:annotation];
     }
     
     [self.mapView removeAnnotations:pins];
