@@ -114,11 +114,8 @@
     
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     
-    NSString *mappy = @"Yes";
     NSString *freeMap = ([[NSUserDefaults standardUserDefaults] boolForKey:@"CFEnableMapWithAds"])? @"Yes" : @"No";
-    
-    [mixpanel registerSuperProperties:@{@"Has Map": mappy}];
-    [mixpanel registerSuperProperties:@{@"Has Free Map": freeMap}];
+    [mixpanel registerSuperProperties:@{@"Has Ads": freeMap}];
     
     self.stopResultsController = [CFStopResultsViewController new];
     self.stopResultsController.delegate = self;
@@ -176,11 +173,6 @@
     if (shouldEnableAds) {
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"CFEnableMapWithAds"];
         [[NSUserDefaults standardUserDefaults] synchronize];
-        self.mapEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"CFEnableMapWithAds"];
-        
-        Mixpanel *mixpanel = [Mixpanel sharedInstance];
-        [mixpanel registerSuperProperties:@{@"Has Map": @"Yes"}];
-        [mixpanel registerSuperProperties:@{@"Has Free Map": @"Yes"}];
     }
     
     if (self.shouldDisplayAds) {
