@@ -19,11 +19,28 @@
 #import "OLCashier.h"
 #import "CFServiceRouteViewController.h"
 
+@interface CFTransparentView : UIView
+
+@end
+
+@implementation CFTransparentView
+
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
+{
+    id hitView = [super hitTest:point withEvent:event];
+    if (hitView == self) return nil;
+    else return hitView;
+}
+
+@end
+
 @interface CFStopResultsViewController () <CFStopSignViewDelegate, UIAlertViewDelegate, CFResultCellDelegate, UITableViewDelegate, UITableViewDataSource>
 
 @property (nonatomic, strong) UIView *stopResultsView;
+@property (nonatomic, assign, readwrite) CFStopResultsDisplayMode displayMode;
 @property (nonatomic, strong) UIView *overlay;
 @property (nonatomic, assign) CGPoint stopResultsViewPresentedCenter;
+@property (nonatomic, assign) CGRect stopResultsViewPresentedFrame;
 @property (nonatomic, strong) UINavigationBar *localNavigationBar;
 @property (nonatomic, strong) CFStopSignView *stopInfoView;
 @property (nonatomic, strong) OLShapeTintedButton *favoriteButton;
@@ -51,7 +68,7 @@
     self.refreshing = YES;
     self.removedAds = ([OLCashier hasProduct:@"CF01"] || [OLCashier hasProduct:@"CF02"]);
     
-    self.view = [[UIView alloc] initWithFrame:[UIApplication sharedApplication].keyWindow.bounds];
+    self.view = [[CFTransparentView alloc] initWithFrame:[UIApplication sharedApplication].keyWindow.bounds];
     self.view.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     
     self.overlay = [[UIView alloc] initWithFrame:self.view.bounds];
@@ -63,6 +80,7 @@
     [self.view addSubview:self.stopResultsView];
     
     self.stopResultsViewPresentedCenter = self.stopResultsView.center;
+    self.stopResultsViewPresentedFrame = self.stopResultsView.frame;
     
     CALayer *borderLayer = [CALayer layer];
     borderLayer.frame = CGRectInset(self.stopResultsView.bounds, -0.5, -0.5);
@@ -162,36 +180,91 @@
 
 #pragma mark - Presentation
 
-- (void)presentFromViewController:(UIViewController *)fromViewController
+- (void)setDisplayMode:(CFStopResultsDisplayMode)displayMode
 {
-    [self presentFromRect:CGRectZero fromViewController:fromViewController];
+    if (_displayMode == displayMode) return;
+    _displayMode = displayMode;
+    
+    // show gripper, hide fav button and enable tap and vertical pan gesture on title if not presented
+    // show stop code if contained
 }
 
-- (void)presentFromRect:(CGRect)rect fromViewController:(UIViewController *)fromViewController
+- (BOOL)addToParentViewController:(UIViewController *)parentViewController
 {
-    [fromViewController addChildViewController:self];
-    [fromViewController.view addSubview:self.view];
+    if (self.parentViewController) return NO;
+    
+    [parentViewController addChildViewController:self];
+    [parentViewController.view addSubview:self.view];
     
     self.overlay.alpha = 0;
     
-    CGRect finalFrame = self.stopResultsView.frame;
+    return YES;
+}
+
+- (void)presentOnViewController:(UIViewController *)onViewController
+{
+    [self presentFromRect:CGRectZero onViewController:onViewController];
+}
+
+- (void)presentFromRect:(CGRect)rect onViewController:(UIViewController *)onViewController
+{
     CGFloat initialVelocity = 1;
     
-    if (CGRectIsEmpty(rect)) {
-        self.stopResultsView.alpha = 0;
-        self.stopResultsView.frame = CGRectOffset(finalFrame, 0, 40.0);
-    } else {
-        self.stopResultsView.frame = rect;
-        initialVelocity = 0;
+    if ([self addToParentViewController:onViewController]) {
+        if (CGRectIsEmpty(rect)) {
+            self.stopResultsView.alpha = 0;
+            self.stopResultsView.frame = CGRectOffset(self.stopResultsViewPresentedFrame, 0, 40.0);
+        } else {
+            self.stopResultsView.frame = rect;
+            initialVelocity = 0;
+        }
     }
     
-    [UIView animateWithDuration:0.45 delay:0 usingSpringWithDamping:1 initialSpringVelocity:initialVelocity options:0 animations:^{
+    [self expandWithVelocity:initialVelocity];
+}
+
+- (void)containOnRect:(CGRect)rect onViewController:(UIViewController *)onViewController
+{
+    if (![self addToParentViewController:onViewController]) return;
+    
+    self.displayMode = CFStopResultsDisplayModeContained;
+    self.stopResultsView.alpha = 0;
+    self.stopResultsView.frame = CGRectOffset(rect, 0, -SEARCH_CARD_ANIMATION_OFFSET);
+    
+    [UIView animateWithDuration:0.35 delay:0 usingSpringWithDamping:1 initialSpringVelocity:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+        self.stopResultsView.alpha = 1;
+        self.stopResultsView.frame = rect;
+    } completion:^(BOOL finished) {
+    }];
+}
+
+- (void)expand
+{
+    [self expandWithVelocity:0];
+}
+
+- (void)expandWithVelocity:(CGFloat)velocity
+{
+    if (!self.parentViewController) return;
+    
+    self.displayMode = CFStopResultsDisplayModePresented;
+    
+    [UIView animateWithDuration:0.45 delay:0 usingSpringWithDamping:1 initialSpringVelocity:velocity options:0 animations:^{
         self.overlay.alpha = 1;
         self.stopResultsView.alpha = 1;
-        self.stopResultsView.frame = finalFrame;
+        self.stopResultsView.frame = self.stopResultsViewPresentedFrame;
     } completion:^(BOOL finished) {
-        
     }];
+}
+
+- (void)minimize
+{
+    if (!self.parentViewController) return;
+    
+    [self dismiss];
+    return; // just a stub for now
+    
+    self.displayMode = CFStopResultsDisplayModeMinimized;
 }
 
 - (void)dismiss
@@ -211,7 +284,8 @@
     } completion:^(BOOL finished) {
         [self.view removeFromSuperview];
         [self removeFromParentViewController];
-        self.stopResultsView.center = self.stopResultsViewPresentedCenter;
+        self.stopResultsView.frame = self.stopResultsViewPresentedFrame;
+        self.displayMode = CFStopResultsDisplayModeNone;
     }];
 }
 
@@ -668,11 +742,8 @@
 {
     CFResultCell *cell = (CFResultCell *)[self.tableView cellForRowAtIndexPath:indexPath];
     
-//    CFServiceRouteViewController *stopRoute = [[CFServiceRouteViewController alloc] initWithService:cell.serviceLabel.text directionString:cell.directionLabel.text];
-//    [self.navigationController pushViewController:stopRoute animated:YES];
-    
     [self.delegate stopResultsViewControllerDidRequestServiceRoute:cell.serviceLabel.text directionString:cell.directionLabel.text];
-    [self dismiss];
+    [self minimize];
     
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     [mixpanel track:@"Service Route Requested" properties:@{@"Service": cell.serviceLabel.text, @"From": @"Stop Results"}];

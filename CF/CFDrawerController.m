@@ -14,21 +14,6 @@
 #import "CFMoreViewController.h"
 #import "OLShapeTintedButton.h"
 
-@interface CFTransparentView : UIView
-
-@end
-
-@implementation CFTransparentView
-
-- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
-{
-    id hitView = [super hitTest:point withEvent:event];
-    if (hitView == self) return nil;
-    else return hitView;
-}
-
-@end
-
 @interface CFDrawerController () <UIScrollViewDelegate, CFStopTableViewDelegate, UIActionSheetDelegate>
 
 @property (nonatomic, strong) UIView *drawer;
@@ -64,7 +49,7 @@
     CGRect windowBounds = [UIApplication sharedApplication].keyWindow.rootViewController.view.bounds;
     CGSize windowSize = windowBounds.size;
     
-    self.view = [[CFTransparentView alloc] initWithFrame:windowBounds];
+    self.view = [[UIView alloc] initWithFrame:windowBounds];
     
     CGRect drawerFrame = CGRectMake(10.0, windowSize.height - TAB_BAR_HEIGHT, windowSize.width - 20.0, windowSize.height - DRAWER_ORIGIN_Y);
     

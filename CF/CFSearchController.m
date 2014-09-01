@@ -14,7 +14,6 @@
 
 #define VERTICAL_MARGIN 0.0
 #define HORIZONTAL_MARGIN 0.0
-#define ANIMATION_OFFSET 20.0
 
 @interface CFSearchController () <CFServiceRouteBarDelegate, CFStopSuggestionViewDelegate, CFSearchFieldDelegate>
 
@@ -87,7 +86,7 @@
     self.alpha = 0;
     self.hidden = NO;
     if (!self.suggesting) {
-        self.searchSuggestionsCard.frame = CGRectMake(self.searchSuggestionsCard.frame.origin.x, - ANIMATION_OFFSET, self.searchSuggestionsCard.bounds.size.width, self.searchSuggestionsCard.bounds.size.height);
+        self.searchSuggestionsCard.frame = CGRectMake(self.searchSuggestionsCard.frame.origin.x, - SEARCH_CARD_ANIMATION_OFFSET, self.searchSuggestionsCard.bounds.size.width, self.searchSuggestionsCard.bounds.size.height);
     }
     
     [UIView animateWithDuration:0.25 delay:0.0 usingSpringWithDamping:1 initialSpringVelocity:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
@@ -119,11 +118,11 @@
     
     self.searchSuggestionsCard.hidden = suggesting;
     self.searchSuggestionsCard.alpha = suggesting;
-    self.searchSuggestionsCard.frame = CGRectMake(self.searchSuggestionsCard.frame.origin.x, - (ANIMATION_OFFSET * (1 - suggesting)), self.searchSuggestionsCard.bounds.size.width, self.searchSuggestionsCard.bounds.size.height);
+    self.searchSuggestionsCard.frame = CGRectMake(self.searchSuggestionsCard.frame.origin.x, - (SEARCH_CARD_ANIMATION_OFFSET * (1 - suggesting)), self.searchSuggestionsCard.bounds.size.width, self.searchSuggestionsCard.bounds.size.height);
     
     [UIView animateWithDuration:0.25 delay:0 usingSpringWithDamping:1 initialSpringVelocity:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
         self.searchSuggestionsCard.alpha = 1 - suggesting;
-        self.searchSuggestionsCard.frame = CGRectMake(self.searchSuggestionsCard.frame.origin.x, - (ANIMATION_OFFSET * suggesting), self.searchSuggestionsCard.bounds.size.width, self.searchSuggestionsCard.bounds.size.height);
+        self.searchSuggestionsCard.frame = CGRectMake(self.searchSuggestionsCard.frame.origin.x, - (SEARCH_CARD_ANIMATION_OFFSET * suggesting), self.searchSuggestionsCard.bounds.size.width, self.searchSuggestionsCard.bounds.size.height);
     } completion:^(BOOL finished) {
         self.searchSuggestionsCard.hidden = suggesting;
     }];
@@ -145,7 +144,7 @@
 //    NSLog(@"_curr: %@, curr: %@", _currentCard, currentCard);
 //    if (_currentCard) NSLog(@"passed old value existance");
 //    if (currentCard) NSLog(@"passed new value existance");
-    CGFloat animationOffset = ANIMATION_OFFSET;
+    CGFloat animationOffset = SEARCH_CARD_ANIMATION_OFFSET;
     
     if ((_currentCard && !currentCard)) {
 //        NSLog(@"passed exit animation check");

@@ -351,7 +351,7 @@
     }
     
     self.stopResultsController.stopCode = stopCode;
-    [self.stopResultsController presentFromViewController:self];
+    [self.stopResultsController presentOnViewController:self];
     self.drawerController.drawerOpen = NO;
 }
 
@@ -367,7 +367,7 @@
 {
     CGRect originRect = [self.view convertRect:self.mapController.stopCalloutView.contentView.frame fromView:self.mapController.stopCalloutView];
     self.stopResultsController.stopCode = stopCode;
-    [self.stopResultsController presentFromRect:originRect fromViewController:self];
+    [self.stopResultsController presentFromRect:originRect onViewController:self];
     self.drawerController.drawerOpen = NO;
     
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
