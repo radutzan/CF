@@ -366,8 +366,6 @@
 - (void)mapControllerDidSelectStop:(NSString *)stopCode
 {
     CGRect originRect = [self.view convertRect:self.mapController.stopCalloutView.contentView.frame fromView:self.mapController.stopCalloutView];
-    NSLog(@"origin.x: %f, origin.y: %f, width: %f, height: %f", originRect.origin.x, originRect.origin.y, originRect.size.width, originRect.size.height);
-    
     self.stopResultsController.stopCode = stopCode;
     [self.stopResultsController presentFromRect:originRect fromViewController:self];
     self.drawerController.drawerOpen = NO;

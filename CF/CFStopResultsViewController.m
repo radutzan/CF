@@ -44,23 +44,13 @@
 
 @implementation CFStopResultsViewController
 
-- (instancetype)initWithStopCode:(NSString *)stopCode
-{
-    self = [super initWithNibName:nil bundle:nil];
-    if (self) {
-        _responseEstimation = [NSMutableArray new];
-        _finalData = [NSMutableArray new];
-        _refreshing = YES;
-        
-        self.title = @"Stop Results";
-        self.stopCode = stopCode;
-        self.removedAds = ([OLCashier hasProduct:@"CF01"] || [OLCashier hasProduct:@"CF02"]);
-    }
-    return self;
-}
-
 - (void)loadView
 {
+    self.responseEstimation = [NSMutableArray new];
+    self.finalData = [NSMutableArray new];
+    self.refreshing = YES;
+    self.removedAds = ([OLCashier hasProduct:@"CF01"] || [OLCashier hasProduct:@"CF02"]);
+    
     self.view = [[UIView alloc] initWithFrame:[UIApplication sharedApplication].keyWindow.bounds];
     self.view.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     
@@ -129,6 +119,7 @@
     self.refreshControl = [UIRefreshControl new];
     self.refreshControl.tintColor = [UIColor whiteColor];
     [self.refreshControl addTarget:self action:@selector(performStopRequestQuietly:) forControlEvents:UIControlEventValueChanged];
+    [self.tableView addSubview:self.refreshControl];
     
     self.timerLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.stopResultsView.bounds.size.width - 100.0 - 15.0, 0, 100.0, 20.0)];
     self.timerLabel.font = [UIFont fontWithName:@"AvenirNext-MediumItalic" size:13.0];
@@ -141,14 +132,11 @@
 {
     [super viewWillAppear:animated];
     
-//    self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
-//    [self.navigationController setNavigationBarHidden:YES animated:YES];
-    
     if (self.refreshing) {
         [self.refreshControl beginRefreshing];
-        [UIView animateWithDuration:0.2 animations:^{
-            self.tableView.contentOffset = CGPointMake(0, -134.0);
-        }];
+//        [UIView animateWithDuration:0.2 animations:^{
+//            self.tableView.contentOffset = CGPointMake(0, -134.0);
+//        }];
     }
 }
 
@@ -187,15 +175,17 @@
     self.overlay.alpha = 0;
     
     CGRect finalFrame = self.stopResultsView.frame;
+    CGFloat initialVelocity = 1;
     
     if (CGRectIsEmpty(rect)) {
         self.stopResultsView.alpha = 0;
         self.stopResultsView.frame = CGRectOffset(finalFrame, 0, 40.0);
     } else {
         self.stopResultsView.frame = rect;
+        initialVelocity = 0;
     }
     
-    [UIView animateWithDuration:0.45 delay:0 usingSpringWithDamping:1 initialSpringVelocity:1 options:0 animations:^{
+    [UIView animateWithDuration:0.45 delay:0 usingSpringWithDamping:1 initialSpringVelocity:initialVelocity options:0 animations:^{
         self.overlay.alpha = 1;
         self.stopResultsView.alpha = 1;
         self.stopResultsView.frame = finalFrame;
@@ -212,6 +202,7 @@
 - (void)dismissFromCenter:(CGPoint)center withVelocityFactor:(CGFloat)velocityFactor
 {
     CGFloat animationDuration = 0.45 * (1 - velocityFactor);
+    [self resetTimer];
     
     [UIView animateWithDuration:animationDuration delay:0 usingSpringWithDamping:1 initialSpringVelocity:velocityFactor options:0 animations:^{
         self.overlay.alpha = 0;
@@ -379,6 +370,11 @@
     
     self.stopInfoView.stop = stop;
     
+    [self resetTimer];
+    [self.finalData removeAllObjects];
+    [self.responseEstimation removeAllObjects];
+    [self.tableView reloadData];
+    
     if (stop) {
         self.favoriteButton.enabled = YES;
         self.favoriteButton.selected = stop.isFavorite;
@@ -401,18 +397,15 @@
         self.favoriteButton.enabled = NO;
         self.favoriteButton.selected = NO;
     }
-    
-    [self.responseEstimation removeAllObjects];
-    [self.tableView reloadData];
 }
 
 - (void)performStopRequestQuietly:(BOOL)quietly
 {
+    NSLog(@"performStopRequestQuietly:");
+    if (!self.stop) return;
     self.refreshing = YES;
     
-    [self refreshTimerLabel];
-    [self.class cancelPreviousPerformRequestsWithTarget:nil];
-    [self.timer invalidate];
+    [self resetTimer];
     
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     [self.responseEstimation removeAllObjects];
@@ -449,6 +442,7 @@
 
 - (void)processEstimationData
 {
+    NSLog(@"processEstimationData");
     [self.finalData removeAllObjects];
     
     NSMutableArray *estimationlessServices = [NSMutableArray new];
@@ -524,6 +518,7 @@
     self.refreshing = NO;
     [self.tableView reloadData];
     [self.refreshControl endRefreshing];
+    [self refreshTimerLabel];
     
     [self performSelector:@selector(performStopRequestQuietly:) withObject:NO afterDelay:16.0];
     
@@ -540,9 +535,18 @@
     if (self.refreshing) {
         self.timerLabel.text = NSLocalizedString(@"REFRESHING", nil);
         self.timerCount = 15;
-    } else {
+    } else if (self.timer.isValid) {
         self.timerLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)self.timerCount--];
+    } else {
+        self.timerLabel.text = @"";
     }
+}
+
+- (void)resetTimer
+{
+    [self refreshTimerLabel];
+    [self.class cancelPreviousPerformRequestsWithTarget:self];
+    [self.timer invalidate];
 }
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex

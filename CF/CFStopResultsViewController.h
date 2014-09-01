@@ -18,7 +18,6 @@
 
 @interface CFStopResultsViewController : UIViewController
 
-- (instancetype)initWithStopCode:(NSString *)stopCode;
 - (void)presentFromViewController:(UIViewController *)fromViewController;
 - (void)presentFromRect:(CGRect)rect fromViewController:(UIViewController *)fromViewController;
 - (void)expand;
