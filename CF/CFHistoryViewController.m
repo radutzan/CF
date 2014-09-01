@@ -100,7 +100,7 @@
     
     if (number > 0) {
         cell.numberLabel.hidden = NO;
-        cell.numberLabel.text = [NSString stringWithFormat:@"%d", number];
+        cell.numberLabel.text = [NSString stringWithFormat:@"%ld", (long)number];
     }
     
     BOOL isMetro = [[stopDictionary objectForKey:@"metro"] boolValue];

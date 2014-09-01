@@ -135,17 +135,16 @@
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
 {
     self.view.frame = CGRectMake(0, 0, size.width, size.height);
-}
-
-- (void)viewWillLayoutSubviews
-{
     CGFloat drawerOriginY = (self.drawerOpen) ? DRAWER_ORIGIN_Y : self.view.bounds.size.height - TAB_BAR_HEIGHT;
     self.drawer.frame = CGRectMake(10.0, drawerOriginY, self.view.bounds.size.width - 20.0, self.view.bounds.size.height - DRAWER_ORIGIN_Y);
     self.borderLayer.frame = CGRectInset(self.drawer.bounds, -0.5, -0.5);
     self.drawerOpenCenterY = DRAWER_ORIGIN_Y + self.drawer.bounds.size.height;
     self.scrollView.contentSize = CGSizeMake(self.scrollView.bounds.size.width * 3, self.scrollView.bounds.size.height);
     self.tabBar.frame = CGRectMake(0, self.view.bounds.size.height - TAB_BAR_HEIGHT, self.view.bounds.size.width, TAB_BAR_HEIGHT);
-    
+}
+
+- (void)viewWillLayoutSubviews
+{
     for (UIView *subview in self.scrollView.subviews) {
         if (![subview isKindOfClass:[UIImageView class]]) {
             subview.frame = CGRectMake(self.scrollView.bounds.size.width * [self.scrollView.subviews indexOfObject:subview], 0, self.scrollView.bounds.size.width, self.scrollView.bounds.size.height);

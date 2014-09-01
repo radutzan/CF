@@ -247,7 +247,7 @@
         
     } else {
         CGFloat terminalVelocity = MIN([recognizer velocityInView:self.view].x, 3500);
-        CGFloat velocityFactor = abs(terminalVelocity) / 3500;
+        CGFloat velocityFactor = fabs(terminalVelocity / 3500);
         
         if (terminalVelocity > 250 || moveDiff > 80) {
             [self dismissFromCenter:self.stopResultsView.center withVelocityFactor:velocityFactor];
@@ -381,7 +381,7 @@
     
     if (stop) {
         self.favoriteButton.enabled = YES;
-        if (stop.isFavorite) self.favoriteButton.selected = YES;
+        self.favoriteButton.selected = stop.isFavorite;
         
         if (!self.removedAds) {
             self.bannerView = [[GADBannerView alloc] initWithAdSize:kGADAdSizeSmartBannerPortrait];
@@ -397,6 +397,9 @@
         [self updateHistory];
         [self performStopRequest];
         [self.refreshControl beginRefreshing];
+    } else {
+        self.favoriteButton.enabled = NO;
+        self.favoriteButton.selected = NO;
     }
     
     [self.responseEstimation removeAllObjects];
@@ -492,7 +495,7 @@
                     NSRange toRange = NSMakeRange(11, 2);
                     NSInteger fromMin = [[time substringWithRange:fromRange] integerValue];
                     NSInteger toMin = [[time substringWithRange:toRange] integerValue];
-                    finalTimeString =  [NSString stringWithFormat:@"%d %@ %d min", fromMin, NSLocalizedString(@"TO_MINS", nil), toMin];
+                    finalTimeString =  [NSString stringWithFormat:@"%ld %@ %ld min", (long)fromMin, NSLocalizedString(@"TO_MINS", nil), (long)toMin];
                 } else {
                     finalTimeString = time;
                 }

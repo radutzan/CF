@@ -146,7 +146,11 @@
         self.favoriteContentView.hidden = YES;
     }
     
-    if (stop.favoriteName) self.favoriteNameField.text = stop.favoriteName;
+    if (stop.favoriteName) {
+        self.favoriteNameField.text = stop.favoriteName;
+    } else {
+        self.favoriteNameField.text = @"";
+    }
     self.stopFullNameLabel.text = stop.name;
     
     // reset
@@ -179,7 +183,7 @@
     
     // número de parada
     if (stop.number > 0) {
-        self.stopNumberLabel.text = [NSString stringWithFormat:@"%d", stop.number];
+        self.stopNumberLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)stop.number];
         [self.stopNumberLabel sizeToFit];
         self.stopNumberLabel.frame = CGRectMake(self.stopNumberLabel.frame.origin.x, self.stopNumberLabel.frame.origin.y, self.stopNumberLabel.frame.size.width, self.bounds.size.height + 2.0);
         self.stopNumberLabel.hidden = NO;
