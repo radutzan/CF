@@ -12,6 +12,7 @@
 #import "CFFavoritesViewController.h"
 #import "CFHistoryViewController.h"
 #import "CFMoreViewController.h"
+#import "CFTransparentView.h"
 #import "OLShapeTintedButton.h"
 
 @interface CFDrawerController () <UIScrollViewDelegate, CFStopTableViewDelegate, UIActionSheetDelegate>
@@ -46,10 +47,10 @@
 
 - (void)loadView
 {
-    CGRect windowBounds = [UIApplication sharedApplication].keyWindow.rootViewController.view.bounds;
+    CGRect windowBounds = [UIScreen mainScreen].applicationFrame;
     CGSize windowSize = windowBounds.size;
     
-    self.view = [[UIView alloc] initWithFrame:windowBounds];
+    self.view = [[CFTransparentView alloc] initWithFrame:windowBounds];
     
     CGRect drawerFrame = CGRectMake(10.0, windowSize.height - TAB_BAR_HEIGHT, windowSize.width - 20.0, windowSize.height - DRAWER_ORIGIN_Y);
     

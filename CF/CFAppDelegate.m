@@ -31,15 +31,17 @@
     }];
     
     [cashier setProductsWithIdentifiers:[NSSet setWithObjects:@"CF01", @"CF02", nil] handler:NULL];
+    
+    CFMainViewController *mainViewController = [CFMainViewController new];
 
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    self.window.rootViewController = [[CFNavigationController alloc] initWithNavigationBarClass:[CFNavigationBar class] toolbarClass:nil];
+    self.window.rootViewController = mainViewController;
     self.window.tintColor = [UIColor colorWithHue:133.0/360.0 saturation:0.74 brightness:0.87 alpha:1];
     [self.window makeKeyAndVisible];
     
     NSString *urlString = [launchOptions valueForKey:UIApplicationLaunchOptionsURLKey];
     if (urlString) {
-        NSLog(@"%@", urlString);
+        [mainViewController processExternalURLString:urlString];
     }
     
     return YES;

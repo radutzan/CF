@@ -11,37 +11,23 @@
 #import <OLGhostAlertView/OLGhostAlertView.h>
 #import "CFStopResultsViewController.h"
 #import "CFSapoClient.h"
+#import "OLCashier.h"
 #import "CFStopSignView.h"
 #import "CFResultCell.h"
-#import "CFNavigationController.h"
 #import "OLShapeTintedButton.h"
+#import "CFTransparentView.h"
 #import "GADBannerView.h"
-#import "OLCashier.h"
-#import "CFServiceRouteViewController.h"
-
-@interface CFTransparentView : UIView
-
-@end
-
-@implementation CFTransparentView
-
-- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
-{
-    id hitView = [super hitTest:point withEvent:event];
-    if (hitView == self) return nil;
-    else return hitView;
-}
-
-@end
 
 @interface CFStopResultsViewController () <CFStopSignViewDelegate, UIAlertViewDelegate, CFResultCellDelegate, UITableViewDelegate, UITableViewDataSource>
 
 @property (nonatomic, strong) UIView *stopResultsView;
+@property (nonatomic, strong) CALayer *borderLayer;
 @property (nonatomic, assign, readwrite) CFStopResultsDisplayMode displayMode;
 @property (nonatomic, strong) UIView *overlay;
 @property (nonatomic, assign) CGPoint stopResultsViewPresentedCenter;
 @property (nonatomic, assign) CGRect stopResultsViewPresentedFrame;
-@property (nonatomic, strong) UINavigationBar *localNavigationBar;
+@property (nonatomic, assign) CGRect stopResultsViewMinimizedFrame;
+@property (nonatomic, strong) UINavigationBar *titleView;
 @property (nonatomic, strong) CFStopSignView *stopInfoView;
 @property (nonatomic, strong) OLShapeTintedButton *favoriteButton;
 @property (nonatomic, strong) NSTimer *timer;
@@ -79,32 +65,37 @@
     self.stopResultsView.backgroundColor = [UIColor colorWithWhite:0 alpha:.5];
     [self.view addSubview:self.stopResultsView];
     
+    self.titleView = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, self.stopResultsView.bounds.size.width, 54.0)];
+    self.titleView.barStyle = UIBarStyleBlack;
+    [self.stopResultsView addSubview:self.titleView];
+    
+    self.borderLayer = [CALayer layer];
+    self.borderLayer.frame = CGRectInset(self.stopResultsView.bounds, -0.5, -0.5);
+    self.borderLayer.borderWidth = 0.5;
+    self.borderLayer.borderColor = [UIColor colorWithWhite:0 alpha:0.3].CGColor;
+    [self.stopResultsView.layer addSublayer:self.borderLayer];
+    
     self.stopResultsViewPresentedCenter = self.stopResultsView.center;
     self.stopResultsViewPresentedFrame = self.stopResultsView.frame;
-    
-    CALayer *borderLayer = [CALayer layer];
-    borderLayer.frame = CGRectInset(self.stopResultsView.bounds, -0.5, -0.5);
-    borderLayer.borderWidth = 0.5;
-    borderLayer.borderColor = [UIColor colorWithWhite:0 alpha:0.3].CGColor;
-    [self.stopResultsView.layer addSublayer:borderLayer];
-    
-    self.localNavigationBar = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, self.stopResultsView.bounds.size.width, 54.0)];
-    self.localNavigationBar.barStyle = UIBarStyleBlack;
-    [self.stopResultsView addSubview:self.localNavigationBar];
+    self.stopResultsViewMinimizedFrame = CGRectMake(self.stopResultsView.frame.origin.x, self.view.bounds.size.height - self.titleView.bounds.size.height, self.stopResultsView.bounds.size.width, self.stopResultsView.bounds.size.height);
     
     self.tableView = [[UITableView alloc] initWithFrame:self.stopResultsView.bounds style:UITableViewStylePlain];
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     self.tableView.separatorInset = UIEdgeInsetsZero;
     self.tableView.separatorColor = [UIColor clearColor];
-    self.tableView.contentInset = UIEdgeInsetsMake(self.localNavigationBar.bounds.size.height, 0, 0, 0);
+    self.tableView.contentInset = UIEdgeInsetsMake(self.titleView.bounds.size.height, 0, 0, 0);
     self.tableView.backgroundColor = [UIColor clearColor];
-    [self.stopResultsView insertSubview:self.tableView belowSubview:self.localNavigationBar];
+    [self.stopResultsView insertSubview:self.tableView belowSubview:self.titleView];
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    UIPanGestureRecognizer *horizontalPanRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleHorizontalPanGesture:)];
+    [horizontalPanRecognizer requireGestureRecognizerToFail:self.tableView.panGestureRecognizer];
+    [self.stopResultsView addGestureRecognizer:horizontalPanRecognizer];
     
     UITapGestureRecognizer *overlayTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismiss)];
     [self.overlay addGestureRecognizer:overlayTap];
@@ -113,26 +104,19 @@
     [overlayPan requireGestureRecognizerToFail:self.tableView.panGestureRecognizer];
     [self.overlay addGestureRecognizer:overlayPan];
     
-    UIPanGestureRecognizer *horizontalPanRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleHorizontalPanGesture:)];
-    [horizontalPanRecognizer requireGestureRecognizerToFail:self.tableView.panGestureRecognizer];
-    [self.stopResultsView addGestureRecognizer:horizontalPanRecognizer];
-    
-    self.stopInfoView = [[CFStopSignView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.localNavigationBar.bounds.size.width - 33.0, 52.0)];
+    self.stopInfoView = [[CFStopSignView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.titleView.bounds.size.width - 33.0, 52.0)];
     self.stopInfoView.delegate = self;
     self.stopInfoView.stopCodeLabel.hidden = YES;
     self.stopInfoView.favoriteContentView.userInteractionEnabled = YES;
-    [self.localNavigationBar addSubview:self.stopInfoView];
+    [self.titleView addSubview:self.stopInfoView];
     
     self.favoriteButton = [OLShapeTintedButton buttonWithType:UIButtonTypeCustom];
-    self.favoriteButton.frame = CGRectMake(self.localNavigationBar.bounds.size.width - 38.0, 5.0, 42.0, 42.0);
+    self.favoriteButton.frame = CGRectMake(self.titleView.bounds.size.width - 38.0, 5.0, 42.0, 42.0);
     self.favoriteButton.enabled = NO;
     [self.favoriteButton setImage:[UIImage imageNamed:@"button-favorites"] forState:UIControlStateNormal];
     [self.favoriteButton setImage:[UIImage imageNamed:@"button-favorites-selected"] forState:UIControlStateSelected];
     [self.favoriteButton addTarget:self action:@selector(favButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-    [self.localNavigationBar addSubview:self.favoriteButton];
-    
-//    UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
-//    [self.navigationItem setBackBarButtonItem:backButtonItem];
+    [self.titleView addSubview:self.favoriteButton];
     
     self.refreshControl = [UIRefreshControl new];
     self.refreshControl.tintColor = [UIColor whiteColor];
@@ -185,6 +169,14 @@
     if (_displayMode == displayMode) return;
     _displayMode = displayMode;
     
+    UITapGestureRecognizer *titleBarExpandTap;
+    if (displayMode != CFStopResultsDisplayModePresented) {
+        titleBarExpandTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(expand)];
+        [self.titleView addGestureRecognizer:titleBarExpandTap];
+    } else {
+        [self.titleView removeGestureRecognizer:titleBarExpandTap];
+    }
+    
     // show gripper, hide fav button and enable tap and vertical pan gesture on title if not presented
     // show stop code if contained
 }
@@ -216,6 +208,7 @@
             self.stopResultsView.frame = CGRectOffset(self.stopResultsViewPresentedFrame, 0, 40.0);
         } else {
             self.stopResultsView.frame = rect;
+            self.borderLayer.frame = self.stopResultsView.layer.bounds;
             initialVelocity = 0;
         }
     }
@@ -225,7 +218,17 @@
 
 - (void)containOnRect:(CGRect)rect onViewController:(UIViewController *)onViewController
 {
-    if (![self addToParentViewController:onViewController]) return;
+    if (![self addToParentViewController:onViewController]) {
+        if (onViewController == self.parentViewController && self.displayMode == CFStopResultsDisplayModeContained) {
+            // already contained, adjust frame
+            [UIView animateWithDuration:0.25 delay:0 usingSpringWithDamping:1 initialSpringVelocity:0 options:0 animations:^{
+                self.stopResultsView.frame = rect;
+                self.borderLayer.frame = self.stopResultsView.layer.bounds;
+            } completion:nil];
+            
+            return;
+        } else return;
+    }
     
     self.displayMode = CFStopResultsDisplayModeContained;
     self.stopResultsView.alpha = 0;
@@ -234,6 +237,7 @@
     [UIView animateWithDuration:0.35 delay:0 usingSpringWithDamping:1 initialSpringVelocity:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
         self.stopResultsView.alpha = 1;
         self.stopResultsView.frame = rect;
+        self.borderLayer.frame = self.stopResultsView.layer.bounds;
     } completion:^(BOOL finished) {
     }];
 }
@@ -253,6 +257,7 @@
         self.overlay.alpha = 1;
         self.stopResultsView.alpha = 1;
         self.stopResultsView.frame = self.stopResultsViewPresentedFrame;
+        self.borderLayer.frame = self.stopResultsView.layer.bounds;
     } completion:^(BOOL finished) {
     }];
 }
@@ -261,10 +266,12 @@
 {
     if (!self.parentViewController) return;
     
-    [self dismiss];
-    return; // just a stub for now
-    
     self.displayMode = CFStopResultsDisplayModeMinimized;
+    
+    [UIView animateWithDuration:0.45 delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:1 options:0 animations:^{
+        self.overlay.alpha = 0;
+        self.stopResultsView.frame = self.stopResultsViewMinimizedFrame;
+    } completion:nil];
 }
 
 - (void)dismiss
@@ -300,7 +307,7 @@
     CGFloat dragFactor = moveDiff / draggableDistance;
     
     if (recognizer.state == UIGestureRecognizerStateBegan) {
-        
+        [self.view endEditing:YES];
     } else if (recognizer.state == UIGestureRecognizerStateChanged) {
         if (moveDiff >= 0) {
             // moving to the right

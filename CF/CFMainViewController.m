@@ -60,7 +60,7 @@
 
 - (void)loadView
 {
-    self.view = [[UIView alloc] initWithFrame:self.navigationController.view.bounds];
+    self.view = [[UIView alloc] initWithFrame:[UIScreen mainScreen].applicationFrame];
     
     self.mapController = [[CFMapController alloc] initWithFrame:self.view.bounds];
     self.mapController.delegate = self;
@@ -89,7 +89,7 @@
     self.topContentMargin = 64.0;
     self.bottomContentMargin = TAB_BAR_HEIGHT;
     
-    UIBarButtonItem *bipButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"button-bip"] style:UIBarButtonItemStylePlain target:self.mapController action:@selector(goToNearestBipSpot)];
+//    UIBarButtonItem *bipButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"button-bip"] style:UIBarButtonItemStylePlain target:self.mapController action:@selector(goToNearestBipSpot)];
     MKUserTrackingBarButtonItem *tracky = [[MKUserTrackingBarButtonItem alloc] initWithMapView:self.mapController.mapView];
     
     UINavigationItem *navItem = [UINavigationItem new];
@@ -353,6 +353,15 @@
     self.stopResultsController.stopCode = stopCode;
     [self.stopResultsController presentOnViewController:self];
     self.drawerController.drawerOpen = NO;
+}
+
+- (void)processExternalURLString:(NSString *)URLString
+{
+    NSLog(@"%@", URLString);
+    NSArray *URLComponents = [URLString componentsSeparatedByString:@"/"];
+    for (NSString *component in URLComponents) {
+        NSLog(@"%@", component);
+    }
 }
 
 - (void)drawerDidSelectCellWithStop:(NSString *)stopCode

@@ -30,8 +30,14 @@ NSString * const queryKeySalt = @"4ESMLSVB_ONDA";
         [_sharedSapoClient registerHTTPOperationClass:[AFJSONRequestOperation class]];
         [_sharedSapoClient setDefaultHeader:@"Accept" value:@"application/json"];
         [_sharedSapoClient setDefaultHeader:@"X-Api-Version" value:APIVersion];
+        
+        NSString *userAgentString = [NSString stringWithFormat:@"%@ %@ rv:%@ (%@; iOS %@; %@)",[[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString *)kCFBundleExecutableKey] ?: [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString *)kCFBundleIdentifierKey],[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"],(__bridge id)CFBundleGetValueForInfoDictionaryKey(CFBundleGetMainBundle(), kCFBundleVersionKey) ?: [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString *)kCFBundleVersionKey],[[UIDevice currentDevice] model],[[UIDevice currentDevice] systemVersion],[[NSLocale currentLocale] localeIdentifier]];
+        
+#ifdef DEV_VERSION
+        userAgentString = [NSString stringWithFormat:@"%@ %@ rv:%@ (%@; iOS %@; %@)", @"Cuánto Falta", @"1.9.5", @"140623",[[UIDevice currentDevice] model],[[UIDevice currentDevice] systemVersion],[[NSLocale currentLocale] localeIdentifier]];
+#endif
 
-        [_sharedSapoClient setDefaultHeader:@"User-Agent" value:[NSString stringWithFormat:@"%@ %@ rv:%@ (%@; iOS %@; %@)",[[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString *)kCFBundleExecutableKey] ?: [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString *)kCFBundleIdentifierKey],[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"],(__bridge id)CFBundleGetValueForInfoDictionaryKey(CFBundleGetMainBundle(), kCFBundleVersionKey) ?: [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString *)kCFBundleVersionKey],[[UIDevice currentDevice] model],[[UIDevice currentDevice] systemVersion],[[NSLocale currentLocale] localeIdentifier]]];
+        [_sharedSapoClient setDefaultHeader:@"User-Agent" value:userAgentString];
     });
     return _sharedSapoClient;
 }

@@ -29,7 +29,7 @@ typedef NS_ENUM(NSInteger, CFStopResultsDisplayMode) {
 - (void)presentOnViewController:(UIViewController *)onViewController;
 - (void)presentFromRect:(CGRect)rect onViewController:(UIViewController *)onViewController;
 
-/* Contains the view in the requested `rect` without interfering with the rest of the chrome. This method assumes there is no `parentViewController` assigned (the view is not currently on screen), and will fail if there already is a `parentViewController`.
+/* Contains the view in the requested `rect` without interfering with the rest of the chrome. If there is no `parentViewController` assigned (the view is not currently on screen), this method will assign the instance to the `onViewController` and animate the view in. This method can also be called when the instance is already contained and a change of frame is required.
  */
 - (void)containOnRect:(CGRect)rect onViewController:(UIViewController *)onViewController;
 
