@@ -18,7 +18,7 @@
 #import "CFTransparentView.h"
 #import "GADBannerView.h"
 
-@interface CFStopResultsViewController () <CFStopSignViewDelegate, UIAlertViewDelegate, CFResultCellDelegate, UITableViewDelegate, UITableViewDataSource>
+@interface CFStopResultsViewController () <CFStopSignViewDelegate, UIAlertViewDelegate, CFResultCellDelegate, UITableViewDelegate, UITableViewDataSource, UIGestureRecognizerDelegate>
 
 @property (nonatomic, strong) UIView *stopResultsView;
 @property (nonatomic, strong) CALayer *borderLayer;
@@ -27,17 +27,19 @@
 @property (nonatomic, assign) CGPoint stopResultsViewPresentedCenter;
 @property (nonatomic, assign) CGRect stopResultsViewPresentedFrame;
 @property (nonatomic, assign) CGRect stopResultsViewMinimizedFrame;
+@property (nonatomic, assign) CGPoint stopResultsViewStoredCenter;
 @property (nonatomic, strong) UINavigationBar *titleView;
 @property (nonatomic, strong) CFStopSignView *stopInfoView;
 @property (nonatomic, strong) OLShapeTintedButton *favoriteButton;
-@property (nonatomic, strong) NSTimer *timer;
-@property (nonatomic, strong) UILabel *timerLabel;
-@property (nonatomic, assign) NSUInteger timerCount;
 
 @property (nonatomic, retain) UITableView *tableView;
 @property (nonatomic, retain) UIRefreshControl *refreshControl;
 @property (nonatomic, strong) NSMutableArray *responseEstimation;
 @property (nonatomic, strong) NSMutableArray *finalData;
+
+@property (nonatomic, strong) NSTimer *timer;
+@property (nonatomic, strong) UILabel *timerLabel;
+@property (nonatomic, assign) NSUInteger timerCount;
 
 @property (nonatomic, strong) GADBannerView *bannerView;
 @property (nonatomic, assign) BOOL refreshing;
@@ -93,16 +95,7 @@
 {
     [super viewDidLoad];
     
-    UIPanGestureRecognizer *horizontalPanRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleHorizontalPanGesture:)];
-    [horizontalPanRecognizer requireGestureRecognizerToFail:self.tableView.panGestureRecognizer];
-    [self.stopResultsView addGestureRecognizer:horizontalPanRecognizer];
-    
-    UITapGestureRecognizer *overlayTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismiss)];
-    [self.overlay addGestureRecognizer:overlayTap];
-    
-    UIPanGestureRecognizer *overlayPan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleHorizontalPanGesture:)];
-    [overlayPan requireGestureRecognizerToFail:self.tableView.panGestureRecognizer];
-    [self.overlay addGestureRecognizer:overlayPan];
+    self.displayMode = CFStopResultsDisplayModeNone;
     
     self.stopInfoView = [[CFStopSignView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.titleView.bounds.size.width - 33.0, 52.0)];
     self.stopInfoView.delegate = self;
@@ -169,16 +162,66 @@
     if (_displayMode == displayMode) return;
     _displayMode = displayMode;
     
-    UITapGestureRecognizer *titleBarExpandTap;
-    if (displayMode != CFStopResultsDisplayModePresented) {
-        titleBarExpandTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(expand)];
-        [self.titleView addGestureRecognizer:titleBarExpandTap];
-    } else {
-        [self.titleView removeGestureRecognizer:titleBarExpandTap];
+    // set up gesture recognizers
+    UIPanGestureRecognizer *horizontalPanRecognizer;
+    UITapGestureRecognizer *overlayTap;
+    UIPanGestureRecognizer *overlayPan;
+    UITapGestureRecognizer *titleBarTap;
+    UITapGestureRecognizer *titleBarDoubleTap;
+    UIPanGestureRecognizer *titleBarPan;
+    
+    if (!horizontalPanRecognizer) {
+        horizontalPanRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleHorizontalPanGesture:)];
+        [horizontalPanRecognizer requireGestureRecognizerToFail:self.tableView.panGestureRecognizer];
+        horizontalPanRecognizer.delegate = self;
+        [self.stopResultsView addGestureRecognizer:horizontalPanRecognizer];
     }
     
-    // show gripper, hide fav button and enable tap and vertical pan gesture on title if not presented
-    // show stop code if contained
+    if (!overlayTap) {
+        overlayTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismiss)];
+        [self.overlay addGestureRecognizer:overlayTap];
+    }
+    
+    if (!overlayPan) {
+        overlayPan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleHorizontalPanGesture:)];
+        [self.overlay addGestureRecognizer:overlayPan];
+    }
+    
+    if (!titleBarTap) {
+        titleBarTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(expand)];
+        [self.titleView addGestureRecognizer:titleBarTap];
+    }
+    
+    if (!titleBarDoubleTap) {
+        titleBarDoubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(minimize)];
+        titleBarDoubleTap.numberOfTapsRequired = 2;
+        [self.titleView addGestureRecognizer:titleBarDoubleTap];
+    }
+    
+    if (!titleBarPan) {
+        titleBarPan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleVerticalPanGesture:)];
+        [titleBarPan requireGestureRecognizerToFail:horizontalPanRecognizer];
+        [self.titleView addGestureRecognizer:titleBarPan];
+    }
+    
+    // handle mode switches
+    if (displayMode == CFStopResultsDisplayModePresented) {
+        self.favoriteButton.enabled = YES;
+        titleBarDoubleTap.enabled = YES;
+        titleBarTap.enabled = NO;
+    } else {
+        self.favoriteButton.enabled = NO;
+        titleBarDoubleTap.enabled = NO;
+        titleBarTap.enabled = YES;
+    }
+    
+    if (displayMode == CFStopResultsDisplayModeContained) {
+        horizontalPanRecognizer.enabled = NO;
+    } else {
+        horizontalPanRecognizer.enabled = YES;
+    }
+    
+    // to-do: show gripper
 }
 
 - (BOOL)addToParentViewController:(UIViewController *)parentViewController
@@ -253,7 +296,7 @@
     
     self.displayMode = CFStopResultsDisplayModePresented;
     
-    [UIView animateWithDuration:0.45 delay:0 usingSpringWithDamping:1 initialSpringVelocity:velocity options:0 animations:^{
+    [UIView animateWithDuration:0.45 delay:0 usingSpringWithDamping:0.75 initialSpringVelocity:velocity options:0 animations:^{
         self.overlay.alpha = 1;
         self.stopResultsView.alpha = 1;
         self.stopResultsView.frame = self.stopResultsViewPresentedFrame;
@@ -286,8 +329,7 @@
     
     [UIView animateWithDuration:animationDuration delay:0 usingSpringWithDamping:1 initialSpringVelocity:velocityFactor options:0 animations:^{
         self.overlay.alpha = 0;
-        self.stopResultsView.center = CGPointMake(self.stopResultsView.center.x + self.view.bounds.size.width, self.stopResultsView.center.y
-                                                  );
+        self.stopResultsView.center = CGPointMake(self.stopResultsView.center.x + self.view.bounds.size.width, self.stopResultsView.center.y);
     } completion:^(BOOL finished) {
         [self.view removeFromSuperview];
         [self removeFromParentViewController];
@@ -296,23 +338,27 @@
     }];
 }
 
+- (BOOL)gestureRecognizerShouldBegin:(UIPanGestureRecognizer *)panGestureRecognizer
+{
+    CGPoint velocity = [panGestureRecognizer velocityInView:self.view];
+    return fabs(velocity.x) > fabs(velocity.y);
+}
+
 - (void)handleHorizontalPanGesture:(UIPanGestureRecognizer *)recognizer
 {
-    // a simplified implementation based on the drawer panning method
-    
     CGFloat draggableDistance = self.view.bounds.size.width;
     CGFloat moveDiff = [recognizer translationInView:self.stopResultsView].x;
     
-    // dragFactor: opening is negative / closing is positive
     CGFloat dragFactor = moveDiff / draggableDistance;
     
     if (recognizer.state == UIGestureRecognizerStateBegan) {
         [self.view endEditing:YES];
+        
     } else if (recognizer.state == UIGestureRecognizerStateChanged) {
         if (moveDiff >= 0) {
             // moving to the right
             self.stopResultsView.center = CGPointMake(self.stopResultsViewPresentedCenter.x + moveDiff, self.stopResultsView.center.y);
-            self.overlay.alpha = 1.0 - fabs(dragFactor);
+            if (self.displayMode == CFStopResultsDisplayModePresented) self.overlay.alpha = 1.0 - fabs(dragFactor);
         } else {
             self.stopResultsView.center = CGPointMake(self.stopResultsViewPresentedCenter.x + moveDiff * 0.25, self.stopResultsView.center.y);
         }
@@ -326,8 +372,51 @@
         } else {
             [UIView animateWithDuration:0.45 delay:0 usingSpringWithDamping:0.6 initialSpringVelocity:velocityFactor options:0 animations:^{
                 self.stopResultsView.center = self.stopResultsViewPresentedCenter;
-                self.overlay.alpha = 1;
+                if (self.displayMode == CFStopResultsDisplayModePresented) self.overlay.alpha = 1;
             } completion:nil];
+        }
+    }
+}
+
+- (void)handleVerticalPanGesture:(UIPanGestureRecognizer *)recognizer
+{
+    CGFloat draggableDistance = self.stopResultsViewPresentedFrame.size.height;
+    CGFloat moveDiff = [recognizer translationInView:self.view].y;
+    
+    CGFloat dragFactor = moveDiff / draggableDistance;
+    
+    if (recognizer.state == UIGestureRecognizerStateBegan) {
+        self.stopResultsViewStoredCenter = self.stopResultsView.center;
+        [self.view endEditing:YES];
+        
+    } else if (recognizer.state == UIGestureRecognizerStateChanged) {
+        self.stopResultsView.center = CGPointMake(self.stopResultsView.center.x, self.stopResultsViewStoredCenter.y + moveDiff);
+        if (self.displayMode == CFStopResultsDisplayModePresented) {
+            self.overlay.alpha = 1.0 - fabs(dragFactor);
+        } else {
+            self.overlay.alpha = fabs(dragFactor);
+        }
+        
+    } else {
+        CGFloat terminalVelocity = MIN([recognizer velocityInView:self.view].y, 3500);
+        CGFloat velocityFactor = fabs(terminalVelocity / 3500);
+        CGFloat targetVelocity = 400;
+        CGFloat targetDiff = 120;
+        
+        if (self.displayMode == CFStopResultsDisplayModePresented) {
+            if (terminalVelocity > targetVelocity || moveDiff > targetDiff) {
+                [self minimize];
+            } else {
+                [self expandWithVelocity:velocityFactor];
+            }
+        } else if (self.displayMode == CFStopResultsDisplayModeMinimized) {
+            if (terminalVelocity < -targetVelocity || moveDiff < -targetDiff) {
+                [self expandWithVelocity:velocityFactor];
+            } else {
+                [self minimize];
+            }
+        } else if (self.displayMode == CFStopResultsDisplayModeContained) {
+            [self expandWithVelocity:velocityFactor];
         }
     }
 }
@@ -597,7 +686,7 @@
     [self.finalData addObjectsFromArray:estimationlessServices];
     
     self.refreshing = NO;
-    [self.tableView reloadData];
+    [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
     [self.refreshControl endRefreshing];
     [self refreshTimerLabel];
     
