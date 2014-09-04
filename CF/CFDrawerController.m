@@ -385,7 +385,7 @@
     CGFloat animationDuration = 0.3 * (1 - velocityFactor);
     CGFloat scaleFactor = 1 + velocityFactor * 0.2;
     
-    [UIView animateWithDuration:animationDuration delay:0 options:0 animations:^{
+    [UIView animateWithDuration:animationDuration delay:0 usingSpringWithDamping:1 initialSpringVelocity:velocityFactor options:0 animations:^{
         [self openDrawer];
         
         if (CGAffineTransformIsIdentity(self.drawer.transform)) {
@@ -411,7 +411,7 @@
     CGFloat velocityFactor = velocity / 3500;
     CGFloat animationDuration = 0.3 * (1 - velocityFactor);
     
-    [UIView animateWithDuration:animationDuration delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+    [UIView animateWithDuration:animationDuration delay:0 usingSpringWithDamping:1 initialSpringVelocity:velocityFactor options:UIViewAnimationOptionCurveEaseOut animations:^{
         [self closeDrawer];
     } completion:^(BOOL finished) {
         self.drawerOpen = NO;

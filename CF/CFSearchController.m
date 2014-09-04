@@ -9,24 +9,22 @@
 #import "CFSearchController.h"
 #import "CFSearchSuggestionsCard.h"
 #import "CFServiceRouteBar.h"
-#import "CFStopSuggestionView.h"
 #import <Mixpanel/Mixpanel.h>
 
 #define VERTICAL_MARGIN 0.0
 #define HORIZONTAL_MARGIN 0.0
 
-@interface CFSearchController () <CFServiceRouteBarDelegate, CFStopSuggestionViewDelegate, CFSearchFieldDelegate>
+@interface CFSearchController () <CFServiceRouteBarDelegate, CFSearchFieldDelegate>
 
 @property (nonatomic, strong) UIView *overlay;
-@property (nonatomic, strong) UIView *containerView;
 @property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
 @property (nonatomic, strong) CFSearchSuggestionsCard *searchSuggestionsCard;
 @property (nonatomic, strong) CFServiceRouteBar *serviceSuggestionView;
-@property (nonatomic, strong) CFStopSuggestionView *stopSuggestionView;
 
 @property (nonatomic, strong) UIView *currentCard;
 @property (nonatomic, assign) BOOL thinking;
 @property (nonatomic, readwrite) BOOL suggesting;
+@property (nonatomic, readwrite) BOOL suggestingStop;
 
 @end
 
@@ -59,11 +57,6 @@
         _serviceSuggestionView.layer.backgroundColor = [UIColor colorWithWhite:1 alpha:.96].CGColor;
         [_containerView addSubview:_serviceSuggestionView];
         
-        _stopSuggestionView = [[CFStopSuggestionView alloc] initWithFrame:CGRectMake(HORIZONTAL_MARGIN, VERTICAL_MARGIN, frame.size.width - HORIZONTAL_MARGIN * 2, 52.0)];
-        _stopSuggestionView.delegate = self;
-        _stopSuggestionView.hidden = YES;
-        [_containerView addSubview:_stopSuggestionView];
-        
         _activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
         _activityIndicator.frame = CGRectOffset(_activityIndicator.frame, (frame.size.width - _activityIndicator.frame.size.width) / 2, VERTICAL_MARGIN + 10.0);
         [_containerView addSubview:_activityIndicator];
@@ -77,6 +70,7 @@
 
 - (void)setContentInset:(UIEdgeInsets)contentInset
 {
+    if (UIEdgeInsetsEqualToEdgeInsets(_contentInset, contentInset)) return;
     _contentInset = contentInset;
     self.containerView.frame = CGRectMake(0, contentInset.top, self.bounds.size.width, self.bounds.size.height - contentInset.top - contentInset.bottom);
 }
@@ -85,8 +79,13 @@
 {
     self.alpha = 0;
     self.hidden = NO;
+    
     if (!self.suggesting) {
         self.searchSuggestionsCard.frame = CGRectMake(self.searchSuggestionsCard.frame.origin.x, - SEARCH_CARD_ANIMATION_OFFSET, self.searchSuggestionsCard.bounds.size.width, self.searchSuggestionsCard.bounds.size.height);
+    }
+    
+    if (self.suggestingStop) {
+        [self checkStop:self.searchField.text];
     }
     
     [UIView animateWithDuration:0.25 delay:0.0 usingSpringWithDamping:1 initialSpringVelocity:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
@@ -101,6 +100,7 @@
 - (void)hide
 {
     self.hidden = NO;
+    [self.delegate searchControllerWillHide];
     
     [UIView animateWithDuration:0.25 animations:^{
         self.alpha = 0;
@@ -141,13 +141,9 @@
 
 - (void)setCurrentCard:(UIView *)currentCard
 {
-//    NSLog(@"_curr: %@, curr: %@", _currentCard, currentCard);
-//    if (_currentCard) NSLog(@"passed old value existance");
-//    if (currentCard) NSLog(@"passed new value existance");
     CGFloat animationOffset = SEARCH_CARD_ANIMATION_OFFSET;
     
     if ((_currentCard && !currentCard)) {
-//        NSLog(@"passed exit animation check");
         [UIView animateWithDuration:0.25 delay:0 usingSpringWithDamping:1 initialSpringVelocity:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
             _currentCard.center = CGPointMake(_currentCard.center.x, _currentCard.center.y - animationOffset);
             _currentCard.alpha = 0;
@@ -159,7 +155,6 @@
     }
     
     if (currentCard && ![currentCard isKindOfClass:[_currentCard class]]) {
-//        NSLog(@"passed intro animation check");
         currentCard.frame = CGRectMake(0, -animationOffset, currentCard.bounds.size.width, currentCard.bounds.size.height);
         currentCard.alpha = 0;
         currentCard.hidden = NO;
@@ -180,17 +175,17 @@
 //    NSLog(@"clearing service suggestions");
     if ([self.currentCard isKindOfClass:[self.serviceSuggestionView class]]) {
         self.currentCard = nil;
-    };
-    self.suggesting = NO;
+    }
+    
+    if (!self.suggestingStop) self.suggesting = NO;
 }
 
 - (void)clearStopSuggestions
 {
 //    NSLog(@"clearing stop suggestions");
-    if ([self.currentCard isKindOfClass:[self.stopSuggestionView class]]) {
-        self.currentCard = nil;
-    };
+    [self.delegate searchControllerDidClearStopSuggestions];
     self.suggesting = NO;
+    self.suggestingStop = NO;
 }
 
 - (void)showServiceSuggestionWithService:(CFService *)service
@@ -334,8 +329,9 @@
         self.thinking = NO;
 
         if (result) {
-            NSLog(@"stop exists");
+//            NSLog(@"stop exists");
             self.suggesting = YES;
+            self.suggestingStop = YES;
             
             NSDictionary *stopData = [result firstObject];
             CLLocationCoordinate2D coordinate;
@@ -343,8 +339,7 @@
             coordinate.longitude = [[stopData objectForKey:@"longitude"] doubleValue];
 
             CFStop *stop = [CFStop stopWithCoordinate:coordinate code:[stopData objectForKey:@"codigo"] name:[stopData objectForKey:@"nombre"] services:[stopData objectForKey:@"recorridos"]];
-            self.stopSuggestionView.stop = stop;
-            self.currentCard = self.stopSuggestionView;
+            [self.delegate searchControllerNeedsStopCardForStop:stop];
             
         } else {
 //            NSLog(@"not a stop");
@@ -361,17 +356,6 @@
     [self.delegate searchControllerDidSelectService:service direction:direction];
     [self.searchField clear];
     [self hide];
-}
-
-- (void)stopSuggestionViewDidSelectStop:(NSString *)stop
-{
-    [self.delegate searchControllerDidSelectStop:stop];
-}
-
-// deprecated
-- (void)stopSuggestionViewDidSelectService:(NSString *)service directionString:(NSString *)directionString
-{
-//    [self.delegate searchControllerDidSelectService:service directionString:directionString];
 }
 
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event

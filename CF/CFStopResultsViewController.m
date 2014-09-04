@@ -63,7 +63,7 @@
     self.overlay.backgroundColor = [UIColor colorWithWhite:0 alpha:.3];
     [self.view addSubview:self.overlay];
     
-    self.stopResultsView = [[UIView alloc] initWithFrame:CGRectOffset(CGRectInset(self.view.bounds, 10.0, 20.0), 0, 10.0)];
+    self.stopResultsView = [[UIView alloc] initWithFrame:CGRectOffset(CGRectInset(self.view.bounds, 10.0, 17.5), 0, 7.5)];
     self.stopResultsView.backgroundColor = [UIColor colorWithWhite:0 alpha:.5];
     [self.view addSubview:self.stopResultsView];
     
@@ -88,6 +88,7 @@
     self.tableView.separatorColor = [UIColor clearColor];
     self.tableView.contentInset = UIEdgeInsetsMake(self.titleView.bounds.size.height, 0, 0, 0);
     self.tableView.backgroundColor = [UIColor clearColor];
+    self.tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
     [self.stopResultsView insertSubview:self.tableView belowSubview:self.titleView];
 }
 
@@ -160,7 +161,13 @@
 - (void)setDisplayMode:(CFStopResultsDisplayMode)displayMode
 {
     if (_displayMode == displayMode) return;
+    
+    BOOL promotedFromContainment = NO;
+    if (_displayMode == CFStopResultsDisplayModeContained && displayMode != CFStopResultsDisplayModeNone) promotedFromContainment = YES;
+    
     _displayMode = displayMode;
+    
+    if (promotedFromContainment) [self.delegate stopResultsViewWasPromotedFromContainment];
     
     // set up gesture recognizers
     UIPanGestureRecognizer *horizontalPanRecognizer;
@@ -261,23 +268,15 @@
 
 - (void)containOnRect:(CGRect)rect onViewController:(UIViewController *)onViewController
 {
-    if (![self addToParentViewController:onViewController]) {
-        if (onViewController == self.parentViewController && self.displayMode == CFStopResultsDisplayModeContained) {
-            // already contained, adjust frame
-            [UIView animateWithDuration:0.25 delay:0 usingSpringWithDamping:1 initialSpringVelocity:0 options:0 animations:^{
-                self.stopResultsView.frame = rect;
-                self.borderLayer.frame = self.stopResultsView.layer.bounds;
-            } completion:nil];
-            
-            return;
-        } else return;
+    if ([self addToParentViewController:onViewController]) {
+        self.stopResultsView.alpha = 0;
+        self.stopResultsView.frame = CGRectOffset(rect, 0, -SEARCH_CARD_ANIMATION_OFFSET);
     }
     
     self.displayMode = CFStopResultsDisplayModeContained;
-    self.stopResultsView.alpha = 0;
-    self.stopResultsView.frame = CGRectOffset(rect, 0, -SEARCH_CARD_ANIMATION_OFFSET);
     
     [UIView animateWithDuration:0.35 delay:0 usingSpringWithDamping:1 initialSpringVelocity:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+        self.overlay.alpha = 0;
         self.stopResultsView.alpha = 1;
         self.stopResultsView.frame = rect;
         self.borderLayer.frame = self.stopResultsView.layer.bounds;
@@ -319,6 +318,7 @@
 
 - (void)dismiss
 {
+    NSLog(@"stopResultsController dismiss");
     [self dismissFromCenter:CGPointZero withVelocityFactor:0.0];
 }
 
@@ -329,10 +329,16 @@
     
     [UIView animateWithDuration:animationDuration delay:0 usingSpringWithDamping:1 initialSpringVelocity:velocityFactor options:0 animations:^{
         self.overlay.alpha = 0;
-        self.stopResultsView.center = CGPointMake(self.stopResultsView.center.x + self.view.bounds.size.width, self.stopResultsView.center.y);
+        if (self.displayMode == CFStopResultsDisplayModeContained) {
+            self.stopResultsView.center = CGPointMake(self.stopResultsView.center.x, self.stopResultsView.center.y - SEARCH_CARD_ANIMATION_OFFSET);
+            self.stopResultsView.alpha = 0;
+        } else {
+            self.stopResultsView.center = CGPointMake(self.stopResultsView.center.x + self.view.bounds.size.width, self.stopResultsView.center.y);
+        }
     } completion:^(BOOL finished) {
         [self.view removeFromSuperview];
         [self removeFromParentViewController];
+        self.stopResultsView.alpha = 1;
         self.stopResultsView.frame = self.stopResultsViewPresentedFrame;
         self.displayMode = CFStopResultsDisplayModeNone;
     }];

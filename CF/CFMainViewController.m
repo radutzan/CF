@@ -60,7 +60,7 @@
 
 - (void)loadView
 {
-    self.view = [[UIView alloc] initWithFrame:[UIScreen mainScreen].applicationFrame];
+    self.view = [[UIView alloc] initWithFrame:[UIScreen mainScreen].bounds];
     
     self.mapController = [[CFMapController alloc] initWithFrame:self.view.bounds];
     self.mapController.delegate = self;
@@ -258,6 +258,13 @@
 
 #pragma mark - Search
 
+- (void)searchControllerWillHide
+{
+    if (self.stopResultsController.displayMode == CFStopResultsDisplayModeContained) {
+        [self.stopResultsController dismiss];
+    }
+}
+
 - (void)searchControllerDidBeginSearching
 {
     [self.localNavigationBar.topItem setRightBarButtonItems:@[] animated:YES];
@@ -269,30 +276,27 @@
     [self.localNavigationBar.topItem setRightBarButtonItems:self.rightBarButtonItems animated:YES];
 }
 
+- (void)searchControllerNeedsStopCardForStop:(CFStop *)stop
+{
+    [self.stopResultsController containOnRect:CGRectMake(10.0, self.topContentMargin + 10.0, self.searchController.bounds.size.width - 20.0, self.searchController.containerView.bounds.size.height - 20.0) onViewController:self];
+    self.stopResultsController.stop = stop;
+}
+
+- (void)searchControllerDidClearStopSuggestions
+{    
+    if (self.stopResultsController.displayMode == CFStopResultsDisplayModeContained) {
+        [self.stopResultsController dismiss];
+    }
+}
+
 - (void)searchControllerRequestedLocalSearch:(NSString *)searchString
 {
     [self.mapController performSearchWithString:searchString];
 }
 
-- (void)searchControllerDidSelectStop:(NSString *)stopCode
-{
-    [self pushStopResultsWithStopCode:stopCode];
-    
-    Mixpanel *mixpanel = [Mixpanel sharedInstance];
-    [mixpanel track:@"Stop Requested" properties:@{@"Code": stopCode, @"From": @"Smart Search Results"}];
-}
-
 - (void)searchControllerDidSelectService:(CFService *)service direction:(CFDirection)direction
 {
     [self showServiceRouteForService:service direction:direction];
-    
-    Mixpanel *mixpanel = [Mixpanel sharedInstance];
-    [mixpanel track:@"Service Route Requested" properties:@{@"Service": service.name, @"From": @"Smart Search Results"}];
-}
-
-- (void)searchControllerDidSelectService:(CFService *)service directionString:(NSString *)directionString
-{
-    [self showServiceRoute:service.name directionString:directionString];
     
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     [mixpanel track:@"Service Route Requested" properties:@{@"Service": service.name, @"From": @"Smart Search Results"}];
@@ -329,6 +333,13 @@
     _bottomContentMargin = bottomContentMargin;
     
     self.searchController.contentInset = UIEdgeInsetsMake(self.searchController.contentInset.top, self.searchController.contentInset.left, bottomContentMargin, self.searchController.contentInset.right);
+}
+
+- (void)stopResultsViewWasPromotedFromContainment
+{
+    NSLog(@"stopResultsViewWasPromotedFromContainment");
+    [self.searchController hide];
+    [self.searchController.searchField clear];
 }
 
 #pragma mark - Push stop results

@@ -18,6 +18,7 @@ typedef NS_ENUM(NSInteger, CFStopResultsDisplayMode) {
 
 @protocol CFStopResultsViewControllerDelegate <NSObject>
 
+- (void)stopResultsViewWasPromotedFromContainment;
 - (void)stopResultsViewControllerDidUpdateUserData;
 - (void)stopResultsViewControllerDidRequestServiceRoute:(NSString *)serviceName directionString:(NSString *)directionString;
 
