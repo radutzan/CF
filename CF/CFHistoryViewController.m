@@ -69,7 +69,7 @@
         cell = [[CFStopCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    cell.backgroundColor = [UIColor clearColor];
+    cell.backgroundColor = [UIColor colorWithWhite:1 alpha:0.6];
     
     cell.codeLabel.text = [stopDictionary objectForKey:@"codigo"];
     
@@ -79,8 +79,8 @@
     if (intersection) {
         NSRange firstLineRange = NSMakeRange(0, [street length]);
         
-        UIFont *boldFont = [UIFont boldSystemFontOfSize:15.0];
-        UIFont *regularFont = [UIFont systemFontOfSize:15.0];
+        UIFont *boldFont = [UIFont fontWithName:DEFAULT_FONT_NAME_BOLD size:15.0];
+        UIFont *regularFont = [UIFont fontWithName:DEFAULT_FONT_NAME_MEDIUM size:15.0];
         
         NSDictionary *attrs = [NSDictionary dictionaryWithObjectsAndKeys:regularFont, NSFontAttributeName, nil];
         NSDictionary *subAttrs = [NSDictionary dictionaryWithObjectsAndKeys:boldFont, NSFontAttributeName, nil];

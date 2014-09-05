@@ -15,11 +15,11 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         self.favoriteNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 9.0, self.contentView.bounds.size.width, 22.0)];
-        self.favoriteNameLabel.font = [UIFont systemFontOfSize:19.0];
+        self.favoriteNameLabel.font = [UIFont fontWithName:@"AvenirNext-Medium" size:19.0];
         self.favoriteNameLabel.textColor = [UIColor colorWithWhite:0 alpha:0.8];
         [self.containerView addSubview:self.favoriteNameLabel];
         
-        self.nameLabel.font = [UIFont boldSystemFontOfSize:11.0];
+        self.nameLabel.font = [UIFont fontWithName:@"AvenirNext-DemiBold" size:11.0];
         self.nameLabel.alpha = 0.6;
         self.nameLabel.numberOfLines = 1;
     }
@@ -31,7 +31,7 @@
     [super layoutSubviews];
     
     self.favoriteNameLabel.frame = CGRectMake(0, 9.0, self.contentView.bounds.size.width, 22.0);
-    self.nameLabel.frame = CGRectMake(0, 32.0, self.contentView.bounds.size.width, 12.0);
+    self.nameLabel.frame = CGRectMake(0, 33.0, self.contentView.bounds.size.width, 12.0);
     
     self.numberLabel.hidden = YES;
     self.metroBadge.hidden = YES;

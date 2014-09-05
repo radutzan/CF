@@ -28,12 +28,12 @@
         self.nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.containerView.bounds.size.width - HORIZONTAL_MARGIN * 2, self.containerView.bounds.size.height)];
         self.nameLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         self.nameLabel.numberOfLines = 2;
-        self.nameLabel.font = [UIFont boldSystemFontOfSize:15.0];
+        self.nameLabel.font = [UIFont fontWithName:@"AvenirNext-DemiBold" size:15.0];
         self.nameLabel.textColor = [UIColor colorWithWhite:0 alpha:0.8];
         [self.containerView addSubview:self.nameLabel];
         
         self.codeLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.containerView.bounds.size.width - 60.0, 0, 60.0, self.containerView.bounds.size.height)];
-        self.codeLabel.font = [UIFont fontWithName:@"HelveticaNeue-Thin" size:15.0];
+        self.codeLabel.font = [UIFont fontWithName:@"AvenirNext-UltraLight" size:15.0];
         self.codeLabel.textAlignment = NSTextAlignmentRight;
         self.codeLabel.textColor = [UIColor colorWithWhite:0 alpha:0.5];
         [self.containerView addSubview:self.codeLabel];
@@ -77,14 +77,16 @@
 - (UILabel *)numberLabel
 {
     if (!_numberLabel) {
-        CGFloat originY = (self.containerView.bounds.size.height - 26.0) / 2;
-        _numberLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, originY, 26.0, 26.0)];
-        _numberLabel.font = [UIFont systemFontOfSize:15];
+        CGFloat squareSize = 24.0;
+        CGFloat originY = (self.containerView.bounds.size.height - squareSize) / 2;
+        _numberLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, originY, squareSize, squareSize)];
+        _numberLabel.font = [UIFont fontWithName:@"AvenirNextCondensed-Medium" size:15.0];
         _numberLabel.textAlignment = NSTextAlignmentCenter;
         _numberLabel.textColor = self.nameLabel.textColor;
-        _numberLabel.layer.borderColor = self.nameLabel.textColor.CGColor;
-        _numberLabel.layer.borderWidth = 1.0;
-        _numberLabel.layer.cornerRadius = 2.0;
+        _numberLabel.layer.backgroundColor = [UIColor colorWithWhite:0 alpha:.07].CGColor;
+        _numberLabel.layer.borderColor = [UIColor colorWithWhite:0 alpha:.1].CGColor;
+        _numberLabel.layer.borderWidth = 0.5;
+        _numberLabel.layer.cornerRadius = 4.0;
         _numberLabel.hidden = YES;
         [self.containerView addSubview:_numberLabel];
     }

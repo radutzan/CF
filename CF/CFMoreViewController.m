@@ -34,6 +34,7 @@
     [super viewDidLoad];
     
     self.view.backgroundColor = [UIColor clearColor];
+    self.tableView.separatorColor = [UIColor colorWithWhite:0 alpha:0.15];
 }
 
 - (void)didReceiveMemoryWarning
@@ -65,7 +66,8 @@
     if (cell == nil)
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
     
-    cell.backgroundColor = [UIColor colorWithWhite:1 alpha:0.5];
+    cell.backgroundColor = [UIColor colorWithWhite:1 alpha:0.6];
+    cell.textLabel.font = [UIFont fontWithName:DEFAULT_FONT_NAME_MEDIUM size:17.0];
     
     if (indexPath.section != 2)
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;

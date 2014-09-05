@@ -18,6 +18,7 @@
     #define DRAWER_ORIGIN_Y 180.0
     #define SEARCH_CARD_ANIMATION_OFFSET 20.0
     #define DEFAULT_FONT_NAME_REGULAR @"AvenirNext-Regular"
+    #define DEFAULT_FONT_NAME_MEDIUM @"AvenirNext-Medium"
     #define DEFAULT_FONT_NAME_BOLD @"AvenirNext-DemiBold"
     #define DEFAULT_FONT_NAME_ITALIC @"AvenirNext-Italic"
     #define DEFAULT_FONT_NAME_BOLDITALIC @"AvenirNext-DemiBoldItalic"

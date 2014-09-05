@@ -23,7 +23,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         _serviceLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0, 0, 80.0, frame.size.height)];
-        _serviceLabel.font = [UIFont fontWithName:@"AvenirNext-Regular" size:26.0];
+        _serviceLabel.font = [UIFont fontWithName:DEFAULT_FONT_NAME_MEDIUM size:22.0];
         _serviceLabel.textColor = [UIColor colorWithWhite:0 alpha:.8];
         [self addSubview:_serviceLabel];
         

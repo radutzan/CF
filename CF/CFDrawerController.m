@@ -63,6 +63,11 @@
     
     self.drawer.layer.anchorPoint = CGPointMake(0.5, 1.0);
     self.drawer.frame = drawerFrame;
+//    self.drawer.layer.shadowColor = [UIColor blackColor].CGColor;
+//    self.drawer.layer.shadowOffset = CGSizeMake(0, 1.5);
+//    self.drawer.layer.shadowOpacity = 0.4;
+//    self.drawer.layer.shadowPath = [UIBezierPath bezierPathWithRect:self.drawer.bounds].CGPath;
+//    self.drawer.layer.shadowRadius = 2.0;
     [self.view addSubview:self.drawer];
     
     self.borderLayer = [CALayer layer];

@@ -90,7 +90,7 @@
 //    [cell addGestureRecognizer:longPressGesture];
     
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    cell.backgroundColor = [UIColor clearColor];
+    cell.backgroundColor = [UIColor colorWithWhite:1 alpha:0.6];
     
     cell.codeLabel.text = [stopDictionary objectForKey:@"codigo"];
     cell.nameLabel.text = [stopDictionary objectForKey:@"nombre"];
@@ -99,11 +99,12 @@
     
     if ([favoriteName isEqualToString:@""]) {
         cell.favoriteNameLabel.text = NSLocalizedString(@"NAMELESS_FAVORITE", nil);
-        cell.favoriteNameLabel.font = [UIFont italicSystemFontOfSize:19.0];
+        cell.favoriteNameLabel.font = [UIFont fontWithName:@"AvenirNext-MediumItalic" size:18.0];
     } else {
         cell.favoriteNameLabel.text = favoriteName;
-        cell.favoriteNameLabel.font = [UIFont systemFontOfSize:19.0];
+        cell.favoriteNameLabel.font = [UIFont fontWithName:@"AvenirNext-Medium" size:18.0];
     }
+//    cell.nameLabel.textColor = [UIColor darkTextColor];
     
     return cell;
 }

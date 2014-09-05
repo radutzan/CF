@@ -48,6 +48,7 @@
         [self addSubview:_containerView];
         
         _searchSuggestionsCard = [[CFSearchSuggestionsCard alloc] initWithFrame:CGRectMake(HORIZONTAL_MARGIN, VERTICAL_MARGIN, frame.size.width - HORIZONTAL_MARGIN * 2, 150.0)];
+        _searchSuggestionsCard.clipsToBounds = NO;
         [_containerView addSubview:_searchSuggestionsCard];
         
         _serviceSuggestionView = [[CFServiceRouteBar alloc] initWithFrame:CGRectMake(HORIZONTAL_MARGIN, VERTICAL_MARGIN, frame.size.width - HORIZONTAL_MARGIN * 2, 44.0)];

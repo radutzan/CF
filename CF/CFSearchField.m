@@ -35,7 +35,7 @@
         _textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
         _textField.autocorrectionType = UITextAutocorrectionTypeNo;
         _textField.delegate = self;
-        _textField.font = [UIFont fontWithName:DEFAULT_FONT_NAME_REGULAR size:18.0];
+        _textField.font = [UIFont fontWithName:DEFAULT_FONT_NAME_MEDIUM size:17.0];
         [self addSubview:_textField];
         
         _text = @"";

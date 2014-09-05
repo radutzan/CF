@@ -63,8 +63,17 @@
     self.overlay.backgroundColor = [UIColor colorWithWhite:0 alpha:.3];
     [self.view addSubview:self.overlay];
     
-    self.stopResultsView = [[UIView alloc] initWithFrame:CGRectOffset(CGRectInset(self.view.bounds, 10.0, 17.5), 0, 7.5)];
-    self.stopResultsView.backgroundColor = [UIColor colorWithWhite:0 alpha:.5];
+    CGRect stopResultsViewFrame = CGRectOffset(CGRectInset(self.view.bounds, 10.0, 17.5), 0, 7.5);
+    
+    if (NSClassFromString(@"UIVisualEffectView")) {
+        self.stopResultsView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleDark]];
+        self.stopResultsView.frame = stopResultsViewFrame;
+    } else {
+        self.stopResultsView = [[UIView alloc] initWithFrame:stopResultsViewFrame];
+        self.stopResultsView.backgroundColor = [UIColor colorWithWhite:0 alpha:.5];
+    }
+    self.stopResultsView.layer.cornerRadius = 6.0;
+    self.stopResultsView.layer.masksToBounds = YES;
     [self.view addSubview:self.stopResultsView];
     
     self.titleView = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, self.stopResultsView.bounds.size.width, 54.0)];
@@ -78,7 +87,7 @@
     [self.stopResultsView.layer addSublayer:self.borderLayer];
     
     self.stopResultsViewPresentedCenter = self.stopResultsView.center;
-    self.stopResultsViewPresentedFrame = self.stopResultsView.frame;
+    self.stopResultsViewPresentedFrame = stopResultsViewFrame;
     self.stopResultsViewMinimizedFrame = CGRectMake(self.stopResultsView.frame.origin.x, self.view.bounds.size.height - self.titleView.bounds.size.height, self.stopResultsView.bounds.size.width, self.stopResultsView.bounds.size.height);
     
     self.tableView = [[UITableView alloc] initWithFrame:self.stopResultsView.bounds style:UITableViewStylePlain];
@@ -377,7 +386,7 @@
             [self dismissFromCenter:self.stopResultsView.center withVelocityFactor:velocityFactor];
         } else {
             [UIView animateWithDuration:0.45 delay:0 usingSpringWithDamping:0.6 initialSpringVelocity:velocityFactor options:0 animations:^{
-                self.stopResultsView.center = self.stopResultsViewPresentedCenter;
+                self.stopResultsView.center = CGPointMake(self.stopResultsViewPresentedCenter.x, self.stopResultsView.center.y);
                 if (self.displayMode == CFStopResultsDisplayModePresented) self.overlay.alpha = 1;
             } completion:nil];
         }

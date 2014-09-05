@@ -54,6 +54,9 @@
     
     self.view.backgroundColor = [UIColor clearColor];
     
+//    self.tableView.separatorEffect = [UIVibrancyEffect effectForBlurEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight]];
+    self.tableView.separatorColor = [UIColor colorWithWhite:0 alpha:0.15];
+    
     [self.tableView reloadData];
 }
 
