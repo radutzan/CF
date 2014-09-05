@@ -41,7 +41,7 @@
         _contentViewWidth = frame.size.width - HORIZONTAL_MARGIN * 2;
         
         _busPictogram = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bus"]];
-        _busPictogram.frame = CGRectMake(HORIZONTAL_MARGIN, floorf((frame.size.height - _busPictogram.bounds.size.height) / 2), _busPictogram.bounds.size.width, _busPictogram.bounds.size.height);
+        _busPictogram.frame = CGRectMake(HORIZONTAL_MARGIN + 1.0, ceilf((frame.size.height - _busPictogram.bounds.size.height) / 2), _busPictogram.bounds.size.width, _busPictogram.bounds.size.height);
         [self addSubview:_busPictogram];
         
         _horizontalMarginWithPictogram = _busPictogram.bounds.size.width + HORIZONTAL_MARGIN;
@@ -169,13 +169,17 @@
         
         NSDictionary *attrs = [NSDictionary dictionaryWithObjectsAndKeys:regularFont, NSFontAttributeName, nil];
         NSDictionary *subAttrs = [NSDictionary dictionaryWithObjectsAndKeys:boldFont, NSFontAttributeName, nil];
+        NSMutableParagraphStyle *paragrahStyle = [[NSMutableParagraphStyle alloc] init];
+        paragrahStyle.maximumLineHeight = 18.0;
         
         NSString *fullString = [NSString stringWithFormat:@"%@\n%@ %@", stop.street, NSLocalizedString(@"AND_BUS_STOP", nil), stop.intersection];
         
         NSMutableAttributedString *attributedText = [[NSMutableAttributedString alloc] initWithString:fullString attributes:attrs];
         [attributedText setAttributes:subAttrs range:firstLineRange];
+        [attributedText addAttribute:NSParagraphStyleAttributeName value:paragrahStyle range:NSMakeRange(0, fullString.length)];
         
         [self.stopNameLabel setAttributedText:attributedText];
+        newLabelFrame.origin.y += 2.0;
         
     } else {
         self.stopNameLabel.text = stop.street;

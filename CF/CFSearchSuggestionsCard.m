@@ -8,7 +8,7 @@
 
 #import "CFSearchSuggestionsCard.h"
 
-#define TOP_MARGIN 15.0
+#define TOP_MARGIN 10.0
 #define VERTICAL_SPACING 12.0
 #define HORIZONTAL_MARGIN 10.0
 
@@ -26,7 +26,7 @@
     if (self) {
         UIView *backgroundView;
         if (NSClassFromString(@"UIVisualEffectView")) {
-            UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
+            UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
 
             backgroundView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
             backgroundView.frame = self.bounds;
@@ -63,7 +63,7 @@
         for (NSDictionary *suggestion in contentArray) {
             UILabel *suggestionTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(HORIZONTAL_MARGIN, topGuide, 80.0, 20.0)];
             suggestionTitleLabel.font = [UIFont fontWithName:@"AvenirNextCondensed-Medium" size:17.0];
-            suggestionTitleLabel.textColor = [UIColor whiteColor];
+            suggestionTitleLabel.textColor = [UIColor colorWithWhite:0 alpha:.8];
             suggestionTitleLabel.text = suggestion[@"name"];
             suggestionTitleLabel.textAlignment = NSTextAlignmentRight;
             [self addSubview:suggestionTitleLabel];
@@ -81,11 +81,9 @@
             }
             
             topGuide += suggestionExampleLabel.bounds.size.height + VERTICAL_SPACING;
-            NSLog(@"%f, %f", suggestionExampleLabel.bounds.size.height, topGuide);
         }
         
         backgroundView.frame = CGRectMake(0, 0, self.bounds.size.width, topGuide + TOP_MARGIN);
-        NSLog(@"frame: %f", self.frame.size.height);
     }
     return self;
 }

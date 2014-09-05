@@ -39,6 +39,7 @@
 
 @property (nonatomic, assign) CGFloat topContentMargin;
 @property (nonatomic, assign) CGFloat bottomContentMargin;
+@property (nonatomic, assign) CGPoint storedDismissingViewCenter;
 
 @property (nonatomic, assign) BOOL shouldDisplayAds;
 @property (nonatomic, strong) GADBannerView *mapBannerAd;
@@ -430,13 +431,7 @@
 - (void)showServiceRouteForService:(CFService *)service direction:(CFDirection)direction
 {
     [self.mapController displayServiceRoute:service.name direction:direction];
-    
-    for (UIView *subview in self.view.subviews) {
-        if ([subview isKindOfClass:[CFServiceRouteBar class]]) {
-            [subview removeFromSuperview];
-        }
-    }
-    
+    [self clearServiceRouteBar];
     [self showServiceRouteBarWithService:service];
 }
 
@@ -454,6 +449,9 @@
     [clearServiceRouteButton addTarget:self action:@selector(clearServiceRoute) forControlEvents:UIControlEventTouchUpInside];
     [serviceBar addSubview:clearServiceRouteButton];
     
+    UIPanGestureRecognizer *dismissRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleHorizontalDismissPanGesture:)];
+    [serviceBar addGestureRecognizer:dismissRecognizer];
+    
     self.topContentMargin += serviceBar.bounds.size.height;
 }
 
@@ -462,7 +460,7 @@
     [self showServiceRouteForService:service direction:(index ? CFDirectionInward : CFDirectionOutward)];
 }
 
-- (void)clearServiceRoute
+- (void)clearServiceRouteBar
 {
     for (UIView *subview in self.view.subviews) {
         if ([subview isKindOfClass:[CFServiceRouteBar class]]) {
@@ -470,8 +468,51 @@
             [subview removeFromSuperview];
         }
     }
-    
+}
+
+- (void)clearServiceRoute
+{
+    [self clearServiceRouteBar];
     [self.mapController displayStops];
+}
+
+- (void)handleHorizontalDismissPanGesture:(UIPanGestureRecognizer *)recognizer
+{
+    CGFloat draggableDistance = self.view.bounds.size.width;
+    CGFloat moveDiff = [recognizer translationInView:self.view].x;
+    
+    CGFloat dragFactor = moveDiff / draggableDistance;
+    
+    if (recognizer.state == UIGestureRecognizerStateBegan) {
+        [self.view endEditing:YES];
+        self.storedDismissingViewCenter = recognizer.view.center;
+        
+    } else if (recognizer.state == UIGestureRecognizerStateChanged) {
+        if (moveDiff >= 0) {
+            // moving to the right
+            recognizer.view.center = CGPointMake(self.storedDismissingViewCenter.x + moveDiff, recognizer.view.center.y);
+        } else {
+            recognizer.view.center = CGPointMake(self.storedDismissingViewCenter.x + moveDiff * 0.25, recognizer.view.center.y);
+        }
+        
+    } else {
+        CGFloat terminalVelocity = MIN([recognizer velocityInView:self.view].x, 3500);
+        CGFloat velocityFactor = fabs(terminalVelocity / 3500);
+        
+        if (terminalVelocity > 250 || moveDiff > 80) {
+            CGFloat animationDuration = 0.45 * (1 - velocityFactor);
+            
+            [UIView animateWithDuration:animationDuration delay:0 usingSpringWithDamping:1 initialSpringVelocity:velocityFactor options:0 animations:^{
+                recognizer.view.center = CGPointMake(recognizer.view.center.x + self.view.bounds.size.width, recognizer.view.center.y);
+            } completion:^(BOOL finished) {
+                [self clearServiceRoute];
+            }];
+        } else {
+            [UIView animateWithDuration:0.45 delay:0 usingSpringWithDamping:0.6 initialSpringVelocity:velocityFactor options:0 animations:^{
+                recognizer.view.center = CGPointMake(self.storedDismissingViewCenter.x, recognizer.view.center.y);
+            } completion:nil];
+        }
+    }
 }
 
 #pragma mark - Commerce and Ads

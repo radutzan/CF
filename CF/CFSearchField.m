@@ -22,13 +22,12 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        _glyphView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 16.0, frame.size.height - 1.0)];
+        _glyphView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 16.0, frame.size.height - 3.0)];
         _glyphView.contentMode = UIViewContentModeCenter;
-//        _glyphView.tintColor = [UIColor colorWithWhite:0 alpha:.2];
         _glyphView.image = [[UIImage imageNamed:@"searchfield-glyph"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
         [self addSubview:_glyphView];
         
-        _textField = [[UITextField alloc] initWithFrame:CGRectMake(_glyphView.bounds.size.width + 2.0, 0, frame.size.width - 1.0 - _glyphView.bounds.size.width, frame.size.height)];
+        _textField = [[UITextField alloc] initWithFrame:CGRectMake(_glyphView.bounds.size.width + 2.0, -1.0, frame.size.width - 1.0 - _glyphView.bounds.size.width, frame.size.height)];
         _textField.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
         _textField.returnKeyType = UIReturnKeySearch;
         _textField.clearButtonMode = UITextFieldViewModeWhileEditing;

@@ -555,7 +555,7 @@ static MKMapRect santiagoBounds;
 
 - (void)popupStopCalloutViewFromPin:(MKAnnotationView *)pin
 {
-    CFStopSignView *stopSign = [[CFStopSignView alloc] initWithFrame:CGRectMake(0, 0, 280, 52)];
+    CFStopSignView *stopSign = [[CFStopSignView alloc] initWithFrame:CGRectMake(0, 0, 280, 49)];
     stopSign.stop = self.selectedStop;
     stopSign.userInteractionEnabled = NO;
     

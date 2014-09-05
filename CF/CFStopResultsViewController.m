@@ -24,10 +24,6 @@
 @property (nonatomic, strong) CALayer *borderLayer;
 @property (nonatomic, assign, readwrite) CFStopResultsDisplayMode displayMode;
 @property (nonatomic, strong) UIView *overlay;
-@property (nonatomic, assign) CGPoint stopResultsViewPresentedCenter;
-@property (nonatomic, assign) CGRect stopResultsViewPresentedFrame;
-@property (nonatomic, assign) CGRect stopResultsViewMinimizedFrame;
-@property (nonatomic, assign) CGPoint stopResultsViewStoredCenter;
 @property (nonatomic, strong) UINavigationBar *titleView;
 @property (nonatomic, strong) CFStopSignView *stopInfoView;
 @property (nonatomic, strong) OLShapeTintedButton *favoriteButton;
@@ -41,6 +37,11 @@
 @property (nonatomic, strong) UILabel *timerLabel;
 @property (nonatomic, assign) NSUInteger timerCount;
 
+@property (nonatomic, assign) CGPoint stopResultsViewPresentedCenter;
+@property (nonatomic, assign) CGRect stopResultsViewPresentedFrame;
+@property (nonatomic, assign) CGRect stopResultsViewMinimizedFrame;
+@property (nonatomic, assign) CGPoint stopResultsViewStoredCenter;
+
 @property (nonatomic, strong) GADBannerView *bannerView;
 @property (nonatomic, assign) BOOL refreshing;
 @property (nonatomic, assign) BOOL removedAds;
@@ -48,6 +49,15 @@
 @end
 
 @implementation CFStopResultsViewController
+
+UIPanGestureRecognizer *_horizontalPanRecognizer;
+UITapGestureRecognizer *_overlayTap;
+UIPanGestureRecognizer *_overlayPan;
+UITapGestureRecognizer *_titleBarTap;
+UITapGestureRecognizer *_titleBarDoubleTap;
+UIPanGestureRecognizer *_titleBarPan;
+CALayer *_topGripper;
+CALayer *_leftGripper;
 
 - (void)loadView
 {
@@ -131,6 +141,53 @@
     self.timerLabel.alpha = 0.5;
     self.timerLabel.textAlignment = NSTextAlignmentRight;
     self.timerLabel.text = NSLocalizedString(@"REFRESHING", nil);
+    
+    [self initGestures];
+}
+
+- (void)initGestures
+{
+    _horizontalPanRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleHorizontalPanGesture:)];
+    [_horizontalPanRecognizer requireGestureRecognizerToFail:self.tableView.panGestureRecognizer];
+    _horizontalPanRecognizer.delegate = self;
+    [self.stopResultsView addGestureRecognizer:_horizontalPanRecognizer];
+    
+    _overlayTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismiss)];
+    [self.overlay addGestureRecognizer:_overlayTap];
+    
+    _overlayPan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleHorizontalPanGesture:)];
+    [self.overlay addGestureRecognizer:_overlayPan];
+    
+    _titleBarTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(expand)];
+    [self.titleView addGestureRecognizer:_titleBarTap];
+    
+    _titleBarDoubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(minimize)];
+    _titleBarDoubleTap.numberOfTapsRequired = 2;
+    [self.titleView addGestureRecognizer:_titleBarDoubleTap];
+    
+    _titleBarPan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleVerticalPanGesture:)];
+    [_titleBarPan requireGestureRecognizerToFail:_horizontalPanRecognizer];
+    [self.titleView addGestureRecognizer:_titleBarPan];
+    
+    // set up grippers
+    CGFloat gripperThickness = 2.0;
+    CGFloat gripperLength = 24.0;
+    CGFloat gripperDistance = 4.0;
+    UIColor *gripperColor = [UIColor colorWithWhite:1 alpha:.25];
+    
+    _topGripper = [CALayer layer];
+    _topGripper.frame = CGRectMake(self.titleView.center.x - gripperLength / 2, gripperDistance, gripperLength, gripperThickness);
+    _topGripper.backgroundColor = gripperColor.CGColor;
+    _topGripper.cornerRadius = gripperThickness / 2;
+    _topGripper.opacity = 0;
+    [self.titleView.layer addSublayer:_topGripper];
+    
+    _leftGripper = [CALayer layer];
+    _leftGripper.frame = CGRectMake(gripperDistance, self.titleView.center.y - gripperLength / 2, gripperThickness, gripperLength);
+    _leftGripper.backgroundColor = gripperColor.CGColor;
+    _leftGripper.cornerRadius = gripperThickness / 2;
+    _leftGripper.opacity = 0;
+    [self.titleView.layer addSublayer:_leftGripper];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -139,9 +196,6 @@
     
     if (self.refreshing) {
         [self.refreshControl beginRefreshing];
-//        [UIView animateWithDuration:0.2 animations:^{
-//            self.tableView.contentOffset = CGPointMake(0, -134.0);
-//        }];
     }
 }
 
@@ -178,66 +232,26 @@
     
     if (promotedFromContainment) [self.delegate stopResultsViewWasPromotedFromContainment];
     
-    // set up gesture recognizers
-    UIPanGestureRecognizer *horizontalPanRecognizer;
-    UITapGestureRecognizer *overlayTap;
-    UIPanGestureRecognizer *overlayPan;
-    UITapGestureRecognizer *titleBarTap;
-    UITapGestureRecognizer *titleBarDoubleTap;
-    UIPanGestureRecognizer *titleBarPan;
-    
-    if (!horizontalPanRecognizer) {
-        horizontalPanRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleHorizontalPanGesture:)];
-        [horizontalPanRecognizer requireGestureRecognizerToFail:self.tableView.panGestureRecognizer];
-        horizontalPanRecognizer.delegate = self;
-        [self.stopResultsView addGestureRecognizer:horizontalPanRecognizer];
-    }
-    
-    if (!overlayTap) {
-        overlayTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismiss)];
-        [self.overlay addGestureRecognizer:overlayTap];
-    }
-    
-    if (!overlayPan) {
-        overlayPan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleHorizontalPanGesture:)];
-        [self.overlay addGestureRecognizer:overlayPan];
-    }
-    
-    if (!titleBarTap) {
-        titleBarTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(expand)];
-        [self.titleView addGestureRecognizer:titleBarTap];
-    }
-    
-    if (!titleBarDoubleTap) {
-        titleBarDoubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(minimize)];
-        titleBarDoubleTap.numberOfTapsRequired = 2;
-        [self.titleView addGestureRecognizer:titleBarDoubleTap];
-    }
-    
-    if (!titleBarPan) {
-        titleBarPan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleVerticalPanGesture:)];
-        [titleBarPan requireGestureRecognizerToFail:horizontalPanRecognizer];
-        [self.titleView addGestureRecognizer:titleBarPan];
-    }
-    
     // handle mode switches
     if (displayMode == CFStopResultsDisplayModePresented) {
         self.favoriteButton.enabled = YES;
-        titleBarDoubleTap.enabled = YES;
-        titleBarTap.enabled = NO;
+        _titleBarDoubleTap.enabled = YES;
+        _titleBarTap.enabled = NO;
+        _leftGripper.opacity = 1;
+        _topGripper.opacity = 0;
     } else {
         self.favoriteButton.enabled = NO;
-        titleBarDoubleTap.enabled = NO;
-        titleBarTap.enabled = YES;
+        _titleBarDoubleTap.enabled = NO;
+        _titleBarTap.enabled = YES;
+        _leftGripper.opacity = 0;
+        _topGripper.opacity = 1;
     }
     
     if (displayMode == CFStopResultsDisplayModeContained) {
-        horizontalPanRecognizer.enabled = NO;
+        _horizontalPanRecognizer.enabled = NO;
     } else {
-        horizontalPanRecognizer.enabled = YES;
+        _horizontalPanRecognizer.enabled = YES;
     }
-    
-    // to-do: show gripper
 }
 
 - (BOOL)addToParentViewController:(UIViewController *)parentViewController
@@ -327,7 +341,6 @@
 
 - (void)dismiss
 {
-    NSLog(@"stopResultsController dismiss");
     [self dismissFromCenter:CGPointZero withVelocityFactor:0.0];
 }
 
