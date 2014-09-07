@@ -35,7 +35,7 @@
     CFMainViewController *mainViewController = [CFMainViewController new];
 
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    self.window.rootViewController = mainViewController;
+    self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:mainViewController];
     self.window.tintColor = [UIColor colorWithHue:133.0/360.0 saturation:0.74 brightness:0.87 alpha:1];
     [self.window makeKeyAndVisible];
     

@@ -45,7 +45,7 @@
 "NO_INFO_COMPLAINT_TWEET" = "@transantiago No hay información para el servicio %@ en el paradero %@. ¿Qué sucede?";
 
 // map
-"MAP_SEARCHFIELD_PLACEHOLDER" = "Código, servicio o lugar";
+"MAP_SEARCHFIELD_PLACEHOLDER" = "Busca código, servicio o lugar";
 "SEARCH_SUGGESTION_CARD_STOP_CODE_TITLE" = "Código";
 "SEARCH_SUGGESTION_CARD_SERVICE_TITLE" = "Servicio";
 "SEARCH_SUGGESTION_CARD_PLACE_TITLE" = "Lugar";
@@ -64,7 +64,7 @@
 
 // favs and history
 "FAVORITES_PLACEHOLDER_TITLE" = "No tienes favoritos";
-"FAVORITES_PLACEHOLDER_MESSAGE" = "Puedes agregar favoritos tocando la estrella que aparece cuando consultas una parada.";
+"FAVORITES_PLACEHOLDER_MESSAGE" = "Agrega favoritos tocando la estrella que aparece cuando consultas una parada.";
 "HISTORY_PLACEHOLDER_TITLE" = "Sin historial";
 "HISTORY_PLACEHOLDER_MESSAGE" = "Tu historial se guardará automáticamente a medida que consultes paradas.";
 "CLEAR_ALL_HISTORY" = "Borrar Historial";

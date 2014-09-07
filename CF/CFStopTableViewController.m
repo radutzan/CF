@@ -32,14 +32,14 @@
         
         _placeholderTitleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         _placeholderTitleLabel.textAlignment = NSTextAlignmentCenter;
-        _placeholderTitleLabel.font = [UIFont boldSystemFontOfSize:17.0];
+        _placeholderTitleLabel.font = [UIFont fontWithName:DEFAULT_FONT_NAME_BOLD size:17.0];
         _placeholderTitleLabel.textColor = [UIColor colorWithWhite:0 alpha:0.4];
         [_placeholderView addSubview:_placeholderTitleLabel];
         
         _placeholderMessageLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         _placeholderMessageLabel.numberOfLines = 3;
         _placeholderMessageLabel.textAlignment = NSTextAlignmentCenter;
-        _placeholderMessageLabel.font = [UIFont systemFontOfSize:15.0];
+        _placeholderMessageLabel.font = [UIFont fontWithName:DEFAULT_FONT_NAME_REGULAR size:15.0];
         _placeholderMessageLabel.textColor = [UIColor colorWithWhite:0 alpha:0.4];
         [_placeholderView addSubview:_placeholderMessageLabel];
         

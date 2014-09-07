@@ -79,7 +79,9 @@ CALayer *_leftGripper;
         self.stopResultsView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleDark]];
         self.stopResultsView.frame = stopResultsViewFrame;
     } else {
-        self.stopResultsView = [[UIView alloc] initWithFrame:stopResultsViewFrame];
+        self.stopResultsView = [[UIToolbar alloc] initWithFrame:stopResultsViewFrame];
+        UIToolbar *castedStopResultsView = (UIToolbar *)self.stopResultsView;
+        castedStopResultsView.barStyle = UIBarStyleBlack;
         self.stopResultsView.backgroundColor = [UIColor colorWithWhite:0 alpha:.5];
     }
     self.stopResultsView.layer.cornerRadius = 6.0;
@@ -170,10 +172,10 @@ CALayer *_leftGripper;
     [self.titleView addGestureRecognizer:_titleBarPan];
     
     // set up grippers
-    CGFloat gripperThickness = 2.0;
+    CGFloat gripperThickness = 2.5;
     CGFloat gripperLength = 24.0;
     CGFloat gripperDistance = 4.0;
-    UIColor *gripperColor = [UIColor colorWithWhite:1 alpha:.25];
+    UIColor *gripperColor = [UIColor colorWithWhite:1 alpha:.35];
     
     _topGripper = [CALayer layer];
     _topGripper.frame = CGRectMake(self.titleView.center.x - gripperLength / 2, gripperDistance, gripperLength, gripperThickness);
@@ -195,7 +197,7 @@ CALayer *_leftGripper;
     [super viewWillAppear:animated];
     
     if (self.refreshing) {
-        [self.refreshControl beginRefreshing];
+//        [self.refreshControl beginRefreshing];
     }
 }
 
@@ -590,7 +592,7 @@ CALayer *_leftGripper;
         
         [self updateHistory];
         [self performStopRequestQuietly:NO];
-        [self.refreshControl beginRefreshing];
+//        [self.refreshControl beginRefreshing];
     } else {
         self.favoriteButton.enabled = NO;
         self.favoriteButton.selected = NO;
@@ -837,7 +839,8 @@ CALayer *_leftGripper;
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    UIView *headerView = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, self.stopResultsView.bounds.size.width, 20.0)];
+    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.stopResultsView.bounds.size.width, 20.0)];
+    headerView.backgroundColor = [UIColor whiteColor];
     
     UILabel *service = [[UILabel alloc] initWithFrame:CGRectMake(15.0, 0, 90.0, 20.0)];
     service.text = NSLocalizedString(@"SERVICE", nil);

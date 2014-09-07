@@ -59,7 +59,6 @@
 		7C2EECDD188345F500AE78C2 /* CFResultCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C426416184AE88000A8968F /* CFResultCell.m */; };
 		7C2EECDE188345F500AE78C2 /* CFHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C10B971183ADD2A0086B650 /* CFHistoryViewController.m */; };
 		7C2EECDF188345F500AE78C2 /* CFFavoriteCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C426419184AF3E300A8968F /* CFFavoriteCell.m */; };
-		7C2EECE0188345F500AE78C2 /* CFNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C7A15E01854E01F002EE4C5 /* CFNavigationBar.m */; };
 		7C2EECE1188345F500AE78C2 /* CLLocation+UTMUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CFF7E9718382B1B006230CE /* CLLocation+UTMUtilities.m */; };
 		7C2EECE3188345F500AE78C2 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C5DD3431879234F00FE5CFB /* SystemConfiguration.framework */; };
 		7C2EECE4188345F500AE78C2 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C6CE7FC1877B7DD00DDEF54 /* StoreKit.framework */; };
@@ -128,7 +127,6 @@
 		7C7A15D818540966002EE4C5 /* pin-favorite@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7C7A15D718540966002EE4C5 /* pin-favorite@2x.png */; };
 		7C7A15DB18540E08002EE4C5 /* CFMoreContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C7A15DA18540E08002EE4C5 /* CFMoreContentViewController.m */; };
 		7C7A15DE1854DF54002EE4C5 /* CFNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C7A15DD1854DF54002EE4C5 /* CFNavigationController.m */; };
-		7C7A15E11854E01F002EE4C5 /* CFNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C7A15E01854E01F002EE4C5 /* CFNavigationBar.m */; };
 		7C7A15E71854EF37002EE4C5 /* about.css in Resources */ = {isa = PBXBuildFile; fileRef = 7C7A15E41854EF37002EE4C5 /* about.css */; };
 		7C7A15E81854EF67002EE4C5 /* about.html in Resources */ = {isa = PBXBuildFile; fileRef = 7C7A15EA1854EF67002EE4C5 /* about.html */; };
 		7C7A55EC19B7C4F0002AA398 /* CFTransparentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C7A55EB19B7C4F0002AA398 /* CFTransparentView.m */; };
@@ -385,8 +383,6 @@
 		7C7A15DA18540E08002EE4C5 /* CFMoreContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFMoreContentViewController.m; sourceTree = "<group>"; };
 		7C7A15DC1854DF54002EE4C5 /* CFNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFNavigationController.h; sourceTree = "<group>"; };
 		7C7A15DD1854DF54002EE4C5 /* CFNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFNavigationController.m; sourceTree = "<group>"; };
-		7C7A15DF1854E01F002EE4C5 /* CFNavigationBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFNavigationBar.h; sourceTree = "<group>"; };
-		7C7A15E01854E01F002EE4C5 /* CFNavigationBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFNavigationBar.m; sourceTree = "<group>"; };
 		7C7A15E41854EF37002EE4C5 /* about.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = about.css; sourceTree = "<group>"; };
 		7C7A15E91854EF67002EE4C5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = en; path = en.lproj/about.html; sourceTree = "<group>"; };
 		7C7A15EB1854EF6A002EE4C5 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = es; path = es.lproj/about.html; sourceTree = "<group>"; };
@@ -883,8 +879,6 @@
 				7CD35CA7194955EF007C36CA /* CFSearchField.m */,
 				7CFF7EBD1838700F006230CE /* CFStopSignView.h */,
 				7CFF7EBE1838700F006230CE /* CFStopSignView.m */,
-				7C7A15DF1854E01F002EE4C5 /* CFNavigationBar.h */,
-				7C7A15E01854E01F002EE4C5 /* CFNavigationBar.m */,
 				7CFF7E7F1838288C006230CE /* SMCalloutView.h */,
 				7CFF7E801838288C006230CE /* SMCalloutView.m */,
 				7CB337FC192AB27500234792 /* CFStopServicesButtonArrayView.h */,
@@ -1388,7 +1382,6 @@
 				7C2EECDD188345F500AE78C2 /* CFResultCell.m in Sources */,
 				7C2EECDE188345F500AE78C2 /* CFHistoryViewController.m in Sources */,
 				7C2EECDF188345F500AE78C2 /* CFFavoriteCell.m in Sources */,
-				7C2EECE0188345F500AE78C2 /* CFNavigationBar.m in Sources */,
 				7C062F2B19330DF000342E4A /* UIImage+ImageEffects.m in Sources */,
 				7C2EECE1188345F500AE78C2 /* CLLocation+UTMUtilities.m in Sources */,
 			);
@@ -1460,7 +1453,6 @@
 				7C10B972183ADD2A0086B650 /* CFHistoryViewController.m in Sources */,
 				7CC7EC451929B74B002160E5 /* CFRoute.m in Sources */,
 				7C42641A184AF3E300A8968F /* CFFavoriteCell.m in Sources */,
-				7C7A15E11854E01F002EE4C5 /* CFNavigationBar.m in Sources */,
 				7CFF7E9B18382B1B006230CE /* CLLocation+UTMUtilities.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

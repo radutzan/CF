@@ -338,7 +338,6 @@
 
 - (void)stopResultsViewWasPromotedFromContainment
 {
-    NSLog(@"stopResultsViewWasPromotedFromContainment");
     [self.searchController hide];
     [self.searchController.searchField clear];
 }

@@ -39,16 +39,10 @@
             UIVisualEffectView *castedBackgroundView = (UIVisualEffectView *)backgroundView;
             [castedBackgroundView.contentView addSubview:_vibrancyEffectView];
         } else {
-            UIView *backgroundView = [[UIView alloc] initWithFrame:self.bounds];
-            backgroundView.backgroundColor = [UIColor colorWithWhite:0 alpha:.8];
+            backgroundView = [[UINavigationBar alloc] initWithFrame:self.bounds];
+//            backgroundView.backgroundColor = [UIColor colorWithWhite:.97 alpha:.9];
             [self addSubview:backgroundView];
         }
-        
-        CGFloat contentWidth = self.bounds.size.width - HORIZONTAL_MARGIN * 2;
-        
-        UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(HORIZONTAL_MARGIN, TOP_MARGIN, contentWidth, 0.0)];
-//        titleLabel.text = @"Search";
-//        [self addSubview:titleLabel];
         
         NSArray *contentArray = @[
   @{@"name": NSLocalizedString(@"SEARCH_SUGGESTION_CARD_STOP_CODE_TITLE", nil),
@@ -58,17 +52,19 @@
   @{@"name": NSLocalizedString(@"SEARCH_SUGGESTION_CARD_PLACE_TITLE", nil),
     @"example": @"“Plaza de Armas”, \n“Los Navegantes 1919”…"}];
         
-        CGFloat topGuide = TOP_MARGIN + titleLabel.bounds.size.height + VERTICAL_SPACING;
+        CGFloat contentWidth = self.bounds.size.width - HORIZONTAL_MARGIN * 2;
+        CGFloat topGuide = TOP_MARGIN + VERTICAL_SPACING;
+        CGFloat titleWidth = 70.0;
         
         for (NSDictionary *suggestion in contentArray) {
-            UILabel *suggestionTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(HORIZONTAL_MARGIN, topGuide, 80.0, 20.0)];
+            UILabel *suggestionTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(HORIZONTAL_MARGIN, topGuide, titleWidth, 20.0)];
             suggestionTitleLabel.font = [UIFont fontWithName:@"AvenirNextCondensed-Medium" size:17.0];
             suggestionTitleLabel.textColor = [UIColor colorWithWhite:0 alpha:.8];
             suggestionTitleLabel.text = suggestion[@"name"];
             suggestionTitleLabel.textAlignment = NSTextAlignmentRight;
             [self addSubview:suggestionTitleLabel];
             
-            UILabel *suggestionExampleLabel = [[UILabel alloc] initWithFrame:CGRectMake(HORIZONTAL_MARGIN + suggestionTitleLabel.bounds.size.width + 10.0, topGuide - 1.0, contentWidth - suggestionTitleLabel.bounds.size.width + 10.0, 20.0)];
+            UILabel *suggestionExampleLabel = [[UILabel alloc] initWithFrame:CGRectMake(HORIZONTAL_MARGIN + suggestionTitleLabel.bounds.size.width + 10.0, topGuide - 1.0, contentWidth - titleWidth + 10.0, 20.0)];
             suggestionExampleLabel.font = [UIFont fontWithName:DEFAULT_FONT_NAME_REGULAR size:17.0];
             suggestionExampleLabel.text = suggestion[@"example"];
             suggestionExampleLabel.numberOfLines = 0;
@@ -76,11 +72,11 @@
             if (_vibrancyEffectView) {
                 [_vibrancyEffectView.contentView addSubview:suggestionExampleLabel];
             } else {
-                suggestionExampleLabel.textColor = [UIColor colorWithWhite:1 alpha:.6];
+                suggestionExampleLabel.textColor = [UIColor colorWithWhite:0 alpha:.45];
                 [self addSubview:suggestionExampleLabel];
             }
             
-            topGuide += suggestionExampleLabel.bounds.size.height + VERTICAL_SPACING;
+            topGuide += ceilf(suggestionExampleLabel.bounds.size.height) + VERTICAL_SPACING;
         }
         
         backgroundView.frame = CGRectMake(0, 0, self.bounds.size.width, topGuide + TOP_MARGIN);

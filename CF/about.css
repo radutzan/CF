@@ -2,13 +2,15 @@ body {
     background: transparent;
     margin: 15px;
     color: rgba(0,0,0,.8);
-    font: 15px 'HelveticaNeue';
+    font-size: 15px;
+    font-family: 'AvenirNext-Regular';
 	text-rendering: optimizeLegibility;
     }
 
 h1 {
     font-weight: normal;
-    font: 45px 'HelveticaNeue-Thin';
+    font-size: 42px;
+    letter-spacing: -1px;
     margin: 10px 0 0;
     }
 
@@ -51,9 +53,13 @@ p.right {
     }
 
 strong {
-    font-family: 'HelveticaNeue-Medium';
+    font-family: 'AvenirNext-Medium';
     font-weight: normal;
-    }
+}
+
+p.left strong, p.right strong {
+    font-size: 18px;
+}
 
 .icon {
     margin: 5px 0 0;
@@ -61,16 +67,13 @@ strong {
 
 .version {
     font-size: 13px;
-    margin: 0 0 15px;
+    margin: -3px 0 15px;
     opacity: .7;
-    }
-
-.love {
     padding: 0 0 15px;
     border-bottom: 1px solid rgba(0,0,0,.1);
     }
 
-.twitter {
+.love {
     padding: 15px 0 0;
     border-top: 1px solid rgba(0,0,0,.1);
     margin-bottom: 0;
@@ -87,10 +90,10 @@ dt, dd {
     }
 
 dt {
-    font-size: 25px;
-    line-height: 31px;
+    font-size: 20px;
+    line-height: 30px;
     margin: 15px 0;
-    font-family: 'HelveticaNeue-Light';
+    font-family: 'AvenirNext-Medium';
     }
 
 dd {
