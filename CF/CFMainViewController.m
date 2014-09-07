@@ -33,6 +33,7 @@
 @property (nonatomic, strong) CFDrawerController *drawerController;
 @property (nonatomic, strong) CFSearchController *searchController;
 @property (nonatomic, strong) CFStopResultsViewController *stopResultsController;
+@property (nonatomic, strong) NSMutableArray *serviceRouteBars;
 
 @property (nonatomic, strong) UINavigationBar *localNavigationBar;
 @property (nonatomic, strong) NSArray *rightBarButtonItems;
@@ -429,58 +430,95 @@
 
 - (void)showServiceRouteForService:(CFService *)service direction:(CFDirection)direction
 {
+    if (self.mapController.mapMode == CFMapModeServiceRoute && self.mapController.currentServiceName == service.name && self.mapController.currentDirection == direction) return;
+    
     [self.mapController displayServiceRoute:service.name direction:direction];
-    [self clearServiceRouteBar];
-    [self showServiceRouteBarWithService:service];
+    [self showServiceRouteBarWithService:service selectedDirection:direction];
 }
 
-- (void)showServiceRouteBarWithService:(CFService *)service
+- (void)showServiceRouteBarWithService:(CFService *)service selectedDirection:(CFDirection)direction
 {
-    CFServiceRouteBar *serviceBar = [[CFServiceRouteBar alloc] initWithFrame:CGRectMake(0, self.localNavigationBar.bounds.size.height, self.view.bounds.size.width, 44.0)];
-    serviceBar.service = service;
-    serviceBar.delegate = self;
-    [self.view insertSubview:serviceBar aboveSubview:self.searchController];
+    CFServiceRouteBar *serviceBar;
+    BOOL didFindABar = NO;
     
-    UINavigationBar *serviceBarBackground = [[UINavigationBar alloc] initWithFrame:serviceBar.bounds];
-    [serviceBar insertSubview:serviceBarBackground atIndex:0];
+    for (UIView *subview in self.view.subviews) {
+        if ([subview isKindOfClass:[CFServiceRouteBar class]]) {
+            CFServiceRouteBar *possibleBar = (CFServiceRouteBar *)subview;
+            if ([possibleBar.service isEqualToService:service]) {
+                didFindABar = YES;
+                serviceBar = possibleBar;
+            } else {
+                // this should change when more bars are supported at once
+                [self clearServiceRouteBarAnimated:YES];
+            }
+        }
+    }
     
-    UIButton *clearServiceRouteButton = [UIButton buttonWithType:UIButtonTypeInfoLight];
-    [clearServiceRouteButton addTarget:self action:@selector(clearServiceRoute) forControlEvents:UIControlEventTouchUpInside];
-    [serviceBar addSubview:clearServiceRouteButton];
+    if (!didFindABar) {
+        serviceBar = [[CFServiceRouteBar alloc] initWithFrame:CGRectMake(0, self.localNavigationBar.bounds.size.height, self.view.bounds.size.width, 44.0)];
+        serviceBar.service = service;
+        serviceBar.dismissible = YES;
+        serviceBar.delegate = self;
+        serviceBar.alpha = 0;
+        [self.view insertSubview:serviceBar aboveSubview:self.searchController];
+        
+        UINavigationBar *serviceBarBackground = [[UINavigationBar alloc] initWithFrame:serviceBar.bounds];
+        [serviceBar insertSubview:serviceBarBackground atIndex:0];
+        
+//        serviceBar.center = CGPointMake(serviceBar.center.x, serviceBar.center.y - serviceBar.bounds.size.height);
+        [UIView animateWithDuration:0.25 delay:0 usingSpringWithDamping:1 initialSpringVelocity:1 options:0 animations:^{
+            serviceBar.alpha = 1;
+//            serviceBar.center = CGPointMake(serviceBar.center.x, serviceBar.center.y + serviceBar.bounds.size.height);
+        } completion:nil];
+        
+        UIPanGestureRecognizer *dismissRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleHorizontalDismissPanGesture:)];
+        [serviceBar addGestureRecognizer:dismissRecognizer];
+        
+        self.topContentMargin += serviceBar.bounds.size.height;
+    }
     
-    UIPanGestureRecognizer *dismissRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleHorizontalDismissPanGesture:)];
-    [serviceBar addGestureRecognizer:dismissRecognizer];
-    
-    self.topContentMargin += serviceBar.bounds.size.height;
+    serviceBar.selectedDirection = direction;
 }
 
-- (void)serviceRouteBarSelectedButtonAtIndex:(NSUInteger)index service:(CFService *)service
+- (void)serviceRouteBar:(CFServiceRouteBar *)serviceRouteBar selectedButtonAtIndex:(NSUInteger)index service:(CFService *)service
 {
     [self showServiceRouteForService:service direction:(index ? CFDirectionInward : CFDirectionOutward)];
 }
 
-- (void)clearServiceRouteBar
+- (void)clearServiceRouteBarAnimated:(BOOL)animated
 {
     for (UIView *subview in self.view.subviews) {
         if ([subview isKindOfClass:[CFServiceRouteBar class]]) {
             self.topContentMargin -= subview.bounds.size.height;
-            [subview removeFromSuperview];
+            
+            if (animated) {
+                [UIView animateWithDuration:0.25 delay:0 usingSpringWithDamping:1 initialSpringVelocity:1 options:0 animations:^{
+                    subview.alpha = 0;
+                    subview.center = CGPointMake(subview.center.x, subview.center.y - subview.bounds.size.height);
+                } completion:^(BOOL finished) {
+                    [subview removeFromSuperview];
+                }];
+            } else {
+                [subview removeFromSuperview];
+            }
         }
     }
 }
 
-- (void)clearServiceRoute
+- (void)clearServiceRouteAnimated:(BOOL)animated
 {
-    [self clearServiceRouteBar];
+    [self clearServiceRouteBarAnimated:animated];
     [self.mapController displayStops];
+}
+
+- (void)serviceRouteBarDidDismiss:(CFServiceRouteBar *)serviceRouteBar
+{
+    [self clearServiceRouteAnimated:YES];
 }
 
 - (void)handleHorizontalDismissPanGesture:(UIPanGestureRecognizer *)recognizer
 {
-    CGFloat draggableDistance = self.view.bounds.size.width;
     CGFloat moveDiff = [recognizer translationInView:self.view].x;
-    
-    CGFloat dragFactor = moveDiff / draggableDistance;
     
     if (recognizer.state == UIGestureRecognizerStateBegan) {
         [self.view endEditing:YES];
@@ -504,7 +542,7 @@
             [UIView animateWithDuration:animationDuration delay:0 usingSpringWithDamping:1 initialSpringVelocity:velocityFactor options:0 animations:^{
                 recognizer.view.center = CGPointMake(recognizer.view.center.x + self.view.bounds.size.width, recognizer.view.center.y);
             } completion:^(BOOL finished) {
-                [self clearServiceRoute];
+                [self clearServiceRouteAnimated:NO];
             }];
         } else {
             [UIView animateWithDuration:0.45 delay:0 usingSpringWithDamping:0.6 initialSpringVelocity:velocityFactor options:0 animations:^{

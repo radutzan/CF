@@ -31,6 +31,8 @@
 
 @property (nonatomic, assign, readwrite) CFMapMode mapMode;
 @property (nonatomic, assign) BOOL routeRegionSet;
+@property (nonatomic, strong, readwrite) NSString *currentServiceName;
+@property (nonatomic, assign, readwrite) CFDirection currentDirection;
 
 @end
 
@@ -151,7 +153,7 @@ static MKMapRect santiagoBounds;
 - (void)setDefaultRegionAnimated:(BOOL)animated
 {
     CLLocationCoordinate2D startCoordinate = CLLocationCoordinate2DMake(-33.444117, -70.651055);
-    MKCoordinateRegion adjustedRegion = [self.mapView regionThatFits:MKCoordinateRegionMakeWithDistance(startCoordinate, 400, 400)];
+    MKCoordinateRegion adjustedRegion = [self.mapView regionThatFits:MKCoordinateRegionMakeWithDistance(startCoordinate, 350, 350)];
     [self.mapView setRegion:adjustedRegion animated:animated];
     
     self.defaultCenterCoordinate = startCoordinate;
@@ -208,6 +210,7 @@ static MKMapRect santiagoBounds;
         [self.mapView removeOverlays:self.mapView.overlays];
         [self clearStopAnnotations];
         self.routeRegionSet = NO;
+        self.currentServiceName = nil;
     }
     
     _mapMode = mapMode;
@@ -349,6 +352,9 @@ static MKMapRect santiagoBounds;
     self.mapMode = CFMapModeServiceRoute;
     if (!direction) direction = CFDirectionOutward;
     [self drawPolylineForService:serviceName direction:direction];
+    
+    self.currentServiceName = serviceName;
+    self.currentDirection = direction;
 }
 
 - (void)displayServiceRoute:(NSString *)serviceName directionString:(NSString *)directionString
@@ -361,18 +367,12 @@ static MKMapRect santiagoBounds;
 //            NSString *responseRegreso = [resultDictionary objectForKey:@"regreso"];
             NSString *localizedTo = NSLocalizedString(@"TO_DIRECTION", nil);
             NSString *comparableDirectionString = [[directionString stringByReplacingCharactersInRange:NSMakeRange(0, localizedTo.length + 1) withString:@""] uppercaseString];
-//            NSLog(@"%@", responseIda);
-//            NSLog(@"%@", responseRegreso);
-//            NSLog(@"%@", comparableDirectionString);
             
             if ([comparableDirectionString isEqualToString:responseIda]) {
                 finalDirection = CFDirectionOutward;//NSLog(@"CFDirectionOutward");
             } else {
                 finalDirection = CFDirectionInward;//NSLog(@"CFDirectionInward");
             }
-            
-//            self.directionSwitcher.selectedSegmentIndex = finalDirection;
-//            self.currentDirection = finalDirection;
             
             [self displayServiceRoute:serviceName direction:finalDirection];
         }
@@ -418,16 +418,14 @@ static MKMapRect santiagoBounds;
             [self.mapView addAnnotations:stops];
             
             if (i == result.count && !self.routeRegionSet) {
-                MKCoordinateRegion adjustedRegion;
-                
+                CFStop *middleAnnotation = [stops objectAtIndex:floorf(stops.count / 2)];
                 if (self.mapView.userLocation && MKMapRectContainsPoint(santiagoBounds, MKMapPointForCoordinate(self.mapView.userLocation.coordinate))) {
-                    adjustedRegion = [self.mapView regionThatFits:MKCoordinateRegionMakeWithDistance(self.mapView.userLocation.coordinate, 1400, 1400)];
+                    [self.mapView showAnnotations:@[middleAnnotation, self.mapView.userLocation] animated:YES];
                 } else {
-                    CFStop *middleAnnotation = [stops objectAtIndex:floorf(stops.count / 2)];
-                    adjustedRegion = [self.mapView regionThatFits:MKCoordinateRegionMakeWithDistance(middleAnnotation.coordinate, 1400, 1400)];
+                    MKCoordinateRegion adjustedRegion = [self.mapView regionThatFits:MKCoordinateRegionMakeWithDistance(middleAnnotation.coordinate, 1400, 1400)];
+                    [self.mapView setRegion:adjustedRegion animated:YES];
                 }
                 
-                [self.mapView setRegion:adjustedRegion];
                 self.routeRegionSet = YES;
             }
         });

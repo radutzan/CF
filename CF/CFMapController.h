@@ -16,6 +16,7 @@ typedef NS_ENUM(NSInteger, CFMapMode) {
 };
 
 #import "CFSapoClient.h"
+#import "CFService.h"
 #import "CustomPinAnnotationView.h"
 
 @protocol CFMapControllerDelegate <NSObject>
@@ -41,5 +42,7 @@ typedef NS_ENUM(NSInteger, CFMapMode) {
 @property (nonatomic, weak) id<CFMapControllerDelegate> delegate;
 @property (nonatomic, assign) CLLocationCoordinate2D defaultCenterCoordinate;
 @property (nonatomic, assign, readonly) CFMapMode mapMode;
+@property (nonatomic, strong, readonly) NSString *currentServiceName;
+@property (nonatomic, assign, readonly) CFDirection currentDirection;
 
 @end

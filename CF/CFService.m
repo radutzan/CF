@@ -35,4 +35,13 @@
     return self;
 }
 
+- (BOOL)isEqualToService:(CFService *)service
+{
+    if ([self.name isEqualToString:service.name] &&
+        [self.outwardDirectionName isEqualToString:service.outwardDirectionName] &&
+        [self.inwardDirectionName isEqualToString:service.inwardDirectionName]) return YES;
+    
+    return NO;
+}
+
 @end

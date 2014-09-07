@@ -9,12 +9,15 @@
 #import <UIKit/UIKit.h>
 #import "CFService.h"
 
+@class CFServiceRouteBar;
+
 @protocol CFServiceRouteBarDelegate <NSObject>
 
 /**
  indexes: 0 is outward, 1 is inward
  */
-- (void)serviceRouteBarSelectedButtonAtIndex:(NSUInteger)index service:(CFService *)service;
+- (void)serviceRouteBar:(CFServiceRouteBar *)serviceRouteBar selectedButtonAtIndex:(NSUInteger)index service:(CFService *)service;
+- (void)serviceRouteBarDidDismiss:(CFServiceRouteBar *)serviceRouteBar;
 
 @end
 
@@ -24,5 +27,7 @@
 @property (nonatomic, strong) NSString *outwardDirectionString;
 @property (nonatomic, strong) NSString *inwardDirectionString;
 @property (nonatomic, weak) id<CFServiceRouteBarDelegate> delegate;
+@property (nonatomic, assign) NSUInteger selectedDirection;
+@property (nonatomic, assign) BOOL dismissible;
 
 @end

@@ -36,7 +36,6 @@
 		7C2EECC4188345F500AE78C2 /* SMCalloutView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CFF7E801838288C006230CE /* SMCalloutView.m */; };
 		7C2EECC5188345F500AE78C2 /* CFStopTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C3B27C3183B194A00818A3B /* CFStopTableViewController.m */; };
 		7C2EECC7188345F500AE78C2 /* NSDictionary+NSNullUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C9A0F681852E9C60018ED1F /* NSDictionary+NSNullUtility.m */; };
-		7C2EECC8188345F500AE78C2 /* CFNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C7A15DD1854DF54002EE4C5 /* CFNavigationController.m */; };
 		7C2EECC9188345F500AE78C2 /* CFStoreViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C6CE7FF1877D04A00DDEF54 /* CFStoreViewController.m */; };
 		7C2EECCA188345F500AE78C2 /* UIDevice+hardware.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CFF7E9A18382B1B006230CE /* UIDevice+hardware.m */; };
 		7C2EECCB188345F500AE78C2 /* CFStopSignView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CFF7EBE1838700F006230CE /* CFStopSignView.m */; };
@@ -87,10 +86,8 @@
 		7C2EECFD188345F500AE78C2 /* icon-about@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CB64D7D18552648006422E0 /* icon-about@2x.png */; };
 		7C2EECFE188345F500AE78C2 /* about.css in Resources */ = {isa = PBXBuildFile; fileRef = 7C7A15E41854EF37002EE4C5 /* about.css */; };
 		7C2EECFF188345F500AE78C2 /* help.html in Resources */ = {isa = PBXBuildFile; fileRef = 7CB64D7918550695006422E0 /* help.html */; };
-		7C2EED00188345F500AE78C2 /* logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CFF7EA818383B65006230CE /* logo@2x.png */; };
 		7C2EED01188345F500AE78C2 /* button-favorites-selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CFF7EAC18384106006230CE /* button-favorites-selected@2x.png */; };
 		7C2EED02188345F500AE78C2 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7CFF7E5618381645006230CE /* Images.xcassets */; };
-		7C2EED03188345F500AE78C2 /* button-code@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CFF7EAB18384106006230CE /* button-code@2x.png */; };
 		7C2EED04188345F500AE78C2 /* dsym_upload.sh in Resources */ = {isa = PBXBuildFile; fileRef = 7C5DD33F18791F6900FE5CFB /* dsym_upload.sh */; };
 		7C2EED05188345F500AE78C2 /* button-go@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CFF7EBB18386BDC006230CE /* button-go@2x.png */; };
 		7C2EED06188345F500AE78C2 /* bus@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CFF7EC2183871F7006230CE /* bus@2x.png */; };
@@ -98,7 +95,6 @@
 		7C2EED08188345F500AE78C2 /* placeholder-favorites@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CAFA3361842A206005A06BC /* placeholder-favorites@2x.png */; };
 		7C2EED09188345F500AE78C2 /* button-history@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CFF7EAF18384106006230CE /* button-history@2x.png */; };
 		7C2EED0A188345F500AE78C2 /* button-bip@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CB64D7B18551C9C006422E0 /* button-bip@2x.png */; };
-		7C2EED0B188345F500AE78C2 /* button-code-selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CFF7EAA18384106006230CE /* button-code-selected@2x.png */; };
 		7C2EED0C188345F500AE78C2 /* pin-stop@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CFF7EA61838362E006230CE /* pin-stop@2x.png */; };
 		7C36D72719ABA6C600CBFDBA /* CFService.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C36D72619ABA6C600CBFDBA /* CFService.m */; };
 		7C36D72819ABB32600CBFDBA /* CFService.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C36D72619ABA6C600CBFDBA /* CFService.m */; };
@@ -126,7 +122,6 @@
 		7C7A15D61853EBF0002EE4C5 /* OLTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C7A15D51853EBF0002EE4C5 /* OLTextField.m */; };
 		7C7A15D818540966002EE4C5 /* pin-favorite@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7C7A15D718540966002EE4C5 /* pin-favorite@2x.png */; };
 		7C7A15DB18540E08002EE4C5 /* CFMoreContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C7A15DA18540E08002EE4C5 /* CFMoreContentViewController.m */; };
-		7C7A15DE1854DF54002EE4C5 /* CFNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C7A15DD1854DF54002EE4C5 /* CFNavigationController.m */; };
 		7C7A15E71854EF37002EE4C5 /* about.css in Resources */ = {isa = PBXBuildFile; fileRef = 7C7A15E41854EF37002EE4C5 /* about.css */; };
 		7C7A15E81854EF67002EE4C5 /* about.html in Resources */ = {isa = PBXBuildFile; fileRef = 7C7A15EA1854EF67002EE4C5 /* about.html */; };
 		7C7A55EC19B7C4F0002AA398 /* CFTransparentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C7A55EB19B7C4F0002AA398 /* CFTransparentView.m */; };
@@ -175,6 +170,8 @@
 		7CE0D9DA189DD2D800D9782E /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CE0D9D9189DD2D800D9782E /* Social.framework */; };
 		7CEADD6B194C1E9500428ADE /* CFSearchSuggestionsCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CEADD6A194C1E9500428ADE /* CFSearchSuggestionsCard.m */; };
 		7CEADD6C194C200A00428ADE /* CFSearchSuggestionsCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CEADD6A194C1E9500428ADE /* CFSearchSuggestionsCard.m */; };
+		7CF12E5719BD14B400772DC7 /* button-close@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CF12E5619BD14B300772DC7 /* button-close@2x.png */; };
+		7CF12E5819BD174700772DC7 /* button-close@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CF12E5619BD14B300772DC7 /* button-close@2x.png */; };
 		7CF7EE4F1852D790009B3F46 /* CFBipSpot.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CF7EE4E1852D790009B3F46 /* CFBipSpot.m */; };
 		7CFF7E4518381645006230CE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CFF7E4418381645006230CE /* Foundation.framework */; };
 		7CFF7E4718381645006230CE /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CFF7E4618381645006230CE /* CoreGraphics.framework */; };
@@ -198,9 +195,6 @@
 		7CFF7EA218382B4D006230CE /* CFSapoClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CFF7EA118382B4D006230CE /* CFSapoClient.m */; };
 		7CFF7EA518382D55006230CE /* CFStop.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CFF7EA318382D55006230CE /* CFStop.m */; };
 		7CFF7EA71838362E006230CE /* pin-stop@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CFF7EA61838362E006230CE /* pin-stop@2x.png */; };
-		7CFF7EA918383B65006230CE /* logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CFF7EA818383B65006230CE /* logo@2x.png */; };
-		7CFF7EB018384106006230CE /* button-code-selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CFF7EAA18384106006230CE /* button-code-selected@2x.png */; };
-		7CFF7EB118384106006230CE /* button-code@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CFF7EAB18384106006230CE /* button-code@2x.png */; };
 		7CFF7EB218384106006230CE /* button-favorites-selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CFF7EAC18384106006230CE /* button-favorites-selected@2x.png */; };
 		7CFF7EB318384106006230CE /* button-favorites@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CFF7EAD18384106006230CE /* button-favorites@2x.png */; };
 		7CFF7EB418384106006230CE /* button-history-selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CFF7EAE18384106006230CE /* button-history-selected@2x.png */; };
@@ -381,8 +375,6 @@
 		7C7A15D718540966002EE4C5 /* pin-favorite@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pin-favorite@2x.png"; sourceTree = "<group>"; };
 		7C7A15D918540E08002EE4C5 /* CFMoreContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFMoreContentViewController.h; sourceTree = "<group>"; };
 		7C7A15DA18540E08002EE4C5 /* CFMoreContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFMoreContentViewController.m; sourceTree = "<group>"; };
-		7C7A15DC1854DF54002EE4C5 /* CFNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFNavigationController.h; sourceTree = "<group>"; };
-		7C7A15DD1854DF54002EE4C5 /* CFNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFNavigationController.m; sourceTree = "<group>"; };
 		7C7A15E41854EF37002EE4C5 /* about.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = about.css; sourceTree = "<group>"; };
 		7C7A15E91854EF67002EE4C5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = en; path = en.lproj/about.html; sourceTree = "<group>"; };
 		7C7A15EB1854EF6A002EE4C5 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = es; path = es.lproj/about.html; sourceTree = "<group>"; };
@@ -435,6 +427,7 @@
 		7CE0D9D9189DD2D800D9782E /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		7CEADD69194C1E9500428ADE /* CFSearchSuggestionsCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFSearchSuggestionsCard.h; sourceTree = "<group>"; };
 		7CEADD6A194C1E9500428ADE /* CFSearchSuggestionsCard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFSearchSuggestionsCard.m; sourceTree = "<group>"; };
+		7CF12E5619BD14B300772DC7 /* button-close@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-close@2x.png"; sourceTree = "<group>"; };
 		7CF7EE4D1852D790009B3F46 /* CFBipSpot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFBipSpot.h; sourceTree = "<group>"; };
 		7CF7EE4E1852D790009B3F46 /* CFBipSpot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFBipSpot.m; sourceTree = "<group>"; };
 		7CFF7E4118381645006230CE /* Cuánto Falta.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Cuánto Falta.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -471,9 +464,6 @@
 		7CFF7EA318382D55006230CE /* CFStop.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFStop.m; sourceTree = "<group>"; };
 		7CFF7EA418382D55006230CE /* CFStop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFStop.h; sourceTree = "<group>"; };
 		7CFF7EA61838362E006230CE /* pin-stop@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pin-stop@2x.png"; sourceTree = "<group>"; };
-		7CFF7EA818383B65006230CE /* logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo@2x.png"; sourceTree = "<group>"; };
-		7CFF7EAA18384106006230CE /* button-code-selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-code-selected@2x.png"; sourceTree = "<group>"; };
-		7CFF7EAB18384106006230CE /* button-code@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-code@2x.png"; sourceTree = "<group>"; };
 		7CFF7EAC18384106006230CE /* button-favorites-selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-favorites-selected@2x.png"; sourceTree = "<group>"; };
 		7CFF7EAD18384106006230CE /* button-favorites@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-favorites@2x.png"; sourceTree = "<group>"; };
 		7CFF7EAE18384106006230CE /* button-history-selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-history-selected@2x.png"; sourceTree = "<group>"; };
@@ -823,8 +813,7 @@
 				7CFF7E5218381645006230CE /* CF-Prefix.pch */,
 				7CFF7EC2183871F7006230CE /* bus@2x.png */,
 				7CB64D7B18551C9C006422E0 /* button-bip@2x.png */,
-				7CFF7EAA18384106006230CE /* button-code-selected@2x.png */,
-				7CFF7EAB18384106006230CE /* button-code@2x.png */,
+				7CF12E5619BD14B300772DC7 /* button-close@2x.png */,
 				7CFF7EAC18384106006230CE /* button-favorites-selected@2x.png */,
 				7CFF7EAD18384106006230CE /* button-favorites@2x.png */,
 				7CFF7EBB18386BDC006230CE /* button-go@2x.png */,
@@ -839,7 +828,6 @@
 				7C062F211933074D00342E4A /* feature-service@2x.png */,
 				7CAFA33A1842C359005A06BC /* gripper@2x.png */,
 				7CB64D7D18552648006422E0 /* icon-about@2x.png */,
-				7CFF7EA818383B65006230CE /* logo@2x.png */,
 				7CFF7EC0183871E8006230CE /* metro@2x.png */,
 				7CAFA33C1842C360005A06BC /* pin-bip@2x.png */,
 				7CFF7EA61838362E006230CE /* pin-stop@2x.png */,
@@ -891,8 +879,6 @@
 		7CFF7E821838289D006230CE /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				7C7A15DC1854DF54002EE4C5 /* CFNavigationController.h */,
-				7C7A15DD1854DF54002EE4C5 /* CFNavigationController.m */,
 				7CFF7E7618381D6E006230CE /* CFMainViewController.h */,
 				7CFF7E7718381D6E006230CE /* CFMainViewController.m */,
 				7C66C55019A2809300DDA6DF /* CFDrawerController.h */,
@@ -1091,7 +1077,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = CF;
-				LastUpgradeCheck = 0500;
+				LastUpgradeCheck = 0600;
 				ORGANIZATIONNAME = Onda;
 				TargetAttributes = {
 					7C01EDAD1974938E00DE7EAB = {
@@ -1171,14 +1157,13 @@
 				7C2EECFA188345F500AE78C2 /* about.html in Resources */,
 				7C2EECFB188345F500AE78C2 /* pin-bip@2x.png in Resources */,
 				7C2EECFC188345F500AE78C2 /* placeholder-history@2x.png in Resources */,
+				7CF12E5819BD174700772DC7 /* button-close@2x.png in Resources */,
 				7C2EECFD188345F500AE78C2 /* icon-about@2x.png in Resources */,
 				7C2EECFE188345F500AE78C2 /* about.css in Resources */,
 				7C2EECFF188345F500AE78C2 /* help.html in Resources */,
 				7C062F251933074D00342E4A /* feature-pro@2x.png in Resources */,
-				7C2EED00188345F500AE78C2 /* logo@2x.png in Resources */,
 				7C2EED01188345F500AE78C2 /* button-favorites-selected@2x.png in Resources */,
 				7C2EED02188345F500AE78C2 /* Images.xcassets in Resources */,
-				7C2EED03188345F500AE78C2 /* button-code@2x.png in Resources */,
 				7C2EED04188345F500AE78C2 /* dsym_upload.sh in Resources */,
 				7C9BD17819272726003E9F8E /* feature-stops@2x.png in Resources */,
 				7C2EED05188345F500AE78C2 /* button-go@2x.png in Resources */,
@@ -1189,7 +1174,6 @@
 				7C2EED09188345F500AE78C2 /* button-history@2x.png in Resources */,
 				7C2EED0A188345F500AE78C2 /* button-bip@2x.png in Resources */,
 				7C062F271933074D00342E4A /* feature-service@2x.png in Resources */,
-				7C2EED0B188345F500AE78C2 /* button-code-selected@2x.png in Resources */,
 				7C2EED0C188345F500AE78C2 /* pin-stop@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1225,14 +1209,13 @@
 				7C7A15E81854EF67002EE4C5 /* about.html in Resources */,
 				7CAFA33D1842C360005A06BC /* pin-bip@2x.png in Resources */,
 				7CAFA3391842A206005A06BC /* placeholder-history@2x.png in Resources */,
+				7CF12E5719BD14B400772DC7 /* button-close@2x.png in Resources */,
 				7CB64D7E18552648006422E0 /* icon-about@2x.png in Resources */,
 				7C7A15E71854EF37002EE4C5 /* about.css in Resources */,
 				7CB64D7718550695006422E0 /* help.html in Resources */,
 				7C062F241933074D00342E4A /* feature-pro@2x.png in Resources */,
-				7CFF7EA918383B65006230CE /* logo@2x.png in Resources */,
 				7CFF7EB218384106006230CE /* button-favorites-selected@2x.png in Resources */,
 				7CFF7E5718381645006230CE /* Images.xcassets in Resources */,
-				7CFF7EB118384106006230CE /* button-code@2x.png in Resources */,
 				7C5DD34118791F6900FE5CFB /* dsym_upload.sh in Resources */,
 				7C9BD17719272726003E9F8E /* feature-stops@2x.png in Resources */,
 				7CFF7EBC18386BDC006230CE /* button-go@2x.png in Resources */,
@@ -1243,7 +1226,6 @@
 				7CFF7EB518384106006230CE /* button-history@2x.png in Resources */,
 				7CB64D7C18551C9C006422E0 /* button-bip@2x.png in Resources */,
 				7C062F261933074D00342E4A /* feature-service@2x.png in Resources */,
-				7CFF7EB018384106006230CE /* button-code-selected@2x.png in Resources */,
 				7CFF7EA71838362E006230CE /* pin-stop@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1344,7 +1326,6 @@
 				7C2EECC4188345F500AE78C2 /* SMCalloutView.m in Sources */,
 				7C2EECC5188345F500AE78C2 /* CFStopTableViewController.m in Sources */,
 				7C2EECC7188345F500AE78C2 /* NSDictionary+NSNullUtility.m in Sources */,
-				7C2EECC8188345F500AE78C2 /* CFNavigationController.m in Sources */,
 				7C2EECC9188345F500AE78C2 /* CFStoreViewController.m in Sources */,
 				7C2EECCA188345F500AE78C2 /* UIDevice+hardware.m in Sources */,
 				7C2EECCB188345F500AE78C2 /* CFStopSignView.m in Sources */,
@@ -1417,7 +1398,6 @@
 				7C3B27C4183B194A00818A3B /* CFStopTableViewController.m in Sources */,
 				7C9A0F691852E9C60018ED1F /* NSDictionary+NSNullUtility.m in Sources */,
 				7CCA7469193248C200ADB397 /* CFForwardingTouchScrollView.m in Sources */,
-				7C7A15DE1854DF54002EE4C5 /* CFNavigationController.m in Sources */,
 				7C6CE8001877D04A00DDEF54 /* CFStoreViewController.m in Sources */,
 				7CC7EC421929B5F6002160E5 /* CFServiceRouteViewController.m in Sources */,
 				7CFF7E9E18382B1B006230CE /* UIDevice+hardware.m in Sources */,
@@ -1600,7 +1580,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F62BD801ED374EB1AD8B82CE /* Pods.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = "Cuánta Beta.entitlements";
@@ -1632,7 +1611,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F62BD801ED374EB1AD8B82CE /* Pods.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = "Cuánta Beta.entitlements";
@@ -1751,7 +1729,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -1790,7 +1767,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -1823,7 +1799,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F62BD801ED374EB1AD8B82CE /* Pods.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -1846,7 +1821,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F62BD801ED374EB1AD8B82CE /* Pods.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -1868,7 +1842,6 @@
 		7CFF7E7118381645006230CE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/CF.app/CF";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
@@ -1891,7 +1864,6 @@
 		7CFF7E7218381645006230CE /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/CF.app/CF";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",

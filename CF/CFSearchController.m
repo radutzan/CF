@@ -351,8 +351,9 @@
 
 #pragma mark - Delegates, etc
 
-- (void)serviceRouteBarSelectedButtonAtIndex:(NSUInteger)index service:(CFService *)service
+- (void)serviceRouteBar:(CFServiceRouteBar *)serviceRouteBar selectedButtonAtIndex:(NSUInteger)index service:(CFService *)service
 {
+    serviceRouteBar.selectedDirection = 3;
     CFDirection direction = (index == 0) ? CFDirectionOutward : CFDirectionInward;
     [self.delegate searchControllerDidSelectService:service direction:direction];
     [self.searchField clear];

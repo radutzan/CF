@@ -13,6 +13,7 @@
 @property (nonatomic, strong) UILabel *serviceLabel;
 @property (nonatomic, strong) UIButton *outwardButton;
 @property (nonatomic, strong) UIButton *inwardButton;
+@property (nonatomic, strong) UIButton *dismissButton;
 
 @end
 
@@ -23,7 +24,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         _serviceLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0, 0, 80.0, frame.size.height)];
-        _serviceLabel.font = [UIFont fontWithName:DEFAULT_FONT_NAME_MEDIUM size:22.0];
+        _serviceLabel.font = [UIFont fontWithName:@"AvenirNextCondensed-Medium" size:22.0];
         _serviceLabel.textColor = [UIColor colorWithWhite:0 alpha:.8];
         [self addSubview:_serviceLabel];
         
@@ -47,6 +48,14 @@
         [_inwardButton addTarget:self action:@selector(buttonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:_inwardButton];
         
+        _dismissButton = [UIButton buttonWithType:UIButtonTypeSystem];
+        _dismissButton.frame = CGRectMake(0, 0, 36.0, self.bounds.size.height);
+        _dismissButton.center = CGPointMake(0, _serviceLabel.center.y);
+        _dismissButton.alpha = 0;
+        [_dismissButton setImage:[UIImage imageNamed:@"button-close"] forState:UIControlStateNormal];
+        [_dismissButton addTarget:self action:@selector(dismiss) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:_dismissButton];
+        
         CALayer *divider1 = [CALayer layer];
         divider1.frame = CGRectMake(_outwardButton.frame.origin.x, 0, 0.5, frame.size.height);
         divider1.backgroundColor = [UIColor blackColor].CGColor;
@@ -65,7 +74,7 @@
 - (void)setService:(CFService *)service
 {
     _service = service;
-    self.serviceLabel.text = [service.name uppercaseString];
+    self.serviceLabel.text = service.name;
     self.outwardDirectionString = service.outwardDirectionName;
     self.inwardDirectionString = service.inwardDirectionName;
 }
@@ -83,7 +92,59 @@
 - (void)buttonTapped:(UIButton *)button
 {
     NSUInteger index = ([button isEqual:self.outwardButton]) ? 0 : 1;
-    [self.delegate serviceRouteBarSelectedButtonAtIndex:index service:self.service];
+    [self.delegate serviceRouteBar:self selectedButtonAtIndex:index service:self.service];
+}
+
+- (void)dismiss
+{
+    [self.delegate serviceRouteBarDidDismiss:self];
+}
+
+- (void)setSelectedDirection:(NSUInteger)selectedDirection
+{
+    _selectedDirection = selectedDirection;
+    
+    switch (selectedDirection) {
+        case 0:
+            self.outwardButton.selected = YES;
+            self.inwardButton.selected = NO;
+            break;
+            
+        case 1:
+            self.outwardButton.selected = NO;
+            self.inwardButton.selected = YES;
+            break;
+            
+        default:
+            self.outwardButton.selected = NO;
+            self.inwardButton.selected = NO;
+            break;
+    }
+}
+
+- (void)setDismissible:(BOOL)dismissible
+{
+    if (_dismissible == dismissible) return;
+    _dismissible = dismissible;
+    
+    CGPoint nameTargetCenter;
+    CGPoint buttonTargetCenter;
+    CGFloat buttonOffset = self.dismissButton.bounds.size.width / 2;
+    CGFloat extraPadding = 6.0;
+    
+    if (dismissible) {
+        nameTargetCenter = CGPointMake(self.serviceLabel.center.x + buttonOffset + extraPadding, self.serviceLabel.center.y);
+        buttonTargetCenter = CGPointMake(buttonOffset, self.dismissButton.center.y);
+    } else {
+        nameTargetCenter = CGPointMake(self.serviceLabel.center.x - buttonOffset - extraPadding, self.serviceLabel.center.y);
+        buttonTargetCenter = CGPointMake(0.0, self.dismissButton.center.y);
+    }
+    
+    [UIView animateWithDuration:0.25 delay:0 usingSpringWithDamping:1 initialSpringVelocity:0 options:0 animations:^{
+        self.serviceLabel.center = nameTargetCenter;
+        self.dismissButton.center = buttonTargetCenter;
+        self.dismissButton.alpha = dismissible;
+    } completion:nil];
 }
 
 @end

@@ -192,7 +192,7 @@
         self.stopNumberLabel.frame = CGRectMake(self.stopNumberLabel.frame.origin.x, self.stopNumberLabel.frame.origin.y, self.stopNumberLabel.frame.size.width, self.bounds.size.height + 2.0);
         self.stopNumberLabel.hidden = NO;
         
-        newLabelFrame.origin.x += self.stopNumberLabel.bounds.size.width + HORIZONTAL_MARGIN - 5.0;
+        newLabelFrame.origin.x += self.stopNumberLabel.bounds.size.width + HORIZONTAL_MARGIN - 6.0;
         newLabelFrame.size.width -= newLabelFrame.origin.x;
     }
     
