@@ -384,15 +384,15 @@
     [mixpanel track:@"Stop Requested" properties:@{@"Code": stopCode, @"From": @"History or Favorites"}];
 }
 
-- (void)mapControllerDidSelectStop:(NSString *)stopCode
+- (void)mapControllerDidSelectStop:(CFStop *)stop
 {
     CGRect originRect = [self.view convertRect:self.mapController.stopCalloutView.contentView.frame fromView:self.mapController.stopCalloutView];
-    self.stopResultsController.stopCode = stopCode;
+    self.stopResultsController.stop = stop;
     [self.stopResultsController presentFromRect:originRect onViewController:self];
     self.drawerController.drawerOpen = NO;
     
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
-    [mixpanel track:@"Stop Requested" properties:@{@"Code": stopCode, @"From": @"Map"}];
+    [mixpanel track:@"Stop Requested" properties:@{@"Code": stop.code, @"From": @"Map"}];
 }
 
 - (void)stopResultsViewControllerDidUpdateUserData

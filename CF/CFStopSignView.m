@@ -203,7 +203,7 @@
         
         // tiene número
         if (stop.number > 0) {
-            self.metroPictogram.frame = CGRectMake(self.stopNumberLabel.bounds.size.width + HORIZONTAL_MARGIN - 3.0, self.metroPictogram.frame.origin.y, self.metroPictogram.bounds.size.width, self.metroPictogram.bounds.size.height);
+            self.metroPictogram.frame = CGRectMake(self.stopNumberLabel.bounds.size.width + HORIZONTAL_MARGIN - 6.0, self.metroPictogram.frame.origin.y, self.metroPictogram.bounds.size.width, self.metroPictogram.bounds.size.height);
         }
         
         self.metroPictogram.hidden = NO;

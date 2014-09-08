@@ -16,12 +16,13 @@ typedef NS_ENUM(NSInteger, CFMapMode) {
 };
 
 #import "CFSapoClient.h"
+#import "CFStop.h"
 #import "CFService.h"
 #import "CustomPinAnnotationView.h"
 
 @protocol CFMapControllerDelegate <NSObject>
 
-- (void)mapControllerDidSelectStop:(NSString *)stopCode;
+- (void)mapControllerDidSelectStop:(CFStop *)stop;
 
 @optional
 

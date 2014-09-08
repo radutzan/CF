@@ -65,6 +65,7 @@ CALayer *_leftGripper;
     self.finalData = [NSMutableArray new];
     self.refreshing = YES;
     self.removedAds = ([OLCashier hasProduct:@"CF01"] || [OLCashier hasProduct:@"CF02"]);
+    self.displayMode = CFStopResultsDisplayModeNone;
     
     self.view = [[CFTransparentView alloc] initWithFrame:[UIApplication sharedApplication].keyWindow.bounds];
     self.view.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
@@ -92,6 +93,20 @@ CALayer *_leftGripper;
     self.titleView.barStyle = UIBarStyleBlack;
     [self.stopResultsView addSubview:self.titleView];
     
+    self.stopInfoView = [[CFStopSignView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.titleView.bounds.size.width - 33.0, 52.0)];
+    self.stopInfoView.delegate = self;
+    self.stopInfoView.stopCodeLabel.hidden = YES;
+    self.stopInfoView.favoriteContentView.userInteractionEnabled = YES;
+    [self.titleView addSubview:self.stopInfoView];
+    
+    self.favoriteButton = [OLShapeTintedButton buttonWithType:UIButtonTypeCustom];
+    self.favoriteButton.frame = CGRectMake(self.titleView.bounds.size.width - 38.0, 5.0, 42.0, 42.0);
+    self.favoriteButton.enabled = NO;
+    [self.favoriteButton setImage:[UIImage imageNamed:@"button-favorites"] forState:UIControlStateNormal];
+    [self.favoriteButton setImage:[UIImage imageNamed:@"button-favorites-selected"] forState:UIControlStateSelected];
+    [self.favoriteButton addTarget:self action:@selector(favButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+    [self.titleView addSubview:self.favoriteButton];
+    
     self.borderLayer = [CALayer layer];
     self.borderLayer.frame = CGRectInset(self.stopResultsView.bounds, -0.5, -0.5);
     self.borderLayer.borderWidth = 0.5;
@@ -117,21 +132,7 @@ CALayer *_leftGripper;
 {
     [super viewDidLoad];
     
-    self.displayMode = CFStopResultsDisplayModeNone;
-    
-    self.stopInfoView = [[CFStopSignView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.titleView.bounds.size.width - 33.0, 52.0)];
-    self.stopInfoView.delegate = self;
-    self.stopInfoView.stopCodeLabel.hidden = YES;
-    self.stopInfoView.favoriteContentView.userInteractionEnabled = YES;
-    [self.titleView addSubview:self.stopInfoView];
-    
-    self.favoriteButton = [OLShapeTintedButton buttonWithType:UIButtonTypeCustom];
-    self.favoriteButton.frame = CGRectMake(self.titleView.bounds.size.width - 38.0, 5.0, 42.0, 42.0);
-    self.favoriteButton.enabled = NO;
-    [self.favoriteButton setImage:[UIImage imageNamed:@"button-favorites"] forState:UIControlStateNormal];
-    [self.favoriteButton setImage:[UIImage imageNamed:@"button-favorites-selected"] forState:UIControlStateSelected];
-    [self.favoriteButton addTarget:self action:@selector(favButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-    [self.titleView addSubview:self.favoriteButton];
+    if (self.stop) self.stopInfoView.stop = self.stop;
     
     self.refreshControl = [UIRefreshControl new];
     self.refreshControl.tintColor = [UIColor whiteColor];
@@ -192,20 +193,11 @@ CALayer *_leftGripper;
     [self.titleView.layer addSublayer:_leftGripper];
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    
-    if (self.refreshing) {
-//        [self.refreshControl beginRefreshing];
-    }
-}
-
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
     
-    if (self.stop) [self performStopRequestQuietly:YES];
+    if (self.stop && !self.refreshing) [self performStopRequestQuietly:YES];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -576,7 +568,7 @@ CALayer *_leftGripper;
     [self.tableView reloadData];
     
     if (stop) {
-        self.favoriteButton.enabled = YES;
+        if (self.displayMode == CFStopResultsDisplayModePresented) self.favoriteButton.enabled = YES;
         self.favoriteButton.selected = stop.isFavorite;
         
         if (!self.removedAds) {
@@ -592,7 +584,6 @@ CALayer *_leftGripper;
         
         [self updateHistory];
         [self performStopRequestQuietly:NO];
-//        [self.refreshControl beginRefreshing];
     } else {
         self.favoriteButton.enabled = NO;
         self.favoriteButton.selected = NO;
@@ -602,7 +593,7 @@ CALayer *_leftGripper;
 - (void)performStopRequestQuietly:(BOOL)quietly
 {
     NSLog(@"performStopRequestQuietly:");
-    if (!self.stop) return;
+    if (!self.stop || self.refreshing) return;
     self.refreshing = YES;
     
     [self resetTimer];
@@ -617,7 +608,9 @@ CALayer *_leftGripper;
                                                [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
                                                
                                                if (result) {
-                                                   NSArray *buses = result[@"estimation"][0];
+                                                   NSArray *estimation = result[@"estimation"];
+                                                   NSArray *buses = estimation[0];
+                                                   NSArray *outOfSchedule = estimation[2];
                                                    
                                                    for (NSArray *busData in buses) {
                                                        NSDictionary *dict = [NSDictionary dictionaryWithObjects:busData forKeys:[NSArray arrayWithObjects:@"recorrido", @"tiempo", @"distancia", nil]];

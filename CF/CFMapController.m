@@ -185,12 +185,6 @@ static MKMapRect santiagoBounds;
     }
 }
 
-- (void)stopCalloutTapped
-{
-    [self.delegate mapControllerDidSelectStop:self.selectedStop.code];
-//    [self.mapView deselectAnnotation:self.selectedStop animated:NO];
-}
-
 #pragma mark - Map Mode Switching
 
 - (void)setMapMode:(CFMapMode)mapMode
@@ -584,7 +578,7 @@ static MKMapRect santiagoBounds;
 
 - (void)calloutViewClicked:(SMCalloutView *)calloutView
 {
-    [self stopCalloutTapped];
+    [self.delegate mapControllerDidSelectStop:self.selectedStop];
 }
 
 - (MKOverlayRenderer *)mapView:(MKMapView *)mapView rendererForOverlay:(id<MKOverlay>)overlay
