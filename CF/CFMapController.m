@@ -6,6 +6,7 @@
 //  Copyright (c) 2013 Onda. All rights reserved.
 //
 
+#import "sys/utsname.h"
 #import "CFMapController.h"
 #import "NSDictionary+NSNullUtility.h"
 #import "CFSapoClient.h"
@@ -19,14 +20,15 @@
 
 @interface CFMapController () <CLLocationManagerDelegate, SMCalloutViewDelegate>
 
-@property (nonatomic, strong) OLGhostAlertView *zoomWarning;
 @property (nonatomic, strong) OLGhostAlertView *outOfSantiagoWarning;
+@property (nonatomic, strong) UILabel *zoomWarning;
 
 @property (nonatomic, strong) NSMutableSet *stops;
 @property (nonatomic, strong) NSMutableSet *bipSpots;
 @property (assign) CFStop *selectedStop;
 @property (nonatomic) BOOL showZoomWarning;
 @property (nonatomic) BOOL showOutOfSantiagoWarning;
+@property (nonatomic) BOOL phoneIsCrap;
 @property (nonatomic, strong) CLLocationManager *locationManager;
 
 @property (nonatomic, assign, readwrite) CFMapMode mapMode;
@@ -75,14 +77,22 @@ static MKMapRect santiagoBounds;
         self.stopCalloutView.constrainedInsets = UIEdgeInsetsMake(64.0, 0, 60.0, 0);
         self.stopCalloutView.permittedArrowDirection = SMCalloutArrowDirectionDown;
         
-        self.zoomWarning = [[OLGhostAlertView alloc] initWithTitle:NSLocalizedString(@"ZOOM_LEVEL_WARNING_TITLE", nil) message:NSLocalizedString(@"ZOOM_LEVEL_WARNING_MESSAGE", nil) timeout:200.0 dismissible:YES];
-        self.zoomWarning.style = OLGhostAlertViewStyleLight;
-        self.zoomWarning.position = OLGhostAlertViewPositionCenter;
-        
         self.outOfSantiagoWarning = [[OLGhostAlertView alloc] initWithTitle:NSLocalizedString(@"OUT_OF_SANTIAGO_WARNING_TITLE", nil) message:NSLocalizedString(@"OUT_OF_SANTIAGO_WARNING_MESSAGE", nil) timeout:200.0 dismissible:NO];
         self.outOfSantiagoWarning.style = OLGhostAlertViewStyleLight;
         self.outOfSantiagoWarning.position = OLGhostAlertViewPositionCenter;
         self.outOfSantiagoWarning.userInteractionEnabled = NO;
+        
+        self.zoomWarning = [[UILabel alloc] initWithFrame:CGRectMake(10.0, frame.size.height - self.contentInset.bottom - 10.0 - 36.0, self.bounds.size.width - 20.0, 36.0)];
+        self.zoomWarning.backgroundColor = [UIColor colorWithWhite:0 alpha:.75];
+        self.zoomWarning.userInteractionEnabled = NO;
+        self.zoomWarning.alpha = 0;
+        self.zoomWarning.font = [UIFont fontWithName:@"AvenirNextCondensed-Medium" size:17.0];
+        self.zoomWarning.text = @"Acércate para ver paradas en el mapa";
+        self.zoomWarning.textColor = [UIColor whiteColor];
+        self.zoomWarning.textAlignment = NSTextAlignmentCenter;
+        self.zoomWarning.layer.cornerRadius = 2.5;
+        self.zoomWarning.layer.masksToBounds = YES;
+        [self addSubview:self.zoomWarning];
         
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
@@ -93,6 +103,11 @@ static MKMapRect santiagoBounds;
         });
     }
     return self;
+}
+
+- (void)layoutSubviews
+{
+    self.zoomWarning.frame = CGRectMake(10.0, self.bounds.size.height - self.contentInset.bottom - 10.0 - 36.0, self.bounds.size.width - 20.0, 36.0);
 }
 
 #pragma mark - Helpers
@@ -165,11 +180,21 @@ static MKMapRect santiagoBounds;
     
     _showZoomWarning = showZoomWarning;
     
-    if (showZoomWarning && !self.showOutOfSantiagoWarning) {
-        [self.zoomWarning showInView:self];
-    } else {
-        [self.zoomWarning hide];
-    }
+    BOOL shouldShow = (showZoomWarning);
+    
+    CGFloat offset = TAB_BAR_HEIGHT + 10.0;
+    if (shouldShow) offset = -offset;
+    if (shouldShow) [self setNeedsLayout];
+    
+    self.zoomWarning.alpha = 1 - shouldShow;
+    self.zoomWarning.center = CGPointMake(self.zoomWarning.center.x, self.zoomWarning.center.y - offset * shouldShow);
+    
+    [UIView animateWithDuration:0.45 delay:0 usingSpringWithDamping:0.5 initialSpringVelocity:shouldShow options:0 animations:^{
+        self.zoomWarning.alpha = shouldShow;
+        self.zoomWarning.center = CGPointMake(self.zoomWarning.center.x, self.zoomWarning.center.y + offset);
+    } completion:^(BOOL finished) {
+        self.zoomWarning.center = CGPointMake(self.zoomWarning.center.x, self.zoomWarning.center.y - offset * !shouldShow);
+    }];
 }
 
 - (void)setShowOutOfSantiagoWarning:(BOOL)showOutOfSantiagoWarning
@@ -180,9 +205,21 @@ static MKMapRect santiagoBounds;
     
     if (showOutOfSantiagoWarning) {
         [self.outOfSantiagoWarning showInView:self];
+        self.outOfSantiagoWarning.center = CGPointMake(self.outOfSantiagoWarning.center.x, self.outOfSantiagoWarning.center.y - TAB_BAR_HEIGHT - 10.0);
     } else {
         [self.outOfSantiagoWarning hide];
     }
+}
+
+- (BOOL)phoneIsCrap
+{
+    struct utsname systemInfo;
+    uname(&systemInfo);
+    
+    NSString *machineName = [NSString stringWithCString:systemInfo.machine encoding:NSUTF8StringEncoding];
+    if ([machineName isEqualToString:@"iPhone3,1"]) return YES;
+    
+    return NO;
 }
 
 #pragma mark - Map Mode Switching
@@ -225,7 +262,7 @@ static MKMapRect santiagoBounds;
     radio = MIN(1750, radio);
     radio = radio + 50;
     
-    if (radio > 1750) {
+    if ((self.phoneIsCrap && radio > 420) || (!self.phoneIsCrap && radio > 1750)) {
         [self clearStopAnnotations];
         self.showZoomWarning = YES;
         return;

@@ -59,6 +59,8 @@
         self.drawer.frame = drawerFrame;
     } else {
         self.drawer = [[UINavigationBar alloc] initWithFrame:drawerFrame];
+        UINavigationBar *castedDrawer = (UINavigationBar *)self.drawer;
+        castedDrawer.translucent = NO;
     }
     
     self.drawer.layer.anchorPoint = CGPointMake(0.5, 1.0);

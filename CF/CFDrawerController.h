@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#define DRAWER_ORIGIN_Y 160.0
 
 @protocol CFDrawerControllerDelegate <NSObject>
 

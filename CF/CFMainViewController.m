@@ -148,15 +148,15 @@
         [self importUserData];
     }
     
-    BOOL hasLaunched192 = [[NSUserDefaults standardUserDefaults] boolForKey:@"OLHasLaunched192"];
-    
-    if (!hasLaunched192) {
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"OLHasLaunched192"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-        
-        CFWhatsNewViewController *whatsNew = [CFWhatsNewViewController new];
-        [self presentViewController:whatsNew animated:YES completion:nil];
-    }
+//    BOOL hasLaunched192 = [[NSUserDefaults standardUserDefaults] boolForKey:@"OLHasLaunched192"];
+//    
+//    if (!hasLaunched192) {
+//        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"OLHasLaunched192"];
+//        [[NSUserDefaults standardUserDefaults] synchronize];
+//        
+//        CFWhatsNewViewController *whatsNew = [CFWhatsNewViewController new];
+//        [self presentViewController:whatsNew animated:YES completion:nil];
+//    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -328,6 +328,7 @@
     _topContentMargin = topContentMargin;
     
     self.searchController.contentInset = UIEdgeInsetsMake(topContentMargin, self.searchController.contentInset.left, self.searchController.contentInset.bottom, self.searchController.contentInset.right);
+    self.mapController.contentInset = UIEdgeInsetsMake(topContentMargin, self.mapController.contentInset.left, self.mapController.contentInset.bottom, self.mapController.contentInset.right);
 }
 
 - (void)setBottomContentMargin:(CGFloat)bottomContentMargin
@@ -335,6 +336,7 @@
     _bottomContentMargin = bottomContentMargin;
     
     self.searchController.contentInset = UIEdgeInsetsMake(self.searchController.contentInset.top, self.searchController.contentInset.left, bottomContentMargin, self.searchController.contentInset.right);
+    self.mapController.contentInset = UIEdgeInsetsMake(self.mapController.contentInset.top, self.mapController.contentInset.left, bottomContentMargin, self.mapController.contentInset.right);
 }
 
 - (void)stopResultsViewWasPromotedFromContainment

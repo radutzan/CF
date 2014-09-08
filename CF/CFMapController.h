@@ -42,6 +42,7 @@ typedef NS_ENUM(NSInteger, CFMapMode) {
 @property (nonatomic, strong) MKMapView *mapView;
 @property (nonatomic, weak) id<CFMapControllerDelegate> delegate;
 @property (nonatomic, assign) CLLocationCoordinate2D defaultCenterCoordinate;
+@property (nonatomic) UIEdgeInsets contentInset;
 @property (nonatomic, assign, readonly) CFMapMode mapMode;
 @property (nonatomic, strong, readonly) NSString *currentServiceName;
 @property (nonatomic, assign, readonly) CFDirection currentDirection;
