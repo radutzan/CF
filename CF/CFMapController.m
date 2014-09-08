@@ -87,7 +87,7 @@ static MKMapRect santiagoBounds;
         self.zoomWarning.userInteractionEnabled = NO;
         self.zoomWarning.alpha = 0;
         self.zoomWarning.font = [UIFont fontWithName:@"AvenirNextCondensed-Medium" size:17.0];
-        self.zoomWarning.text = @"Acércate para ver paradas en el mapa";
+        self.zoomWarning.text = NSLocalizedString(@"ZOOM_LEVEL_WARNING_MESSAGE", nil);
         self.zoomWarning.textColor = [UIColor whiteColor];
         self.zoomWarning.textAlignment = NSTextAlignmentCenter;
         self.zoomWarning.layer.cornerRadius = 2.5;

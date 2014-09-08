@@ -13,18 +13,6 @@
 "ERROR_MESSAGE_TRY_AGAIN" = "Please try again.";
 "ERROR_MESSAGE_TRY_AGAIN_OR_REPORT" = "Please try again, and if it keeps failing, please report it to us via Twitter.";
 
-// map ad
-"ENABLE_MAP_WITH_ADS" = "Enable it for Free, with ads";
-"THE_MAP" = "The Map";
-"SLIDE_TO_LEARN_MORE_MAP" = "‹ slide to learn more";
-"MAP_FEATURE_STOPS" = "Search service routes and find every bus stop in Santiago.";
-"MAP_FEATURE_BIP" = "See every Bip! spot and jump quickly to your nearest one.";
-"MAP_FEATURES_END" = "It makes life a lot easier.";
-"ENABLE_MAP" = "Enable Map";
-"ENABLE_MAP_ALERT_MESSAGE" = "You can enable the Map for free, with an ad across the bottom.\n\nCuánto Falta Pro enables the Map and removes all ads forever — $1.99.";
-"ENABLE_MAP_ALERT_BUTTON_FREE" = "Enable with Ads — Free";
-"ENABLE_MAP_ALERT_BUTTON_PAID" = "Get Pro — $1.99";
-
 // stop stuff
 "AND_BUS_STOP" = "and";
 "SERVICE" = "service";
@@ -33,6 +21,7 @@
 "REFRESHING" = "updating…";
 "DISTANCE" = "distance";
 "NO_INFO" = "No data";
+"OUT_OF_SCHEDULE" = "Out of schedule";
 "TO_DIRECTION" = "to";
 "TO_MINS" = "to";
 "ENTER_STOP_CODE" = "Enter the\nStop Code";
@@ -40,7 +29,7 @@
 "INVALID_STOP_CODE_TITLE" = "Invalid Stop Code";
 "INVALID_STOP_CODE_MESSAGE" = "Please make sure you entered it correctly. It needs to include the P, a letter and a number with up to 4 digits, without spaces.";
 "NO_INFO_TITLE" = "There's no data about this service";
-"NO_INFO_MESSAGE" = "It may be out of its operation hours, or the operator may be failing to provide the information.";
+"NO_INFO_MESSAGE" = "There could be a problem with the origin data server, or the operator may be failing to provide the information.";
 "NO_INFO_BUTTON_COMPLAIN" = "Report";
 "NO_INFO_COMPLAINT_TWEET" = "@transantiago No hay información para el servicio %@ en el paradero %@. ¿Qué sucede?";
 
@@ -54,7 +43,7 @@
 "OUT_OF_SANTIAGO_WARNING_TITLE" = "You're not in Santiago";
 "OUT_OF_SANTIAGO_WARNING_MESSAGE" = "Cuánto Falta only works in Santiago. Navigate to Santiago on the map to see stuff.";
 "ZOOM_LEVEL_WARNING_TITLE" = "You're too far away";
-"ZOOM_LEVEL_WARNING_MESSAGE" = "Zoom in to see stops on the map.";
+"ZOOM_LEVEL_WARNING_MESSAGE" = "Zoom in to see stops on the map";
 "ROUTES_SEARCHFIELD_PLACEHOLDER" = "Search for places or enter an address";
 "SEARCH_ERROR_NOTFOUND_TITLE" = "Place not found";
 "SEARCH_ERROR_NOTFOUND_MESSAGE" = "Be more specific, or look for the place directly on the map.";

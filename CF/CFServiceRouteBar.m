@@ -11,6 +11,7 @@
 @interface CFServiceRouteBar ()
 
 @property (nonatomic, strong) UILabel *serviceLabel;
+@property (nonatomic, strong) UITapGestureRecognizer *serviceTapRecognizer;
 @property (nonatomic, strong) UIButton *outwardButton;
 @property (nonatomic, strong) UIButton *inwardButton;
 @property (nonatomic, strong) UIButton *dismissButton;
@@ -26,7 +27,11 @@
         _serviceLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0, 0, 80.0, frame.size.height)];
         _serviceLabel.font = [UIFont fontWithName:@"AvenirNextCondensed-Medium" size:22.0];
         _serviceLabel.textColor = [UIColor colorWithWhite:0 alpha:.8];
+        _serviceLabel.userInteractionEnabled = YES;
         [self addSubview:_serviceLabel];
+        
+        UITapGestureRecognizer *serviceTapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(nameTapped)];
+        [_serviceLabel addGestureRecognizer:serviceTapRecognizer];
         
         CGFloat buttonWidth = floorf((self.frame.size.width - _serviceLabel.bounds.size.width - _serviceLabel.frame.origin.x) / 2);
         
@@ -95,6 +100,11 @@
     [self.delegate serviceRouteBar:self selectedButtonAtIndex:index service:self.service];
 }
 
+- (void)nameTapped
+{
+    [self.delegate serviceRouteBar:self selectedButtonAtIndex:0 service:self.service];
+}
+
 - (void)dismiss
 {
     [self.delegate serviceRouteBarDidDismiss:self];
@@ -145,6 +155,8 @@
         self.dismissButton.center = buttonTargetCenter;
         self.dismissButton.alpha = dismissible;
     } completion:nil];
+    
+    self.serviceTapRecognizer.enabled = !dismissible;
 }
 
 @end

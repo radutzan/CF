@@ -22,6 +22,8 @@
 @property (nonatomic, strong) UILabel *secondTimeLabel;
 @property (nonatomic, strong) UILabel *secondDistanceLabel;
 @property (nonatomic, strong) UIView *noInfoView;
+@property (nonatomic, strong) UIButton *noInfoButton;
+@property (nonatomic, strong) UILabel *noInfoLabel;
 @property (nonatomic, strong) CALayer *selectionVeilLayer;
 
 @end
@@ -97,18 +99,18 @@
         
         _noInfoView = [[UIView alloc] initWithFrame:CGRectMake(140.0, 0, 125.0, self.contentView.bounds.size.height)];
         
-        UIButton *noInfoButton = [UIButton buttonWithType:UIButtonTypeInfoLight];
-        noInfoButton.center = CGPointMake(noInfoButton.center.x, _noInfoView.center.y);
-        [noInfoButton addTarget:self action:@selector(noInfoButtonTapped) forControlEvents:UIControlEventTouchUpInside];
-        [_noInfoView addSubview:noInfoButton];
+        _noInfoButton = [UIButton buttonWithType:UIButtonTypeInfoLight];
+        _noInfoButton.center = CGPointMake(_noInfoButton.center.x, _noInfoView.center.y);
+        [_noInfoButton addTarget:self action:@selector(noInfoButtonTapped) forControlEvents:UIControlEventTouchUpInside];
+        [_noInfoView addSubview:_noInfoButton];
         
-        UILabel *noInfoLabel = [[UILabel alloc] initWithFrame:CGRectMake(30.0, 0, 90.0, self.contentView.bounds.size.height)];
-        noInfoLabel.font = [UIFont fontWithName:@"AvenirNextCondensed-Italic" size:15.0];
-        noInfoLabel.textColor = [UIColor colorWithWhite:0.3 alpha:1];
-        noInfoLabel.text = NSLocalizedString(@"NO_INFO", nil);
-        noInfoLabel.numberOfLines = 0;
-        noInfoLabel.backgroundColor = [UIColor blackColor];
-        [_noInfoView addSubview:noInfoLabel];
+        _noInfoLabel = [[UILabel alloc] initWithFrame:CGRectMake(30.0, 0, 90.0, self.contentView.bounds.size.height)];
+        _noInfoLabel.font = [UIFont fontWithName:@"AvenirNextCondensed-Italic" size:15.0];
+        _noInfoLabel.textColor = [UIColor colorWithWhite:0.3 alpha:1];
+        _noInfoLabel.text = NSLocalizedString(@"NO_INFO", nil);
+        _noInfoLabel.numberOfLines = 0;
+        _noInfoLabel.backgroundColor = [UIColor blackColor];
+        [_noInfoView addSubview:_noInfoLabel];
         
         _selectionVeilLayer = [CALayer layer];
         _selectionVeilLayer.frame = self.contentView.bounds;
@@ -146,6 +148,21 @@
         
         self.secondDistanceLabel.text = [[estimations lastObject] objectForKey:@"distance"];
         self.secondTimeLabel.text = [[[estimations lastObject] objectForKey:@"eta"] stringByReplacingOccurrencesOfString:@"." withString:@""];
+    }
+}
+
+- (void)setNoEstimationReason:(NSString *)noEstimationReason
+{
+    _noEstimationReason = noEstimationReason;
+    
+    if (noEstimationReason) {
+        self.noInfoLabel.text = noEstimationReason;
+        self.noInfoLabel.frame = CGRectMake(0, 0, 120.0, self.contentView.bounds.size.height);
+        self.noInfoButton.hidden = YES;
+    } else {
+        self.noInfoLabel.text = NSLocalizedString(@"NO_INFO", nil);
+        self.noInfoLabel.frame = CGRectMake(30.0, 0, 90.0, self.contentView.bounds.size.height);
+        self.noInfoButton.hidden = NO;
     }
 }
 

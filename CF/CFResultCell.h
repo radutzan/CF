@@ -19,7 +19,9 @@
 @property (nonatomic, strong) UILabel *serviceLabel;
 @property (nonatomic, strong) UILabel *directionLabel;
 @property (nonatomic, strong) NSArray *estimations;
+@property (nonatomic, strong) NSString *noEstimationReason;
 @property (nonatomic, strong) UIColor *badgeColor;
 @property (nonatomic, weak) id<CFResultCellDelegate> delegate;
+@property (nonatomic, assign) BOOL loading;
 
 @end

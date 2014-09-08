@@ -31,6 +31,7 @@
 @property (nonatomic, retain) UITableView *tableView;
 @property (nonatomic, retain) UIRefreshControl *refreshControl;
 @property (nonatomic, strong) NSMutableArray *responseEstimation;
+@property (nonatomic, strong) NSMutableArray *responseWithoutEstimation;
 @property (nonatomic, strong) NSMutableArray *finalData;
 
 @property (nonatomic, strong) NSTimer *timer;
@@ -62,6 +63,7 @@ CALayer *_leftGripper;
 - (void)loadView
 {
     self.responseEstimation = [NSMutableArray new];
+    self.responseWithoutEstimation = [NSMutableArray new];
     self.finalData = [NSMutableArray new];
     self.refreshing = YES;
     self.removedAds = ([OLCashier hasProduct:@"CF01"] || [OLCashier hasProduct:@"CF02"]);
@@ -91,13 +93,11 @@ CALayer *_leftGripper;
     
     self.titleView = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, self.stopResultsView.bounds.size.width, 54.0)];
     self.titleView.barStyle = UIBarStyleBlack;
-    [self.stopResultsView addSubview:self.titleView];
     
     self.stopInfoView = [[CFStopSignView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.titleView.bounds.size.width - 33.0, 52.0)];
     self.stopInfoView.delegate = self;
     self.stopInfoView.stopCodeLabel.hidden = YES;
     self.stopInfoView.favoriteContentView.userInteractionEnabled = YES;
-    [self.titleView addSubview:self.stopInfoView];
     
     self.favoriteButton = [OLShapeTintedButton buttonWithType:UIButtonTypeCustom];
     self.favoriteButton.frame = CGRectMake(self.titleView.bounds.size.width - 38.0, 5.0, 42.0, 42.0);
@@ -105,7 +105,6 @@ CALayer *_leftGripper;
     [self.favoriteButton setImage:[UIImage imageNamed:@"button-favorites"] forState:UIControlStateNormal];
     [self.favoriteButton setImage:[UIImage imageNamed:@"button-favorites-selected"] forState:UIControlStateSelected];
     [self.favoriteButton addTarget:self action:@selector(favButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-    [self.titleView addSubview:self.favoriteButton];
     
     self.borderLayer = [CALayer layer];
     self.borderLayer.frame = CGRectInset(self.stopResultsView.bounds, -0.5, -0.5);
@@ -133,6 +132,10 @@ CALayer *_leftGripper;
     [super viewDidLoad];
     
     if (self.stop) self.stopInfoView.stop = self.stop;
+    
+    [self.stopResultsView addSubview:self.titleView];
+    [self.titleView addSubview:self.stopInfoView];
+    [self.titleView addSubview:self.favoriteButton];
     
     self.refreshControl = [UIRefreshControl new];
     self.refreshControl.tintColor = [UIColor whiteColor];
@@ -526,6 +529,7 @@ CALayer *_leftGripper;
 
 - (void)setStopCode:(NSString *)stopCode
 {
+    NSLog(@"setStopCode:%@", stopCode);
     self.stop = nil;
     _stopCode = stopCode;
     
@@ -558,16 +562,16 @@ CALayer *_leftGripper;
 
 - (void)setStop:(CFStop *)stop
 {
+    NSLog(@"setStop:%@", stop.code);
     _stop = stop;
     
     self.stopInfoView.stop = stop;
     
+    [self resetEstimationData];
     [self resetTimer];
-    [self.finalData removeAllObjects];
-    [self.responseEstimation removeAllObjects];
-    [self.tableView reloadData];
     
     if (stop) {
+        [self.tableView reloadData];
         if (self.displayMode == CFStopResultsDisplayModePresented) self.favoriteButton.enabled = YES;
         self.favoriteButton.selected = stop.isFavorite;
         
@@ -596,11 +600,10 @@ CALayer *_leftGripper;
     if (!self.stop || self.refreshing) return;
     self.refreshing = YES;
     
+    [self resetEstimationData];
     [self resetTimer];
     
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-    [self.responseEstimation removeAllObjects];
-    [self.tableView reloadData];
     
     [[CFSapoClient sharedClient] estimateAtBusStop:self.stop.code
                                           services:nil
@@ -610,11 +613,15 @@ CALayer *_leftGripper;
                                                if (result) {
                                                    NSArray *estimation = result[@"estimation"];
                                                    NSArray *buses = estimation[0];
-                                                   NSArray *outOfSchedule = estimation[2];
                                                    
                                                    for (NSArray *busData in buses) {
                                                        NSDictionary *dict = [NSDictionary dictionaryWithObjects:busData forKeys:[NSArray arrayWithObjects:@"recorrido", @"tiempo", @"distancia", nil]];
                                                        [self.responseEstimation addObject:dict];
+                                                   }
+                                                   
+                                                   if (estimation[2]) {
+                                                       NSArray *outOfSchedule = estimation[2];
+                                                       self.responseWithoutEstimation = [outOfSchedule mutableCopy];
                                                    }
                                                    
                                                    [self processEstimationData];
@@ -636,9 +643,7 @@ CALayer *_leftGripper;
 - (void)processEstimationData
 {
     NSLog(@"processEstimationData");
-    [self.finalData removeAllObjects];
-    
-    NSMutableArray *estimationlessServices = [NSMutableArray new];
+    NSMutableArray *servicesWithoutAnyData = [NSMutableArray new];
     
     for (NSDictionary *service in self.stop.services) {
         NSMutableDictionary *moddedService = [service mutableCopy];
@@ -696,8 +701,14 @@ CALayer *_leftGripper;
         [moddedService setObject:[NSNumber numberWithFloat:rawNearestDistance] forKey:@"rawNearestDistance"];
         [moddedService setObject:estimations forKey:@"estimations"];
         
-        if (![estimations lastObject]) {
-            [estimationlessServices addObject:moddedService];
+        for (NSString *outOfScheduleService in self.responseWithoutEstimation) {
+            if ([outOfScheduleService isEqualToString:serviceName]) {
+                [moddedService setObject:NSLocalizedString(@"OUT_OF_SCHEDULE", nil) forKey:@"noEstimationReason"];
+            }
+        }
+        
+        if (![estimations lastObject] && !moddedService[@"noEstimationReason"]) {
+            [servicesWithoutAnyData addObject:moddedService];
         } else {
             [self.finalData addObject:moddedService];
         }
@@ -706,7 +717,7 @@ CALayer *_leftGripper;
     NSSortDescriptor *distanceSortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"rawNearestDistance" ascending:YES];
     [self.finalData sortUsingDescriptors:@[distanceSortDescriptor]];
     
-    [self.finalData addObjectsFromArray:estimationlessServices];
+    [self.finalData addObjectsFromArray:servicesWithoutAnyData];
     
     self.refreshing = NO;
     [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
@@ -720,7 +731,14 @@ CALayer *_leftGripper;
         
         self.timer = newTimer;
     }
+}
 
+- (void)resetEstimationData
+{
+    [self.responseEstimation removeAllObjects];
+    [self.responseWithoutEstimation removeAllObjects];
+    [self.finalData removeAllObjects];
+    if (!self.refreshing) [self.tableView reloadData];
 }
 
 - (void)refreshTimerLabel
@@ -782,6 +800,7 @@ CALayer *_leftGripper;
     cell.serviceLabel.text = [serviceDictionary objectForKey:@"name"];
     cell.directionLabel.text = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"TO_DIRECTION", nil), [[serviceDictionary objectForKey:@"destino"] capitalizedString]];
     cell.estimations = [serviceDictionary objectForKey:@"estimations"];
+    cell.noEstimationReason = [serviceDictionary objectForKey:@"noEstimationReason"];
     
     NSString *operatorID = [cell.serviceLabel.text substringToIndex:1];
     
@@ -832,8 +851,8 @@ CALayer *_leftGripper;
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.stopResultsView.bounds.size.width, 20.0)];
-    headerView.backgroundColor = [UIColor whiteColor];
+    UIView *headerView = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, self.stopResultsView.bounds.size.width, 20.0)];
+//    headerView.backgroundColor = [UIColor whiteColor];
     
     UILabel *service = [[UILabel alloc] initWithFrame:CGRectMake(15.0, 0, 90.0, 20.0)];
     service.text = NSLocalizedString(@"SERVICE", nil);

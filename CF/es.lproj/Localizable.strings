@@ -13,18 +13,6 @@
 "ERROR_MESSAGE_TRY_AGAIN" = "Por favor, inténtalo de nuevo.";
 "ERROR_MESSAGE_TRY_AGAIN_OR_REPORT" = "Por favor, inténtalo de nuevo, y si sigue fallando, repórtanoslo vía Twitter.";
 
-// map ad
-"ENABLE_MAP_WITH_ADS" = "Actívalo Gratis, con Publicidad";
-"THE_MAP" = "El Mapa";
-"SLIDE_TO_LEARN_MORE_MAP" = "‹ desliza y conócelo";
-"MAP_FEATURE_STOPS" = "Busca recorridos de servicios y revisa todas las paradas de Santiago.";
-"MAP_FEATURE_BIP" = "Ve todos los puntos Bip! y salta automáticamente al que esté más cerca tuyo.";
-"MAP_FEATURES_END" = "Te facilita la vida.";
-"ENABLE_MAP" = "Activar Mapa";
-"ENABLE_MAP_ALERT_MESSAGE" = "Puedes activar el Mapa con publicidad, y verás un banner bajo el Mapa.\n\nCuánto Falta Pro activa el Mapa y desactiva para siempre toda la publicidad de la app — USD $1.99.";
-"ENABLE_MAP_ALERT_BUTTON_FREE" = "Con Publicidad — Gratis";
-"ENABLE_MAP_ALERT_BUTTON_PAID" = "Comprar Pro — USD $1.99";
-
 // stop stuff
 "AND_BUS_STOP" = "con";
 "SERVICE" = "servicio";
@@ -33,14 +21,15 @@
 "DISTANCE" = "distancia";
 "REFRESHING" = "cargando…";
 "NO_INFO" = "No hay datos";
+"OUT_OF_SCHEDULE" = "Fuera de horario";
 "TO_DIRECTION" = "a";
 "TO_MINS" = "a";
 "ENTER_STOP_CODE" = "Código\nde Parada";
 "STOP_ERROR_TITLE" = "No se pudo consultar la parada";
 "INVALID_STOP_CODE_TITLE" = "Código inválido";
 "INVALID_STOP_CODE_MESSAGE" = "Asegúrate de que lo ingresaste correctamente. Tiene que incluir la P, la letra de zona y un número de hasta 4 dígitos. No puede contener espacios.";
-"NO_INFO_TITLE" = "No hay datos sobre este servicio";
-"NO_INFO_MESSAGE" = "Puede que esté fuera de su horario de operación o que la empresa operadora no esté enviando la información.";
+"NO_INFO_TITLE" = "No hay información sobre este servicio";
+"NO_INFO_MESSAGE" = "Puede que haya problemas en el servidor de origen o que la empresa operadora no esté enviando la información.";
 "NO_INFO_BUTTON_COMPLAIN" = "Reportar";
 "NO_INFO_COMPLAINT_TWEET" = "@transantiago No hay información para el servicio %@ en el paradero %@. ¿Qué sucede?";
 
@@ -54,7 +43,7 @@
 "OUT_OF_SANTIAGO_WARNING_TITLE" = "Estás fuera de Santiago";
 "OUT_OF_SANTIAGO_WARNING_MESSAGE" = "Cuánto Falta sólo funciona en Santiago. Navega hacia Santiago en el mapa para ver cosas.";
 "ZOOM_LEVEL_WARNING_TITLE" = "Estás muy lejos";
-"ZOOM_LEVEL_WARNING_MESSAGE" = "Acércate para ver paradas en el mapa.";
+"ZOOM_LEVEL_WARNING_MESSAGE" = "Acércate para ver paradas en el mapa";
 "ROUTES_SEARCHFIELD_PLACEHOLDER" = "Busca lugares o direcciones";
 "SEARCH_ERROR_NOTFOUND_TITLE" = "Lugar no encontrado";
 "SEARCH_ERROR_NOTFOUND_MESSAGE" = "Especifica más tu búsqueda o busca directamente en el mapa.";
