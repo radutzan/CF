@@ -15,6 +15,7 @@
     #import <Foundation/Foundation.h>
 
     #define TAB_BAR_HEIGHT 50.0
+    #define MAX_OVERLAY_WIDTH 340.0
     #define SEARCH_CARD_ANIMATION_OFFSET 20.0
     #define DEFAULT_FONT_NAME_REGULAR @"AvenirNext-Regular"
     #define DEFAULT_FONT_NAME_MEDIUM @"AvenirNext-Medium"

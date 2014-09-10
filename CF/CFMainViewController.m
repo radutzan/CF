@@ -83,10 +83,11 @@
     self.localNavigationBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     [self.view addSubview:self.localNavigationBar];
     
-    CFSearchField *searchField = [[CFSearchField alloc] initWithFrame:CGRectMake(0, 0, 300, 44.0)];
+    CFSearchField *searchField = [[CFSearchField alloc] initWithFrame:CGRectMake(8.0, 20.0, self.localNavigationBar.bounds.size.width - 70.0, 44.0)];
     searchField.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     searchField.placeholder = NSLocalizedString(@"MAP_SEARCHFIELD_PLACEHOLDER", nil);
     self.searchController.searchField = searchField;
+    [self.localNavigationBar addSubview:searchField];
     
     self.topContentMargin = 64.0;
     self.bottomContentMargin = TAB_BAR_HEIGHT;
@@ -95,7 +96,6 @@
     MKUserTrackingBarButtonItem *tracky = [[MKUserTrackingBarButtonItem alloc] initWithMapView:self.mapController.mapView];
     
     UINavigationItem *navItem = [UINavigationItem new];
-    navItem.titleView = searchField;
     navItem.rightBarButtonItems = @[tracky];
     
     self.rightBarButtonItems = navItem.rightBarButtonItems;

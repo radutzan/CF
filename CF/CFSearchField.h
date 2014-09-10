@@ -17,6 +17,7 @@
 @property (nonatomic, weak) id<CFSearchFieldDelegate> delegate;
 @property (nonatomic, copy, readonly) NSString *text;
 @property (nonatomic, readonly, getter=isEditing) BOOL editing;
+@property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
 
 @end
 

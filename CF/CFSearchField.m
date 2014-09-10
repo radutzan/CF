@@ -37,6 +37,10 @@
         _textField.font = [UIFont fontWithName:DEFAULT_FONT_NAME_MEDIUM size:17.0];
         [self addSubview:_textField];
         
+        _activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        _activityIndicator.frame = CGRectOffset(_activityIndicator.frame, frame.size.width + 3.0, 12.0);
+        [self addSubview:_activityIndicator];
+        
         _text = @"";
     }
     return self;
@@ -51,6 +55,7 @@
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
 //    self.glyphView.tintColor = [UIColor colorWithWhite:0 alpha:.2];
+    [self.activityIndicator stopAnimating];
     [self.delegate searchFieldDidEndEditing:self];
 }
 
@@ -65,6 +70,7 @@
 - (BOOL)textFieldShouldClear:(UITextField *)textField
 {
     [self.delegate searchField:self textDidChange:@""];
+    [self.activityIndicator stopAnimating];
     return YES;
 }
 

@@ -17,14 +17,14 @@
 @interface CFSearchController () <CFServiceRouteBarDelegate, CFSearchFieldDelegate>
 
 @property (nonatomic, strong) UIView *overlay;
-@property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
 @property (nonatomic, strong) CFSearchSuggestionsCard *searchSuggestionsCard;
 @property (nonatomic, strong) CFServiceRouteBar *serviceSuggestionView;
 
 @property (nonatomic, strong) UIView *currentCard;
+@property (nonatomic, assign) BOOL hiding;
 @property (nonatomic, assign) BOOL thinking;
 @property (nonatomic, readwrite) BOOL suggesting;
-@property (nonatomic, readwrite) BOOL suggestingStop;
+@property (nonatomic, readwrite) CFStop *suggestedStop;
 
 @end
 
@@ -58,10 +58,6 @@
         _serviceSuggestionView.layer.backgroundColor = [UIColor colorWithWhite:1 alpha:.96].CGColor;
         [_containerView addSubview:_serviceSuggestionView];
         
-        _activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-        _activityIndicator.frame = CGRectOffset(_activityIndicator.frame, (frame.size.width - _activityIndicator.frame.size.width) / 2, VERTICAL_MARGIN + 10.0);
-        [_containerView addSubview:_activityIndicator];
-        
         _suggesting = NO;
     }
     return self;
@@ -74,6 +70,8 @@
     if (UIEdgeInsetsEqualToEdgeInsets(_contentInset, contentInset)) return;
     _contentInset = contentInset;
     self.containerView.frame = CGRectMake(0, contentInset.top, self.bounds.size.width, self.bounds.size.height - contentInset.top - contentInset.bottom);
+    
+    if (self.suggestedStop && !(self.hidden || self.hiding)) [self.delegate searchControllerNeedsStopCardForStop:self.suggestedStop];
 }
 
 - (void)show
@@ -85,9 +83,7 @@
         self.searchSuggestionsCard.frame = CGRectMake(self.searchSuggestionsCard.frame.origin.x, - SEARCH_CARD_ANIMATION_OFFSET, self.searchSuggestionsCard.bounds.size.width, self.searchSuggestionsCard.bounds.size.height);
     }
     
-    if (self.suggestingStop) {
-        [self checkStop:self.searchField.text];
-    }
+    if (self.suggestedStop) [self.delegate searchControllerNeedsStopCardForStop:self.suggestedStop];
     
     [UIView animateWithDuration:0.25 delay:0.0 usingSpringWithDamping:1 initialSpringVelocity:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
         self.alpha = 1;
@@ -100,6 +96,7 @@
 
 - (void)hide
 {
+    self.hiding = YES;
     self.hidden = NO;
     [self.delegate searchControllerWillHide];
     
@@ -107,6 +104,7 @@
         self.alpha = 0;
         if (self.searchField.editing) [self.searchField endEditing:YES];
     } completion:^(BOOL finished) {
+        self.hiding = NO;
         self.hidden = YES;
     }];
 }
@@ -134,9 +132,9 @@
     _thinking = thinking;
     
     if (thinking) {
-        [self.activityIndicator startAnimating];
+        [self.searchField.activityIndicator startAnimating];
     } else {
-        [self.activityIndicator stopAnimating];
+        [self.searchField.activityIndicator stopAnimating];
     }
 }
 
@@ -178,7 +176,7 @@
         self.currentCard = nil;
     }
     
-    if (!self.suggestingStop) self.suggesting = NO;
+    if (!self.suggestedStop) self.suggesting = NO;
 }
 
 - (void)clearStopSuggestions
@@ -186,7 +184,7 @@
 //    NSLog(@"clearing stop suggestions");
     [self.delegate searchControllerDidClearStopSuggestions];
     self.suggesting = NO;
-    self.suggestingStop = NO;
+    self.suggestedStop = nil;
 }
 
 - (void)showServiceSuggestionWithService:(CFService *)service
@@ -207,6 +205,7 @@
 - (void)searchFieldDidBeginEditing:(CFSearchField *)searchField
 {
     [self show];
+    searchField.frame = CGRectMake(searchField.frame.origin.x, searchField.frame.origin.y, searchField.superview.bounds.size.width - 16.0, searchField.bounds.size.height);
     [self.delegate searchControllerDidBeginSearching];
 }
 
@@ -232,6 +231,8 @@
 - (void)searchFieldDidEndEditing:(CFSearchField *)searchField
 {
     [self.delegate searchControllerDidEndSearching];
+    
+    searchField.frame = CGRectMake(searchField.frame.origin.x, searchField.frame.origin.y, searchField.superview.bounds.size.width - 70.0, searchField.bounds.size.height);
     
     if (!self.suggesting) {
         [self hide];
@@ -332,7 +333,6 @@
         if (result) {
 //            NSLog(@"stop exists");
             self.suggesting = YES;
-            self.suggestingStop = YES;
             
             NSDictionary *stopData = [result firstObject];
             CLLocationCoordinate2D coordinate;
@@ -341,6 +341,7 @@
 
             CFStop *stop = [CFStop stopWithCoordinate:coordinate code:[stopData objectForKey:@"codigo"] name:[stopData objectForKey:@"nombre"] services:[stopData objectForKey:@"recorridos"]];
             [self.delegate searchControllerNeedsStopCardForStop:stop];
+            self.suggestedStop = stop;
             
         } else {
 //            NSLog(@"not a stop");

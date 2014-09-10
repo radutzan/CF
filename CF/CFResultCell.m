@@ -121,6 +121,12 @@
     return self;
 }
 
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    self.selectionVeilLayer.frame = self.bounds;
+}
+
 - (void)setEstimations:(NSArray *)estimations
 {
     _estimations = estimations;

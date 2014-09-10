@@ -17,6 +17,8 @@
  indexes: 0 is outward, 1 is inward
  */
 - (void)serviceRouteBar:(CFServiceRouteBar *)serviceRouteBar selectedButtonAtIndex:(NSUInteger)index service:(CFService *)service;
+
+@optional
 - (void)serviceRouteBarDidDismiss:(CFServiceRouteBar *)serviceRouteBar;
 
 @end

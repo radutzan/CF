@@ -21,7 +21,6 @@
 @interface CFStopResultsViewController () <CFStopSignViewDelegate, UIAlertViewDelegate, CFResultCellDelegate, UITableViewDelegate, UITableViewDataSource, UIGestureRecognizerDelegate>
 
 @property (nonatomic, strong) UIView *stopResultsView;
-@property (nonatomic, strong) CALayer *borderLayer;
 @property (nonatomic, assign, readwrite) CFStopResultsDisplayMode displayMode;
 @property (nonatomic, strong) UIView *overlay;
 @property (nonatomic, strong) UINavigationBar *titleView;
@@ -69,14 +68,20 @@ CALayer *_leftGripper;
     self.removedAds = ([OLCashier hasProduct:@"CF01"] || [OLCashier hasProduct:@"CF02"]);
     self.displayMode = CFStopResultsDisplayModeNone;
     
-    self.view = [[CFTransparentView alloc] initWithFrame:[UIApplication sharedApplication].keyWindow.bounds];
+    CGRect screenBounds = [UIScreen mainScreen].bounds;
+    self.view = [[CFTransparentView alloc] initWithFrame:screenBounds];
     self.view.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     
     self.overlay = [[UIView alloc] initWithFrame:self.view.bounds];
     self.overlay.backgroundColor = [UIColor colorWithWhite:0 alpha:.3];
     [self.view addSubview:self.overlay];
     
-    CGRect stopResultsViewFrame = CGRectOffset(CGRectInset(self.view.bounds, 10.0, 17.5), 0, 7.5);
+    CGFloat stopResultsViewWidth = screenBounds.size.width - 20.0;
+    stopResultsViewWidth = MIN(MAX_OVERLAY_WIDTH, stopResultsViewWidth);
+    CGFloat stopResultsViewHeight = screenBounds.size.height - 35.0;
+    stopResultsViewHeight = MIN(610.0, stopResultsViewHeight);
+    
+    CGRect stopResultsViewFrame = CGRectMake(self.view.center.x - stopResultsViewWidth / 2, self.view.center.y + 10.0 - stopResultsViewHeight / 2, stopResultsViewWidth, stopResultsViewHeight);
     
     if (NSClassFromString(@"UIVisualEffectView")) {
         self.stopResultsView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleDark]];
@@ -89,7 +94,13 @@ CALayer *_leftGripper;
     }
     self.stopResultsView.layer.cornerRadius = 6.0;
     self.stopResultsView.layer.masksToBounds = YES;
+    self.stopResultsView.layer.borderWidth = 0.5;
+    self.stopResultsView.layer.borderColor = [UIColor colorWithWhite:0 alpha:0.3].CGColor;
     [self.view addSubview:self.stopResultsView];
+    
+    self.stopResultsViewPresentedCenter = self.stopResultsView.center;
+    self.stopResultsViewPresentedFrame = stopResultsViewFrame;
+    self.stopResultsViewMinimizedFrame = CGRectMake(self.stopResultsView.frame.origin.x, self.view.bounds.size.height - self.titleView.bounds.size.height, self.stopResultsView.bounds.size.width, self.stopResultsView.bounds.size.height);
     
     self.titleView = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, self.stopResultsView.bounds.size.width, 54.0)];
     self.titleView.barStyle = UIBarStyleBlack;
@@ -105,16 +116,6 @@ CALayer *_leftGripper;
     [self.favoriteButton setImage:[UIImage imageNamed:@"button-favorites"] forState:UIControlStateNormal];
     [self.favoriteButton setImage:[UIImage imageNamed:@"button-favorites-selected"] forState:UIControlStateSelected];
     [self.favoriteButton addTarget:self action:@selector(favButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-    
-    self.borderLayer = [CALayer layer];
-    self.borderLayer.frame = CGRectInset(self.stopResultsView.bounds, -0.5, -0.5);
-    self.borderLayer.borderWidth = 0.5;
-    self.borderLayer.borderColor = [UIColor colorWithWhite:0 alpha:0.3].CGColor;
-    [self.stopResultsView.layer addSublayer:self.borderLayer];
-    
-    self.stopResultsViewPresentedCenter = self.stopResultsView.center;
-    self.stopResultsViewPresentedFrame = stopResultsViewFrame;
-    self.stopResultsViewMinimizedFrame = CGRectMake(self.stopResultsView.frame.origin.x, self.view.bounds.size.height - self.titleView.bounds.size.height, self.stopResultsView.bounds.size.width, self.stopResultsView.bounds.size.height);
     
     self.tableView = [[UITableView alloc] initWithFrame:self.stopResultsView.bounds style:UITableViewStylePlain];
     self.tableView.delegate = self;
@@ -229,19 +230,21 @@ CALayer *_leftGripper;
     
     if (promotedFromContainment) [self.delegate stopResultsViewWasPromotedFromContainment];
     
-    // handle mode switches
     if (displayMode == CFStopResultsDisplayModePresented) {
         self.favoriteButton.enabled = YES;
+        self.stopInfoView.userInteractionEnabled = YES;
         _titleBarDoubleTap.enabled = YES;
         _titleBarTap.enabled = NO;
         _leftGripper.opacity = 1;
         _topGripper.opacity = 0;
     } else {
         self.favoriteButton.enabled = NO;
+        self.stopInfoView.userInteractionEnabled = NO;
         _titleBarDoubleTap.enabled = NO;
         _titleBarTap.enabled = YES;
         _leftGripper.opacity = 0;
         _topGripper.opacity = 1;
+        [self.view endEditing:YES];
     }
     
     if (displayMode == CFStopResultsDisplayModeContained) {
@@ -278,7 +281,6 @@ CALayer *_leftGripper;
             self.stopResultsView.frame = CGRectOffset(self.stopResultsViewPresentedFrame, 0, 40.0);
         } else {
             self.stopResultsView.frame = rect;
-            self.borderLayer.frame = self.stopResultsView.layer.bounds;
             initialVelocity = 0;
         }
     }
@@ -288,18 +290,22 @@ CALayer *_leftGripper;
 
 - (void)containOnRect:(CGRect)rect onViewController:(UIViewController *)onViewController
 {
-    if ([self addToParentViewController:onViewController]) {
-        self.stopResultsView.alpha = 0;
-        self.stopResultsView.frame = CGRectOffset(rect, 0, -SEARCH_CARD_ANIMATION_OFFSET);
-    }
+    BOOL viewIsFresh = NO;
+    if ([self addToParentViewController:onViewController]) viewIsFresh = YES;
     
     self.displayMode = CFStopResultsDisplayModeContained;
+    
+    CGRect targetRect = CGRectMake(self.stopResultsView.frame.origin.x, rect.origin.y, self.stopResultsView.frame.size.width, rect.size.height);
+    
+    if (viewIsFresh) {
+        self.stopResultsView.alpha = 0;
+        self.stopResultsView.frame = CGRectOffset(targetRect, 0, -SEARCH_CARD_ANIMATION_OFFSET);
+    }
     
     [UIView animateWithDuration:0.35 delay:0 usingSpringWithDamping:1 initialSpringVelocity:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
         self.overlay.alpha = 0;
         self.stopResultsView.alpha = 1;
-        self.stopResultsView.frame = rect;
-        self.borderLayer.frame = self.stopResultsView.layer.bounds;
+        self.stopResultsView.frame = targetRect;
     } completion:^(BOOL finished) {
     }];
 }
@@ -319,7 +325,6 @@ CALayer *_leftGripper;
         self.overlay.alpha = 1;
         self.stopResultsView.alpha = 1;
         self.stopResultsView.frame = self.stopResultsViewPresentedFrame;
-        self.borderLayer.frame = self.stopResultsView.layer.bounds;
     } completion:^(BOOL finished) {
     }];
 }
@@ -596,7 +601,7 @@ CALayer *_leftGripper;
 
 - (void)performStopRequestQuietly:(BOOL)quietly
 {
-    NSLog(@"performStopRequestQuietly:");
+    NSLog(@"performStopRequestQuietly:", quietly);
     if (!self.stop || self.refreshing) return;
     self.refreshing = YES;
     
@@ -619,7 +624,7 @@ CALayer *_leftGripper;
                                                        [self.responseEstimation addObject:dict];
                                                    }
                                                    
-                                                   if (estimation[2]) {
+                                                   if (estimation.count > 2) {
                                                        NSArray *outOfSchedule = estimation[2];
                                                        self.responseWithoutEstimation = [outOfSchedule mutableCopy];
                                                    }
@@ -629,7 +634,7 @@ CALayer *_leftGripper;
                                                } else if (error) {
                                                    NSLog(@"Consulta falló. Error: %@", error.description);
                                                    
-                                                   if ([[self.navigationController topViewController] isEqual:self] && !quietly) {
+                                                   if (self.displayMode == CFStopResultsDisplayModePresented && !quietly) {
                                                        UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"STOP_ERROR_TITLE", nil) message:[NSString stringWithFormat:@"%@\n%@", error.localizedDescription, NSLocalizedString(@"ERROR_MESSAGE_TRY_AGAIN", nil)] delegate:self cancelButtonTitle:NSLocalizedString(@"ERROR_DISMISS", nil) otherButtonTitles:nil];
                                                        [errorAlert show];
                                                    }

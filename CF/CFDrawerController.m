@@ -52,7 +52,9 @@
     
     self.view = [[CFTransparentView alloc] initWithFrame:windowBounds];
     
-    CGRect drawerFrame = CGRectMake(10.0, windowSize.height - TAB_BAR_HEIGHT, windowSize.width - 20.0, windowSize.height - DRAWER_ORIGIN_Y);
+    CGFloat drawerWidth = windowSize.width - 20.0;
+    drawerWidth = MIN(MAX_OVERLAY_WIDTH, drawerWidth);
+    CGRect drawerFrame = CGRectMake(self.view.center.x - drawerWidth / 2, windowSize.height - TAB_BAR_HEIGHT, drawerWidth, windowSize.height - DRAWER_ORIGIN_Y);
     
     if (NSClassFromString(@"UIVisualEffectView")) {
         self.drawer = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleLight]];
@@ -65,11 +67,6 @@
     
     self.drawer.layer.anchorPoint = CGPointMake(0.5, 1.0);
     self.drawer.frame = drawerFrame;
-//    self.drawer.layer.shadowColor = [UIColor blackColor].CGColor;
-//    self.drawer.layer.shadowOffset = CGSizeMake(0, 1.5);
-//    self.drawer.layer.shadowOpacity = 0.4;
-//    self.drawer.layer.shadowPath = [UIBezierPath bezierPathWithRect:self.drawer.bounds].CGPath;
-//    self.drawer.layer.shadowRadius = 2.0;
     [self.view addSubview:self.drawer];
     
     self.borderLayer = [CALayer layer];
@@ -100,7 +97,7 @@
     UIPanGestureRecognizer *gripDrag = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleDrawerDragGesture:)];
     [self.gripper addGestureRecognizer:gripDrag];
     
-    self.tabBar = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - TAB_BAR_HEIGHT, self.view.bounds.size.width, TAB_BAR_HEIGHT)];
+    self.tabBar = [[UIView alloc] initWithFrame:CGRectMake(self.drawer.frame.origin.x, self.view.bounds.size.height - TAB_BAR_HEIGHT, drawerWidth, TAB_BAR_HEIGHT)];
     self.tabBar.tintColor = [UIColor colorWithWhite:0.42 alpha:1];
     [self.view addSubview:self.tabBar];
     
@@ -146,7 +143,7 @@
     
     CGFloat tabButtonWidth = floorf(self.drawer.bounds.size.width / self.tabs.count);
     for (UIButton *subview in self.tabBar.subviews) {
-        subview.frame = CGRectMake(10.0 + tabButtonWidth * [self.tabBar.subviews indexOfObject:subview], 0, tabButtonWidth, TAB_BAR_HEIGHT);
+        subview.frame = CGRectMake(tabButtonWidth * [self.tabBar.subviews indexOfObject:subview], 0, tabButtonWidth, TAB_BAR_HEIGHT);
         if (subview.selected) {
             [self tabButtonPressed:subview];
         }
@@ -185,7 +182,7 @@
     
     self.scrollView.contentSize = CGSizeMake(self.scrollView.bounds.size.width * tabs.count, self.scrollView.bounds.size.height);
     
-    CGFloat tabButtonWidth = floorf(300 / tabs.count);
+    CGFloat tabButtonWidth = floorf(self.tabBar.bounds.size.width / tabs.count);
     
     for (NSDictionary *tab in tabs) {
         UIViewController *thisTabController = tab[@"controller"];
@@ -195,7 +192,7 @@
         [self.scrollView addSubview:thisTabController.view];
         
         OLShapeTintedButton *thisTabButton = [OLShapeTintedButton buttonWithType:UIButtonTypeCustom];
-        thisTabButton.frame = CGRectMake(10.0 + tabButtonWidth * [tabs indexOfObject:tab], 0, tabButtonWidth, TAB_BAR_HEIGHT);
+        thisTabButton.frame = CGRectMake(tabButtonWidth * [tabs indexOfObject:tab], 0, tabButtonWidth, TAB_BAR_HEIGHT);
         [thisTabButton setImage:tab[@"button"] forState:UIControlStateNormal];
         [thisTabButton setImage:tab[@"button-selected"] forState:UIControlStateSelected];
         [thisTabButton addTarget:self action:@selector(tabButtonPressed:) forControlEvents:UIControlEventTouchDown];
