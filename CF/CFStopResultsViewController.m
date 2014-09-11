@@ -571,6 +571,7 @@ CALayer *_leftGripper;
     _stop = stop;
     
     self.stopInfoView.stop = stop;
+    self.refreshing = NO;
     
     [self resetEstimationData];
     [self resetTimer];
@@ -601,7 +602,7 @@ CALayer *_leftGripper;
 
 - (void)performStopRequestQuietly:(BOOL)quietly
 {
-    NSLog(@"performStopRequestQuietly:", quietly);
+    NSLog(@"performStopRequestQuietly:%d", quietly);
     if (!self.stop || self.refreshing) return;
     self.refreshing = YES;
     

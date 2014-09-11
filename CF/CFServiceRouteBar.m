@@ -40,6 +40,7 @@
         _outwardButton.titleLabel.font = [UIFont fontWithName:@"AvenirNextCondensed-Medium" size:14.0];
         _outwardButton.titleLabel.numberOfLines = 2;
         _outwardButton.titleEdgeInsets = UIEdgeInsetsMake(0, 10.0, 0, 10.0);
+        _outwardButton.clipsToBounds = YES;
         _outwardButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
         [_outwardButton addTarget:self action:@selector(buttonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:_outwardButton];
@@ -49,6 +50,7 @@
         _inwardButton.titleLabel.font = _outwardButton.titleLabel.font;
         _inwardButton.titleLabel.numberOfLines = 0;
         _inwardButton.titleEdgeInsets = _outwardButton.titleEdgeInsets;
+        _inwardButton.clipsToBounds = YES;
         _inwardButton.contentHorizontalAlignment = _outwardButton.contentHorizontalAlignment;
         [_inwardButton addTarget:self action:@selector(buttonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:_inwardButton];
@@ -116,18 +118,24 @@
     
     switch (selectedDirection) {
         case 0:
+            self.outwardButton.backgroundColor = self.tintColor;
             self.outwardButton.selected = YES;
+            self.inwardButton.backgroundColor = [UIColor clearColor];
             self.inwardButton.selected = NO;
             break;
             
         case 1:
+            self.outwardButton.backgroundColor = [UIColor clearColor];
             self.outwardButton.selected = NO;
+            self.inwardButton.backgroundColor = self.tintColor;
             self.inwardButton.selected = YES;
             break;
             
         default:
-            self.outwardButton.selected = NO;
-            self.inwardButton.selected = NO;
+            self.outwardButton.selected = YES;
+            self.outwardButton.backgroundColor = [UIColor clearColor];
+            self.inwardButton.backgroundColor = [UIColor clearColor];
+            self.inwardButton.selected = YES;
             break;
     }
 }

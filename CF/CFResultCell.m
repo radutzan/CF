@@ -25,6 +25,7 @@
 @property (nonatomic, strong) UIButton *noInfoButton;
 @property (nonatomic, strong) UILabel *noInfoLabel;
 @property (nonatomic, strong) CALayer *selectionVeilLayer;
+@property (nonatomic, strong) CALayer *separatorLayer;
 
 @end
 
@@ -37,26 +38,26 @@
         self.contentView.frame = CGRectMake(self.contentView.frame.origin.x, self.contentView.frame.origin.y, self.contentView.bounds.size.width, 60.0);
         self.selectionStyle = UITableViewCellSelectionStyleNone;
         
-        CALayer *separatorLayer = [CALayer new];
-        separatorLayer.frame = CGRectMake(0, self.contentView.bounds.size.height - 0.5, self.contentView.bounds.size.width, 0.5);
-        separatorLayer.backgroundColor = [UIColor colorWithWhite:0.25 alpha:1].CGColor;
-        [self.layer insertSublayer:separatorLayer above:self.contentView.layer];
+        self.separatorLayer = [CALayer new];
+        self.separatorLayer.frame = CGRectMake(0, self.contentView.bounds.size.height - 0.5, self.contentView.bounds.size.width, 0.5);
+        self.separatorLayer.backgroundColor = [UIColor colorWithWhite:0.25 alpha:1].CGColor;
+        [self.layer insertSublayer:self.separatorLayer above:self.contentView.layer];
         
         _colorBadge = [[CFColorBadgeView alloc] initWithFrame:CGRectMake(0, 0, 10.0, 10.0)];
         [self.contentView addSubview:_colorBadge];
         
         _serviceLabel = [[UILabel alloc] initWithFrame:CGRectMake(16.0, 10.0, 80.0, 25.0)];
         _serviceLabel.textColor = [UIColor whiteColor];
-        _serviceLabel.font = [UIFont fontWithName:@"AvenirNext-Regular" size:26.0];
+        _serviceLabel.font = [UIFont fontWithName:@"AvenirNext-Regular" size:24.0];
         _serviceLabel.backgroundColor = [UIColor blackColor];
         
-        _directionLabel = [[UILabel alloc] initWithFrame:CGRectMake(15.0, 35.0, 100.0, 17.0)];
+        _directionLabel = [[UILabel alloc] initWithFrame:CGRectMake(15.0, 33.0, 100.0, 17.0)];
         _directionLabel.font = [UIFont fontWithName:@"AvenirNextCondensed-Medium" size:12.0];
         _directionLabel.textColor = [UIColor colorWithWhite:0.6 alpha:1];
         _directionLabel.numberOfLines = 1;
         _directionLabel.backgroundColor = [UIColor blackColor];
         
-        _estimationContainer = [[CFClipView alloc] initWithFrame:CGRectMake(90.0, 0, 185.0, self.contentView.bounds.size.height)];
+        _estimationContainer = [[CFClipView alloc] initWithFrame:CGRectMake(90.0, 0, self.bounds.size.width - 115.0, self.contentView.bounds.size.height)];
         _estimationContainer.backgroundColor = [UIColor blackColor];
         _estimationContainer.scrollView.frame = CGRectMake(50.0, 0, 95.0, self.contentView.bounds.size.height);
         _estimationContainer.scrollView.delegate = self;
@@ -65,19 +66,20 @@
         _estimationContainer.scrollView.showsHorizontalScrollIndicator = NO;
         _estimationContainer.scrollView.clipsToBounds = NO;
         _estimationContainer.scrollView.alwaysBounceHorizontal = YES;
+        _estimationContainer.scrollView.backgroundColor = [UIColor blackColor];
         _estimationContainer.clipsToBounds = YES;
         [self.contentView addSubview:_estimationContainer];
         [self.contentView addSubview:_serviceLabel];
         [self.contentView addSubview:_directionLabel];
         
-        _distanceLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 12.0, _estimationContainer.scrollView.bounds.size.width, 20.0)];
+        _distanceLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 11.0, _estimationContainer.scrollView.bounds.size.width, 20.0)];
         _distanceLabel.font = [UIFont fontWithName:@"AvenirNext-Regular" size:20.0];
         _distanceLabel.textColor = [UIColor whiteColor];
         _distanceLabel.backgroundColor = [UIColor blackColor];
         _distanceLabel.userInteractionEnabled = NO;
         [_estimationContainer.scrollView addSubview:_distanceLabel];
         
-        _timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 35.0, _estimationContainer.scrollView.bounds.size.width, 14.0)];
+        _timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 34.0, _estimationContainer.scrollView.bounds.size.width, 14.0)];
         _timeLabel.font = [UIFont fontWithName:@"AvenirNextCondensed-DemiBold" size:14.0];
         _timeLabel.textColor = [UIColor colorWithWhite:0.4 alpha:1];
         _timeLabel.alpha = 1;
@@ -85,13 +87,13 @@
         _timeLabel.userInteractionEnabled = NO;
         [_estimationContainer.scrollView addSubview:_timeLabel];
         
-        _secondDistanceLabel = [[UILabel alloc] initWithFrame:CGRectMake(_estimationContainer.scrollView.bounds.size.width, _distanceLabel.frame.origin.y, _estimationContainer.bounds.size.width, _distanceLabel.bounds.size.height)];
+        _secondDistanceLabel = [[UILabel alloc] initWithFrame:CGRectMake(_estimationContainer.scrollView.bounds.size.width, _distanceLabel.frame.origin.y, _distanceLabel.bounds.size.width, _distanceLabel.bounds.size.height)];
         _secondDistanceLabel.font = _distanceLabel.font;
         _secondDistanceLabel.textColor = _distanceLabel.textColor;
         _secondDistanceLabel.alpha = SECOND_ESTIMATION_ALPHA;
         _secondDistanceLabel.backgroundColor = _distanceLabel.backgroundColor;
         
-        _secondTimeLabel = [[UILabel alloc] initWithFrame:CGRectMake(_estimationContainer.scrollView.bounds.size.width, _timeLabel.frame.origin.y, _estimationContainer.bounds.size.width, _timeLabel.bounds.size.height)];
+        _secondTimeLabel = [[UILabel alloc] initWithFrame:CGRectMake(_estimationContainer.scrollView.bounds.size.width, _timeLabel.frame.origin.y, _timeLabel.bounds.size.width, _timeLabel.bounds.size.height)];
         _secondTimeLabel.font = _timeLabel.font;
         _secondTimeLabel.textColor = _timeLabel.textColor;
         _secondTimeLabel.alpha = SECOND_ESTIMATION_ALPHA;
@@ -124,7 +126,19 @@
 - (void)layoutSubviews
 {
     [super layoutSubviews];
+    self.separatorLayer.frame = CGRectMake(0, self.bounds.size.height - 0.5, self.bounds.size.width, 0.5);
     self.selectionVeilLayer.frame = self.bounds;
+    self.estimationContainer.frame = CGRectMake(90.0, 0, self.bounds.size.width - 115.0, self.contentView.bounds.size.height);
+    
+    BOOL bigAssPhone = self.bounds.size.width > 305.0;
+    
+    if (bigAssPhone) {
+        self.estimationContainer.gradientLayer.hidden = YES;
+        self.estimationContainer.scrollView.scrollEnabled = NO;
+        self.estimationContainer.scrollView.frame = CGRectMake(50.0, 0, self.estimationContainer.bounds.size.width - 50.0, self.contentView.bounds.size.height);
+        self.secondDistanceLabel.alpha = SECOND_ESTIMATION_ALPHA * 1.8;
+        self.secondTimeLabel.alpha = SECOND_ESTIMATION_ALPHA * 1.8;
+    }
 }
 
 - (void)setEstimations:(NSArray *)estimations

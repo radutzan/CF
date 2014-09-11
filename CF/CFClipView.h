@@ -12,5 +12,6 @@
 @interface CFClipView : UIView
 
 @property (nonatomic, strong) CFForwardingTouchScrollView *scrollView;
+@property (nonatomic, strong) CAGradientLayer *gradientLayer;
 
 @end
