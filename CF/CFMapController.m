@@ -78,11 +78,14 @@ static MKMapRect santiagoBounds;
         self.stopCalloutView.permittedArrowDirection = SMCalloutArrowDirectionDown;
         
         self.outOfSantiagoWarning = [[OLGhostAlertView alloc] initWithTitle:NSLocalizedString(@"OUT_OF_SANTIAGO_WARNING_TITLE", nil) message:NSLocalizedString(@"OUT_OF_SANTIAGO_WARNING_MESSAGE", nil) timeout:200.0 dismissible:NO];
+        self.outOfSantiagoWarning.titleLabel.font = [UIFont fontWithName:DEFAULT_FONT_NAME_BOLD size:16.0];
+        self.outOfSantiagoWarning.messageLabel.font = [UIFont fontWithName:DEFAULT_FONT_NAME_REGULAR size:14.0];
         self.outOfSantiagoWarning.style = OLGhostAlertViewStyleLight;
-        self.outOfSantiagoWarning.position = OLGhostAlertViewPositionCenter;
+        self.outOfSantiagoWarning.position = OLGhostAlertViewPositionTop;
+        self.outOfSantiagoWarning.topContentMargin = self.contentInset.top;
         self.outOfSantiagoWarning.userInteractionEnabled = NO;
         
-        self.zoomWarning = [[UILabel alloc] initWithFrame:CGRectMake(10.0, frame.size.height - self.contentInset.bottom - 10.0 - 36.0, self.bounds.size.width - 20.0, 36.0)];
+        self.zoomWarning = [[UILabel alloc] initWithFrame:CGRectMake(0.0, frame.size.height - self.contentInset.bottom - 10.0 - 36.0, 280.0, 36.0)];
         self.zoomWarning.backgroundColor = [UIColor colorWithWhite:0 alpha:.75];
         self.zoomWarning.userInteractionEnabled = NO;
         self.zoomWarning.alpha = 0;
@@ -107,7 +110,9 @@ static MKMapRect santiagoBounds;
 
 - (void)layoutSubviews
 {
-    self.zoomWarning.frame = CGRectMake(10.0, self.bounds.size.height - self.contentInset.bottom - 10.0 - 36.0, self.bounds.size.width - 20.0, 36.0);
+    self.outOfSantiagoWarning.topContentMargin = self.contentInset.top;
+    self.zoomWarning.frame = CGRectMake(0.0, self.bounds.size.height - self.contentInset.bottom - 10.0 - 36.0, self.zoomWarning.bounds.size.width, self.zoomWarning.bounds.size.height);
+    self.zoomWarning.center = CGPointMake(self.center.x, self.zoomWarning.center.y);
 }
 
 #pragma mark - Helpers

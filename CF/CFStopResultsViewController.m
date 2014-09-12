@@ -640,6 +640,10 @@ CALayer *_leftGripper;
                                                        [errorAlert show];
                                                    }
                                                    
+                                                   self.refreshing = NO;
+                                                   [self.refreshControl endRefreshing];
+                                                   [self refreshTimerLabel];
+                                                   
                                                    Mixpanel *mixpanel = [Mixpanel sharedInstance];
                                                    [mixpanel track:@"Failed Estimation Request" properties:@{@"Code": self.stop.code, @"Error": error.debugDescription}];
                                                }

@@ -89,7 +89,7 @@
     self.searchController.searchField = searchField;
     [self.localNavigationBar addSubview:searchField];
     
-    self.topContentMargin = 64.0;
+    self.topContentMargin = self.localNavigationBar.bounds.size.height;
     self.bottomContentMargin = TAB_BAR_HEIGHT;
     
 //    UIBarButtonItem *bipButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"button-bip"] style:UIBarButtonItemStylePlain target:self.mapController action:@selector(goToNearestBipSpot)];
@@ -369,12 +369,14 @@
     self.drawerController.drawerOpen = NO;
 }
 
-- (void)processExternalURLString:(NSString *)URLString
+- (void)processExternalURL:(NSURL *)url
 {
-    NSLog(@"%@", URLString);
-    NSArray *URLComponents = [URLString componentsSeparatedByString:@"/"];
-    for (NSString *component in URLComponents) {
-        NSLog(@"%@", component);
+    NSLog(@"%@", [url absoluteString]);
+    
+    if ([url.host isEqualToString:@"stop"]) {
+        NSString *stopCode = url.lastPathComponent;
+        NSLog(@"opening stop %@ from url", stopCode);
+        [self pushStopResultsWithStopCode:stopCode];
     }
 }
 

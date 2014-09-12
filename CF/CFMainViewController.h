@@ -10,6 +10,6 @@
 
 @interface CFMainViewController : UIViewController
 
-- (void)processExternalURLString:(NSString *)URLString;
+- (void)processExternalURL:(NSURL *)url;
 
 @end

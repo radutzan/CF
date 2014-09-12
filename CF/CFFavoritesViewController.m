@@ -39,9 +39,15 @@
     NSArray *favsArray = [defaults arrayForKey:@"favorites"];
     [defaults synchronize];
     
+#ifdef DEV_VERSION
     NSUserDefaults *sharedDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.ondalabs.cfbetagroup"];
     [sharedDefaults setObject:favsArray forKey:@"favorites"];
     [sharedDefaults synchronize];
+#else
+    NSUserDefaults *sharedDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.ondalabs.cfgroup"];
+    [sharedDefaults setObject:favsArray forKey:@"favorites"];
+    [sharedDefaults synchronize];
+#endif
     
     return favsArray;
 }

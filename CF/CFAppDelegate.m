@@ -11,6 +11,12 @@
 #import "Crittercism.h"
 #import "OLCashier.h"
 
+@interface CFAppDelegate ()
+
+@property (nonatomic, strong) CFMainViewController *mainViewController;
+
+@end
+
 @implementation CFAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -32,18 +38,22 @@
     
     [cashier setProductsWithIdentifiers:[NSSet setWithObjects:@"CF01", @"CF02", nil] handler:NULL];
     
-    CFMainViewController *mainViewController = [CFMainViewController new];
+    self.mainViewController = [CFMainViewController new];
 
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:mainViewController];
+    self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:self.mainViewController];
     self.window.tintColor = [UIColor colorWithHue:133.0/360.0 saturation:0.74 brightness:0.87 alpha:1];
     [self.window makeKeyAndVisible];
     
-    NSString *urlString = [launchOptions valueForKey:UIApplicationLaunchOptionsURLKey];
-    if (urlString) {
-        [mainViewController processExternalURLString:urlString];
-    }
+    return YES;
+}
+
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+{
     
+    if (url) {
+        [self.mainViewController processExternalURL:url];
+    }
     return YES;
 }
 
