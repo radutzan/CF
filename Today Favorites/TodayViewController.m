@@ -15,6 +15,10 @@
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, assign) UIEdgeInsets marginInsets;
 
+@property (nonatomic, strong) UIView *placeholderView;
+@property (nonatomic, strong) UIButton *openCFButton;
+@property (nonatomic, assign) BOOL placeholderVisible;
+
 @property (nonatomic, strong) NSArray *favorites;
 @property (nonatomic, strong) NSArray *storedFavorites;
 
@@ -27,14 +31,42 @@
     self.view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320.0, self.favorites.count * CELL_HEIGHT)];
     self.view.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     self.preferredContentSize = self.view.bounds.size;
+    self.view.translatesAutoresizingMaskIntoConstraints = YES;
     
     self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
+    self.tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     self.tableView.scrollEnabled = NO;
     self.tableView.rowHeight = CELL_HEIGHT;
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     self.tableView.separatorEffect = [UIVibrancyEffect notificationCenterVibrancyEffect];
     [self.view addSubview:self.tableView];
+    
+    self.placeholderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 280.0, CELL_HEIGHT)];
+    self.placeholderView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
+    self.placeholderView.hidden = YES;
+    [self.view addSubview:self.placeholderView];
+    
+    UILabel *noFavoritesLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200.0, self.placeholderView.bounds.size.height)];
+    noFavoritesLabel.text = NSLocalizedString(@"NO_FAVORITES", nil);
+    noFavoritesLabel.font = [UIFont systemFontOfSize:15.0];
+    noFavoritesLabel.numberOfLines = 0;
+    noFavoritesLabel.textColor = [UIColor whiteColor];
+    [self.placeholderView addSubview:noFavoritesLabel];
+    
+    UIVisualEffectView *vibrancyView = [[UIVisualEffectView alloc] initWithEffect:[UIVibrancyEffect notificationCenterVibrancyEffect]];
+    vibrancyView.frame = self.placeholderView.bounds;
+    vibrancyView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
+    vibrancyView.translatesAutoresizingMaskIntoConstraints = YES;
+    [self.placeholderView addSubview:vibrancyView];
+    
+    self.openCFButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    self.openCFButton.frame = CGRectMake(100.0, 0, 100.0, CELL_HEIGHT);
+    self.openCFButton.titleEdgeInsets = UIEdgeInsetsMake(0, 10.0, 0, 0);
+    [self.openCFButton setTitle:NSLocalizedString(@"OPEN_CF", nil) forState:UIControlStateNormal];
+    [self.openCFButton setImage:[UIImage imageNamed:@"icon-widget"] forState:UIControlStateNormal];
+    [self.openCFButton addTarget:self action:@selector(openCF) forControlEvents:UIControlEventTouchUpInside];
+    [vibrancyView.contentView addSubview:self.openCFButton];
 }
 
 - (void)viewDidLoad
@@ -45,11 +77,19 @@
     [self updateContent];
 }
 
+- (void)viewWillLayoutSubviews
+{
+    if (self.placeholderVisible) {
+        self.placeholderView.frame = CGRectMake(self.marginInsets.left, 0, self.view.bounds.size.width - self.marginInsets.left, CELL_HEIGHT);
+        self.openCFButton.frame = CGRectMake(self.placeholderView.bounds.size.width - self.openCFButton.bounds.size.width, 0, self.openCFButton.bounds.size.width, CELL_HEIGHT);
+    }
+}
+
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
 {
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
-        self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y, size.width, size.height);
-        self.tableView.frame = self.view.bounds;
+//        self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y, size.width, size.height);
+//        self.tableView.frame = self.view.bounds;
     } completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
         
     }];
@@ -60,9 +100,8 @@
 - (void)updateContent
 {
     [self.tableView reloadData];
-    self.tableView.frame = CGRectMake(0, 0, self.tableView.contentSize.width, self.tableView.contentSize.height);
     
-    self.preferredContentSize = self.tableView.contentSize;
+    self.preferredContentSize = (self.placeholderVisible) ? CGSizeMake(self.tableView.contentSize.width, CELL_HEIGHT) : self.tableView.contentSize;
 }
 
 - (void)widgetPerformUpdateWithCompletionHandler:(void (^)(NCUpdateResult))completionHandler
@@ -88,16 +127,25 @@
 {
     self.marginInsets = defaultMarginInsets;
     self.tableView.separatorInset = UIEdgeInsetsZero;
+    self.placeholderView.frame = CGRectMake(defaultMarginInsets.left, 0, self.view.bounds.size.width - defaultMarginInsets.left, CELL_HEIGHT);
     [self updateContent];
     
     return UIEdgeInsetsMake(0, 0, 40.0, 0);
+}
+
+- (void)setPlaceholderVisible:(BOOL)placeholderVisible
+{
+    _placeholderVisible = placeholderVisible;
+    
+    self.placeholderView.hidden = !placeholderVisible;
+    self.tableView.hidden = placeholderVisible;
 }
 
 #pragma mark - Table view
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-//    self.placeholderVisible = (self.favoritesArray.count == 0) ? YES : NO;
+    self.placeholderVisible = (self.favorites.count == 0) ? YES : NO;
     return self.favorites.count;
 }
 
@@ -139,6 +187,11 @@
     
     UIVisualEffectView *cellBackgroundView = [[UIVisualEffectView alloc] initWithEffect:[UIVibrancyEffect notificationCenterVibrancyEffect]];
     cellBackgroundView.frame = cell.contentView.bounds;
+    
+    UIView *fillView = [[UIView alloc] initWithFrame:cell.bounds];
+    fillView.backgroundColor = [UIColor whiteColor];
+    [cellBackgroundView.contentView addSubview:fillView];
+    
     cell.selectedBackgroundView = cellBackgroundView;
     
     return cell;
@@ -179,9 +232,15 @@
 
 - (NSArray *)favorites
 {
+#ifdef DEV_VERSION
     NSUserDefaults *defaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.ondalabs.cfbetagroup"];
     NSArray *favorites = [defaults objectForKey:@"favorites"];
     return favorites;
+#else
+    NSUserDefaults *defaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.ondalabs.cfgroup"];
+    NSArray *favorites = [defaults objectForKey:@"favorites"];
+    return favorites;
+#endif
 }
 
 @end

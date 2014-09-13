@@ -34,6 +34,7 @@ typedef NS_ENUM(NSInteger, CFMapMode) {
 
 - (void)performSearchWithString:(NSString *)searchString;
 - (void)goToNearestBipSpot;
+- (void)reloadStops;
 - (void)displayStops;
 - (void)displayServiceRoute:(NSString *)serviceName direction:(CFDirection)direction;
 - (void)displayServiceRoute:(NSString *)serviceName directionString:(NSString *)directionString;

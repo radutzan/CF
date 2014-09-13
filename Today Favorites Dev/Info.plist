@@ -5,15 +5,15 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>Favorites</string>
+	<string>Today Favorites Dev</string>
 	<key>CFBundleExecutable</key>
-	<string>${EXECUTABLE_NAME}</string>
+	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.ondalabs.cuantofalta.$(PRODUCT_NAME:rfc1034identifier)</string>
+	<string>com.ondalabs.cfbeta.$(PRODUCT_NAME:rfc1034identifier)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>${PRODUCT_NAME}</string>
+	<string>$(PRODUCT_NAME)</string>
 	<key>CFBundlePackageType</key>
 	<string>XPC!</string>
 	<key>CFBundleShortVersionString</key>
@@ -24,10 +24,10 @@
 	<string>1</string>
 	<key>NSExtension</key>
 	<dict>
-		<key>NSExtensionPointIdentifier</key>
-		<string>com.apple.widget-extension</string>
 		<key>NSExtensionPrincipalClass</key>
 		<string>TodayViewController</string>
+		<key>NSExtensionPointIdentifier</key>
+		<string>com.apple.widget-extension</string>
 	</dict>
 </dict>
 </plist>

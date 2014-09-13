@@ -1,0 +1,11 @@
+/* 
+  Localizable.strings
+  CF
+
+  Created by Radu Dutzan on 9/12/14.
+  Copyright (c) 2014 Onda. All rights reserved.
+*/
+
+"NAMELESS_FAVORITE" = "Favorite with no name";
+"NO_FAVORITES" = "You have no favorite stops.";
+"OPEN_CF" = "Open";

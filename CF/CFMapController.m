@@ -259,6 +259,12 @@ static MKMapRect santiagoBounds;
     self.mapMode = CFMapModeStops;
 }
 
+- (void)reloadStops
+{
+    [self clearStopAnnotations];
+    [self loadStopAnnotations];
+}
+
 - (void)loadStopAnnotations
 {
     MKCoordinateRegion region = self.mapView.region;

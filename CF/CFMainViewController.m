@@ -110,7 +110,7 @@
     
 #ifdef DEV_VERSION
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"CFEnableMapWithAds"];
-    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"CF01"];
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"CF01"];
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"CF02"];
 #endif
     
@@ -402,6 +402,7 @@
 - (void)stopResultsViewControllerDidUpdateUserData
 {
     [self reloadUserData];
+    if (self.mapController.mapMode == CFMapModeStops) [self.mapController reloadStops];
 }
 
 #pragma mark - Push service routes

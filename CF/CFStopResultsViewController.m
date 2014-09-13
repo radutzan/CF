@@ -197,11 +197,18 @@ CALayer *_leftGripper;
     [self.titleView.layer addSublayer:_leftGripper];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    self.refreshing = NO;
+}
+
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
     
-    if (self.stop && !self.refreshing) [self performStopRequestQuietly:YES];
+    self.favoriteButton.selected = self.stop.isFavorite;
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -210,6 +217,7 @@ CALayer *_leftGripper;
     
     [self.timer invalidate];
     [self.view endEditing:YES];
+    self.refreshing = NO;
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
@@ -490,6 +498,8 @@ CALayer *_leftGripper;
             } completion:nil];
         }];
     }
+    
+    [self.delegate stopResultsViewControllerDidUpdateUserData];
 }
 
 - (void)stopSignView:(UIView *)signView didEditFavoriteNameWithString:(NSString *)string
@@ -578,8 +588,10 @@ CALayer *_leftGripper;
     
     if (stop) {
         [self.tableView reloadData];
-        if (self.displayMode == CFStopResultsDisplayModePresented) self.favoriteButton.enabled = YES;
+        
         self.favoriteButton.selected = stop.isFavorite;
+        self.stopInfoView.favoriteContentView.hidden = !stop.isFavorite;
+        self.stopInfoView.contentView.hidden = stop.isFavorite;
         
         if (!self.removedAds) {
             self.bannerView = [[GADBannerView alloc] initWithAdSize:kGADAdSizeSmartBannerPortrait];
@@ -597,6 +609,8 @@ CALayer *_leftGripper;
     } else {
         self.favoriteButton.enabled = NO;
         self.favoriteButton.selected = NO;
+        self.stopInfoView.favoriteContentView.hidden = YES;
+        self.stopInfoView.contentView.hidden = NO;
     }
 }
 

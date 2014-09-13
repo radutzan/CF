@@ -34,13 +34,15 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>beta1</string>
+	<string>beta2</string>
 	<key>LSApplicationCategoryType</key>
 	<string></string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSLocationUsageDescription</key>
-	<string>To show you the nearest stops and Bip! spots on the Map. Your location never leaves your device.</string>
+	<string>Your location is used to show you the nearest stops and Bip! spots on the Map. Your location never leaves your device.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Your location is used to show you the nearest stops and Bip! spots on the Map. Your location never leaves your device.</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>
