@@ -24,8 +24,7 @@
 "OUT_OF_SCHEDULE" = "Fuera de horario";
 "TO_DIRECTION" = "a";
 "TO_MINS" = "a";
-"ENTER_STOP_CODE" = "Código\nde Parada";
-"STOP_ERROR_TITLE" = "No se pudo consultar la parada";
+"STOP_ERROR_TITLE" = "No se pudo consultar el paradero";
 "INVALID_STOP_CODE_TITLE" = "Código inválido";
 "INVALID_STOP_CODE_MESSAGE" = "Asegúrate de que lo ingresaste correctamente. Tiene que incluir la P, la letra de zona y un número de hasta 4 dígitos. No puede contener espacios.";
 "NO_INFO_TITLE" = "No hay información sobre este servicio";
@@ -41,9 +40,9 @@
 "LOCATION_DENIED_ALERT_TITLE" = "Ubicación Desactivada";
 "LOCATION_DENIED_ALERT_MESSAGE" = "Cuánto Falta necesita tu ubicación para mostrarte los paraderos y puntos Bip! más cercanos. Tu ubicación se mantendrá completamente privada, nunca se enviará a ningún servidor, y sólo se usará dentro de tu dispositivo.\n\nPara permitir el uso de la ubicación, anda a la app de Ajustes > Privacidad > Ubicación y activa Cuánto Falta.";
 "OUT_OF_SANTIAGO_WARNING_TITLE" = "Estás fuera de Santiago";
-"OUT_OF_SANTIAGO_WARNING_MESSAGE" = "Cuánto Falta sólo funciona en Santiago. Navega hacia Santiago en el mapa para ver cosas.";
+"OUT_OF_SANTIAGO_WARNING_MESSAGE" = "Cuánto Falta sólo funciona en Santiago de Chile. Navega hacia Santiago en el mapa para ver cosas.";
 "ZOOM_LEVEL_WARNING_TITLE" = "Estás muy lejos";
-"ZOOM_LEVEL_WARNING_MESSAGE" = "Acércate para ver paradas en el mapa";
+"ZOOM_LEVEL_WARNING_MESSAGE" = "Acércate para ver paraderos en el mapa";
 "ROUTES_SEARCHFIELD_PLACEHOLDER" = "Busca lugares o direcciones";
 "SEARCH_ERROR_NOTFOUND_TITLE" = "Lugar no encontrado";
 "SEARCH_ERROR_NOTFOUND_MESSAGE" = "Especifica más tu búsqueda o busca directamente en el mapa.";
@@ -53,11 +52,11 @@
 
 // favs and history
 "FAVORITES_PLACEHOLDER_TITLE" = "No tienes favoritos";
-"FAVORITES_PLACEHOLDER_MESSAGE" = "Agrega favoritos tocando la estrella que aparece cuando consultas una parada.";
+"FAVORITES_PLACEHOLDER_MESSAGE" = "Agrega favoritos tocando la estrella que aparece cuando consultas un paradero.";
 "HISTORY_PLACEHOLDER_TITLE" = "Sin historial";
-"HISTORY_PLACEHOLDER_MESSAGE" = "Tu historial se guardará automáticamente a medida que consultes paradas.";
+"HISTORY_PLACEHOLDER_MESSAGE" = "Tu historial se guardará aquí cuando consultes un paradero.";
 "CLEAR_ALL_HISTORY" = "Borrar Historial";
-"NAME_YOUR_FAVORITE" = "Ponle nombre";
+"NAME_YOUR_FAVORITE" = "Ponle nombre al favorito";
 "NAMELESS_FAVORITE" = "Favorito sin nombre";
 
 // more

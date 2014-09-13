@@ -103,7 +103,7 @@
 
 - (void)initFavoriteContentView
 {
-    _favoriteNameField = [[OLTextField alloc] initWithFrame:CGRectMake(0, 10.0, _favoriteContentView.bounds.size.width, 20.0)];
+    _favoriteNameField = [[OLTextField alloc] initWithFrame:CGRectMake(0, 9.0, _favoriteContentView.bounds.size.width, 20.0)];
     _favoriteNameField.placeholder    = NSLocalizedString(@"NAME_YOUR_FAVORITE", nil);
     _favoriteNameField.textColor      = [UIColor whiteColor];
     _favoriteNameField.placeholderTextColor = [UIColor colorWithWhite:1 alpha:0.3];
@@ -113,7 +113,7 @@
     _favoriteNameField.delegate       = self;
     [_favoriteContentView addSubview:_favoriteNameField];
     
-    _stopFullNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 32.0, _favoriteContentView.bounds.size.width, 12.0)];
+    _stopFullNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 30.0, _favoriteContentView.bounds.size.width, 12.0)];
     _stopFullNameLabel.font           = [UIFont fontWithName:DEFAULT_FONT_NAME_BOLD size:11.0];
     _stopFullNameLabel.textColor      = [UIColor colorWithWhite:1 alpha:0.6];
     [_favoriteContentView addSubview:_stopFullNameLabel];

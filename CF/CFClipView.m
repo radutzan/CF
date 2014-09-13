@@ -30,6 +30,11 @@
     return self;
 }
 
+- (void)layoutSubviews
+{
+    self.gradientLayer.frame = self.bounds;
+}
+
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
 {
     if ([self pointInside:point withEvent:event]) {

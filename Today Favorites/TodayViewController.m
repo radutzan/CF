@@ -61,7 +61,7 @@
     [self.placeholderView addSubview:vibrancyView];
     
     self.openCFButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    self.openCFButton.frame = CGRectMake(100.0, 0, 100.0, CELL_HEIGHT);
+    self.openCFButton.frame = CGRectMake(90.0, 0, 90.0, CELL_HEIGHT);
     self.openCFButton.titleEdgeInsets = UIEdgeInsetsMake(0, 10.0, 0, 0);
     [self.openCFButton setTitle:NSLocalizedString(@"OPEN_CF", nil) forState:UIControlStateNormal];
     [self.openCFButton setImage:[UIImage imageNamed:@"icon-widget"] forState:UIControlStateNormal];

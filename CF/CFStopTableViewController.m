@@ -68,7 +68,7 @@
         self.placeholderView.frame = self.view.bounds;
         
         CGFloat verticalMargin = 12.0;
-        CGFloat imageOriginY = floorf((self.view.bounds.size.height - 240.0) / 2);
+        CGFloat imageOriginY = floorf((self.view.bounds.size.height - 256.0) / 2);
         
         self.placeholderImageView.center = CGPointMake(self.placeholderView.bounds.size.width / 2, imageOriginY + self.placeholderImageView.image.size.height / 2);
         self.placeholderTitleLabel.frame = CGRectMake(0, self.placeholderImageView.frame.origin.y + self.placeholderImageView.bounds.size.height + verticalMargin, self.placeholderView.bounds.size.width, 25);
@@ -76,7 +76,7 @@
         
         if (imageOriginY < 20) {
             self.placeholderImageView.transform = CGAffineTransformMakeScale(0.8, 0.8);
-            self.placeholderImageView.center = CGPointMake(_placeholderImageView.center.x, _placeholderImageView.center.y + 15.0);
+            self.placeholderImageView.center = CGPointMake(self.placeholderImageView.center.x, self.placeholderImageView.center.y + 14.0);
         }
         
         self.placeholderViewWasLaidOut = YES;

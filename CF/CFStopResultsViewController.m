@@ -177,9 +177,9 @@ CALayer *_leftGripper;
     [self.titleView addGestureRecognizer:_titleBarPan];
     
     // set up grippers
-    CGFloat gripperThickness = 2.5;
+    CGFloat gripperThickness = 3.0;
     CGFloat gripperLength = 24.0;
-    CGFloat gripperDistance = 4.0;
+    CGFloat gripperDistance = 3.5;
     UIColor *gripperColor = [UIColor colorWithWhite:1 alpha:.35];
     
     _topGripper = [CALayer layer];
