@@ -15,6 +15,14 @@
 
 @end
 
+@protocol CFDrawerScrollingDelegate <NSObject>
+
+- (void)drawerScrollViewDidScroll:(UIScrollView *)scrollView;
+- (void)drawerScrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset;
+- (void)drawerScrollViewDidEndDecelerating:(UIScrollView *)scrollView;
+
+@end
+
 @interface CFDrawerController : UIViewController
 
 - (void)reloadUserData;

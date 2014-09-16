@@ -10,6 +10,7 @@
 
 #import "CFStop.h"
 #import "CFStopCell.h"
+#import "CFDrawerController.h"
 
 @protocol CFStopTableViewDelegate <NSObject>
 
@@ -17,9 +18,10 @@
 
 @end
 
-@interface CFStopTableViewController : UITableViewController
+@interface CFStopTableViewController : UITableViewController <CFDrawerScrollingDelegate>
 
 @property (nonatomic, weak) id<CFStopTableViewDelegate> delegate;
+@property (nonatomic, weak) id<CFDrawerScrollingDelegate> scrollingDelegate;
 @property (nonatomic, strong) UIImage *placeholderImage;
 @property (nonatomic, strong) NSString *placeholderTitle;
 @property (nonatomic, strong) NSString *placeholderMessage;

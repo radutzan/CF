@@ -36,6 +36,7 @@
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic, strong) UILabel *timerLabel;
 @property (nonatomic, assign) NSUInteger timerCount;
+@property (nonatomic, assign) BOOL refreshing;
 
 @property (nonatomic, assign) CGPoint stopResultsViewPresentedCenter;
 @property (nonatomic, assign) CGRect stopResultsViewPresentedFrame;
@@ -43,7 +44,6 @@
 @property (nonatomic, assign) CGPoint stopResultsViewStoredCenter;
 
 @property (nonatomic, strong) GADBannerView *bannerView;
-@property (nonatomic, assign) BOOL refreshing;
 @property (nonatomic, assign) BOOL removedAds;
 
 @end
@@ -132,8 +132,6 @@ CALayer *_leftGripper;
 {
     [super viewDidLoad];
     
-    if (self.stop) self.stopInfoView.stop = self.stop;
-    
     [self.stopResultsView addSubview:self.titleView];
     [self.titleView addSubview:self.stopInfoView];
     [self.titleView addSubview:self.favoriteButton];
@@ -148,6 +146,10 @@ CALayer *_leftGripper;
     self.timerLabel.alpha = 0.5;
     self.timerLabel.textAlignment = NSTextAlignmentRight;
     self.timerLabel.text = NSLocalizedString(@"REFRESHING", nil);
+    
+    self.bannerView = [[GADBannerView alloc] initWithAdSize:kGADAdSizeSmartBannerPortrait];
+    self.bannerView.rootViewController = self;
+    self.bannerView.adUnitID = @"ca-app-pub-6226087428684107/3340545274";
     
     [self initGestures];
 }
@@ -202,13 +204,7 @@ CALayer *_leftGripper;
     [super viewWillAppear:animated];
     
     self.refreshing = NO;
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-    
-    self.favoriteButton.selected = self.stop.isFavorite;
+    [self setUpTitleView];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -476,6 +472,8 @@ CALayer *_leftGripper;
             self.stopInfoView.favoriteContentView.alpha = 0;
         } completion:^(BOOL finished) {
             self.stopInfoView.favoriteContentView.hidden = YES;
+            self.stopInfoView.favoriteContentView.alpha = 1;
+            self.stopInfoView.contentView.alpha = 0;
             self.stopInfoView.contentView.hidden = NO;
             
             [UIView animateWithDuration:animationDuration animations:^{
@@ -491,6 +489,8 @@ CALayer *_leftGripper;
             self.stopInfoView.contentView.alpha = 0;
         } completion:^(BOOL finished) {
             self.stopInfoView.contentView.hidden = YES;
+            self.stopInfoView.contentView.alpha = 1;
+            self.stopInfoView.favoriteContentView.alpha = 0;
             self.stopInfoView.favoriteContentView.hidden = NO;
             
             [UIView animateWithDuration:animationDuration animations:^{
@@ -513,9 +513,7 @@ CALayer *_leftGripper;
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSArray *history = [defaults arrayForKey:@"history"];
     
-    if (!history) {
-        history = [NSArray new];
-    }
+    if (!history) history = [NSArray new];
     
     NSMutableArray *mutableHistory = [history mutableCopy];
     NSUInteger historyCount = 0;
@@ -523,7 +521,6 @@ CALayer *_leftGripper;
     for (NSDictionary *stop in history) {
         if ([stop[@"codigo"] isEqualToString:self.stop.code]) {
             historyCount = [stop[@"count"] integerValue];
-//            NSLog(@"stop %@ has count: %d", stop[@"codigo"], historyCount);
             [mutableHistory removeObject:stop];
         }
     }
@@ -531,7 +528,6 @@ CALayer *_leftGripper;
     historyCount++;
     NSMutableDictionary *mutableStop = [[self.stop asDictionary] mutableCopy];
     [mutableStop setValue:@(historyCount) forKey:@"count"];
-//    NSLog(@"recording count: %d", [mutableStop[@"count"] integerValue]);
     [mutableHistory addObject:mutableStop];
     
     [defaults setObject:mutableHistory forKey:@"history"];
@@ -563,7 +559,7 @@ CALayer *_leftGripper;
                                               [self.refreshControl endRefreshing];
                                               NSLog(@"Couldn't fetch stop. %@", error);
                                               
-                                              if ([[self.navigationController topViewController] isEqual:self]) {
+                                              if (self.displayMode == CFStopResultsDisplayModePresented) {
                                                   UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"STOP_ERROR_TITLE", nil) message:[NSString stringWithFormat:@"%@\n%@", error.localizedDescription, NSLocalizedString(@"ERROR_MESSAGE_TRY_AGAIN", nil)] delegate:self cancelButtonTitle:NSLocalizedString(@"ERROR_DISMISS", nil) otherButtonTitles:nil];
                                                   errorAlert.tag = 6009;
                                                   [errorAlert show];
@@ -580,32 +576,34 @@ CALayer *_leftGripper;
     NSLog(@"setStop:%@", stop.code);
     _stop = stop;
     
-    self.stopInfoView.stop = stop;
     self.refreshing = NO;
     
+    [self setUpTitleView];
     [self resetEstimationData];
     [self resetTimer];
     
     if (stop) {
         [self.tableView reloadData];
-        
-        self.favoriteButton.selected = stop.isFavorite;
-        self.stopInfoView.favoriteContentView.hidden = !stop.isFavorite;
-        self.stopInfoView.contentView.hidden = stop.isFavorite;
+        [self updateHistory];
+        [self performStopRequestQuietly:NO];
         
         if (!self.removedAds) {
-            self.bannerView = [[GADBannerView alloc] initWithAdSize:kGADAdSizeSmartBannerPortrait];
-            self.bannerView.rootViewController = self;
-            self.bannerView.adUnitID = @"ca-app-pub-6226087428684107/3340545274";
-            
             GADRequest *adRequest = [GADRequest request];
             adRequest.testDevices = @[GAD_SIMULATOR_ID];
             [adRequest setLocationWithLatitude:stop.coordinate.latitude longitude:stop.coordinate.longitude accuracy:0];
             [self.bannerView loadRequest:adRequest];
         }
-        
-        [self updateHistory];
-        [self performStopRequestQuietly:NO];
+    }
+}
+
+- (void)setUpTitleView
+{
+    self.stopInfoView.stop = self.stop;
+    
+    if (self.stop) {
+        self.favoriteButton.selected = self.stop.isFavorite;
+        self.stopInfoView.favoriteContentView.hidden = !self.stop.isFavorite;
+        self.stopInfoView.contentView.hidden = self.stop.isFavorite;
     } else {
         self.favoriteButton.enabled = NO;
         self.favoriteButton.selected = NO;

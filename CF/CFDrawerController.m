@@ -15,7 +15,7 @@
 #import "CFTransparentView.h"
 #import "OLShapeTintedButton.h"
 
-@interface CFDrawerController () <UIScrollViewDelegate, CFStopTableViewDelegate, UIActionSheetDelegate>
+@interface CFDrawerController () <UIScrollViewDelegate, CFStopTableViewDelegate, CFDrawerScrollingDelegate, UIActionSheetDelegate>
 
 @property (nonatomic, strong) UIView *drawer;
 @property (nonatomic, strong) CALayer *borderLayer;
@@ -29,6 +29,7 @@
 @property (nonatomic, strong) CFHistoryViewController *historyController;
 @property (nonatomic, strong) CFMoreViewController *moreController;
 
+@property (nonatomic, strong) UIPanGestureRecognizer *activePanGestureRecognizer;
 @property (nonatomic, assign) CGFloat drawerCurrentDragCenterY;
 @property (nonatomic, assign) CGFloat drawerOpenCenterY;
 
@@ -94,15 +95,9 @@
     self.gripper.contentMode = UIViewContentModeCenter;
     [self.drawer addSubview:self.gripper];
     
-    UIPanGestureRecognizer *gripDrag = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleDrawerDragGesture:)];
-    [self.gripper addGestureRecognizer:gripDrag];
-    
     self.tabBar = [[UIView alloc] initWithFrame:CGRectMake(self.drawer.frame.origin.x, self.view.bounds.size.height - TAB_BAR_HEIGHT, drawerWidth, TAB_BAR_HEIGHT)];
     self.tabBar.tintColor = [UIColor colorWithWhite:0.42 alpha:1];
     [self.view addSubview:self.tabBar];
-    
-    UIPanGestureRecognizer *openDrawerDrag = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleDrawerDragGesture:)];
-    [self.tabBar addGestureRecognizer:openDrawerDrag];
     
     self.closeDrawerButton = [UIButton buttonWithType:UIButtonTypeCustom];
     self.closeDrawerButton.frame = self.view.bounds;
@@ -110,8 +105,16 @@
     [self.closeDrawerButton addTarget:self action:@selector(closeDrawerWithAnimation) forControlEvents:UIControlEventTouchUpInside];
     [self.view insertSubview:self.closeDrawerButton atIndex:0];
     
+    UIPanGestureRecognizer *gripDrag = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleDrawerDragGesture:)];
+    [self.gripper addGestureRecognizer:gripDrag];
+    
     UIPanGestureRecognizer *closeDrawerButtonDrag = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleDrawerDragGesture:)];
     [self.closeDrawerButton addGestureRecognizer:closeDrawerButtonDrag];
+    
+    UIPanGestureRecognizer *openDrawerTabBarDrag = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleDrawerDragGesture:)];
+    [self.tabBar addGestureRecognizer:openDrawerTabBarDrag];
+    
+    self.activePanGestureRecognizer = nil;
     
     [self initTabs];
 }
@@ -156,11 +159,14 @@
 {
     self.favoritesController = [[CFFavoritesViewController alloc] initWithStyle:UITableViewStyleGrouped];
     self.favoritesController.delegate = self;
+    self.favoritesController.scrollingDelegate = self;
     
     self.historyController = [[CFHistoryViewController alloc] initWithStyle:UITableViewStyleGrouped];
     self.historyController.delegate = self;
+    self.historyController.scrollingDelegate = self;
     
     self.moreController = [[CFMoreViewController alloc] initWithStyle:UITableViewStyleGrouped];
+    self.moreController.scrollingDelegate = self;
     
     self.tabs = @[@{@"controller": self.favoritesController,
                     @"title": @"Favorites",
@@ -185,7 +191,7 @@
     CGFloat tabButtonWidth = floorf(self.tabBar.bounds.size.width / tabs.count);
     
     for (NSDictionary *tab in tabs) {
-        UIViewController *thisTabController = tab[@"controller"];
+        UITableViewController *thisTabController = tab[@"controller"];
         thisTabController.view.frame = CGRectMake(self.scrollView.bounds.size.width * [tabs indexOfObject:tab], 0, self.scrollView.bounds.size.width, self.scrollView.bounds.size.height);
         thisTabController.view.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
         [self addChildViewController:thisTabController];
@@ -298,57 +304,80 @@
 
 - (void)handleDrawerDragGesture:(UIPanGestureRecognizer *)recognizer
 {
-    // opening refers to the drawer, not the map
-    BOOL opening = !([recognizer.view isEqual:self.gripper] || [recognizer.view isEqual:self.closeDrawerButton]);
+    BOOL opening = ([recognizer.view isEqual:self.tabBar]);
     
-    if (opening && self.drawerOpen) {
-        return;
-    }
+    if (opening && self.drawerOpen) return;
+    if (self.activePanGestureRecognizer && ![self.activePanGestureRecognizer isEqual:recognizer]) return;
     
-    CGFloat draggableHeight = self.drawer.bounds.size.height - TAB_BAR_HEIGHT;
-    CGFloat moveDiff = [recognizer translationInView:self.drawer].y;
-    
-    // dragFactor: opening is negative / closing is positive
-    CGFloat dragFactor = moveDiff / draggableHeight;
+    CGFloat yTranslation = [recognizer translationInView:self.drawer].y;
+    CGFloat drawerMaxY = self.drawerOpenCenterY + self.drawer.bounds.size.height - TAB_BAR_HEIGHT;
     
     if (recognizer.state == UIGestureRecognizerStateBegan) {
+        self.activePanGestureRecognizer = recognizer;
         self.drawerCurrentDragCenterY = self.drawer.center.y;
-        
-        [self.view endEditing:YES];
-        
-        Mixpanel *mixpanel = [Mixpanel sharedInstance];
-        [mixpanel track:@"Used Map Drag Gesture" properties:nil];
+        self.drawer.userInteractionEnabled = NO;
         
     } else if (recognizer.state == UIGestureRecognizerStateChanged) {
-        CGPoint newCenter = CGPointMake(self.drawer.center.x, self.drawerCurrentDragCenterY + moveDiff);
+        CGFloat rawCenterY = self.drawerCurrentDragCenterY + yTranslation;
+        CGFloat newCenterY = rawCenterY;
+        newCenterY = MAX(self.drawerOpenCenterY, newCenterY);
+        newCenterY = MIN(drawerMaxY, newCenterY);
+        self.drawer.center = CGPointMake(self.drawer.center.x, newCenterY);
         
-        // alphaFactor provides a normalized factor for fading drawer contents from 0 to 1 while opening and 1 to 0 while closing
-        CGFloat alphaFactor = (opening) ? fabs(dragFactor) : 1.0 - fabs(dragFactor);
-        //        NSLog(@"%f, drag: %f, alpha: %f", moveDiff, dragFactor, alphaFactor);
+        CGFloat alphaFactor = 1.0 - ((newCenterY - self.drawerOpenCenterY) / (drawerMaxY - self.drawerOpenCenterY));
+        self.scrollView.alpha = alphaFactor;
+        self.gripper.alpha = alphaFactor;
         
-        if ((!opening && (dragFactor >= 0 && dragFactor <= 1.0)) || (opening && (dragFactor <= 0 && dragFactor >= -1.0))) {
-            self.drawer.center = newCenter;
-            self.scrollView.alpha = alphaFactor;
-            self.gripper.alpha = alphaFactor;
-        } else if ((opening && dragFactor < 0) || dragFactor < 1.0) {
-            CGFloat scaleFactor = 1.0 + fabs((moveDiff + draggableHeight * opening) / draggableHeight) * 0.25;
+        if (rawCenterY < newCenterY) {
+            CGFloat scaleFactor = 1.0 + (fabs(rawCenterY - newCenterY) / (drawerMaxY - self.drawerOpenCenterY)) * 0.2;
             self.drawer.transform = CGAffineTransformMakeScale(1.0, scaleFactor);
         }
-        
     } else {
         CGFloat terminalVelocity = [recognizer velocityInView:self.view].y;
+        self.drawer.userInteractionEnabled = YES;
         
-        if (terminalVelocity < -250 || (opening && dragFactor <= -0.25)) {
+        if (terminalVelocity < -250) {
             [self openDrawerWithVelocity:terminalVelocity];
-        } else if (terminalVelocity > 40 || (!opening && dragFactor > 0.25)) {
+        } else if (terminalVelocity > 250) {
+            [self closeDrawerWithVelocity:terminalVelocity];
+        } else if ((!opening && yTranslation < 40.0) || (opening && yTranslation < -40.0)) {
+            [self openDrawerWithVelocity:terminalVelocity];
+        } else {
+            [self closeDrawerWithVelocity:terminalVelocity];
+        }
+        
+        self.activePanGestureRecognizer = nil;
+    }
+}
+
+- (void)drawerScrollViewDidScroll:(UIScrollView *)scrollView
+{
+    if (!scrollView.tracking) return;
+    
+    if (scrollView.contentOffset.y <= 0 || self.drawer.center.y > self.drawerOpenCenterY) {
+        CGFloat drawerMaxY = self.drawerOpenCenterY + self.drawer.bounds.size.height - TAB_BAR_HEIGHT;
+        
+        CGFloat targetDrawerY = self.drawer.center.y - scrollView.contentOffset.y;
+        targetDrawerY = MAX(self.drawerOpenCenterY, targetDrawerY);
+        targetDrawerY = MIN(drawerMaxY, targetDrawerY);
+        self.drawer.center = CGPointMake(self.drawer.center.x, targetDrawerY);
+        
+        CGFloat alphaFactor = 1.0 - ((targetDrawerY - self.drawerOpenCenterY) / (drawerMaxY - self.drawerOpenCenterY));
+        self.scrollView.alpha = alphaFactor;
+        self.gripper.alpha = alphaFactor;
+        
+        scrollView.contentOffset = CGPointMake(0, 0);
+    }
+}
+
+- (void)drawerScrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset
+{
+    if (self.drawer.center.y > self.drawerOpenCenterY || scrollView.contentOffset.y <= 10.0) {
+        CGFloat terminalVelocity = velocity.y * -1000;
+        if (terminalVelocity > 150) {
             [self closeDrawerWithVelocity:terminalVelocity];
         } else {
-            // you didn't want it enough
-            if (opening) {
-                [self closeDrawerWithVelocity:terminalVelocity];
-            } else {
-                [self openDrawerWithVelocity:terminalVelocity];
-            }
+            [self openDrawerWithVelocity:0];
         }
     }
 }
@@ -400,7 +429,7 @@
         if (CGAffineTransformIsIdentity(self.drawer.transform)) {
             self.drawerOpen = YES;
         } else {
-            [UIView animateWithDuration:0.7 delay:0 usingSpringWithDamping:0.25 initialSpringVelocity:0 options:UIViewAnimationOptionAllowUserInteraction animations:^{
+            [UIView animateWithDuration:0.7 delay:0 usingSpringWithDamping:0.25 initialSpringVelocity:velocityFactor options:UIViewAnimationOptionAllowUserInteraction animations:^{
                 self.drawer.transform = CGAffineTransformIdentity;
             } completion:^(BOOL finished) {
                 self.drawerOpen = YES;
@@ -431,7 +460,7 @@
 
 - (void)longPressRecognized:(UILongPressGestureRecognizer *)recognizer
 {
-    if (recognizer.state == UIGestureRecognizerStateBegan) {
+    if (recognizer.state == UIGestureRecognizerStateBegan && self.drawerOpen) {
         UIActionSheet *clearSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:NSLocalizedString(@"CANCEL", nil) destructiveButtonTitle:NSLocalizedString(@"CLEAR_ALL_HISTORY", nil) otherButtonTitles:nil];
         [clearSheet showInView:self.view];
     }

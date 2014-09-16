@@ -125,4 +125,14 @@
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    [self.scrollingDelegate drawerScrollViewDidScroll:scrollView];
+}
+
+- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset
+{
+    [self.scrollingDelegate drawerScrollViewWillEndDragging:scrollView withVelocity:velocity targetContentOffset:targetContentOffset];
+}
+
 @end

@@ -43,6 +43,16 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    [self.scrollingDelegate drawerScrollViewDidScroll:scrollView];
+}
+
+- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset
+{
+    [self.scrollingDelegate drawerScrollViewWillEndDragging:scrollView withVelocity:velocity targetContentOffset:targetContentOffset];
+}
+
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView

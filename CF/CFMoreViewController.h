@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "CFDrawerController.h"
 
-@interface CFMoreViewController : UITableViewController
+@interface CFMoreViewController : UITableViewController <CFDrawerScrollingDelegate>
+
+@property (nonatomic, weak) id<CFDrawerScrollingDelegate> scrollingDelegate;
 
 @end
