@@ -110,6 +110,8 @@
 		7C5DD34118791F6900FE5CFB /* dsym_upload.sh in Resources */ = {isa = PBXBuildFile; fileRef = 7C5DD33F18791F6900FE5CFB /* dsym_upload.sh */; };
 		7C5DD3441879234F00FE5CFB /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C5DD3431879234F00FE5CFB /* SystemConfiguration.framework */; };
 		7C5FD9CE184F8B140099FEE2 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7C5FD9CC184F8B140099FEE2 /* Localizable.strings */; };
+		7C65BDFE19C9EFA5003DE405 /* UIImage+Star.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CBEF1B519C9216A00567C07 /* UIImage+Star.m */; };
+		7C65BDFF19C9EFA5003DE405 /* UIImage+Star.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CBEF1B519C9216A00567C07 /* UIImage+Star.m */; };
 		7C66C54E19A1C6AF00DDA6DF /* CFStopTransitionAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C66C54D19A1C6AF00DDA6DF /* CFStopTransitionAnimator.m */; };
 		7C66C54F19A1C6AF00DDA6DF /* CFStopTransitionAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C66C54D19A1C6AF00DDA6DF /* CFStopTransitionAnimator.m */; };
 		7C66C55219A2809300DDA6DF /* CFDrawerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C66C55119A2809300DDA6DF /* CFDrawerController.m */; };
@@ -1398,6 +1400,7 @@
 				7CC4F8D51977274300D40B88 /* CFStopCell.m in Sources */,
 				7CC4F8D61977274600D40B88 /* CFFavoriteCell.m in Sources */,
 				7C01EDB51974938E00DE7EAB /* TodayViewController.m in Sources */,
+				7C65BDFF19C9EFA5003DE405 /* UIImage+Star.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1408,6 +1411,7 @@
 				7CCAD5E619C4D0BF00DEF306 /* CFFavoriteCell.m in Sources */,
 				7C0A9AA119C4CEE00007FAA1 /* TodayViewController.m in Sources */,
 				7CCAD5E719C4D0CE00DEF306 /* CFStopCell.m in Sources */,
+				7C65BDFE19C9EFA5003DE405 /* UIImage+Star.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

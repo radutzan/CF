@@ -232,15 +232,18 @@
 
 - (NSArray *)favorites
 {
+    NSUserDefaults *defaults;
 #ifdef DEV_VERSION
-    NSUserDefaults *defaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.ondalabs.cfbetagroup"];
-    NSArray *favorites = [defaults objectForKey:@"favorites"];
-    return favorites;
+    defaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.ondalabs.cfbetagroup"];
 #else
-    NSUserDefaults *defaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.ondalabs.cfgroup"];
-    NSArray *favorites = [defaults objectForKey:@"favorites"];
-    return favorites;
+    defaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.ondalabs.cfgroup"];
 #endif
+    
+    if ([defaults objectForKey:@"favorites"]) {
+        return [defaults objectForKey:@"favorites"];
+    } else {
+        return @[];
+    }
 }
 
 @end
