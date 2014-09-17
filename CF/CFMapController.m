@@ -20,18 +20,21 @@
 
 @interface CFMapController () <CLLocationManagerDelegate, SMCalloutViewDelegate>
 
-@property (nonatomic, strong) OLGhostAlertView *outOfSantiagoWarning;
-@property (nonatomic, strong) UILabel *zoomWarning;
-
+@property (nonatomic, strong) CLLocationManager *locationManager;
 @property (nonatomic, strong) NSMutableSet *stops;
 @property (nonatomic, strong) NSMutableSet *bipSpots;
 @property (assign) CFStop *selectedStop;
+
+@property (nonatomic, strong) UILabel *zoomWarning;
 @property (nonatomic) BOOL showZoomWarning;
+@property (nonatomic, strong) OLGhostAlertView *outOfSantiagoWarning;
 @property (nonatomic) BOOL showOutOfSantiagoWarning;
-@property (nonatomic) BOOL phoneIsCrap;
-@property (nonatomic, strong) CLLocationManager *locationManager;
 
 @property (nonatomic, assign, readwrite) CFMapMode mapMode;
+
+@property (nonatomic) BOOL phoneIsCrap;
+@property (nonatomic) BOOL hasPresentedNearestStop;
+
 @property (nonatomic, assign) BOOL routeRegionSet;
 @property (nonatomic, strong, readwrite) NSString *currentServiceName;
 @property (nonatomic, assign, readwrite) CFDirection currentDirection;
@@ -59,10 +62,6 @@ static MKMapRect santiagoBounds;
         self.mapView.pitchEnabled = NO;
         [self addSubview:self.mapView];
         
-        self.mapMode = CFMapModeStops;
-        self.routeRegionSet = NO;
-        [self setInitialRegionAnimated:NO];
-        
         self.locationManager = [[CLLocationManager alloc] init];
         self.locationManager.delegate = self;
         self.locationManager.distanceFilter = kCLDistanceFilterNone;
@@ -71,6 +70,11 @@ static MKMapRect santiagoBounds;
             [self.locationManager requestWhenInUseAuthorization];
         }
         [self.locationManager startUpdatingLocation];
+        
+        self.mapMode = CFMapModeStops;
+        self.hasPresentedNearestStop = NO;
+        self.routeRegionSet = NO;
+        [self setInitialRegionAnimated:NO];
         
         self.stopCalloutView = [SMCalloutView new];
         self.stopCalloutView.delegate = self;
@@ -310,6 +314,34 @@ static MKMapRect santiagoBounds;
     }];
 }
 
+- (void)selectNearestStop
+{
+    NSLog(@"selectNearestStop");
+    if (!self.locationManager.location) return;
+    if (self.hasPresentedNearestStop) return;
+    
+    NSMutableDictionary *distances = [NSMutableDictionary dictionary];
+    
+    for (id<MKAnnotation> annotation in self.mapView.annotations) {
+        if ([annotation isKindOfClass:[CFStop class]]) {
+            CLLocation *loc = [[CLLocation alloc] initWithLatitude:annotation.coordinate.latitude longitude:annotation.coordinate.longitude];
+            CLLocationDistance distance = [loc distanceFromLocation:self.locationManager.location];
+            
+            [distances setObject:annotation forKey:@(distance)];
+        }
+    }
+    
+    if (distances.count == 0) return;
+    
+    NSArray *sortedKeys = [[distances allKeys] sortedArrayUsingSelector:@selector(compare:)];
+    NSArray *nearestKeys = [sortedKeys subarrayWithRange:NSMakeRange(0, MIN(3, sortedKeys.count))];
+    
+    NSArray *nearestAnnotations = [distances objectsForKeys:nearestKeys notFoundMarker:[NSNull null]];
+    [self.mapView selectAnnotation:nearestAnnotations[0] animated:YES];
+    
+    self.hasPresentedNearestStop = YES;
+}
+
 - (void)placeBipAnnotationsInRegion:(MKCoordinateRegion)region withRadius:(float)radius
 {
     [[CFSapoClient sharedClient] bipSpotsAroundCoordinate:region.center radius:radius handler:^(NSError *error, id result) {
@@ -501,6 +533,11 @@ static MKMapRect santiagoBounds;
 }
 
 #pragma mark - MKMapViewDelegate
+
+- (void)mapViewDidFinishLoadingMap:(MKMapView *)mapView
+{
+    [self selectNearestStop];
+}
 
 - (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation
 {
