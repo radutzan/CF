@@ -83,7 +83,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
+    static NSString *CellIdentifier = @"Favorite Cell";
     CFFavoriteCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
     NSInteger index = [self.favoritesArray count] - indexPath.row - 1;
@@ -110,7 +110,6 @@
         cell.favoriteNameLabel.text = favoriteName;
         cell.favoriteNameLabel.font = [UIFont fontWithName:@"AvenirNext-Medium" size:18.0];
     }
-//    cell.nameLabel.textColor = [UIColor darkTextColor];
     
     return cell;
 }

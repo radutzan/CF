@@ -11,5 +11,6 @@
 @interface CFFavoriteCell : CFStopCell
 
 @property (nonatomic, strong) UILabel *favoriteNameLabel;
+@property (nonatomic, strong) UIImageView *favoriteBadge;
 
 @end

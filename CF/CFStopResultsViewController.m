@@ -6,16 +6,21 @@
 //  Copyright (c) 2013 Onda. All rights reserved.
 //
 
-#import <Mixpanel/Mixpanel.h>
 #import <Social/Social.h>
+
+#import <Mixpanel/Mixpanel.h>
 #import <OLGhostAlertView/OLGhostAlertView.h>
+
 #import "CFStopResultsViewController.h"
 #import "CFSapoClient.h"
 #import "OLCashier.h"
+
 #import "CFStopSignView.h"
 #import "CFResultCell.h"
 #import "OLShapeTintedButton.h"
 #import "CFTransparentView.h"
+#import "UIImage+Star.h"
+
 #import "GADBannerView.h"
 
 @interface CFStopResultsViewController () <CFStopSignViewDelegate, UIAlertViewDelegate, CFResultCellDelegate, UITableViewDelegate, UITableViewDataSource, UIGestureRecognizerDelegate>
@@ -110,11 +115,12 @@ CALayer *_leftGripper;
     self.stopInfoView.stopCodeLabel.hidden = YES;
     self.stopInfoView.favoriteContentView.userInteractionEnabled = YES;
     
+    CGSize starImageSize = CGSizeMake(27.0, 27.0);
     self.favoriteButton = [OLShapeTintedButton buttonWithType:UIButtonTypeCustom];
     self.favoriteButton.frame = CGRectMake(self.titleView.bounds.size.width - 38.0, 5.0, 42.0, 42.0);
     self.favoriteButton.enabled = NO;
-    [self.favoriteButton setImage:[UIImage imageNamed:@"button-favorites"] forState:UIControlStateNormal];
-    [self.favoriteButton setImage:[UIImage imageNamed:@"button-favorites-selected"] forState:UIControlStateSelected];
+    [self.favoriteButton setImage:[UIImage starImageWithSize:starImageSize filled:NO] forState:UIControlStateNormal];
+    [self.favoriteButton setImage:[UIImage starImageWithSize:starImageSize filled:YES] forState:UIControlStateSelected];
     [self.favoriteButton addTarget:self action:@selector(favButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     
     self.tableView = [[UITableView alloc] initWithFrame:self.stopResultsView.bounds style:UITableViewStylePlain];

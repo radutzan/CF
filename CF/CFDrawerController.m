@@ -14,6 +14,7 @@
 #import "CFMoreViewController.h"
 #import "CFTransparentView.h"
 #import "OLShapeTintedButton.h"
+#import "UIImage+Star.h"
 
 @interface CFDrawerController () <UIScrollViewDelegate, CFStopTableViewDelegate, CFDrawerScrollingDelegate, UIActionSheetDelegate>
 
@@ -168,10 +169,11 @@
     self.moreController = [[CFMoreViewController alloc] initWithStyle:UITableViewStyleGrouped];
     self.moreController.scrollingDelegate = self;
     
+    CGFloat starImageSize = 29.0;
     self.tabs = @[@{@"controller": self.favoritesController,
                     @"title": @"Favorites",
-                    @"button": [UIImage imageNamed:@"button-favorites"],
-                    @"button-selected": [UIImage imageNamed:@"button-favorites-selected"]},
+                    @"button": [UIImage starImageWithSize:CGSizeMake(starImageSize, starImageSize) filled:NO],
+                    @"button-selected": [UIImage starImageWithSize:CGSizeMake(starImageSize, starImageSize) filled:YES]},
                   @{@"controller": self.historyController,
                     @"title": @"History",
                     @"button": [UIImage imageNamed:@"button-history"],
