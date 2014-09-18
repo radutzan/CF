@@ -310,6 +310,7 @@ static MKMapRect santiagoBounds;
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.mapView addAnnotations:stopsArray];
+            [self selectNearestStop];
         });
     }];
 }
@@ -317,8 +318,8 @@ static MKMapRect santiagoBounds;
 - (void)selectNearestStop
 {
     NSLog(@"selectNearestStop");
-    if (!self.locationManager.location) return;
     if (self.hasPresentedNearestStop) return;
+    if (!self.locationManager.location) return;
     
     NSMutableDictionary *distances = [NSMutableDictionary dictionary];
     

@@ -47,26 +47,27 @@
     self.placeholderView.hidden = YES;
     [self.view addSubview:self.placeholderView];
     
-    UILabel *noFavoritesLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200.0, self.placeholderView.bounds.size.height)];
-    noFavoritesLabel.text = NSLocalizedString(@"NO_FAVORITES", nil);
-    noFavoritesLabel.font = [UIFont systemFontOfSize:15.0];
-    noFavoritesLabel.numberOfLines = 0;
-    noFavoritesLabel.textColor = [UIColor whiteColor];
-    [self.placeholderView addSubview:noFavoritesLabel];
-    
     UIVisualEffectView *vibrancyView = [[UIVisualEffectView alloc] initWithEffect:[UIVibrancyEffect notificationCenterVibrancyEffect]];
     vibrancyView.frame = self.placeholderView.bounds;
     vibrancyView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     vibrancyView.translatesAutoresizingMaskIntoConstraints = YES;
     [self.placeholderView addSubview:vibrancyView];
     
+    UILabel *noFavoritesLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200.0, self.placeholderView.bounds.size.height)];
+    noFavoritesLabel.text = NSLocalizedString(@"NO_FAVORITES", nil);
+    noFavoritesLabel.font = [UIFont systemFontOfSize:15.0];
+    noFavoritesLabel.numberOfLines = 0;
+    noFavoritesLabel.textColor = [UIColor whiteColor];
+    [vibrancyView.contentView addSubview:noFavoritesLabel];
+    
     self.openCFButton = [UIButton buttonWithType:UIButtonTypeSystem];
     self.openCFButton.frame = CGRectMake(90.0, 0, 90.0, CELL_HEIGHT);
     self.openCFButton.titleEdgeInsets = UIEdgeInsetsMake(0, 10.0, 0, 0);
+    self.openCFButton.tintColor = [UIColor whiteColor];
     [self.openCFButton setTitle:NSLocalizedString(@"OPEN_CF", nil) forState:UIControlStateNormal];
     [self.openCFButton setImage:[UIImage imageNamed:@"icon-widget"] forState:UIControlStateNormal];
     [self.openCFButton addTarget:self action:@selector(openCF) forControlEvents:UIControlEventTouchUpInside];
-    [vibrancyView.contentView addSubview:self.openCFButton];
+    [self.placeholderView addSubview:self.openCFButton];
 }
 
 - (void)viewDidLoad
@@ -130,7 +131,7 @@
     self.placeholderView.frame = CGRectMake(defaultMarginInsets.left, 0, self.view.bounds.size.width - defaultMarginInsets.left, CELL_HEIGHT);
     [self updateContent];
     
-    return UIEdgeInsetsMake(0, 0, 40.0, 0);
+    return UIEdgeInsetsMake(0, 0, 20.0, 0);
 }
 
 - (void)setPlaceholderVisible:(BOOL)placeholderVisible
