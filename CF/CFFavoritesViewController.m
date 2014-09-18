@@ -21,7 +21,7 @@
 {
     self = [super initWithStyle:style];
     if (self) {
-        self.placeholderImage = [UIImage imageNamed:@"placeholder-favorites"];
+        self.placeholderImage = [UIImage starImageWithSize:CGSizeMake(145.0, 145.0) filled:NO];
         self.placeholderTitle = NSLocalizedString(@"FAVORITES_PLACEHOLDER_TITLE", nil);
         self.placeholderMessage = NSLocalizedString(@"FAVORITES_PLACEHOLDER_MESSAGE", nil);
     }

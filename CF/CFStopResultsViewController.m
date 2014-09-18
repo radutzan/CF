@@ -81,18 +81,11 @@ CALayer *_leftGripper;
     self.overlay.backgroundColor = [UIColor colorWithWhite:0 alpha:.3];
     [self.view addSubview:self.overlay];
     
-    CGFloat stopResultsViewWidth = screenBounds.size.width - 20.0;
-    stopResultsViewWidth = MIN(MAX_OVERLAY_WIDTH, stopResultsViewWidth);
-    CGFloat stopResultsViewHeight = screenBounds.size.height - 35.0;
-    stopResultsViewHeight = MIN(610.0, stopResultsViewHeight);
-    
-    CGRect stopResultsViewFrame = CGRectMake(self.view.center.x - stopResultsViewWidth / 2, self.view.center.y + 10.0 - stopResultsViewHeight / 2, stopResultsViewWidth, stopResultsViewHeight);
-    
     if (NSClassFromString(@"UIVisualEffectView")) {
         self.stopResultsView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleDark]];
-        self.stopResultsView.frame = stopResultsViewFrame;
+        self.stopResultsView.frame = self.stopResultsViewPresentedFrame;
     } else {
-        self.stopResultsView = [[UIToolbar alloc] initWithFrame:stopResultsViewFrame];
+        self.stopResultsView = [[UIToolbar alloc] initWithFrame:self.stopResultsViewPresentedFrame];
         UIToolbar *castedStopResultsView = (UIToolbar *)self.stopResultsView;
         castedStopResultsView.barStyle = UIBarStyleBlack;
         self.stopResultsView.backgroundColor = [UIColor colorWithWhite:0 alpha:.5];
@@ -104,8 +97,6 @@ CALayer *_leftGripper;
     [self.view addSubview:self.stopResultsView];
     
     self.stopResultsViewPresentedCenter = self.stopResultsView.center;
-    self.stopResultsViewPresentedFrame = stopResultsViewFrame;
-    self.stopResultsViewMinimizedFrame = CGRectMake(self.stopResultsView.frame.origin.x, self.view.bounds.size.height - self.titleView.bounds.size.height, self.stopResultsView.bounds.size.width, self.stopResultsView.bounds.size.height);
     
     self.titleView = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, self.stopResultsView.bounds.size.width, 54.0)];
     self.titleView.barStyle = UIBarStyleBlack;
@@ -220,6 +211,23 @@ CALayer *_leftGripper;
     [self.timer invalidate];
     [self.view endEditing:YES];
     self.refreshing = NO;
+}
+
+- (void)viewWillLayoutSubviews
+{
+    if (self.displayMode == CFStopResultsDisplayModePresented) self.stopResultsView.frame = self.stopResultsViewPresentedFrame;
+    
+    if (self.displayMode == CFStopResultsDisplayModeMinimized) self.stopResultsView.frame = self.stopResultsViewMinimizedFrame;
+}
+
+- (void)statusBarFrameChanged:(NSNotification*)notification
+{
+    CGRect statusBarFrame = [notification.userInfo[UIApplicationStatusBarFrameUserInfoKey] CGRectValue];
+    CGRect windowBounds = [UIScreen mainScreen].bounds;
+    windowBounds.size.height -= statusBarFrame.size.height - 20.0;
+    self.view.frame = windowBounds;
+    
+    [self.view setNeedsLayout];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
@@ -459,6 +467,22 @@ CALayer *_leftGripper;
             [self expandWithVelocity:velocityFactor];
         }
     }
+}
+
+- (CGRect)stopResultsViewPresentedFrame
+{
+    CGFloat stopResultsViewWidth = self.view.bounds.size.width - 20.0;
+    stopResultsViewWidth = MIN(MAX_OVERLAY_WIDTH, stopResultsViewWidth);
+    CGFloat stopResultsViewHeight = self.view.bounds.size.height - 35.0;
+    stopResultsViewHeight = MIN(610.0, stopResultsViewHeight);
+    
+    CGRect stopResultsViewFrame = CGRectMake(self.view.center.x - stopResultsViewWidth / 2, self.view.center.y + 7.5 - stopResultsViewHeight / 2, stopResultsViewWidth, stopResultsViewHeight);
+    return stopResultsViewFrame;
+}
+
+- (CGRect)stopResultsViewMinimizedFrame
+{
+    return CGRectMake(self.stopResultsViewPresentedFrame.origin.x, self.view.bounds.size.height - self.titleView.bounds.size.height, self.stopResultsViewPresentedFrame.size.width, self.stopResultsViewPresentedFrame.size.height);
 }
 
 #pragma mark - Favorites and history

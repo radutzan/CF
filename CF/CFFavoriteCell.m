@@ -7,7 +7,6 @@
 //
 
 #import "CFFavoriteCell.h"
-#import "UIImage+Star.h"
 
 @implementation CFFavoriteCell
 

@@ -54,21 +54,17 @@
     
     self.view = [[CFTransparentView alloc] initWithFrame:windowBounds];
     
-    CGFloat drawerWidth = windowSize.width - 20.0;
-    drawerWidth = MIN(MAX_OVERLAY_WIDTH, drawerWidth);
-    CGRect drawerFrame = CGRectMake(self.view.center.x - drawerWidth / 2, windowSize.height - TAB_BAR_HEIGHT, drawerWidth, windowSize.height - DRAWER_ORIGIN_Y);
-    
     if (NSClassFromString(@"UIVisualEffectView")) {
         self.drawer = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleLight]];
-        self.drawer.frame = drawerFrame;
+        self.drawer.frame = [self drawerFrame];
     } else {
-        self.drawer = [[UINavigationBar alloc] initWithFrame:drawerFrame];
+        self.drawer = [[UINavigationBar alloc] initWithFrame:[self drawerFrame]];
         UINavigationBar *castedDrawer = (UINavigationBar *)self.drawer;
         castedDrawer.translucent = NO;
     }
     
     self.drawer.layer.anchorPoint = CGPointMake(0.5, 1.0);
-    self.drawer.frame = drawerFrame;
+    self.drawer.frame = [self drawerFrame];
     [self.view addSubview:self.drawer];
     
     self.borderLayer = [CALayer layer];
@@ -96,7 +92,7 @@
     self.gripper.contentMode = UIViewContentModeCenter;
     [self.drawer addSubview:self.gripper];
     
-    self.tabBar = [[UIView alloc] initWithFrame:CGRectMake(self.drawer.frame.origin.x, self.view.bounds.size.height - TAB_BAR_HEIGHT, drawerWidth, TAB_BAR_HEIGHT)];
+    self.tabBar = [[UIView alloc] initWithFrame:CGRectMake(self.drawer.frame.origin.x, self.view.bounds.size.height - TAB_BAR_HEIGHT, self.drawer.bounds.size.width, TAB_BAR_HEIGHT)];
     self.tabBar.tintColor = [UIColor colorWithWhite:0.42 alpha:1];
     [self.view addSubview:self.tabBar];
     
@@ -120,6 +116,14 @@
     [self initTabs];
 }
 
+- (void)viewDidLoad
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(statusBarFrameChanged:)
+                                                 name:UIApplicationWillChangeStatusBarFrameNotification
+                                               object:nil];
+}
+
 - (void)reloadUserData
 {
     [self.favoritesController.tableView reloadData];
@@ -129,16 +133,22 @@
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
 {
     self.view.frame = CGRectMake(0, 0, size.width, size.height);
-    CGFloat drawerOriginY = (self.drawerOpen) ? DRAWER_ORIGIN_Y : self.view.bounds.size.height - TAB_BAR_HEIGHT;
-    self.drawer.frame = CGRectMake(10.0, drawerOriginY, self.view.bounds.size.width - 20.0, self.view.bounds.size.height - DRAWER_ORIGIN_Y);
-    self.borderLayer.frame = CGRectInset(self.drawer.bounds, -0.5, -0.5);
-    self.drawerOpenCenterY = DRAWER_ORIGIN_Y + self.drawer.bounds.size.height;
-    self.scrollView.contentSize = CGSizeMake(self.scrollView.bounds.size.width * 3, self.scrollView.bounds.size.height);
-    self.tabBar.frame = CGRectMake(0, self.view.bounds.size.height - TAB_BAR_HEIGHT, self.view.bounds.size.width, TAB_BAR_HEIGHT);
+    [self.view setNeedsLayout];
 }
 
 - (void)viewWillLayoutSubviews
 {
+    NSLog(@"viewWillLayoutSubviews");
+    self.drawer.frame = [self drawerFrame];
+    self.drawer.layer.anchorPoint = CGPointMake(0.5, 1.0);
+    self.drawer.frame = [self drawerFrame];
+    self.borderLayer.frame = CGRectInset(self.drawer.bounds, -0.5, -0.5);
+    self.drawerOpenCenterY = DRAWER_ORIGIN_Y + self.drawer.bounds.size.height;
+    self.gripper.frame = CGRectMake(0, 0, self.drawer.bounds.size.width, 30);
+    
+    self.scrollView.contentSize = CGSizeMake(self.scrollView.bounds.size.width * self.tabs.count, self.scrollView.bounds.size.height);
+    self.tabBar.frame = CGRectMake(self.drawer.frame.origin.x, self.view.bounds.size.height - TAB_BAR_HEIGHT, self.drawer.bounds.size.width, TAB_BAR_HEIGHT);
+    
     for (UIView *subview in self.scrollView.subviews) {
         if (![subview isKindOfClass:[UIImageView class]]) {
             subview.frame = CGRectMake(self.scrollView.bounds.size.width * [self.scrollView.subviews indexOfObject:subview], 0, self.scrollView.bounds.size.width, self.scrollView.bounds.size.height);
@@ -152,6 +162,30 @@
             [self tabButtonPressed:subview];
         }
     }
+}
+
+- (void)statusBarFrameChanged:(NSNotification*)notification
+{
+    CGRect statusBarFrame = [notification.userInfo[UIApplicationStatusBarFrameUserInfoKey] CGRectValue];
+    CGRect windowBounds = [UIScreen mainScreen].applicationFrame;
+    windowBounds.size.height -= statusBarFrame.size.height - 20.0;
+    self.view.frame = windowBounds;
+    
+    [self.view setNeedsLayout];
+}
+
+- (CGRect)drawerFrame
+{
+    CGSize windowSize = self.view.bounds.size;
+    CGFloat drawerWidth = windowSize.width - 20.0;
+    drawerWidth = MIN(MAX_OVERLAY_WIDTH, drawerWidth);
+    
+    CGRect drawerFrame = CGRectMake(self.view.center.x - drawerWidth / 2, windowSize.height - TAB_BAR_HEIGHT, drawerWidth, windowSize.height - DRAWER_ORIGIN_Y);;
+    if (self.drawerOpen) {
+        drawerFrame = CGRectOffset(drawerFrame, 0, TAB_BAR_HEIGHT - drawerFrame.size.height);
+    }
+    
+    return drawerFrame;
 }
 
 #pragma mark - Tabs

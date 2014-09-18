@@ -33,9 +33,11 @@
         [[UIColor blackColor] setFill];
         [starPath fill];
     } else {
+        CGFloat lineWidth = 2.0;
+        if (size.width > 100) lineWidth = 4.0;
         CGContextRef context = UIGraphicsGetCurrentContext();
         CGContextSetStrokeColorWithColor(context, [UIColor blackColor].CGColor);
-        CGContextSetLineWidth(context, 2.0);
+        CGContextSetLineWidth(context, lineWidth);
         
         CGPathRef path = starPath.CGPath;
         CGContextAddPath(context, path);

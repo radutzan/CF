@@ -21,7 +21,7 @@
 {
     self = [super initWithStyle:style];
     if (self) {
-        self.placeholderImage = [UIImage imageNamed:@"placeholder-history"];
+        self.placeholderImage = [[UIImage imageNamed:@"placeholder-history"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
         self.placeholderTitle = NSLocalizedString(@"HISTORY_PLACEHOLDER_TITLE", nil);
         self.placeholderMessage = NSLocalizedString(@"HISTORY_PLACEHOLDER_MESSAGE", nil);
     }

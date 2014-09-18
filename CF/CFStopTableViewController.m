@@ -28,6 +28,7 @@
         [self.view addSubview:_placeholderView];
         
         _placeholderImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"placeholder-favorites"]];
+        _placeholderImageView.tintColor = [UIColor colorWithWhite:0 alpha:.2];
         [_placeholderView addSubview:_placeholderImageView];
         
         _placeholderTitleLabel = [[UILabel alloc] initWithFrame:CGRectZero];

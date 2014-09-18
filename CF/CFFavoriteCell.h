@@ -7,6 +7,7 @@
 //
 
 #import "CFStopCell.h"
+#import "UIImage+Star.h"
 
 @interface CFFavoriteCell : CFStopCell
 
