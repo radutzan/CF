@@ -9,16 +9,18 @@
 #import "CFSearchController.h"
 #import "CFSearchSuggestionsCard.h"
 #import "CFServiceRouteBar.h"
+#import "CFMapSearchSuggestionView.h"
 #import <Mixpanel/Mixpanel.h>
 
 #define VERTICAL_MARGIN 0.0
 #define HORIZONTAL_MARGIN 0.0
 
-@interface CFSearchController () <CFServiceRouteBarDelegate, CFSearchFieldDelegate>
+@interface CFSearchController () <CFServiceRouteBarDelegate, CFSearchFieldDelegate, CFMapSearchSuggestionViewDelegate>
 
 @property (nonatomic, strong) UIView *overlay;
 @property (nonatomic, strong) CFSearchSuggestionsCard *searchSuggestionsCard;
 @property (nonatomic, strong) CFServiceRouteBar *serviceSuggestionView;
+@property (nonatomic, strong) CFMapSearchSuggestionView *mapSearchSuggestionView;
 
 @property (nonatomic, strong) UIView *currentCard;
 @property (nonatomic, assign) BOOL hiding;
@@ -47,16 +49,23 @@
         _containerView = [[UIView alloc] initWithFrame:self.bounds];
         [self addSubview:_containerView];
         
-        _searchSuggestionsCard = [[CFSearchSuggestionsCard alloc] initWithFrame:CGRectMake(HORIZONTAL_MARGIN, VERTICAL_MARGIN, frame.size.width - HORIZONTAL_MARGIN * 2, 150.0)];
-        _searchSuggestionsCard.clipsToBounds = NO;
-        [_containerView addSubview:_searchSuggestionsCard];
-        
         _serviceSuggestionView = [[CFServiceRouteBar alloc] initWithFrame:CGRectMake(HORIZONTAL_MARGIN, VERTICAL_MARGIN, frame.size.width - HORIZONTAL_MARGIN * 2, 44.0)];
         _serviceSuggestionView.delegate = self;
         _serviceSuggestionView.hidden = YES;
         _serviceSuggestionView.clipsToBounds = NO;
         _serviceSuggestionView.layer.backgroundColor = [UIColor colorWithWhite:1 alpha:.96].CGColor;
         [_containerView addSubview:_serviceSuggestionView];
+        
+        _searchSuggestionsCard = [[CFSearchSuggestionsCard alloc] initWithFrame:CGRectMake(HORIZONTAL_MARGIN, VERTICAL_MARGIN, frame.size.width - HORIZONTAL_MARGIN * 2, 150.0)];
+        _searchSuggestionsCard.clipsToBounds = NO;
+        _searchSuggestionsCard.hidden = YES;
+        [_containerView addSubview:_searchSuggestionsCard];
+        
+        _mapSearchSuggestionView = [[CFMapSearchSuggestionView alloc] initWithFrame:CGRectMake(HORIZONTAL_MARGIN, VERTICAL_MARGIN, frame.size.width - HORIZONTAL_MARGIN * 2, 50.0)];
+        _mapSearchSuggestionView.delegate = self;
+        _mapSearchSuggestionView.hidden = YES;
+        _mapSearchSuggestionView.clipsToBounds = NO;
+        [_containerView addSubview:_mapSearchSuggestionView];
         
         _suggesting = NO;
     }
@@ -71,7 +80,7 @@
     _contentInset = contentInset;
     self.containerView.frame = CGRectMake(0, contentInset.top, self.bounds.size.width, self.bounds.size.height - contentInset.top - contentInset.bottom);
     
-    if (self.suggestedStop && !(self.hidden || self.hiding)) [self.delegate searchControllerNeedsStopCardForStop:self.suggestedStop];
+    if (self.suggestedStop && !(self.hidden || self.hiding)) [self showStopSuggestionWithStop:self.suggestedStop];
 }
 
 - (void)show
@@ -79,17 +88,11 @@
     self.alpha = 0;
     self.hidden = NO;
     
-    if (!self.suggesting) {
-        self.searchSuggestionsCard.frame = CGRectMake(self.searchSuggestionsCard.frame.origin.x, - SEARCH_CARD_ANIMATION_OFFSET, self.searchSuggestionsCard.bounds.size.width, self.searchSuggestionsCard.bounds.size.height);
-    }
-    
-    if (self.suggestedStop) [self.delegate searchControllerNeedsStopCardForStop:self.suggestedStop];
+    if (!self.suggesting) self.currentCard = self.searchSuggestionsCard;
+    if (self.suggestedStop) [self showStopSuggestionWithStop:self.suggestedStop];
     
     [UIView animateWithDuration:0.25 delay:0.0 usingSpringWithDamping:1 initialSpringVelocity:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
         self.alpha = 1;
-        if (!self.suggesting) {
-            self.searchSuggestionsCard.frame = CGRectMake(self.searchSuggestionsCard.frame.origin.x, 0, self.searchSuggestionsCard.bounds.size.width, self.searchSuggestionsCard.bounds.size.height);
-        }
     } completion:^(BOOL finished) {
     }];
 }
@@ -109,22 +112,185 @@
     }];
 }
 
+#pragma mark - Search string processing
+
+- (void)processSearchString:(NSString *)searchString
+{
+    // servicio
+    NSString *serviceRegex;
+    
+    if (searchString.length == 2) {
+        serviceRegex = @"[A-J][1-9]";
+        
+    } else if (searchString.length == 3) {
+        serviceRegex = @"([1-5]|[A-J])[0-4][0-9]";
+        
+    } else if (searchString.length == 4) {
+        serviceRegex = @"([1-5]|[A-J])[0-4][0-9](C|E|N|V)";
+        
+    }
+    
+    BOOL possibleServiceMatch = NO;
+    if (searchString.length >= 2 && searchString.length <= 4) {
+        NSRegularExpression *expression = [NSRegularExpression regularExpressionWithPattern:serviceRegex options:(NSRegularExpressionCaseInsensitive) error:NULL];
+        
+        NSTextCheckingResult *result = [expression firstMatchInString:searchString options:0 range:NSMakeRange(0, searchString.length)];
+        
+        if (result) {
+//            NSLog(@"possible service");
+            NSString *serviceString = searchString;
+            
+            if (searchString.length == 2) {
+//                NSLog(@"…which is shortened");
+                NSMutableString *expandedServiceName = [NSMutableString stringWithString:searchString];
+                [expandedServiceName insertString:@"0" atIndex:1];
+                serviceString = expandedServiceName;
+            }
+            
+            [self checkService:serviceString];
+            possibleServiceMatch = YES;
+        } else {
+            possibleServiceMatch = NO;
+        }
+    } else {
+        possibleServiceMatch = NO;
+    }
+    
+    if (!possibleServiceMatch) [self clearServiceSuggestions];
+    
+    // parada
+    BOOL possibleStopMatch = NO;
+    if (searchString.length >= 3 && searchString.length <= 6) {
+        NSRegularExpression *expression = [NSRegularExpression regularExpressionWithPattern:@"P[A-J][0-9]{1,4}$" options:(NSRegularExpressionCaseInsensitive) error:NULL];
+        
+        NSTextCheckingResult *result = [expression firstMatchInString:searchString options:0 range:NSMakeRange(0, searchString.length)];
+        
+        if (result) {
+            [self checkStop:searchString];
+            possibleStopMatch = YES;
+        } else {
+            possibleStopMatch = NO;
+        }
+    } else {
+        possibleStopMatch = NO;
+    }
+    
+    if (!possibleStopMatch) [self clearStopSuggestions];
+    
+    // suggest map search
+    BOOL possibleMatch = (possibleServiceMatch || possibleStopMatch);
+    
+    if (!possibleMatch && (!self.suggesting || !self.thinking) && ![searchString isEqualToString:@""]) {
+        [self showMapSearchSuggestionWithString:searchString];
+    }
+    
+    if ([searchString isEqualToString:@""]) self.suggesting = NO;
+}
+
+- (void)checkService:(NSString *)service
+{
+//    NSLog(@"checking possible service");
+    self.thinking = YES;
+    
+    [[CFSapoClient sharedClient] serviceInfoForService:service handler:^(NSError *error, NSArray *result) {
+        self.thinking = NO;
+        
+        if (result && [result lastObject]) {
+//            NSLog(@"service exists: %@", result);
+            self.suggesting = YES;
+            
+            NSDictionary *serviceInfo = [result firstObject];
+            [self showServiceSuggestionWithService:[CFService serviceWithName:[serviceInfo objectForKey:@"servicio"] outwardDirectionName:[serviceInfo objectForKey:@"ida"] inwardDirectionName:[serviceInfo objectForKey:@"regreso"]]];
+        }
+        
+        if (error || ![result lastObject]) {
+//            NSLog(@"not a service");
+            [self clearServiceSuggestions];
+        }
+    }];
+}
+
+- (void)checkStop:(NSString *)stop
+{
+//    NSLog(@"checking possible stop code");
+    self.thinking = YES;
+    
+    [[CFSapoClient sharedClient] fetchBusStop:stop handler:^(NSError *error, id result) {
+        self.thinking = NO;
+        
+        if (result) {
+//            NSLog(@"stop exists");
+            self.suggesting = YES;
+            
+            NSDictionary *stopData = [result firstObject];
+            CLLocationCoordinate2D coordinate;
+            coordinate.latitude = [[stopData objectForKey:@"latitude"] doubleValue];
+            coordinate.longitude = [[stopData objectForKey:@"longitude"] doubleValue];
+            
+            CFStop *stop = [CFStop stopWithCoordinate:coordinate code:[stopData objectForKey:@"codigo"] name:[stopData objectForKey:@"nombre"] services:[stopData objectForKey:@"recorridos"]];
+            [self showStopSuggestionWithStop:stop];
+            
+        } else {
+//            NSLog(@"not a stop");
+            [self clearStopSuggestions];
+        }
+    }];
+}
+
+#pragma mark - Suggestions
+
+- (void)setCurrentCard:(UIView *)currentCard
+{
+//    NSLog(@"setCurrentCard:");
+    if ([currentCard isKindOfClass:[_currentCard class]]) return;
+    
+    CGFloat animationOffset = SEARCH_CARD_ANIMATION_OFFSET;
+    
+    UIView *oldCard = _currentCard;
+    UIView *newCard = currentCard;
+    BOOL hasOldCardButNoNewCard = (oldCard && !newCard);
+    BOOL hasNewCardAndIsDifferentFromOldCard = (newCard && ![newCard isKindOfClass:[oldCard class]]);
+    
+//    if (hasOldCardButNoNewCard) NSLog(@"hasOldCardButNoNewCard");
+//    if (hasNewCardAndIsDifferentFromOldCard) NSLog(@"hasNewCardAndIsDifferentFromOldCard");
+//    NSLog(@"old: %@", oldCard);
+//    NSLog(@"new: %@", newCard);
+    
+    if (hasOldCardButNoNewCard || hasNewCardAndIsDifferentFromOldCard) {
+        NSLog(@"old now: %@", _currentCard);
+        [UIView animateWithDuration:0.25 delay:0 usingSpringWithDamping:1 initialSpringVelocity:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+            oldCard.frame = CGRectOffset(oldCard.frame, 0, animationOffset);
+            oldCard.alpha = 0;
+        } completion:^(BOOL finished) {
+            NSLog(@"old now: %@", oldCard);
+            oldCard.frame = CGRectMake(0, 0, oldCard.bounds.size.width, oldCard.bounds.size.height);
+            oldCard.hidden = YES;
+        }];
+    }
+    
+    if (hasNewCardAndIsDifferentFromOldCard) {
+        newCard.frame = CGRectMake(0, -animationOffset, newCard.bounds.size.width, newCard.bounds.size.height);
+        newCard.alpha = 0;
+        newCard.hidden = NO;
+        
+        [UIView animateWithDuration:0.35 delay:0 usingSpringWithDamping:1 initialSpringVelocity:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+            newCard.alpha = 1;
+            newCard.frame = CGRectOffset(newCard.frame, 0, animationOffset);
+        } completion:^(BOOL finished) {
+            newCard.frame = CGRectMake(0, 0, newCard.bounds.size.width, newCard.bounds.size.height);
+            newCard.hidden = NO;
+        }];
+    }
+    
+    _currentCard = currentCard;
+}
+
 - (void)setSuggesting:(BOOL)suggesting
 {
     if (_suggesting == suggesting) return;
-    
     _suggesting = suggesting;
     
-    self.searchSuggestionsCard.hidden = suggesting;
-    self.searchSuggestionsCard.alpha = suggesting;
-    self.searchSuggestionsCard.frame = CGRectMake(self.searchSuggestionsCard.frame.origin.x, - (SEARCH_CARD_ANIMATION_OFFSET * (1 - suggesting)), self.searchSuggestionsCard.bounds.size.width, self.searchSuggestionsCard.bounds.size.height);
-    
-    [UIView animateWithDuration:0.25 delay:0 usingSpringWithDamping:1 initialSpringVelocity:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-        self.searchSuggestionsCard.alpha = 1 - suggesting;
-        self.searchSuggestionsCard.frame = CGRectMake(self.searchSuggestionsCard.frame.origin.x, - (SEARCH_CARD_ANIMATION_OFFSET * suggesting), self.searchSuggestionsCard.bounds.size.width, self.searchSuggestionsCard.bounds.size.height);
-    } completion:^(BOOL finished) {
-        self.searchSuggestionsCard.hidden = suggesting;
-    }];
+    if (!suggesting) self.currentCard = self.searchSuggestionsCard;
 }
 
 - (void)setThinking:(BOOL)thinking
@@ -138,60 +304,43 @@
     }
 }
 
-- (void)setCurrentCard:(UIView *)currentCard
+- (void)showServiceSuggestionWithService:(CFService *)service
 {
-    CGFloat animationOffset = SEARCH_CARD_ANIMATION_OFFSET;
-    
-    if ((_currentCard && !currentCard)) {
-        [UIView animateWithDuration:0.25 delay:0 usingSpringWithDamping:1 initialSpringVelocity:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-            _currentCard.center = CGPointMake(_currentCard.center.x, _currentCard.center.y - animationOffset);
-            _currentCard.alpha = 0;
-        } completion:^(BOOL finished) {
-            _currentCard.center = CGPointMake(_currentCard.center.x, _currentCard.center.y + animationOffset);
-            _currentCard.hidden = YES;
-            _currentCard.alpha = 1;
-        }];
-    }
-    
-    if (currentCard && ![currentCard isKindOfClass:[_currentCard class]]) {
-        currentCard.frame = CGRectMake(0, -animationOffset, currentCard.bounds.size.width, currentCard.bounds.size.height);
-        currentCard.alpha = 0;
-        currentCard.hidden = NO;
-        
-        [UIView animateWithDuration:0.35 delay:0 usingSpringWithDamping:1 initialSpringVelocity:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-            currentCard.alpha = 1;
-            currentCard.center = CGPointMake(currentCard.center.x, currentCard.center.y + animationOffset);
-        } completion:^(BOOL finished) {
-            currentCard.alpha = 1;
-        }];
-    }
-    
-    _currentCard = currentCard;
+//    NSLog(@"showing service suggestion for service: %@", service);
+    self.serviceSuggestionView.service = service;
+    self.currentCard = self.serviceSuggestionView;
+}
+
+- (void)showStopSuggestionWithStop:(CFStop *)stop
+{
+//    NSLog(@"showing stop suggestion for stop: %@", stop);
+    [self.delegate searchControllerNeedsStopCardForStop:stop];
+    self.suggestedStop = stop;
+    self.currentCard = nil;
+}
+
+- (void)showMapSearchSuggestionWithString:(NSString *)searchString
+{
+    self.suggesting = YES;
+    self.mapSearchSuggestionView.searchText = searchString;
+    self.currentCard = self.mapSearchSuggestionView;
 }
 
 - (void)clearServiceSuggestions
 {
 //    NSLog(@"clearing service suggestions");
-    if ([self.currentCard isKindOfClass:[self.serviceSuggestionView class]]) {
-        self.currentCard = nil;
-    }
-    
-    if (!self.suggestedStop) self.suggesting = NO;
+    self.thinking = NO;
+    if (!self.suggestedStop && [self.searchField.text isEqualToString:@""]) self.suggesting = NO;
 }
 
 - (void)clearStopSuggestions
 {
 //    NSLog(@"clearing stop suggestions");
     [self.delegate searchControllerDidClearStopSuggestions];
-    self.suggesting = NO;
     self.suggestedStop = nil;
-}
-
-- (void)showServiceSuggestionWithService:(CFService *)service
-{
-//    NSLog(@"showing service suggestion for service: %@", service);
-    self.serviceSuggestionView.service = service;
-    self.currentCard = self.serviceSuggestionView;
+    self.thinking = NO;
+    
+    if ([self.searchField.text isEqualToString:@""]) self.suggesting = NO;
 }
 
 #pragma mark - Search field
@@ -219,7 +368,7 @@
     [searchField endEditing:YES];
     [self.delegate searchControllerDidEndSearching];
     
-    if (self.suggesting) return;
+    if (self.currentCard == self.serviceSuggestionView || self.suggestedStop) return;
     
     [self hide];
     [self.delegate searchControllerRequestedLocalSearch:searchField.text];
@@ -239,117 +388,6 @@
     }
 }
 
-#pragma mark - Search string processing
-
-- (void)processSearchString:(NSString *)searchString
-{
-    // servicio
-    NSString *serviceRegex;
-    
-    if (searchString.length == 2) {
-        serviceRegex = @"[A-J][1-9]";
-        
-    } else if (searchString.length == 3) {
-        serviceRegex = @"([1-5]|[A-J])[0-4][1-9]";
-        
-    } else if (searchString.length == 4) {
-        serviceRegex = @"([1-5]|[A-J])[0-4][1-9](C|E|N|V)";
-        
-    }
-    
-    if (searchString.length >= 2 && searchString.length <= 4) {
-        NSRegularExpression *expression = [NSRegularExpression regularExpressionWithPattern:serviceRegex options:(NSRegularExpressionCaseInsensitive) error:NULL];
-        
-        NSTextCheckingResult *result = [expression firstMatchInString:searchString options:0 range:NSMakeRange(0, searchString.length)];
-        
-        if (result) {
-//            NSLog(@"possible service");
-            NSString *serviceString = searchString;
-            
-            if (searchString.length == 2) {
-//                NSLog(@"…which is shortened");
-                NSMutableString *expandedServiceName = [NSMutableString stringWithString:searchString];
-                [expandedServiceName insertString:@"0" atIndex:1];
-                serviceString = expandedServiceName;
-            }
-            
-            [self checkService:serviceString];
-        } else {
-            [self clearServiceSuggestions];
-        }
-    } else {
-        [self clearServiceSuggestions];
-    }
-    
-    // parada
-    if (searchString.length >= 3 && searchString.length <= 6) {
-        NSRegularExpression *expression = [NSRegularExpression regularExpressionWithPattern:@"P[A-J][0-9]{1,4}$" options:(NSRegularExpressionCaseInsensitive) error:NULL];
-        
-        NSTextCheckingResult *result = [expression firstMatchInString:searchString options:0 range:NSMakeRange(0, searchString.length)];
-        
-        if (result) {
-            [self checkStop:searchString];
-        } else {
-            [self clearStopSuggestions];
-        }
-    } else {
-        [self clearStopSuggestions];
-    }
-}
-
-- (void)checkService:(NSString *)service
-{
-//    NSLog(@"checking possible service");
-    self.thinking = YES;
-    
-    [[CFSapoClient sharedClient] serviceInfoForService:service handler:^(NSError *error, NSArray *result) {
-        self.thinking = NO;
-        
-        if (result && [result lastObject]) {
-            // win
-//            NSLog(@"service exists: %@", result);
-            self.suggesting = YES;
-            
-            NSDictionary *serviceInfo = [result firstObject];
-            [self showServiceSuggestionWithService:[CFService serviceWithName:[serviceInfo objectForKey:@"servicio"] outwardDirectionName:[serviceInfo objectForKey:@"ida"] inwardDirectionName:[serviceInfo objectForKey:@"regreso"]]];
-        }
-        
-        if (error || ![result lastObject]) {
-            // quit
-//            NSLog(@"not a service");
-            [self clearServiceSuggestions];
-        }
-    }];
-}
-
-- (void)checkStop:(NSString *)stop
-{
-//    NSLog(@"checking possible stop code");
-    self.thinking = YES;
-    
-    [[CFSapoClient sharedClient] fetchBusStop:stop handler:^(NSError *error, id result) {
-        self.thinking = NO;
-
-        if (result) {
-//            NSLog(@"stop exists");
-            self.suggesting = YES;
-            
-            NSDictionary *stopData = [result firstObject];
-            CLLocationCoordinate2D coordinate;
-            coordinate.latitude = [[stopData objectForKey:@"latitude"] doubleValue];
-            coordinate.longitude = [[stopData objectForKey:@"longitude"] doubleValue];
-
-            CFStop *stop = [CFStop stopWithCoordinate:coordinate code:[stopData objectForKey:@"codigo"] name:[stopData objectForKey:@"nombre"] services:[stopData objectForKey:@"recorridos"]];
-            [self.delegate searchControllerNeedsStopCardForStop:stop];
-            self.suggestedStop = stop;
-            
-        } else {
-//            NSLog(@"not a stop");
-            [self clearStopSuggestions];
-        }
-    }];
-}
-
 #pragma mark - Delegates, etc
 
 - (void)serviceRouteBar:(CFServiceRouteBar *)serviceRouteBar selectedButtonAtIndex:(NSUInteger)index service:(CFService *)service
@@ -359,6 +397,11 @@
     [self.delegate searchControllerDidSelectService:service direction:direction];
     [self.searchField clear];
     [self hide];
+}
+
+- (void)mapSearchSuggestionViewTapped
+{
+    [self searchFieldSearchButtonClicked:self.searchField];
 }
 
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event

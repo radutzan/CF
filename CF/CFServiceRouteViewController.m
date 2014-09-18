@@ -562,7 +562,7 @@ static MKMapRect santiagoBounds;
 - (MKOverlayRenderer *)mapView:(MKMapView *)mapView rendererForOverlay:(id<MKOverlay>)overlay
 {
     MKPolylineRenderer *renderer = [[MKPolylineRenderer alloc] initWithPolyline:overlay];
-    renderer.strokeColor = [UIColor colorWithHue:133.0/360.0 saturation:0.74 brightness:0.87 alpha:0.8];
+    renderer.strokeColor = [UIColor colorWithHue:135.0/360.0 saturation:0.70 brightness:0.80 alpha:0.8];
     renderer.lineWidth = 5.0;
     return renderer;
 }

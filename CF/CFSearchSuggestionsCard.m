@@ -10,7 +10,7 @@
 
 #define TOP_MARGIN 10.0
 #define VERTICAL_SPACING 12.0
-#define HORIZONTAL_MARGIN 10.0
+#define HORIZONTAL_MARGIN 12.0
 
 @interface CFSearchSuggestionsCard ()
 
@@ -35,7 +35,7 @@
             [self addSubview:backgroundView];
         }
         
-        UIView *containerView = [[UIView alloc] initWithFrame:CGRectMake(HORIZONTAL_MARGIN, TOP_MARGIN, 300.0, self.bounds.size.height - TOP_MARGIN * 2)];
+        UIView *containerView = [[UIView alloc] initWithFrame:CGRectMake(HORIZONTAL_MARGIN, TOP_MARGIN, 320 - HORIZONTAL_MARGIN * 2, self.bounds.size.height - TOP_MARGIN * 2)];
         containerView.center = backgroundView.center;
         [self addSubview:containerView];
         
@@ -58,7 +58,7 @@
             suggestionTitleLabel.textAlignment = NSTextAlignmentRight;
             [containerView addSubview:suggestionTitleLabel];
             
-            UILabel *suggestionExampleLabel = [[UILabel alloc] initWithFrame:CGRectMake(HORIZONTAL_MARGIN + suggestionTitleLabel.bounds.size.width + 10.0, topGuide - 1.0, containerView.bounds.size.width - titleWidth + 10.0, 20.0)];
+            UILabel *suggestionExampleLabel = [[UILabel alloc] initWithFrame:CGRectMake(HORIZONTAL_MARGIN + titleWidth, topGuide - 1.0, containerView.bounds.size.width - titleWidth + 10.0, 20.0)];
             suggestionExampleLabel.font = [UIFont fontWithName:DEFAULT_FONT_NAME_REGULAR size:17.0];
             suggestionExampleLabel.text = suggestion[@"example"];
             suggestionExampleLabel.numberOfLines = 0;

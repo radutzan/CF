@@ -42,7 +42,7 @@
 
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:self.mainViewController];
-    self.window.tintColor = [UIColor colorWithHue:133.0/360.0 saturation:0.74 brightness:0.87 alpha:1];
+    self.window.tintColor = [UIColor colorWithHue:135.0/360.0 saturation:0.70 brightness:0.80 alpha:1];
     [self.window makeKeyAndVisible];
     
     return YES;

@@ -132,6 +132,10 @@
 		7C7A15E81854EF67002EE4C5 /* about.html in Resources */ = {isa = PBXBuildFile; fileRef = 7C7A15EA1854EF67002EE4C5 /* about.html */; };
 		7C7A55EC19B7C4F0002AA398 /* CFTransparentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C7A55EB19B7C4F0002AA398 /* CFTransparentView.m */; };
 		7C7A55ED19B7C582002AA398 /* CFTransparentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C7A55EB19B7C4F0002AA398 /* CFTransparentView.m */; };
+		7C8F065519CB6B8300FCC707 /* CFMapSearchSuggestionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C8F065419CB6B8300FCC707 /* CFMapSearchSuggestionView.m */; };
+		7C8F065619CB6F9900FCC707 /* CFMapSearchSuggestionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C8F065419CB6B8300FCC707 /* CFMapSearchSuggestionView.m */; };
+		7C8F065819CB8D7600FCC707 /* search@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7C8F065719CB8D7600FCC707 /* search@2x.png */; };
+		7C8F065919CB8D7600FCC707 /* search@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7C8F065719CB8D7600FCC707 /* search@2x.png */; };
 		7C915927193AA4AE004CFCFA /* CFStopSuggestionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C915926193AA4AE004CFCFA /* CFStopSuggestionView.m */; };
 		7C9A0F691852E9C60018ED1F /* NSDictionary+NSNullUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C9A0F681852E9C60018ED1F /* NSDictionary+NSNullUtility.m */; };
 		7C9BD16B1926B1FF003E9F8E /* OLShapeTintedButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CE0D9D7189DB34F00D9782E /* OLShapeTintedButton.m */; };
@@ -395,6 +399,9 @@
 		7C7A15EB1854EF6A002EE4C5 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = es; path = es.lproj/about.html; sourceTree = "<group>"; };
 		7C7A55EA19B7C4F0002AA398 /* CFTransparentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFTransparentView.h; sourceTree = "<group>"; };
 		7C7A55EB19B7C4F0002AA398 /* CFTransparentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFTransparentView.m; sourceTree = "<group>"; };
+		7C8F065319CB6B8300FCC707 /* CFMapSearchSuggestionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFMapSearchSuggestionView.h; sourceTree = "<group>"; };
+		7C8F065419CB6B8300FCC707 /* CFMapSearchSuggestionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFMapSearchSuggestionView.m; sourceTree = "<group>"; };
+		7C8F065719CB8D7600FCC707 /* search@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "search@2x.png"; sourceTree = "<group>"; };
 		7C915925193AA4AE004CFCFA /* CFStopSuggestionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFStopSuggestionView.h; sourceTree = "<group>"; };
 		7C915926193AA4AE004CFCFA /* CFStopSuggestionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFStopSuggestionView.m; sourceTree = "<group>"; };
 		7C9A0F671852E9C60018ED1F /* NSDictionary+NSNullUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+NSNullUtility.h"; sourceTree = "<group>"; };
@@ -626,6 +633,8 @@
 				7CEADD6A194C1E9500428ADE /* CFSearchSuggestionsCard.m */,
 				7C062F301933BC9200342E4A /* CFServiceRouteBar.h */,
 				7C062F311933BC9200342E4A /* CFServiceRouteBar.m */,
+				7C8F065319CB6B8300FCC707 /* CFMapSearchSuggestionView.h */,
+				7C8F065419CB6B8300FCC707 /* CFMapSearchSuggestionView.m */,
 				7C915925193AA4AE004CFCFA /* CFStopSuggestionView.h */,
 				7C915926193AA4AE004CFCFA /* CFStopSuggestionView.m */,
 			);
@@ -883,6 +892,7 @@
 				7C7A15D718540966002EE4C5 /* pin-favorite@2x.png */,
 				7CAFA3361842A206005A06BC /* placeholder-favorites@2x.png */,
 				7CAFA3371842A206005A06BC /* placeholder-history@2x.png */,
+				7C8F065719CB8D7600FCC707 /* search@2x.png */,
 				7CD35CA919495A44007C36CA /* searchfield-glyph@2x.png */,
 			);
 			name = "Supporting Files";
@@ -1233,6 +1243,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7C8F065919CB8D7600FCC707 /* search@2x.png in Resources */,
 				7C2EECF2188345F500AE78C2 /* metro@2x.png in Resources */,
 				7C2EECF3188345F500AE78C2 /* button-favorites@2x.png in Resources */,
 				7C2EECF4188345F500AE78C2 /* button-history-selected@2x.png in Resources */,
@@ -1285,6 +1296,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7C8F065819CB8D7600FCC707 /* search@2x.png in Resources */,
 				7CFF7EC1183871E8006230CE /* metro@2x.png in Resources */,
 				7CFF7EB318384106006230CE /* button-favorites@2x.png in Resources */,
 				7CFF7EB418384106006230CE /* button-history-selected@2x.png in Resources */,
@@ -1426,6 +1438,7 @@
 				7C2EECC3188345F500AE78C2 /* CFMoreViewController.m in Sources */,
 				7C2EECC4188345F500AE78C2 /* SMCalloutView.m in Sources */,
 				7C2EECC5188345F500AE78C2 /* CFStopTableViewController.m in Sources */,
+				7C8F065619CB6F9900FCC707 /* CFMapSearchSuggestionView.m in Sources */,
 				7C2EECC7188345F500AE78C2 /* NSDictionary+NSNullUtility.m in Sources */,
 				7C2EECC9188345F500AE78C2 /* CFStoreViewController.m in Sources */,
 				7C2EECCA188345F500AE78C2 /* UIDevice+hardware.m in Sources */,
@@ -1496,6 +1509,7 @@
 				7CF7EE4F1852D790009B3F46 /* CFBipSpot.m in Sources */,
 				7C062F321933BC9200342E4A /* CFServiceRouteBar.m in Sources */,
 				7C10B975183ADD320086B650 /* CFMoreViewController.m in Sources */,
+				7C8F065519CB6B8300FCC707 /* CFMapSearchSuggestionView.m in Sources */,
 				7CFF7E811838288C006230CE /* SMCalloutView.m in Sources */,
 				7C3B27C4183B194A00818A3B /* CFStopTableViewController.m in Sources */,
 				7C9A0F691852E9C60018ED1F /* NSDictionary+NSNullUtility.m in Sources */,
