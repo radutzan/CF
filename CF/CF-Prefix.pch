@@ -17,6 +17,8 @@
     #define TAB_BAR_HEIGHT 50.0
     #define MAX_OVERLAY_WIDTH 340.0
     #define SEARCH_CARD_ANIMATION_OFFSET 20.0
+    #define MOTION_EFFECTS_HORIZONTAL_OFFSET 8.0
+    #define MOTION_EFFECTS_VERTICAL_OFFSET 12.0
     #define DEFAULT_FONT_NAME_REGULAR @"AvenirNext-Regular"
     #define DEFAULT_FONT_NAME_MEDIUM @"AvenirNext-Medium"
     #define DEFAULT_FONT_NAME_BOLD @"AvenirNext-DemiBold"

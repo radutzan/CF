@@ -52,7 +52,10 @@ static MKMapRect santiagoBounds;
         self.stops = [NSMutableSet new];
         self.bipSpots = [NSMutableSet new];
         
-        self.mapView = [[MKMapView alloc] initWithFrame:self.bounds];
+        CGFloat motionEffectHorizontalOffset = MOTION_EFFECTS_HORIZONTAL_OFFSET;
+        CGFloat motionEffectVerticalOffset = MOTION_EFFECTS_VERTICAL_OFFSET;
+        
+        self.mapView = [[MKMapView alloc] initWithFrame:CGRectInset(self.bounds, -motionEffectHorizontalOffset, -motionEffectVerticalOffset)];
         self.mapView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
         self.mapView.delegate = self;
         self.mapView.showsUserLocation = YES;
@@ -61,6 +64,16 @@ static MKMapRect santiagoBounds;
         self.mapView.rotateEnabled = NO;
         self.mapView.pitchEnabled = NO;
         [self addSubview:self.mapView];
+        
+        UIInterpolatingMotionEffect *mapHorizontalMotionEffect = [[UIInterpolatingMotionEffect alloc] initWithKeyPath:@"center.x" type:UIInterpolatingMotionEffectTypeTiltAlongHorizontalAxis];
+        mapHorizontalMotionEffect.minimumRelativeValue = [NSNumber numberWithFloat:motionEffectHorizontalOffset];
+        mapHorizontalMotionEffect.maximumRelativeValue = [NSNumber numberWithFloat:-motionEffectHorizontalOffset];
+        [self.mapView addMotionEffect:mapHorizontalMotionEffect];
+        
+        UIInterpolatingMotionEffect *mapVerticalMotionEffect = [[UIInterpolatingMotionEffect alloc] initWithKeyPath:@"center.y" type:UIInterpolatingMotionEffectTypeTiltAlongVerticalAxis];
+        mapVerticalMotionEffect.minimumRelativeValue = [NSNumber numberWithFloat:motionEffectVerticalOffset];
+        mapVerticalMotionEffect.maximumRelativeValue = [NSNumber numberWithFloat:-motionEffectVerticalOffset];
+        [self.mapView addMotionEffect:mapVerticalMotionEffect];
         
         self.locationManager = [[CLLocationManager alloc] init];
         self.locationManager.delegate = self;
@@ -108,6 +121,11 @@ static MKMapRect santiagoBounds;
             
             santiagoBounds = MKMapRectMake(upperLeft.x, upperLeft.y, lowerRight.x-upperLeft.x, lowerRight.y-upperLeft.y);
         });
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(appBecameActive:)
+                                                     name:UIApplicationDidBecomeActiveNotification
+                                                   object:nil];
     }
     return self;
 }
@@ -231,6 +249,12 @@ static MKMapRect santiagoBounds;
     return NO;
 }
 
+- (void)appBecameActive:(NSNotification *)notification
+{
+    self.hasPresentedNearestStop = NO;
+    if (self.mapMode == CFMapModeStops) [self selectNearestStop];
+}
+
 #pragma mark - Map Mode Switching
 
 - (void)setMapMode:(CFMapMode)mapMode
@@ -317,7 +341,7 @@ static MKMapRect santiagoBounds;
 
 - (void)selectNearestStop
 {
-    NSLog(@"selectNearestStop");
+//    NSLog(@"selectNearestStop");
     if (self.hasPresentedNearestStop) return;
     if (!self.locationManager.location) return;
     
@@ -537,7 +561,7 @@ static MKMapRect santiagoBounds;
 
 - (void)mapViewDidFinishLoadingMap:(MKMapView *)mapView
 {
-    [self selectNearestStop];
+    if (self.mapMode == CFMapModeStops) [self selectNearestStop];
 }
 
 - (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation

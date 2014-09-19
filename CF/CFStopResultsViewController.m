@@ -96,6 +96,19 @@ CALayer *_leftGripper;
     self.stopResultsView.layer.borderColor = [UIColor colorWithWhite:0 alpha:0.3].CGColor;
     [self.view addSubview:self.stopResultsView];
     
+    CGFloat motionEffectHorizontalOffset = MOTION_EFFECTS_HORIZONTAL_OFFSET / 2;
+    CGFloat motionEffectVerticalOffset = MOTION_EFFECTS_VERTICAL_OFFSET / 2;
+    
+    UIInterpolatingMotionEffect *stopHorizontalMotionEffect = [[UIInterpolatingMotionEffect alloc] initWithKeyPath:@"center.x" type:UIInterpolatingMotionEffectTypeTiltAlongHorizontalAxis];
+    stopHorizontalMotionEffect.minimumRelativeValue = [NSNumber numberWithFloat:-motionEffectHorizontalOffset];
+    stopHorizontalMotionEffect.maximumRelativeValue = [NSNumber numberWithFloat:motionEffectHorizontalOffset];
+    [self.stopResultsView addMotionEffect:stopHorizontalMotionEffect];
+    
+    UIInterpolatingMotionEffect *stopVerticalMotionEffect = [[UIInterpolatingMotionEffect alloc] initWithKeyPath:@"center.y" type:UIInterpolatingMotionEffectTypeTiltAlongVerticalAxis];
+    stopVerticalMotionEffect.minimumRelativeValue = [NSNumber numberWithFloat:-motionEffectVerticalOffset];
+    stopVerticalMotionEffect.maximumRelativeValue = [NSNumber numberWithFloat:motionEffectVerticalOffset];
+    [self.stopResultsView addMotionEffect:stopVerticalMotionEffect];
+    
     self.stopResultsViewPresentedCenter = self.stopResultsView.center;
     
     self.titleView = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, self.stopResultsView.bounds.size.width, 54.0)];

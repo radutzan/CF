@@ -139,27 +139,30 @@
 - (void)viewWillLayoutSubviews
 {
     NSLog(@"viewWillLayoutSubviews");
-    self.drawer.frame = [self drawerFrame];
-    self.drawer.layer.anchorPoint = CGPointMake(0.5, 1.0);
-    self.drawer.frame = [self drawerFrame];
-    self.borderLayer.frame = CGRectInset(self.drawer.bounds, -0.5, -0.5);
-    self.drawerOpenCenterY = DRAWER_ORIGIN_Y + self.drawer.bounds.size.height;
-    self.gripper.frame = CGRectMake(0, 0, self.drawer.bounds.size.width, 30);
-    
-    self.scrollView.contentSize = CGSizeMake(self.scrollView.bounds.size.width * self.tabs.count, self.scrollView.bounds.size.height);
-    self.tabBar.frame = CGRectMake(self.drawer.frame.origin.x, self.view.bounds.size.height - TAB_BAR_HEIGHT, self.drawer.bounds.size.width, TAB_BAR_HEIGHT);
-    
-    for (UIView *subview in self.scrollView.subviews) {
-        if (![subview isKindOfClass:[UIImageView class]]) {
-            subview.frame = CGRectMake(self.scrollView.bounds.size.width * [self.scrollView.subviews indexOfObject:subview], 0, self.scrollView.bounds.size.width, self.scrollView.bounds.size.height);
+    if (!self.activePanGestureRecognizer) {
+        NSLog(@"is actually doing stuff");
+        self.drawer.frame = [self drawerFrame];
+        self.drawer.layer.anchorPoint = CGPointMake(0.5, 1.0);
+        self.drawer.frame = [self drawerFrame];
+        self.borderLayer.frame = CGRectInset(self.drawer.bounds, -0.5, -0.5);
+        self.drawerOpenCenterY = DRAWER_ORIGIN_Y + self.drawer.bounds.size.height;
+        self.gripper.frame = CGRectMake(0, 0, self.drawer.bounds.size.width, 30);
+        
+        self.scrollView.contentSize = CGSizeMake(self.scrollView.bounds.size.width * self.tabs.count, self.scrollView.bounds.size.height);
+        self.tabBar.frame = CGRectMake(self.drawer.frame.origin.x, self.view.bounds.size.height - TAB_BAR_HEIGHT, self.drawer.bounds.size.width, TAB_BAR_HEIGHT);
+        
+        for (UIView *subview in self.scrollView.subviews) {
+            if (![subview isKindOfClass:[UIImageView class]]) {
+                subview.frame = CGRectMake(self.scrollView.bounds.size.width * [self.scrollView.subviews indexOfObject:subview], 0, self.scrollView.bounds.size.width, self.scrollView.bounds.size.height);
+            }
         }
-    }
-    
-    CGFloat tabButtonWidth = floorf(self.drawer.bounds.size.width / self.tabs.count);
-    for (UIButton *subview in self.tabBar.subviews) {
-        subview.frame = CGRectMake(tabButtonWidth * [self.tabBar.subviews indexOfObject:subview], 0, tabButtonWidth, TAB_BAR_HEIGHT);
-        if (subview.selected) {
-            [self tabButtonPressed:subview];
+        
+        CGFloat tabButtonWidth = floorf(self.drawer.bounds.size.width / self.tabs.count);
+        for (UIButton *subview in self.tabBar.subviews) {
+            subview.frame = CGRectMake(tabButtonWidth * [self.tabBar.subviews indexOfObject:subview], 0, tabButtonWidth, TAB_BAR_HEIGHT);
+            if (subview.selected) {
+                [self tabButtonPressed:subview];
+            }
         }
     }
 }
@@ -381,8 +384,6 @@
         } else {
             [self closeDrawerWithVelocity:terminalVelocity];
         }
-        
-        self.activePanGestureRecognizer = nil;
     }
 }
 
@@ -464,11 +465,13 @@
     } completion:^(BOOL finished) {
         if (CGAffineTransformIsIdentity(self.drawer.transform)) {
             self.drawerOpen = YES;
+            self.activePanGestureRecognizer = nil;
         } else {
             [UIView animateWithDuration:0.7 delay:0 usingSpringWithDamping:0.25 initialSpringVelocity:velocityFactor options:UIViewAnimationOptionAllowUserInteraction animations:^{
                 self.drawer.transform = CGAffineTransformIdentity;
             } completion:^(BOOL finished) {
                 self.drawerOpen = YES;
+                self.activePanGestureRecognizer = nil;
             }];
         }
     }];
@@ -484,6 +487,7 @@
         [self closeDrawer];
     } completion:^(BOOL finished) {
         self.drawerOpen = NO;
+        self.activePanGestureRecognizer = nil;
     }];
 }
 
