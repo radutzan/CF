@@ -604,6 +604,7 @@ CALayer *_leftGripper;
 - (void)setStop:(CFStop *)stop
 {
     NSLog(@"setStop:%@", stop.code);
+    if ([stop.code isEqualToString:_stop.code]) return;
     _stop = stop;
     
     self.refreshing = NO;

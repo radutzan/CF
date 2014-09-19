@@ -285,10 +285,16 @@
 }
 
 - (void)searchControllerDidClearStopSuggestions
-{    
+{
     if (self.stopResultsController.displayMode == CFStopResultsDisplayModeContained) {
         [self.stopResultsController dismiss];
     }
+}
+
+- (void)searchControllerRequestedStop:(CFStop *)stop
+{
+    self.stopResultsController.stop = stop;
+    [self.stopResultsController presentOnViewController:self];
 }
 
 - (void)searchControllerRequestedLocalSearch:(NSString *)searchString

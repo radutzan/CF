@@ -18,6 +18,7 @@
 - (void)searchControllerDidBeginSearching;
 - (void)searchControllerDidEndSearching;
 - (void)searchControllerNeedsStopCardForStop:(CFStop *)stop;
+- (void)searchControllerRequestedStop:(CFStop *)stop;
 - (void)searchControllerDidClearStopSuggestions;
 - (void)searchControllerRequestedLocalSearch:(NSString *)searchString;
 - (void)searchControllerDidSelectService:(CFService *)service direction:(CFDirection)direction;

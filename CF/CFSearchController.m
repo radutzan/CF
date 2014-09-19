@@ -368,13 +368,20 @@
     [searchField endEditing:YES];
     [self.delegate searchControllerDidEndSearching];
     
-    if (self.currentCard == self.serviceSuggestionView || self.suggestedStop) return;
+    if (self.suggestedStop) {
+        [self.delegate searchControllerRequestedStop:self.suggestedStop];
+        [self.searchField clear];
+    } else if (self.currentCard == self.serviceSuggestionView) {
+        [self.delegate searchControllerDidSelectService:self.serviceSuggestionView.service direction:CFDirectionOutward];
+        [self.searchField clear];
+    } else {
+        [self.delegate searchControllerRequestedLocalSearch:searchField.text];
+        
+        Mixpanel *mixpanel = [Mixpanel sharedInstance];
+        [mixpanel track:@"Searched in Map" properties:nil];
+    }
     
     [self hide];
-    [self.delegate searchControllerRequestedLocalSearch:searchField.text];
-    
-    Mixpanel *mixpanel = [Mixpanel sharedInstance];
-    [mixpanel track:@"Searched in Map" properties:nil];
 }
 
 - (void)searchFieldDidEndEditing:(CFSearchField *)searchField
