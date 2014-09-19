@@ -1,7 +1,7 @@
 PODS:
   - AFNetworking (1.3.4)
-  - Mixpanel (2.5.2)
-  - OLGhostAlertView (1.8)
+  - Mixpanel (2.5.3)
+  - OLGhostAlertView (1.8.1)
 
 DEPENDENCIES:
   - AFNetworking (~> 1.0)
@@ -10,7 +10,7 @@ DEPENDENCIES:
 
 SPEC CHECKSUMS:
   AFNetworking: 80c4e0652b08eb34e25b9c0ff3c82556fe5967b4
-  Mixpanel: 0115466ba70fd12e67ac4d3d071408dd1d489657
-  OLGhostAlertView: 9ed5f3cd0d8d88969b11b55e3104be55eb81d14b
+  Mixpanel: 708ec9a6ee6e741f7db107831e18b2fc2e7531f1
+  OLGhostAlertView: e059cce3d66667373458454852c69ba6a57be384
 
 COCOAPODS: 0.33.1

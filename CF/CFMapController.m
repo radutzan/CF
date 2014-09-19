@@ -29,6 +29,8 @@
 @property (nonatomic) BOOL showZoomWarning;
 @property (nonatomic, strong) OLGhostAlertView *outOfSantiagoWarning;
 @property (nonatomic) BOOL showOutOfSantiagoWarning;
+@property (nonatomic, strong) OLGhostAlertView *connectivityWarning;
+@property (nonatomic) BOOL showConnectivityWarning;
 
 @property (nonatomic, assign, readwrite) CFMapMode mapMode;
 
@@ -94,14 +96,6 @@ static MKMapRect santiagoBounds;
         self.stopCalloutView.constrainedInsets = UIEdgeInsetsMake(64.0, 0, 60.0, 0);
         self.stopCalloutView.permittedArrowDirection = SMCalloutArrowDirectionDown;
         
-        self.outOfSantiagoWarning = [[OLGhostAlertView alloc] initWithTitle:NSLocalizedString(@"OUT_OF_SANTIAGO_WARNING_TITLE", nil) message:NSLocalizedString(@"OUT_OF_SANTIAGO_WARNING_MESSAGE", nil) timeout:200.0 dismissible:NO];
-        self.outOfSantiagoWarning.titleLabel.font = [UIFont fontWithName:DEFAULT_FONT_NAME_BOLD size:16.0];
-        self.outOfSantiagoWarning.messageLabel.font = [UIFont fontWithName:DEFAULT_FONT_NAME_REGULAR size:14.0];
-        self.outOfSantiagoWarning.style = OLGhostAlertViewStyleLight;
-        self.outOfSantiagoWarning.position = OLGhostAlertViewPositionTop;
-        self.outOfSantiagoWarning.topContentMargin = self.contentInset.top;
-        self.outOfSantiagoWarning.userInteractionEnabled = NO;
-        
         self.zoomWarning = [[UILabel alloc] initWithFrame:CGRectMake(0.0, frame.size.height - self.contentInset.bottom - 10.0 - 36.0, 280.0, 36.0)];
         self.zoomWarning.backgroundColor = [UIColor colorWithWhite:0 alpha:.75];
         self.zoomWarning.userInteractionEnabled = NO;
@@ -114,6 +108,20 @@ static MKMapRect santiagoBounds;
         self.zoomWarning.layer.masksToBounds = YES;
         [self addSubview:self.zoomWarning];
         
+        self.outOfSantiagoWarning = [[OLGhostAlertView alloc] initWithTitle:NSLocalizedString(@"OUT_OF_SANTIAGO_WARNING_TITLE", nil) message:NSLocalizedString(@"OUT_OF_SANTIAGO_WARNING_MESSAGE", nil) timeout:200.0 dismissible:NO];
+        self.outOfSantiagoWarning.titleLabel.font = [UIFont fontWithName:DEFAULT_FONT_NAME_MEDIUM size:17.0];
+        self.outOfSantiagoWarning.messageLabel.font = [UIFont fontWithName:DEFAULT_FONT_NAME_REGULAR size:14.0];
+        self.outOfSantiagoWarning.position = OLGhostAlertViewPositionTop;
+        self.outOfSantiagoWarning.topContentMargin = self.contentInset.top;
+        self.outOfSantiagoWarning.userInteractionEnabled = NO;
+        
+        self.connectivityWarning = [[OLGhostAlertView alloc] initWithTitle:NSLocalizedString(@"NO_INTERNET_WARNING_TITLE", nil) message:NSLocalizedString(@"NO_INTERNET_WARNING_MESSAGE", nil) timeout:200.0 dismissible:NO];
+        self.connectivityWarning.titleLabel.font = [UIFont fontWithName:DEFAULT_FONT_NAME_MEDIUM size:17.0];
+        self.connectivityWarning.messageLabel.font = [UIFont fontWithName:DEFAULT_FONT_NAME_REGULAR size:14.0];
+        self.connectivityWarning.style = OLGhostAlertViewStyleDark;
+        self.connectivityWarning.position = OLGhostAlertViewPositionCenter;
+        self.connectivityWarning.userInteractionEnabled = NO;
+        
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
             MKMapPoint upperLeft = MKMapPointForCoordinate(CLLocationCoordinate2DMake(-33.259, -70.939));
@@ -124,7 +132,7 @@ static MKMapRect santiagoBounds;
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(appBecameActive:)
-                                                     name:UIApplicationDidBecomeActiveNotification
+                                                     name:UIApplicationWillEnterForegroundNotification
                                                    object:nil];
     }
     return self;
@@ -188,7 +196,7 @@ static MKMapRect santiagoBounds;
     if (!self.locationManager.location) {
         [self setDefaultRegionAnimated:animated];
     } else {
-        [self.mapView setRegion:[self.mapView regionThatFits:MKCoordinateRegionMakeWithDistance(self.locationManager.location.coordinate, 1400, 1400)] animated:animated];
+        [self.mapView setRegion:[self.mapView regionThatFits:MKCoordinateRegionMakeWithDistance(self.locationManager.location.coordinate, 1000, 1000)] animated:animated];
     }
 }
 
@@ -204,37 +212,43 @@ static MKMapRect santiagoBounds;
 - (void)setShowZoomWarning:(BOOL)showZoomWarning
 {
     if (_showZoomWarning == showZoomWarning) return;
-    
     _showZoomWarning = showZoomWarning;
     
-    BOOL shouldShow = (showZoomWarning);
-    
     CGFloat offset = TAB_BAR_HEIGHT + 10.0;
-    if (shouldShow) offset = -offset;
-    if (shouldShow) [self setNeedsLayout];
+    if (showZoomWarning) offset = -offset;
+    if (showZoomWarning) [self setNeedsLayout];
     
-    self.zoomWarning.alpha = 1 - shouldShow;
-    self.zoomWarning.center = CGPointMake(self.zoomWarning.center.x, self.zoomWarning.center.y - offset * shouldShow);
+    self.zoomWarning.alpha = 1 - showZoomWarning;
+    self.zoomWarning.center = CGPointMake(self.zoomWarning.center.x, self.zoomWarning.center.y - offset * showZoomWarning);
     
-    [UIView animateWithDuration:0.45 delay:0 usingSpringWithDamping:0.5 initialSpringVelocity:shouldShow options:0 animations:^{
-        self.zoomWarning.alpha = shouldShow;
+    [UIView animateWithDuration:0.45 delay:0 usingSpringWithDamping:0.5 initialSpringVelocity:showZoomWarning options:0 animations:^{
+        self.zoomWarning.alpha = showZoomWarning;
         self.zoomWarning.center = CGPointMake(self.zoomWarning.center.x, self.zoomWarning.center.y + offset);
     } completion:^(BOOL finished) {
-        self.zoomWarning.center = CGPointMake(self.zoomWarning.center.x, self.zoomWarning.center.y - offset * !shouldShow);
+        self.zoomWarning.center = CGPointMake(self.zoomWarning.center.x, self.zoomWarning.center.y - offset * !showZoomWarning);
     }];
 }
 
 - (void)setShowOutOfSantiagoWarning:(BOOL)showOutOfSantiagoWarning
 {
     if (_showOutOfSantiagoWarning == showOutOfSantiagoWarning) return;
-    
     _showOutOfSantiagoWarning = showOutOfSantiagoWarning;
     
-    if (showOutOfSantiagoWarning) {
+    if (showOutOfSantiagoWarning && !self.outOfSantiagoWarning.visible) {
         [self.outOfSantiagoWarning showInView:self];
-        self.outOfSantiagoWarning.center = CGPointMake(self.outOfSantiagoWarning.center.x, self.outOfSantiagoWarning.center.y - TAB_BAR_HEIGHT - 10.0);
-    } else {
+    } else if (!showOutOfSantiagoWarning) {
         [self.outOfSantiagoWarning hide];
+    }
+}
+
+- (void)setShowConnectivityWarning:(BOOL)showConnectivityWarning
+{
+    _showConnectivityWarning = showConnectivityWarning;
+    
+    if (showConnectivityWarning && !self.connectivityWarning.visible) {
+        [self.connectivityWarning showInView:self];
+    } else if (!showConnectivityWarning) {
+        [self.connectivityWarning hide];
     }
 }
 
@@ -316,10 +330,22 @@ static MKMapRect santiagoBounds;
 - (void)placeStopAnnotationsInRegion:(MKCoordinateRegion)region withRadius:(float)radius
 {
     [[CFSapoClient sharedClient] busStopsAroundCoordinate:region.center radius:radius handler:^(NSError *error, id result) {
-        if (error || [result count] == 0) {
+        if (error) {
             NSLog(@"bus stops error: %@", error);
+            
+            if (error.code == -1009) {
+                self.connectivityWarning.title = NSLocalizedString(@"NO_INTERNET_WARNING_TITLE", nil);
+                self.connectivityWarning.message = NSLocalizedString(@"NO_INTERNET_WARNING_MESSAGE", nil);
+            } else {
+                self.connectivityWarning.title = NSLocalizedString(@"API_ISSUE_WARNING_TITLE", nil);
+                self.connectivityWarning.message = NSLocalizedString(@"API_ISSUE_WARNING_MESSAGE", nil);
+            }
+            self.showConnectivityWarning = YES;
+            
             return;
         }
+        
+        if ([result count] == 0) return;
         
         for (NSDictionary *stopData in result) {
             CLLocationCoordinate2D coordinate;
@@ -336,6 +362,8 @@ static MKMapRect santiagoBounds;
             [self.mapView addAnnotations:stopsArray];
             [self selectNearestStop];
         });
+        
+        self.showConnectivityWarning = NO;
     }];
 }
 

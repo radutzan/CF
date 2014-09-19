@@ -12,6 +12,10 @@
 "LOADING" = "Loading…";
 "ERROR_MESSAGE_TRY_AGAIN" = "Please try again.";
 "ERROR_MESSAGE_TRY_AGAIN_OR_REPORT" = "Please try again, and if it keeps failing, please report it to us via Twitter.";
+"NO_INTERNET_WARNING_TITLE" = "No internet connection";
+"NO_INTERNET_WARNING_MESSAGE" = "Your device seems to be offline. Please connect to the internet\n and try again.";
+"API_ISSUE_WARNING_TITLE" = "There was an issue contacting our server";
+"API_ISSUE_WARNING_MESSAGE" = "There seems to be a problem connecting to the Cuánto Falta server. Please try again later.";
 
 // stop stuff
 "AND_BUS_STOP" = "and";

@@ -138,9 +138,9 @@
 
 - (void)viewWillLayoutSubviews
 {
-    NSLog(@"viewWillLayoutSubviews");
+//    NSLog(@"viewWillLayoutSubviews");
     if (!self.activePanGestureRecognizer) {
-        NSLog(@"is actually doing stuff");
+//        NSLog(@"is actually doing stuff");
         self.drawer.frame = [self drawerFrame];
         self.drawer.layer.anchorPoint = CGPointMake(0.5, 1.0);
         self.drawer.frame = [self drawerFrame];

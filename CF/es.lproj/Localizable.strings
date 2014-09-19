@@ -12,6 +12,10 @@
 "LOADING" = "Cargando…";
 "ERROR_MESSAGE_TRY_AGAIN" = "Por favor, inténtalo de nuevo.";
 "ERROR_MESSAGE_TRY_AGAIN_OR_REPORT" = "Por favor, inténtalo de nuevo, y si sigue fallando, repórtanoslo vía Twitter.";
+"NO_INTERNET_WARNING_TITLE" = "No hay conexión a internet";
+"NO_INTERNET_WARNING_MESSAGE" = "Tu dispositivo está desconectado de la red. Conéctate a internet e intenta de nuevo.";
+"API_ISSUE_WARNING_TITLE" = "Imposible conectarse";
+"API_ISSUE_WARNING_MESSAGE" = "En estos momentos no podemos conectarnos al servidor de Cuánto Falta. Por favor, intenta más tarde.";
 
 // stop stuff
 "AND_BUS_STOP" = "con";

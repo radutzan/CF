@@ -257,12 +257,10 @@
 //    NSLog(@"new: %@", newCard);
     
     if (hasOldCardButNoNewCard || hasNewCardAndIsDifferentFromOldCard) {
-        NSLog(@"old now: %@", _currentCard);
         [UIView animateWithDuration:0.25 delay:0 usingSpringWithDamping:1 initialSpringVelocity:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-            oldCard.frame = CGRectOffset(oldCard.frame, 0, animationOffset);
+            oldCard.frame = CGRectMake(0, -animationOffset, oldCard.bounds.size.width, oldCard.bounds.size.height);
             oldCard.alpha = 0;
         } completion:^(BOOL finished) {
-            NSLog(@"old now: %@", oldCard);
             oldCard.frame = CGRectMake(0, 0, oldCard.bounds.size.width, oldCard.bounds.size.height);
             oldCard.hidden = YES;
         }];
@@ -275,9 +273,8 @@
         
         [UIView animateWithDuration:0.35 delay:0 usingSpringWithDamping:1 initialSpringVelocity:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
             newCard.alpha = 1;
-            newCard.frame = CGRectOffset(newCard.frame, 0, animationOffset);
-        } completion:^(BOOL finished) {
             newCard.frame = CGRectMake(0, 0, newCard.bounds.size.width, newCard.bounds.size.height);
+        } completion:^(BOOL finished) {
             newCard.hidden = NO;
         }];
     }
@@ -370,11 +367,11 @@
     
     if (self.suggestedStop) {
         [self.delegate searchControllerRequestedStop:self.suggestedStop];
-        [self.searchField clear];
+        [searchField clear];
     } else if (self.currentCard == self.serviceSuggestionView) {
         [self.delegate searchControllerDidSelectService:self.serviceSuggestionView.service direction:CFDirectionOutward];
-        [self.searchField clear];
-    } else {
+        [searchField clear];
+    } else if (![searchField.text isEqualToString:@""]) {
         [self.delegate searchControllerRequestedLocalSearch:searchField.text];
         
         Mixpanel *mixpanel = [Mixpanel sharedInstance];
