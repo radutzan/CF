@@ -259,7 +259,10 @@ CALayer *_leftGripper;
     
     _displayMode = displayMode;
     
-    if (promotedFromContainment) [self.delegate stopResultsViewWasPromotedFromContainment];
+    if (promotedFromContainment) {
+        [self.delegate stopResultsViewWasPromotedFromContainment];
+        [self updateHistory];
+    }
     
     if (displayMode == CFStopResultsDisplayModePresented) {
         self.favoriteButton.enabled = YES;
@@ -625,11 +628,17 @@ CALayer *_leftGripper;
     [self setUpTitleView];
     [self resetEstimationData];
     [self resetTimer];
+    [self refreshTimerLabel];
     
     if (stop) {
         [self.tableView reloadData];
-        [self updateHistory];
-        [self performStopRequestQuietly:NO];
+        
+        if (self.displayMode == CFStopResultsDisplayModeContained) {
+            [self performSelector:@selector(performStopRequestQuietly:) withObject:NO afterDelay:1.0];
+        } else {
+            [self updateHistory];
+            [self performStopRequestQuietly:NO];
+        }
         
         if (!self.removedAds) {
             GADRequest *adRequest = [GADRequest request];

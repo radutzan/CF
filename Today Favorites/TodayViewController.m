@@ -40,6 +40,7 @@
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     self.tableView.separatorEffect = [UIVibrancyEffect notificationCenterVibrancyEffect];
+    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     [self.view addSubview:self.tableView];
     
     self.placeholderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 280.0, CELL_HEIGHT)];
@@ -131,7 +132,7 @@
     self.placeholderView.frame = CGRectMake(defaultMarginInsets.left, 0, self.view.bounds.size.width - defaultMarginInsets.left, CELL_HEIGHT);
     [self updateContent];
     
-    return UIEdgeInsetsMake(0, 0, 20.0, 0);
+    return UIEdgeInsetsMake(0, 0, 0.0, 0);
 }
 
 - (void)setPlaceholderVisible:(BOOL)placeholderVisible
@@ -164,15 +165,18 @@
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     cell.selectionStyle = UITableViewCellSelectionStyleDefault;
     cell.separatorInset = self.marginInsets;
+    if (indexPath.row == (self.favorites.count - 1)) {
+        cell.separatorInset = UIEdgeInsetsMake(0, cell.bounds.size.width, 0, 0);
+    }
     
     NSString *favoriteName = [stopDictionary objectForKey:@"favoriteName"];
     
     if ([favoriteName isEqualToString:@""]) {
         cell.favoriteNameLabel.text = NSLocalizedString(@"NAMELESS_FAVORITE", nil);
-        cell.favoriteNameLabel.font = [UIFont italicSystemFontOfSize:19.0];
+        cell.favoriteNameLabel.font = [UIFont fontWithName:@"AvenirNext-MediumItalic" size:19.0];
     } else {
         cell.favoriteNameLabel.text = favoriteName;
-        cell.favoriteNameLabel.font = [UIFont systemFontOfSize:19.0];
+        cell.favoriteNameLabel.font = [UIFont fontWithName:@"AvenirNext-Medium" size:19.0];
     }
     
     cell.codeLabel.text = [stopDictionary objectForKey:@"codigo"];
