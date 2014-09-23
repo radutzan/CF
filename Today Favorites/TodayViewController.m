@@ -58,8 +58,8 @@
     noFavoritesLabel.text = NSLocalizedString(@"NO_FAVORITES", nil);
     noFavoritesLabel.font = [UIFont systemFontOfSize:15.0];
     noFavoritesLabel.numberOfLines = 0;
-    noFavoritesLabel.textColor = [UIColor whiteColor];
-    [vibrancyView.contentView addSubview:noFavoritesLabel];
+    noFavoritesLabel.textColor = [UIColor colorWithWhite:1 alpha:.9];
+    [self.placeholderView addSubview:noFavoritesLabel];
     
     self.openCFButton = [UIButton buttonWithType:UIButtonTypeSystem];
     self.openCFButton.frame = CGRectMake(90.0, 0, 90.0, CELL_HEIGHT);
@@ -68,7 +68,7 @@
     [self.openCFButton setTitle:NSLocalizedString(@"OPEN_CF", nil) forState:UIControlStateNormal];
     [self.openCFButton setImage:[UIImage imageNamed:@"icon-widget"] forState:UIControlStateNormal];
     [self.openCFButton addTarget:self action:@selector(openCF) forControlEvents:UIControlEventTouchUpInside];
-    [self.placeholderView addSubview:self.openCFButton];
+    [vibrancyView.contentView addSubview:self.openCFButton];
 }
 
 - (void)viewDidLoad
