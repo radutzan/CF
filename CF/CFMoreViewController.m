@@ -62,7 +62,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if (section == 0) return 4;
+    if (section == 0) return 3;
     if (section == 1) return 1;
     
     return 2;
@@ -88,9 +88,9 @@
         cell.textLabel.text = NSLocalizedString(@"HELP", nil);
     } else if (indexPath.row == 1 && indexPath.section == 0) {
         cell.textLabel.text = NSLocalizedString(@"ABOUT", nil);
+//    } else if (indexPath.row == 2 && indexPath.section == 0) {
+//        cell.textLabel.text = NSLocalizedString(@"WHATS_NEW", nil);
     } else if (indexPath.row == 2 && indexPath.section == 0) {
-        cell.textLabel.text = NSLocalizedString(@"WHATS_NEW", nil);
-    } else if (indexPath.row == 3 && indexPath.section == 0) {
         cell.textLabel.text = NSLocalizedString(@"SEND_FEEDBACK", nil);
     } else if (indexPath.row == 0 && indexPath.section == 1) {
         cell.textLabel.text = NSLocalizedString(@"STORE", nil);

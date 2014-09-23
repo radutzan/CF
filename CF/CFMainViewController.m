@@ -147,16 +147,6 @@
         
         [self importUserData];
     }
-    
-//    BOOL hasLaunched192 = [[NSUserDefaults standardUserDefaults] boolForKey:@"OLHasLaunched192"];
-//    
-//    if (!hasLaunched192) {
-//        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"OLHasLaunched192"];
-//        [[NSUserDefaults standardUserDefaults] synchronize];
-//        
-//        CFWhatsNewViewController *whatsNew = [CFWhatsNewViewController new];
-//        [self presentViewController:whatsNew animated:YES completion:nil];
-//    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
