@@ -132,10 +132,10 @@
             break;
             
         default:
-            self.outwardButton.selected = YES;
             self.outwardButton.backgroundColor = [UIColor clearColor];
+            self.outwardButton.selected = NO;
             self.inwardButton.backgroundColor = [UIColor clearColor];
-            self.inwardButton.selected = YES;
+            self.inwardButton.selected = NO;
             break;
     }
 }

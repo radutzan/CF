@@ -50,8 +50,6 @@
 - (void)loadView
 {
     CGRect windowBounds = [UIScreen mainScreen].applicationFrame;
-    CGSize windowSize = windowBounds.size;
-    
     self.view = [[CFTransparentView alloc] initWithFrame:windowBounds];
     
     if (NSClassFromString(@"UIVisualEffectView")) {
@@ -99,7 +97,7 @@
     self.closeDrawerButton = [UIButton buttonWithType:UIButtonTypeCustom];
     self.closeDrawerButton.frame = self.view.bounds;
     self.closeDrawerButton.hidden = YES;
-    [self.closeDrawerButton addTarget:self action:@selector(closeDrawerWithAnimation) forControlEvents:UIControlEventTouchUpInside];
+    [self.closeDrawerButton addTarget:self action:@selector(closeDrawerButtonTapped) forControlEvents:UIControlEventTouchUpInside];
     [self.view insertSubview:self.closeDrawerButton atIndex:0];
     
     UIPanGestureRecognizer *gripDrag = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleDrawerDragGesture:)];
@@ -133,38 +131,7 @@
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
 {
     self.view.frame = CGRectMake(0, 0, size.width, size.height);
-    [self.view setNeedsLayout];
-}
-
-- (void)viewWillLayoutSubviews
-{
-//    NSLog(@"viewWillLayoutSubviews");
-    if (!self.activePanGestureRecognizer) {
-//        NSLog(@"is actually doing stuff");
-        self.drawer.frame = [self drawerFrame];
-        self.drawer.layer.anchorPoint = CGPointMake(0.5, 1.0);
-        self.drawer.frame = [self drawerFrame];
-        self.borderLayer.frame = CGRectInset(self.drawer.bounds, -0.5, -0.5);
-        self.drawerOpenCenterY = DRAWER_ORIGIN_Y + self.drawer.bounds.size.height;
-        self.gripper.frame = CGRectMake(0, 0, self.drawer.bounds.size.width, 30);
-        
-        self.scrollView.contentSize = CGSizeMake(self.scrollView.bounds.size.width * self.tabs.count, self.scrollView.bounds.size.height);
-        self.tabBar.frame = CGRectMake(self.drawer.frame.origin.x, self.view.bounds.size.height - TAB_BAR_HEIGHT, self.drawer.bounds.size.width, TAB_BAR_HEIGHT);
-        
-        for (UIView *subview in self.scrollView.subviews) {
-            if (![subview isKindOfClass:[UIImageView class]]) {
-                subview.frame = CGRectMake(self.scrollView.bounds.size.width * [self.scrollView.subviews indexOfObject:subview], 0, self.scrollView.bounds.size.width, self.scrollView.bounds.size.height);
-            }
-        }
-        
-        CGFloat tabButtonWidth = floorf(self.drawer.bounds.size.width / self.tabs.count);
-        for (UIButton *subview in self.tabBar.subviews) {
-            subview.frame = CGRectMake(tabButtonWidth * [self.tabBar.subviews indexOfObject:subview], 0, tabButtonWidth, TAB_BAR_HEIGHT);
-            if (subview.selected) {
-                [self tabButtonPressed:subview];
-            }
-        }
-    }
+    [self viewFrameChanged];
 }
 
 - (void)statusBarFrameChanged:(NSNotification*)notification
@@ -174,7 +141,34 @@
     windowBounds.size.height -= statusBarFrame.size.height - 20.0;
     self.view.frame = windowBounds;
     
-    [self.view setNeedsLayout];
+    [self viewFrameChanged];
+}
+
+- (void)viewFrameChanged
+{
+    self.drawer.frame = [self drawerFrame];
+    self.drawer.layer.anchorPoint = CGPointMake(0.5, 1.0);
+    self.drawer.frame = [self drawerFrame];
+    self.borderLayer.frame = CGRectInset(self.drawer.bounds, -0.5, -0.5);
+    self.drawerOpenCenterY = DRAWER_ORIGIN_Y + self.drawer.bounds.size.height;
+    self.gripper.frame = CGRectMake(0, 0, self.drawer.bounds.size.width, 30);
+    
+    self.scrollView.contentSize = CGSizeMake(self.scrollView.bounds.size.width * self.tabs.count, self.scrollView.bounds.size.height);
+    self.tabBar.frame = CGRectMake(self.drawer.frame.origin.x, self.view.bounds.size.height - TAB_BAR_HEIGHT, self.drawer.bounds.size.width, TAB_BAR_HEIGHT);
+    
+    for (UIView *subview in self.scrollView.subviews) {
+        if (![subview isKindOfClass:[UIImageView class]]) {
+            subview.frame = CGRectMake(self.scrollView.bounds.size.width * [self.scrollView.subviews indexOfObject:subview], 0, self.scrollView.bounds.size.width, self.scrollView.bounds.size.height);
+        }
+    }
+    
+    CGFloat tabButtonWidth = floorf(self.drawer.bounds.size.width / self.tabs.count);
+    for (UIButton *subview in self.tabBar.subviews) {
+        subview.frame = CGRectMake(tabButtonWidth * [self.tabBar.subviews indexOfObject:subview], 0, tabButtonWidth, TAB_BAR_HEIGHT);
+        if (subview.selected) {
+            [self tabButtonPressed:subview];
+        }
+    }
 }
 
 - (CGRect)drawerFrame
@@ -321,24 +315,14 @@
 {
     _drawerOpen = drawerOpen;
     
-    if (drawerOpen) {
-        if (self.scrollView.alpha < 1) {
-            [UIView animateWithDuration:0.33 delay:0.0 options:(7 >> 16) animations:^{
-                [self openDrawer];
-            } completion:nil];
-        }
-        
-        self.closeDrawerButton.hidden = NO;
-        
-    } else {
-        if (self.scrollView.alpha > 0) {
-            [UIView animateWithDuration:0.33 delay:0.0 options:(7 >> 16) animations:^{
-                [self closeDrawer];
-            } completion:nil];
-        }
-        
-        self.closeDrawerButton.hidden = YES;
-    }
+    [UIView animateWithDuration:0.33 delay:0.0 options:(7 >> 16) animations:^{
+        if (drawerOpen) [self openDrawer];
+        else [self closeDrawer];
+    } completion:^(BOOL finished) {
+        self.activePanGestureRecognizer = nil;
+    }];
+    
+    self.closeDrawerButton.hidden = !drawerOpen;
 }
 
 - (void)handleDrawerDragGesture:(UIPanGestureRecognizer *)recognizer
@@ -346,7 +330,11 @@
     BOOL opening = ([recognizer.view isEqual:self.tabBar]);
     
     if (opening && self.drawerOpen) return;
-    if (self.activePanGestureRecognizer && ![self.activePanGestureRecognizer isEqual:recognizer]) return;
+    if (self.activePanGestureRecognizer && ![self.activePanGestureRecognizer isEqual:recognizer]) {
+        recognizer.enabled = NO;
+        recognizer.enabled = YES;
+        return;
+    }
     
     CGFloat yTranslation = [recognizer translationInView:self.drawer].y;
     CGFloat drawerMaxY = self.drawerOpenCenterY + self.drawer.bounds.size.height - TAB_BAR_HEIGHT;
@@ -370,10 +358,13 @@
         if (rawCenterY < newCenterY) {
             CGFloat scaleFactor = 1.0 + (fabs(rawCenterY - newCenterY) / (drawerMaxY - self.drawerOpenCenterY)) * 0.2;
             self.drawer.transform = CGAffineTransformMakeScale(1.0, scaleFactor);
+        } else {
+            self.drawer.transform = CGAffineTransformIdentity;
         }
     } else {
         CGFloat terminalVelocity = [recognizer velocityInView:self.view].y;
         self.drawer.userInteractionEnabled = YES;
+//        NSLog(@"*terminalVelocity %f", terminalVelocity);
         
         if (terminalVelocity < -250) {
             [self openDrawerWithVelocity:terminalVelocity];
@@ -411,7 +402,7 @@
 {
     if (self.drawer.center.y > self.drawerOpenCenterY || scrollView.contentOffset.y <= 10.0) {
         CGFloat terminalVelocity = velocity.y * -1000;
-        if (terminalVelocity > 150) {
+        if (terminalVelocity > 300) {
             [self closeDrawerWithVelocity:terminalVelocity];
         } else {
             [self openDrawerWithVelocity:0];
@@ -443,35 +434,56 @@
     }
 }
 
-- (void)closeDrawerWithAnimation
+- (void)closeDrawerButtonTapped
 {
+    if (self.activePanGestureRecognizer) return;
     self.drawerOpen = NO;
 }
 
 - (void)openDrawerWithVelocity:(CGFloat)velocity
 {
-    velocity = MIN(abs(velocity), 3500);
+    velocity = MIN(fabs(velocity), 3500);
+//    NSLog(@"velocity          %f", velocity);
     CGFloat velocityFactor = velocity / 3500;
-    CGFloat animationDuration = 0.3 * (1 - velocityFactor);
-    CGFloat scaleFactor = 1 + velocityFactor * 0.2;
+//    NSLog(@"velocityFactor    %f", velocityFactor);
     
-    [UIView animateWithDuration:animationDuration delay:0 usingSpringWithDamping:1 initialSpringVelocity:velocityFactor options:0 animations:^{
-        [self openDrawer];
+    // inverse relation between velocity and duration
+    CGFloat animationDuration = 0.3 * (1 - velocityFactor);
+//    NSLog(@"animationDuration %f", animationDuration);
+    CGFloat scaleFactor = 1 + velocityFactor * 0.2;
+//    NSLog(@"scaleFactor       %f", scaleFactor);
+    
+    [UIView animateWithDuration:animationDuration delay:0 usingSpringWithDamping:1 initialSpringVelocity:velocityFactor options:UIViewAnimationOptionBeginFromCurrentState animations:^{
         
-        if (CGAffineTransformIsIdentity(self.drawer.transform)) {
+        BOOL shouldForceStretch = NO;
+        if (self.drawer.center.y == self.drawerOpenCenterY) {
+//            NSLog(@"current drawer center is same as drawer open");
+//            NSLog(@"%@", NSStringFromCGAffineTransform(self.drawer.transform));
+            shouldForceStretch = (self.drawer.transform.d <= 1.06);
+        }
+        if (CGAffineTransformIsIdentity(self.drawer.transform) || shouldForceStretch) {
+//            NSLog(@"transform is identity, stretching: %f", scaleFactor);
             self.drawer.transform = CGAffineTransformMakeScale(1.0, scaleFactor);
         }
         
+        [self openDrawer];
+        
     } completion:^(BOOL finished) {
         if (CGAffineTransformIsIdentity(self.drawer.transform)) {
+            if (self.activePanGestureRecognizer.state == UIGestureRecognizerStateChanged) return;
             self.drawerOpen = YES;
-            self.activePanGestureRecognizer = nil;
         } else {
-            [UIView animateWithDuration:0.7 delay:0 usingSpringWithDamping:0.25 initialSpringVelocity:velocityFactor options:UIViewAnimationOptionAllowUserInteraction animations:^{
+            // more velocity, more damping
+            CGFloat bounceDuration = 0.45 + animationDuration;
+            CGFloat bounceDamping = 0.25 + (0.2 * velocityFactor);
+//            NSLog(@"bounceDamping     %f", bounceDamping);
+            
+            [UIView animateWithDuration:bounceDuration delay:0 usingSpringWithDamping:bounceDamping initialSpringVelocity:0 options:(UIViewAnimationOptionAllowUserInteraction|UIViewAnimationOptionBeginFromCurrentState) animations:^{
                 self.drawer.transform = CGAffineTransformIdentity;
             } completion:^(BOOL finished) {
+                self.drawer.transform = CGAffineTransformIdentity;
+                if (self.activePanGestureRecognizer.state == UIGestureRecognizerStateChanged) return;
                 self.drawerOpen = YES;
-                self.activePanGestureRecognizer = nil;
             }];
         }
     }];
@@ -479,7 +491,7 @@
 
 - (void)closeDrawerWithVelocity:(CGFloat)velocity
 {
-    velocity = MIN(abs(velocity), 3500);
+    velocity = MIN(fabs(velocity), 3500);
     CGFloat velocityFactor = velocity / 3500;
     CGFloat animationDuration = 0.3 * (1 - velocityFactor);
     
@@ -487,7 +499,6 @@
         [self closeDrawer];
     } completion:^(BOOL finished) {
         self.drawerOpen = NO;
-        self.activePanGestureRecognizer = nil;
     }];
 }
 
