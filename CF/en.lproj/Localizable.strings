@@ -10,6 +10,7 @@
 "DISMISS" = "Dismiss";
 "ERROR_DISMISS" = "Bummer";
 "LOADING" = "Loading…";
+"VERSION" = "Version";
 "ERROR_MESSAGE_TRY_AGAIN" = "Please try again.";
 "ERROR_MESSAGE_TRY_AGAIN_OR_REPORT" = "Please try again, and if it keeps failing, please report it to us via Twitter.";
 "NO_INTERNET_WARNING_TITLE" = "No internet connection";

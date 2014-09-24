@@ -10,6 +10,7 @@
 "DISMISS" = "Cerrar";
 "ERROR_DISMISS" = "Rayos";
 "LOADING" = "Cargando…";
+"VERSION" = "Versión";
 "ERROR_MESSAGE_TRY_AGAIN" = "Por favor, inténtalo de nuevo.";
 "ERROR_MESSAGE_TRY_AGAIN_OR_REPORT" = "Por favor, inténtalo de nuevo, y si sigue fallando, repórtanoslo vía Twitter.";
 "NO_INTERNET_WARNING_TITLE" = "No hay conexión a internet";

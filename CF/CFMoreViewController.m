@@ -139,7 +139,7 @@
     } else if (indexPath.section == 0 && indexPath.row == 1) {
         NSString *aboutPath = [[NSBundle mainBundle] pathForResource:@"about" ofType:@"html"];
         NSString *aboutString = [NSString stringWithContentsOfFile:aboutPath encoding:NSStringEncodingConversionAllowLossy error:nil];
-        NSString *finalString = [NSString stringWithFormat:aboutString, [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"], [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]];
+        NSString *finalString = [NSString stringWithFormat:aboutString, [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"], [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"], [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]];
         
         [webView loadHTMLString:finalString baseURL:baseURL];
         
@@ -206,6 +206,44 @@
     }
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    if (section == 0) return 105.0;
+    return 0;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    if (section == 0) {
+        CGFloat horizontalMargin = 15.0;
+        CGFloat topMargin = 30.0;
+        UIColor *theColor = [UIColor colorWithWhite:0 alpha:.3];
+        
+        UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 105.0)];
+        headerView.tintColor = theColor;
+        
+        UIImageView *iconImageView = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"icon-outline"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
+        iconImageView.frame = CGRectOffset(iconImageView.frame, horizontalMargin, topMargin);
+        [headerView addSubview:iconImageView];
+        
+        UILabel *nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(horizontalMargin + iconImageView.bounds.size.width + 10.0, topMargin, self.view.bounds.size.width - iconImageView.bounds.size.width - 10.0 - horizontalMargin, 42.0)];
+        nameLabel.font = [UIFont fontWithName:DEFAULT_FONT_NAME_REGULAR size:24.0];
+        nameLabel.text = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"];
+        nameLabel.textColor = theColor;
+        [headerView addSubview:nameLabel];
+        
+        UILabel *versionLabel = [[UILabel alloc] initWithFrame:CGRectMake(nameLabel.frame.origin.x + 2.0, topMargin + 35.0, nameLabel.bounds.size.width, 20.0)];
+        versionLabel.font = [UIFont fontWithName:DEFAULT_FONT_NAME_REGULAR size:12.0];
+        versionLabel.text = [NSString stringWithFormat:@"%@ %@ (%@)", NSLocalizedString(@"VERSION", nil), [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"], [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]];
+        versionLabel.textColor = theColor;
+        [headerView addSubview:versionLabel];
+        
+        return headerView;
+    }
+    
+    return nil;
 }
 
 #pragma mark - WebView Delegate
