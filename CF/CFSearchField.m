@@ -25,7 +25,11 @@
         _glyphView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 16.0, frame.size.height - 3.0)];
         _glyphView.contentMode = UIViewContentModeCenter;
         _glyphView.image = [[UIImage imageNamed:@"searchfield-glyph"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        _glyphView.userInteractionEnabled = YES;
         [self addSubview:_glyphView];
+        
+        UITapGestureRecognizer *glyphTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(glyphTapped)];
+        [_glyphView addGestureRecognizer:glyphTap];
         
         _textField = [[UITextField alloc] initWithFrame:CGRectMake(_glyphView.bounds.size.width + 2.0, -1.0, frame.size.width - 1.0 - _glyphView.bounds.size.width, frame.size.height)];
         _textField.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
@@ -44,6 +48,11 @@
         _text = @"";
     }
     return self;
+}
+
+- (void)glyphTapped
+{
+    [self.textField becomeFirstResponder];
 }
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField

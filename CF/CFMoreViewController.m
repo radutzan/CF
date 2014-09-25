@@ -148,13 +148,13 @@
         
         [mixpanel track:@"Opened About"];
         
+//    } else if (indexPath.section == 0 && indexPath.row == 2) {
+//        CFWhatsNewViewController *whatsNew = [CFWhatsNewViewController new];
+//        [self presentViewController:whatsNew animated:YES completion:nil];
+//        
+//        [mixpanel track:@"Opened What's New"];
+        
     } else if (indexPath.section == 0 && indexPath.row == 2) {
-        CFWhatsNewViewController *whatsNew = [CFWhatsNewViewController new];
-        [self presentViewController:whatsNew animated:YES completion:nil];
-        
-        [mixpanel track:@"Opened What's New"];
-        
-    } else if (indexPath.section == 0 && indexPath.row == 3) {
         NSString *appVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
         NSString *contactURL = [@"http://api.cuantofalta.mobi" stringByAppendingFormat:@"/contact?local=%@&UDID=NULL&osver=%@&appver=%@&device=%@", [[NSLocale preferredLanguages] objectAtIndex:0], [[UIDevice currentDevice] systemVersion], appVersion, [UIDevice platform]];
         
