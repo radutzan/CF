@@ -180,6 +180,7 @@
     }
     
     cell.codeLabel.text = [stopDictionary objectForKey:@"codigo"];
+    cell.codeLabel.textColor = [UIColor colorWithWhite:1 alpha:.35];
     cell.nameLabel.text = [stopDictionary objectForKey:@"nombre"];
     
     cell.favoriteNameLabel.textColor = [UIColor whiteColor];

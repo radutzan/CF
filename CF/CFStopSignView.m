@@ -54,6 +54,15 @@
         _favoriteContentView.userInteractionEnabled = NO;
         [self addSubview:_favoriteContentView];
         
+        // código de parada
+        _stopCodeLabel = [[UILabel alloc] initWithFrame:CGRectMake(_contentView.bounds.size.width - 65.0 - HORIZONTAL_MARGIN, _verticallyCenteredLabelY, 65.0, LABEL_HEIGHT)];
+        _stopCodeLabel.backgroundColor    = [UIColor clearColor];
+        _stopCodeLabel.font               = [UIFont fontWithName:@"AvenirNextCondensed-UltraLight" size:LABEL_FONT_SIZE];
+        _stopCodeLabel.textAlignment      = NSTextAlignmentRight;
+        _stopCodeLabel.textColor          = [UIColor colorWithWhite:1 alpha:1];
+        _stopCodeLabel.alpha              = 0.5;
+        [self addSubview:_stopCodeLabel];
+        
         [self initRegularContentView];
         [self initFavoriteContentView];
     }
@@ -73,15 +82,6 @@
     _stopNameLabel.numberOfLines      = 2;
     //    stopNameSingleLineLabel.backgroundColor = [UIColor yellowColor];
     [_contentView addSubview:_stopNameLabel];
-    
-    // código de parada
-    _stopCodeLabel = [[UILabel alloc] initWithFrame:CGRectMake(_contentView.bounds.size.width - 65.0 - HORIZONTAL_MARGIN, _verticallyCenteredLabelY, 65.0, LABEL_HEIGHT)];
-    _stopCodeLabel.backgroundColor    = [UIColor clearColor];
-    _stopCodeLabel.font               = [UIFont fontWithName:@"AvenirNext-UltraLight" size:LABEL_FONT_SIZE];
-    _stopCodeLabel.textAlignment      = NSTextAlignmentRight;
-    _stopCodeLabel.textColor          = [UIColor colorWithWhite:1 alpha:1];
-    _stopCodeLabel.alpha              = 0.5;
-    [_contentView addSubview:_stopCodeLabel];
     
     _stopNumberLabel = [[UILabel alloc] initWithFrame:CGRectMake(-5.0, 0.0, 0.0, self.bounds.size.height)];
     _stopNumberLabel.backgroundColor  = [UIColor clearColor];
@@ -121,7 +121,7 @@
 
 - (void)layoutSubviews
 {
-    self.stopCodeLabel.frame = CGRectMake(self.contentView.bounds.size.width - 65.0, self.verticallyCenteredLabelY, 65.0, LABEL_HEIGHT);
+    self.stopCodeLabel.frame = CGRectMake(self.bounds.size.width - 65.0 - HORIZONTAL_MARGIN, self.verticallyCenteredLabelY, 65.0, LABEL_HEIGHT);
     
     if (self.busPictogram.hidden)
         self.contentViewWidth = self.bounds.size.width - HORIZONTAL_MARGIN * 2;

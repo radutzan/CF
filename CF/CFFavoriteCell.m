@@ -47,7 +47,7 @@
     
     self.numberLabel.hidden = YES;
     self.metroBadge.hidden = YES;
-    self.codeLabel.hidden = YES;
+//    self.codeLabel.hidden = YES;
 }
 
 @end

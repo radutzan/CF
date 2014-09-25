@@ -33,7 +33,7 @@
         [self.containerView addSubview:self.nameLabel];
         
         self.codeLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.containerView.bounds.size.width - 60.0, 0, 60.0, self.containerView.bounds.size.height)];
-        self.codeLabel.font = [UIFont fontWithName:@"AvenirNext-UltraLight" size:15.0];
+        self.codeLabel.font = [UIFont fontWithName:@"AvenirNextCondensed-UltraLight" size:15.0];
         self.codeLabel.textAlignment = NSTextAlignmentRight;
         self.codeLabel.textColor = [UIColor colorWithWhite:0 alpha:0.5];
         [self.containerView addSubview:self.codeLabel];
