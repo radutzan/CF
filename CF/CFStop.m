@@ -269,9 +269,11 @@ static NSRegularExpression *regexMetroSinNumero;
         return NO;
     }
     
-    if (fabs(object.coordinate.longitude - object.coordinate.longitude) > DBL_EPSILON) {
+    if (fabs(object.coordinate.longitude - self.coordinate.longitude) > DBL_EPSILON) {
         return NO;
     }
+    
+    if (![object.services isEqualToArray:self.services]) return NO;
     
     return YES;
 }

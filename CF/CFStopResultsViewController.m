@@ -31,6 +31,7 @@
 @property (nonatomic, strong) UINavigationBar *titleView;
 @property (nonatomic, strong) CFStopSignView *stopInfoView;
 @property (nonatomic, strong) OLShapeTintedButton *favoriteButton;
+@property (nonatomic, strong) UIActivityIndicatorView *titleActivityIndicatorView;
 
 @property (nonatomic, retain) UITableView *tableView;
 @property (nonatomic, retain) UIRefreshControl *refreshControl;
@@ -128,6 +129,9 @@ CALayer *_leftGripper;
     [self.favoriteButton setImage:[UIImage starImageWithSize:starImageSize filled:YES] forState:UIControlStateSelected];
     [self.favoriteButton addTarget:self action:@selector(favButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     
+    self.titleActivityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+    self.titleActivityIndicatorView.center = self.favoriteButton.center;
+    
     self.tableView = [[UITableView alloc] initWithFrame:self.stopResultsView.bounds style:UITableViewStylePlain];
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
@@ -146,6 +150,8 @@ CALayer *_leftGripper;
     [self.stopResultsView addSubview:self.titleView];
     [self.titleView addSubview:self.stopInfoView];
     [self.titleView addSubview:self.favoriteButton];
+    [self.titleView addSubview:self.titleActivityIndicatorView];
+    [self.titleActivityIndicatorView startAnimating];
     
     self.refreshControl = [UIRefreshControl new];
     self.refreshControl.tintColor = [UIColor whiteColor];
@@ -621,8 +627,13 @@ CALayer *_leftGripper;
 - (void)setStop:(CFStop *)stop
 {
     NSLog(@"setStop:%@", stop.code);
-    if ([stop.code isEqualToString:_stop.code]) return;
+    if ([stop isEqual:_stop]) return;
     _stop = stop;
+    
+    if (stop && stop.services.count == 0) {
+        self.stopCode = stop.code;
+        return;
+    }
     
     self.refreshing = NO;
     
@@ -658,12 +669,27 @@ CALayer *_leftGripper;
         self.favoriteButton.selected = self.stop.isFavorite;
         self.stopInfoView.favoriteContentView.hidden = !self.stop.isFavorite;
         self.stopInfoView.contentView.hidden = self.stop.isFavorite;
+        self.favoriteButton.alpha = 0;
     } else {
         self.favoriteButton.enabled = NO;
         self.favoriteButton.selected = NO;
         self.stopInfoView.favoriteContentView.hidden = YES;
         self.stopInfoView.contentView.hidden = NO;
+        self.titleActivityIndicatorView.alpha = 0;
+        self.favoriteButton.alpha = 1;
     }
+    
+    [UIView animateWithDuration:0.2 delay:0 usingSpringWithDamping:1 initialSpringVelocity:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+        if (self.stop) {
+            [self.titleActivityIndicatorView stopAnimating];
+            self.titleActivityIndicatorView.alpha = 0;
+            self.favoriteButton.alpha = 1;
+        } else {
+            [self.titleActivityIndicatorView startAnimating];
+            self.titleActivityIndicatorView.alpha = 1;
+            self.favoriteButton.alpha = 0;
+        }
+    } completion:nil];
 }
 
 - (void)performStopRequestQuietly:(BOOL)quietly
