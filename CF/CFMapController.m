@@ -97,8 +97,8 @@ static MKMapRect santiagoBounds;
         self.stopCalloutView.permittedArrowDirection = SMCalloutArrowDirectionDown;
         
         self.zoomWarning = [[UILabel alloc] initWithFrame:CGRectMake(0.0, frame.size.height - self.contentInset.bottom - 10.0 - 36.0, 280.0, 36.0)];
+        self.zoomWarning.userInteractionEnabled = YES;
         self.zoomWarning.backgroundColor = [UIColor colorWithWhite:0 alpha:.75];
-        self.zoomWarning.userInteractionEnabled = NO;
         self.zoomWarning.alpha = 0;
         self.zoomWarning.font = [UIFont fontWithName:@"AvenirNextCondensed-Medium" size:17.0];
         self.zoomWarning.text = NSLocalizedString(@"ZOOM_LEVEL_WARNING_MESSAGE", nil);
@@ -107,6 +107,9 @@ static MKMapRect santiagoBounds;
         self.zoomWarning.layer.cornerRadius = 2.5;
         self.zoomWarning.layer.masksToBounds = YES;
         [self addSubview:self.zoomWarning];
+        
+        UITapGestureRecognizer *zoomWarningTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(zoomWarningTapped)];
+        [self.zoomWarning addGestureRecognizer:zoomWarningTap];
         
         self.outOfSantiagoWarning = [[OLGhostAlertView alloc] initWithTitle:NSLocalizedString(@"OUT_OF_SANTIAGO_WARNING_TITLE", nil) message:NSLocalizedString(@"OUT_OF_SANTIAGO_WARNING_MESSAGE", nil) timeout:200.0 dismissible:NO];
         self.outOfSantiagoWarning.titleLabel.font = [UIFont fontWithName:DEFAULT_FONT_NAME_MEDIUM size:17.0];
@@ -157,6 +160,8 @@ static MKMapRect santiagoBounds;
     }
     
     [self.mapView removeAnnotations:pins];
+    [self.stops removeAllObjects];
+    [self.bipSpots removeAllObjects];
     pins = nil;
 }
 
@@ -196,14 +201,17 @@ static MKMapRect santiagoBounds;
     if (!self.locationManager.location) {
         [self setDefaultRegionAnimated:animated];
     } else {
-        [self.mapView setRegion:[self.mapView regionThatFits:MKCoordinateRegionMakeWithDistance(self.locationManager.location.coordinate, 1000, 1000)] animated:animated];
+        CGFloat distance = 800;
+        if (self.phoneIsCrap) distance = 300;
+        [self.mapView setRegion:[self.mapView regionThatFits:MKCoordinateRegionMakeWithDistance(self.locationManager.location.coordinate, distance, distance)] animated:animated];
     }
 }
 
 - (void)setDefaultRegionAnimated:(BOOL)animated
 {
     CLLocationCoordinate2D startCoordinate = CLLocationCoordinate2DMake(-33.444117, -70.651055);
-    MKCoordinateRegion adjustedRegion = [self.mapView regionThatFits:MKCoordinateRegionMakeWithDistance(startCoordinate, 350, 350)];
+    CGFloat distance = 350;
+    MKCoordinateRegion adjustedRegion = [self.mapView regionThatFits:MKCoordinateRegionMakeWithDistance(startCoordinate, distance, distance)];
     [self.mapView setRegion:adjustedRegion animated:animated];
     
     self.defaultCenterCoordinate = startCoordinate;
@@ -250,6 +258,13 @@ static MKMapRect santiagoBounds;
     } else if (!showConnectivityWarning) {
         [self.connectivityWarning hide];
     }
+}
+
+- (void)zoomWarningTapped
+{
+    CGFloat distance = 800;
+    if (self.phoneIsCrap) distance = 300;
+    [self.mapView setRegion:[self.mapView regionThatFits:MKCoordinateRegionMakeWithDistance(self.mapView.centerCoordinate, distance, distance)] animated:YES];
 }
 
 - (BOOL)phoneIsCrap
@@ -315,7 +330,7 @@ static MKMapRect santiagoBounds;
     radio = MIN(1750, radio);
     radio = radio + 50;
     
-    if ((self.phoneIsCrap && radio > 420) || (!self.phoneIsCrap && radio > 1750)) {
+    if ((self.phoneIsCrap && radio > 420) || (!self.phoneIsCrap && radio > 1450)) {
         [self clearStopAnnotations];
         self.showZoomWarning = YES;
         return;
@@ -329,6 +344,8 @@ static MKMapRect santiagoBounds;
 
 - (void)placeStopAnnotationsInRegion:(MKCoordinateRegion)region withRadius:(float)radius
 {
+    if (!self.mapMode == CFMapModeStops) return;
+    
     [[CFSapoClient sharedClient] busStopsAroundCoordinate:region.center radius:radius handler:^(NSError *error, id result) {
         if (error) {
             NSLog(@"bus stops error: %@", error);
@@ -348,6 +365,8 @@ static MKMapRect santiagoBounds;
         if ([result count] == 0) return;
         
         for (NSDictionary *stopData in result) {
+            if (!self.mapMode == CFMapModeStops) return;
+            
             CLLocationCoordinate2D coordinate;
             coordinate.latitude = [[stopData objectForKey:@"latitude"] doubleValue];
             coordinate.longitude = [[stopData objectForKey:@"longitude"] doubleValue];
@@ -397,6 +416,8 @@ static MKMapRect santiagoBounds;
 
 - (void)placeBipAnnotationsInRegion:(MKCoordinateRegion)region withRadius:(float)radius
 {
+    if (!self.mapMode == CFMapModeStops) return;
+    
     [[CFSapoClient sharedClient] bipSpotsAroundCoordinate:region.center radius:radius handler:^(NSError *error, id result) {
         if (error) {
             NSLog(@"bip spots error: %@", error);
@@ -411,6 +432,7 @@ static MKMapRect santiagoBounds;
         NSArray *spotsArray = [self.bipSpots allObjects];
         
         dispatch_async(dispatch_get_main_queue(), ^{
+            if (!self.mapMode == CFMapModeStops) return;
             [self.mapView addAnnotations:spotsArray];
         });
     }];
@@ -508,6 +530,8 @@ static MKMapRect santiagoBounds;
 
 - (void)drawPolylineForService:(NSString *)service direction:(CFDirection)direction
 {
+    if (!self.mapMode == CFMapModeServiceRoute) return;
+    
     [self.mapView removeOverlays:self.mapView.overlays];
     [self clearStopAnnotations];
     
@@ -541,6 +565,11 @@ static MKMapRect santiagoBounds;
         CFRoute *route = [CFRoute routeWithServiceName:service stops:stops routeCoordinates:coordinates count:result.count];
         
         dispatch_async(dispatch_get_main_queue(), ^{
+            if (!self.mapMode == CFMapModeServiceRoute) return;
+            
+            [self.mapView removeOverlays:self.mapView.overlays];
+            [self clearStopAnnotations];
+            
             [self.mapView addOverlay:[route polyline] level:MKOverlayLevelAboveRoads];
             [self.mapView addAnnotations:stops];
             

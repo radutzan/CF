@@ -50,6 +50,7 @@
 - (void)loadView
 {
     CGRect windowBounds = [UIScreen mainScreen].applicationFrame;
+    windowBounds.size.height -= [UIApplication sharedApplication].statusBarFrame.size.height - 20.0;
     self.view = [[CFTransparentView alloc] initWithFrame:windowBounds];
     
     if (NSClassFromString(@"UIVisualEffectView")) {
@@ -325,6 +326,17 @@
     self.closeDrawerButton.hidden = !drawerOpen;
 }
 
+- (void)setActivePanGestureRecognizer:(UIPanGestureRecognizer *)activePanGestureRecognizer
+{
+    _activePanGestureRecognizer = activePanGestureRecognizer;
+    
+    if (activePanGestureRecognizer) {
+        self.scrollView.userInteractionEnabled = NO;
+    } else {
+        self.scrollView.userInteractionEnabled = YES;
+    }
+}
+
 - (void)handleDrawerDragGesture:(UIPanGestureRecognizer *)recognizer
 {
     BOOL opening = ([recognizer.view isEqual:self.tabBar]);
@@ -380,7 +392,7 @@
 
 - (void)drawerScrollViewDidScroll:(UIScrollView *)scrollView
 {
-    if (!scrollView.tracking) return;
+    if (!scrollView.tracking || self.activePanGestureRecognizer) return;
     
     if (scrollView.contentOffset.y <= 0 || self.drawer.center.y > self.drawerOpenCenterY) {
         CGFloat drawerMaxY = self.drawerOpenCenterY + self.drawer.bounds.size.height - TAB_BAR_HEIGHT;
@@ -400,6 +412,8 @@
 
 - (void)drawerScrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset
 {
+    if (self.activePanGestureRecognizer) return;
+    
     if (self.drawer.center.y > self.drawerOpenCenterY || scrollView.contentOffset.y <= 10.0) {
         CGFloat terminalVelocity = velocity.y * -1000;
         if (terminalVelocity > 300) {

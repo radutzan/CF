@@ -74,6 +74,7 @@ CALayer *_leftGripper;
     self.displayMode = CFStopResultsDisplayModeNone;
     
     CGRect screenBounds = [UIScreen mainScreen].bounds;
+    screenBounds.size.height -= [UIApplication sharedApplication].statusBarFrame.size.height - 20.0;
     self.view = [[CFTransparentView alloc] initWithFrame:screenBounds];
     self.view.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     

@@ -296,6 +296,7 @@
     
     if (thinking) {
         [self.searchField.activityIndicator startAnimating];
+        if (!self.suggestedStop) self.currentCard = nil;
     } else {
         [self.searchField.activityIndicator stopAnimating];
     }
