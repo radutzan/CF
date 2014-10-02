@@ -88,6 +88,7 @@
 {
     _placeholderImage = placeholderImage;
     self.placeholderImageView.image = placeholderImage;
+    [self.placeholderImageView sizeToFit];
 }
 
 - (void)setPlaceholderTitle:(NSString *)placeholderTitle

@@ -201,8 +201,8 @@ static MKMapRect santiagoBounds;
     if (!self.locationManager.location) {
         [self setDefaultRegionAnimated:animated];
     } else {
-        CGFloat distance = 800;
-        if (self.phoneIsCrap) distance = 300;
+        CGFloat distance = 600;
+        if (self.phoneIsCrap) distance = 250;
         [self.mapView setRegion:[self.mapView regionThatFits:MKCoordinateRegionMakeWithDistance(self.locationManager.location.coordinate, distance, distance)] animated:animated];
     }
 }
@@ -262,8 +262,8 @@ static MKMapRect santiagoBounds;
 
 - (void)zoomWarningTapped
 {
-    CGFloat distance = 800;
-    if (self.phoneIsCrap) distance = 300;
+    CGFloat distance = 600;
+    if (self.phoneIsCrap) distance = 250;
     [self.mapView setRegion:[self.mapView regionThatFits:MKCoordinateRegionMakeWithDistance(self.mapView.centerCoordinate, distance, distance)] animated:YES];
 }
 

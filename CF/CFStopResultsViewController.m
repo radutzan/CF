@@ -147,6 +147,8 @@ CALayer *_leftGripper;
 {
     [super viewDidLoad];
     
+    self.refreshing = NO;
+    
     [self.stopResultsView addSubview:self.titleView];
     [self.titleView addSubview:self.stopInfoView];
     [self.titleView addSubview:self.favoriteButton];
@@ -220,15 +222,22 @@ CALayer *_leftGripper;
 {
     [super viewWillAppear:animated];
     
-    self.refreshing = NO;
     [self setUpTitleView];
+    if (self.stop && !self.refreshing) [self performStopRequestQuietly:NO];
+    
+    if (!self.removedAds) {
+        GADRequest *adRequest = [GADRequest request];
+        adRequest.testDevices = @[GAD_SIMULATOR_ID];
+        if (self.stop) [adRequest setLocationWithLatitude:self.stop.coordinate.latitude longitude:self.stop.coordinate.longitude accuracy:0];
+        [self.bannerView loadRequest:adRequest];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
     
-    [self.timer invalidate];
+    [self resetTimer];
     [self.view endEditing:YES];
     self.refreshing = NO;
 }
@@ -637,10 +646,9 @@ CALayer *_leftGripper;
     
     self.refreshing = NO;
     
-    [self setUpTitleView];
     [self resetEstimationData];
     [self resetTimer];
-    [self refreshTimerLabel];
+    [self setUpTitleView];
     
     if (stop) {
         [self.tableView reloadData];
@@ -650,13 +658,6 @@ CALayer *_leftGripper;
         } else {
             [self updateHistory];
             [self performStopRequestQuietly:NO];
-        }
-        
-        if (!self.removedAds) {
-            GADRequest *adRequest = [GADRequest request];
-            adRequest.testDevices = @[GAD_SIMULATOR_ID];
-            [adRequest setLocationWithLatitude:stop.coordinate.latitude longitude:stop.coordinate.longitude accuracy:0];
-            [self.bannerView loadRequest:adRequest];
         }
     }
 }
@@ -822,7 +823,7 @@ CALayer *_leftGripper;
     [self.finalData addObjectsFromArray:servicesWithoutAnyData];
     
     self.refreshing = NO;
-    [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
+    [self.tableView reloadRowsAtIndexPaths:[self.tableView indexPathsForVisibleRows] withRowAnimation:UITableViewRowAnimationAutomatic];
     [self.refreshControl endRefreshing];
     [self refreshTimerLabel];
     
@@ -857,9 +858,9 @@ CALayer *_leftGripper;
 
 - (void)resetTimer
 {
+    [self.timer invalidate];
     [self refreshTimerLabel];
     [self.class cancelPreviousPerformRequestsWithTarget:self];
-    [self.timer invalidate];
 }
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex

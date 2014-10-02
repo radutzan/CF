@@ -32,7 +32,7 @@ p.center strong, p.center em {
     display: block;
     }
 
-p.center strong {
+p.center.left strong, p.center.right strong {
     font-size: 17px;
     }
 
