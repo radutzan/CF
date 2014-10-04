@@ -116,7 +116,7 @@
     
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     
-    NSString *freeMap = ([[NSUserDefaults standardUserDefaults] boolForKey:@"CFEnableMapWithAds"])? @"Yes" : @"No";
+    NSString *freeMap = ([[NSUserDefaults standardUserDefaults] boolForKey:@"CF01"] || [[NSUserDefaults standardUserDefaults] boolForKey:@"CF02"])? @"No" : @"Yes";
     [mixpanel registerSuperProperties:@{@"Has Ads": freeMap}];
     
     self.stopResultsController = [CFStopResultsViewController new];
@@ -285,11 +285,17 @@
 {
     self.stopResultsController.stop = stop;
     [self.stopResultsController presentOnViewController:self];
+    
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    [mixpanel track:@"Stop Requested" properties:@{@"Code": stop.code, @"From": @"Search Results"}];
 }
 
 - (void)searchControllerRequestedLocalSearch:(NSString *)searchString
 {
     [self.mapController performSearchWithString:searchString];
+    
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    [mixpanel track:@"Local Search Requested"];
 }
 
 - (void)searchControllerDidSelectService:(CFService *)service direction:(CFDirection)direction
@@ -297,7 +303,7 @@
     [self showServiceRouteForService:service direction:direction];
     
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
-    [mixpanel track:@"Service Route Requested" properties:@{@"Service": service.name, @"From": @"Smart Search Results"}];
+    [mixpanel track:@"Service Route Requested" properties:@{@"Service": service.name, @"From": @"Search Results"}];
 }
 
 - (void)keyboardWasShown:(NSNotification*)aNotification
@@ -337,6 +343,8 @@
 
 - (void)stopResultsViewWasPromotedFromContainment
 {
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    [mixpanel track:@"Stop Promoted From Containment"];
     [self.searchController hide];
     [self.searchController.searchField clear];
 }
@@ -371,8 +379,10 @@
     
     if ([url.host isEqualToString:@"stop"]) {
         NSString *stopCode = url.lastPathComponent;
-        NSLog(@"opening stop %@ from url", stopCode);
         [self pushStopResultsWithStopCode:stopCode];
+        
+        Mixpanel *mixpanel = [Mixpanel sharedInstance];
+        [mixpanel track:@"Stop Requested" properties:@{@"Code": stopCode, @"From": @"External URL"}];
     }
 }
 
@@ -435,6 +445,9 @@
     
     [self.mapController displayServiceRoute:service.name direction:direction];
     [self showServiceRouteBarWithService:service selectedDirection:direction];
+    
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    [mixpanel track:@"Service Route Requested" properties:@{@"Service": service.name}];
 }
 
 - (void)showServiceRouteBarWithService:(CFService *)service selectedDirection:(CFDirection)direction
@@ -544,6 +557,9 @@
                 recognizer.view.center = CGPointMake(recognizer.view.center.x + self.view.bounds.size.width, recognizer.view.center.y);
             } completion:^(BOOL finished) {
                 [self clearServiceRouteAnimated:NO];
+                
+                Mixpanel *mixpanel = [Mixpanel sharedInstance];
+                [mixpanel track:@"Used Service Bar Dismiss Gesture"];
             }];
         } else {
             [UIView animateWithDuration:0.45 delay:0 usingSpringWithDamping:0.6 initialSpringVelocity:velocityFactor options:0 animations:^{

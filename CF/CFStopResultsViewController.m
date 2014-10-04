@@ -376,6 +376,8 @@ CALayer *_leftGripper;
         self.stopResultsView.alpha = 1;
         self.stopResultsView.frame = self.stopResultsViewPresentedFrame;
     } completion:^(BOOL finished) {
+        Mixpanel *mixpanel = [Mixpanel sharedInstance];
+        [mixpanel track:@"Expanded Stop"];
     }];
 }
 
@@ -388,7 +390,10 @@ CALayer *_leftGripper;
     [UIView animateWithDuration:0.45 delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:1 options:0 animations:^{
         self.overlay.alpha = 0;
         self.stopResultsView.frame = self.stopResultsViewMinimizedFrame;
-    } completion:nil];
+    } completion:^(BOOL finished) {
+        Mixpanel *mixpanel = [Mixpanel sharedInstance];
+        [mixpanel track:@"Minimized Stop"];
+    }];
 }
 
 - (void)dismiss
@@ -449,6 +454,8 @@ CALayer *_leftGripper;
         
         if (terminalVelocity > 250 || moveDiff > 80) {
             [self dismissFromCenter:self.stopResultsView.center withVelocityFactor:velocityFactor];
+            Mixpanel *mixpanel = [Mixpanel sharedInstance];
+            [mixpanel track:@"Used Stop Dismiss Gesture"];
         } else {
             [UIView animateWithDuration:0.45 delay:0 usingSpringWithDamping:0.6 initialSpringVelocity:velocityFactor options:0 animations:^{
                 self.stopResultsView.center = CGPointMake(self.stopResultsViewPresentedCenter.x, self.stopResultsView.center.y);
