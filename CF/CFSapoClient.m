@@ -52,7 +52,7 @@ NSString * const queryKeySalt = @"4ESMLSVB_ONDA";
     NSString *keyUnhashed = [NSString stringWithFormat:@"%@%@%@%@", queryKeySalt, [UIDevice platform], busStop, APIVersion];
     [params setObject:[keyUnhashed sha1] forKey:@"queryKey"];
     NSMutableURLRequest *request = [self requestWithMethod:@"GET" path:@"/bus_stops/estimate" parameters:params];
-    [request setTimeoutInterval:180];
+    [request setTimeoutInterval:60];
     AFHTTPRequestOperation *oper = [self HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation *operation, id responseObject) {
         AFJSONRequestOperation *JSONop = (AFJSONRequestOperation *)operation;
         if (handler) {

@@ -36,6 +36,7 @@
 @property (nonatomic, strong) NSMutableArray *serviceRouteBars;
 
 @property (nonatomic, strong) UINavigationBar *localNavigationBar;
+@property (nonatomic, strong) OLShapeTintedButton *locationButton;
 @property (nonatomic, strong) NSArray *rightBarButtonItems;
 
 @property (nonatomic, assign) CGFloat topContentMargin;
@@ -92,11 +93,15 @@
     self.topContentMargin = self.localNavigationBar.bounds.size.height;
     self.bottomContentMargin = TAB_BAR_HEIGHT;
     
-//    UIBarButtonItem *bipButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"button-bip"] style:UIBarButtonItemStylePlain target:self.mapController action:@selector(goToNearestBipSpot)];
-    MKUserTrackingBarButtonItem *tracky = [[MKUserTrackingBarButtonItem alloc] initWithMapView:self.mapController.mapView];
+    self.locationButton = [OLShapeTintedButton buttonWithType:UIButtonTypeCustom];
+    [self.locationButton setImage:[[UIImage imageNamed:@"location"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
+    [self.locationButton setImage:[[UIImage imageNamed:@"location-selected"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateSelected];
+    [self.locationButton addTarget:self action:@selector(goToUserLocation) forControlEvents:UIControlEventTouchUpInside];
+    [self.locationButton sizeToFit];
+    UIBarButtonItem *locationButtonItem = [[UIBarButtonItem alloc] initWithCustomView:self.locationButton];
     
     UINavigationItem *navItem = [UINavigationItem new];
-    navItem.rightBarButtonItems = @[tracky];
+    navItem.rightBarButtonItems = @[locationButtonItem];
     
     self.rightBarButtonItems = navItem.rightBarButtonItems;
     
@@ -165,10 +170,6 @@
     if (shouldEnableAds) {
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"CFEnableMapWithAds"];
         [[NSUserDefaults standardUserDefaults] synchronize];
-    }
-    
-    if (self.shouldDisplayAds) {
-        [self loadMapBannerAd];
     }
 }
 
@@ -248,6 +249,41 @@
     [self.drawerController reloadUserData];
 }
 
+#pragma mark - Layout and more
+
+- (void)setTopContentMargin:(CGFloat)topContentMargin
+{
+    _topContentMargin = topContentMargin;
+    
+    self.searchController.contentInset = UIEdgeInsetsMake(topContentMargin, self.searchController.contentInset.left, self.searchController.contentInset.bottom, self.searchController.contentInset.right);
+    self.mapController.contentInset = UIEdgeInsetsMake(topContentMargin, self.mapController.contentInset.left, self.mapController.contentInset.bottom, self.mapController.contentInset.right);
+}
+
+- (void)setBottomContentMargin:(CGFloat)bottomContentMargin
+{
+    _bottomContentMargin = bottomContentMargin;
+    
+    self.searchController.contentInset = UIEdgeInsetsMake(self.searchController.contentInset.top, self.searchController.contentInset.left, bottomContentMargin, self.searchController.contentInset.right);
+    self.mapController.contentInset = UIEdgeInsetsMake(self.mapController.contentInset.top, self.mapController.contentInset.left, bottomContentMargin, self.mapController.contentInset.right);
+}
+
+- (void)goToUserLocation
+{
+    [self.mapController setInitialRegionAnimated:YES];
+    self.locationButton.selected = YES;
+}
+
+- (void)mapControllerMapViewRegionDidChange
+{
+    CGFloat epsilon = 0.001;
+    
+    if (fabs(self.mapController.mapView.centerCoordinate.latitude - self.mapController.mapView.userLocation.coordinate.latitude) <= epsilon && fabs(self.mapController.mapView.centerCoordinate.longitude - self.mapController.mapView.userLocation.coordinate.longitude) <= epsilon) {
+        self.locationButton.selected = YES;
+    } else {
+        self.locationButton.selected = NO;
+    }
+}
+
 #pragma mark - Search
 
 - (void)searchControllerWillHide
@@ -323,22 +359,6 @@
     [UIView animateKeyframesWithDuration:[[info objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue] delay:0.0 options:(7 << 16) animations:^{
         self.bottomContentMargin = TAB_BAR_HEIGHT;
     } completion:nil];
-}
-
-- (void)setTopContentMargin:(CGFloat)topContentMargin
-{
-    _topContentMargin = topContentMargin;
-    
-    self.searchController.contentInset = UIEdgeInsetsMake(topContentMargin, self.searchController.contentInset.left, self.searchController.contentInset.bottom, self.searchController.contentInset.right);
-    self.mapController.contentInset = UIEdgeInsetsMake(topContentMargin, self.mapController.contentInset.left, self.mapController.contentInset.bottom, self.mapController.contentInset.right);
-}
-
-- (void)setBottomContentMargin:(CGFloat)bottomContentMargin
-{
-    _bottomContentMargin = bottomContentMargin;
-    
-    self.searchController.contentInset = UIEdgeInsetsMake(self.searchController.contentInset.top, self.searchController.contentInset.left, bottomContentMargin, self.searchController.contentInset.right);
-    self.mapController.contentInset = UIEdgeInsetsMake(self.mapController.contentInset.top, self.mapController.contentInset.left, bottomContentMargin, self.mapController.contentInset.right);
 }
 
 - (void)stopResultsViewWasPromotedFromContainment
@@ -636,65 +656,6 @@
         
         [mixpanel track:@"Successfully Restored Purchases"];
     }];
-}
-
-- (BOOL)shouldDisplayAds
-{
-    return ([[NSUserDefaults standardUserDefaults] boolForKey:@"CFEnableMapWithAds"] && ![OLCashier hasProduct:@"CF01"]);
-}
-
-- (void)enableMapWithAdsButtonTapped
-{
-    UIAlertView *enableMapWithAdsAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"ENABLE_MAP", nil) message:NSLocalizedString(@"ENABLE_MAP_ALERT_MESSAGE", nil) delegate:self cancelButtonTitle:NSLocalizedString(@"CANCEL", nil) otherButtonTitles:NSLocalizedString(@"ENABLE_MAP_ALERT_BUTTON_FREE", nil), NSLocalizedString(@"ENABLE_MAP_ALERT_BUTTON_PAID", nil), NSLocalizedString(@"STORE_RESTORE", nil), nil];
-    enableMapWithAdsAlert.tag = 405;
-    [enableMapWithAdsAlert show];
-}
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    if (alertView.tag == 405) {
-        switch (buttonIndex) {
-            case 1:
-                [self enableMapWithAds];
-                break;
-                
-            case 2:
-                [self purchaseMap];
-                break;
-                
-            case 3:
-                [self restorePurchases];
-                break;
-                
-            default:
-                break;
-        }
-    }
-}
-
-- (void)enableMapWithAds
-{
-    [self loadMapBannerAd];
-    
-    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"CFEnableMapWithAds"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-    
-    Mixpanel *mixpanel = [Mixpanel sharedInstance];
-    [mixpanel track:@"Enabled Map With Ads"];
-    [mixpanel registerSuperProperties:@{@"Has Map": @"Yes"}];
-    [mixpanel registerSuperProperties:@{@"Has Free Map": @"Yes"}];
-}
-
-- (void)loadMapBannerAd
-{
-    GADRequest *request = [GADRequest request];
-    request.testDevices = @[@"61abccb6c029497b02bef4224933c76b", GAD_SIMULATOR_ID];
-    
-    self.mapBannerAd = [[GADBannerView alloc] initWithAdSize:kGADAdSizeBanner];
-    self.mapBannerAd.adUnitID = @"ca-app-pub-6226087428684107/9439376076";
-    self.mapBannerAd.rootViewController = self;
-    self.mapBannerAd.frame = CGRectMake(0, self.view.bounds.size.height - TAB_BAR_HEIGHT - self.mapBannerAd.bounds.size.height, self.mapBannerAd.bounds.size.width, self.mapBannerAd.bounds.size.height);
-    [self.mapBannerAd loadRequest:request];
 }
 
 @end

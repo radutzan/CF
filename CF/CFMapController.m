@@ -629,6 +629,9 @@ static MKMapRect santiagoBounds;
 
 - (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated
 {
+    if ([self.delegate respondsToSelector:@selector(mapControllerMapViewRegionDidChange)])
+        [self.delegate mapControllerMapViewRegionDidChange];
+    
     if (!MKMapRectIntersectsRect(santiagoBounds, mapView.visibleMapRect)) {
         self.showOutOfSantiagoWarning = YES;
         return;

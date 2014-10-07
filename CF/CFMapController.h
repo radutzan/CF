@@ -27,11 +27,13 @@ typedef NS_ENUM(NSInteger, CFMapMode) {
 @optional
 
 - (void)mapControllerDidUpdateLocation;
+- (void)mapControllerMapViewRegionDidChange;
 
 @end
 
 @interface CFMapController : UIView <MKMapViewDelegate>
 
+- (void)setInitialRegionAnimated:(BOOL)animated;
 - (void)performSearchWithString:(NSString *)searchString;
 - (void)goToNearestBipSpot;
 - (void)reloadStops;
