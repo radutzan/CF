@@ -12,7 +12,8 @@
 
 @interface CFMapSearchSuggestionView ()
 
-@property (nonatomic, strong) UILabel *mapSearchLabel;
+@property (nonatomic, strong) UILabel *searchTextLabel;
+@property (nonatomic, strong) UILabel *actionDescriptionLabel;
 @property (nonatomic, strong) UIView *backgroundView;
 
 @end
@@ -42,23 +43,33 @@
         searchIconImageView.frame = CGRectOffset(searchIconImageView.frame, 15.0, VERTICAL_MARGIN + 5.0);
         [_backgroundView addSubview:searchIconImageView];
         
-        _mapSearchLabel = [[UILabel alloc] initWithFrame:CGRectMake(35.0, VERTICAL_MARGIN, frame.size.width - 35.0 - 10.0, 20.0)];
-        _mapSearchLabel.numberOfLines = 0;
-        _mapSearchLabel.text = NSLocalizedString(@"MAP_SEARCH_SUGGESTION_CARD_TEXT", nil);
-        _mapSearchLabel.font = [UIFont fontWithName:DEFAULT_FONT_NAME_MEDIUM size:17.0];
-        [_backgroundView addSubview:_mapSearchLabel];
+        _searchTextLabel = [[UILabel alloc] initWithFrame:CGRectMake(35.0, VERTICAL_MARGIN, frame.size.width - 35.0 - 10.0, 20.0)];
+        _searchTextLabel.numberOfLines = 0;
+        _searchTextLabel.text = @"";
+        _searchTextLabel.font = [UIFont fontWithName:DEFAULT_FONT_NAME_MEDIUM size:17.0];
+        [_backgroundView addSubview:_searchTextLabel];
+        
+        _actionDescriptionLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+        _actionDescriptionLabel.text = [NSLocalizedString(@"MAP_SEARCH_SUGGESTION_CARD_TEXT", nil) uppercaseString];
+        _actionDescriptionLabel.font = [UIFont fontWithName:@"AvenirNextCondensed-Regular" size:12.0];
+        [_backgroundView addSubview:_actionDescriptionLabel];
     }
     return self;
 }
 
 - (void)setSearchText:(NSString *)searchText
 {
-    self.mapSearchLabel.text = [NSString stringWithFormat:NSLocalizedString(@"MAP_SEARCH_SUGGESTION_CARD_TEXT", nil), searchText];
-    self.mapSearchLabel.textColor = self.tintColor;
-    self.mapSearchLabel.frame = CGRectMake(self.mapSearchLabel.frame.origin.x, VERTICAL_MARGIN, self.bounds.size.width - self.mapSearchLabel.frame.origin.x - 10.0, 20.0);
-    [self.mapSearchLabel sizeToFit];
+    CGFloat maxLabelWidth = self.bounds.size.width - self.searchTextLabel.frame.origin.x - 10.0;
     
-    self.backgroundView.frame = CGRectMake(self.backgroundView.frame.origin.x, self.backgroundView.frame.origin.y, self.backgroundView.bounds.size.width, self.mapSearchLabel.bounds.size.height + VERTICAL_MARGIN * 2);
+    self.searchTextLabel.text = searchText;
+    self.searchTextLabel.textColor = self.tintColor;
+    self.searchTextLabel.frame = CGRectMake(self.searchTextLabel.frame.origin.x, VERTICAL_MARGIN, maxLabelWidth, 20.0);
+    [self.searchTextLabel sizeToFit];
+    
+    self.actionDescriptionLabel.frame = CGRectMake(self.searchTextLabel.frame.origin.x, VERTICAL_MARGIN + self.searchTextLabel.bounds.size.height + 1.0, maxLabelWidth, 12.0);
+    self.actionDescriptionLabel.textColor = self.tintColor;
+    
+    self.backgroundView.frame = CGRectMake(self.backgroundView.frame.origin.x, self.backgroundView.frame.origin.y, self.backgroundView.bounds.size.width, self.searchTextLabel.bounds.size.height + self.actionDescriptionLabel.bounds.size.height + VERTICAL_MARGIN * 2);
 }
 
 - (void)viewTapped

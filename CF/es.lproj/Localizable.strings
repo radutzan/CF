@@ -42,7 +42,7 @@
 "SEARCH_SUGGESTION_CARD_STOP_CODE_TITLE" = "Código";
 "SEARCH_SUGGESTION_CARD_SERVICE_TITLE" = "Servicio";
 "SEARCH_SUGGESTION_CARD_PLACE_TITLE" = "Lugar";
-"MAP_SEARCH_SUGGESTION_CARD_TEXT" = "Buscar “%@” en el mapa";
+"MAP_SEARCH_SUGGESTION_CARD_TEXT" = "Buscar lugar o dirección";
 "LOCATION_DENIED_ALERT_TITLE" = "Ubicación Desactivada";
 "LOCATION_DENIED_ALERT_MESSAGE" = "Cuánto Falta necesita tu ubicación para mostrarte los paraderos y puntos Bip! más cercanos. Tu ubicación se mantendrá completamente privada, nunca se enviará a ningún servidor, y sólo se usará dentro de tu dispositivo.\n\nPara permitir el uso de la ubicación, anda a la app de Ajustes > Privacidad > Ubicación y activa Cuánto Falta.";
 "OUT_OF_SANTIAGO_WARNING_TITLE" = "Estás fuera de Santiago";

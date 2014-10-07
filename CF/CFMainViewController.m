@@ -275,7 +275,7 @@
 
 - (void)mapControllerMapViewRegionDidChange
 {
-    CGFloat epsilon = 0.001;
+    CGFloat epsilon = 0.0005;
     
     if (fabs(self.mapController.mapView.centerCoordinate.latitude - self.mapController.mapView.userLocation.coordinate.latitude) <= epsilon && fabs(self.mapController.mapView.centerCoordinate.longitude - self.mapController.mapView.userLocation.coordinate.longitude) <= epsilon) {
         self.locationButton.selected = YES;
