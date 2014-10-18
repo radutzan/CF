@@ -70,7 +70,7 @@ CALayer *_leftGripper;
     self.responseEstimation = [NSMutableArray new];
     self.responseWithoutEstimation = [NSMutableArray new];
     self.finalData = [NSMutableArray new];
-    self.refreshing = YES;
+    
     self.removedAds = ([OLCashier hasProduct:@"CF01"] || [OLCashier hasProduct:@"CF02"]);
     self.displayMode = CFStopResultsDisplayModeNone;
     
@@ -146,8 +146,6 @@ CALayer *_leftGripper;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    self.refreshing = NO;
     
     [self.stopResultsView addSubview:self.titleView];
     [self.titleView addSubview:self.stopInfoView];
@@ -709,13 +707,9 @@ CALayer *_leftGripper;
     [self resetEstimationData];
     [self resetTimer];
     
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-    
     [[CFSapoClient sharedClient] estimateAtBusStop:self.stop.code
                                           services:nil
                                            handler:^(NSError *error, id result) {
-                                               [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-                                               
                                                if (result) {
                                                    NSArray *estimation = result[@"estimation"];
                                                    NSArray *buses = estimation[0];
@@ -878,6 +872,12 @@ CALayer *_leftGripper;
 
 #pragma mark - Table view data source
 
+- (void)setRefreshing:(BOOL)refreshing
+{
+    _refreshing = refreshing;
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = refreshing;
+}
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     return 1;
@@ -899,10 +899,11 @@ CALayer *_leftGripper;
     
     NSDictionary *serviceDictionary;
     
-    if ([self.finalData lastObject])
+    if ([self.finalData lastObject]) {
         serviceDictionary = [self.finalData objectAtIndex:indexPath.row];
-    else
+    } else {
         serviceDictionary = [self.stop.services objectAtIndex:indexPath.row];
+    }
     
     cell.backgroundColor = [UIColor blackColor];
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
