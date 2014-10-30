@@ -15,6 +15,7 @@
 @property (nonatomic, strong) UILabel *placeholderTitleLabel;
 @property (nonatomic, strong) UILabel *placeholderMessageLabel;
 @property (nonatomic, assign) BOOL placeholderViewWasLaidOut;
+@property (nonatomic, strong) UILabel *footerLabel;
 
 @end
 
@@ -45,6 +46,12 @@
         [_placeholderView addSubview:_placeholderMessageLabel];
         
         _placeholderViewWasLaidOut = NO;
+        
+        _footerLabel = [[UILabel alloc] initWithFrame:CGRectMake(15.0, 10.0, self.tableView.bounds.size.width - 30.0, 0)];
+        _footerLabel.font = [UIFont fontWithName:DEFAULT_FONT_NAME_REGULAR size:14.0];
+        _footerLabel.textColor = [UIColor colorWithWhite:0 alpha:.6];
+        _footerLabel.textAlignment = NSTextAlignmentCenter;
+        _footerLabel.numberOfLines = 0;
     }
     return self;
 }
@@ -65,6 +72,9 @@
 {
     [super viewDidAppear:animated];
     
+    CGFloat footerLabelHeight = (self.footerString) ? [self calculateHeightForString:self.footerString] : 0;
+    self.footerLabel.frame = CGRectMake(15.0, self.footerLabel.frame.origin.y, self.view.bounds.size.width - 30.0, footerLabelHeight);
+    
     if (!self.placeholderViewWasLaidOut) {
         self.placeholderView.frame = self.view.bounds;
         
@@ -83,6 +93,8 @@
         self.placeholderViewWasLaidOut = YES;
     }
 }
+
+#pragma mark - Views
 
 - (void)setPlaceholderImage:(UIImage *)placeholderImage
 {
@@ -107,7 +119,26 @@
 {
     _placeholderVisible = placeholderVisible;
     self.placeholderView.hidden = !placeholderVisible;
+    self.footerLabel.hidden = placeholderVisible;
 }
+
+- (void)setFooterString:(NSString *)footerString
+{
+    _footerString = footerString;
+    [self.tableView reloadData];
+}
+
+- (CGFloat)calculateHeightForString:(NSString *)string
+{
+    CGRect stringRect = [string boundingRectWithSize:CGSizeMake(self.footerLabel.bounds.size.width, CGFLOAT_MAX)
+                                             options:NSStringDrawingUsesLineFragmentOrigin
+                                          attributes:@{NSFontAttributeName: self.footerLabel.font}
+                                             context:nil];
+    NSLog(@"%f", ceilf(stringRect.size.height));
+    return ceilf(stringRect.size.height);
+}
+
+#pragma mark - UITableViewDelegate
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -135,6 +166,20 @@
 - (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset
 {
     [self.scrollingDelegate drawerScrollViewWillEndDragging:scrollView withVelocity:velocity targetContentOffset:targetContentOffset];
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
+{
+    if (self.footerString) {
+        self.footerLabel.text = self.footerString;
+        self.footerLabel.frame = CGRectMake(self.footerLabel.frame.origin.x, self.footerLabel.frame.origin.y, self.footerLabel.bounds.size.width, [self calculateHeightForString:self.footerString]);
+        return self.footerLabel;
+    } else return nil;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    if (self.footerString) return [self calculateHeightForString:self.footerString]; else return 0;
 }
 
 @end

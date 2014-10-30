@@ -24,6 +24,7 @@
         self.placeholderImage = [UIImage starImageWithSize:CGSizeMake(145.0, 145.0) filled:NO];
         self.placeholderTitle = NSLocalizedString(@"FAVORITES_PLACEHOLDER_TITLE", nil);
         self.placeholderMessage = NSLocalizedString(@"FAVORITES_PLACEHOLDER_MESSAGE", nil);
+        self.footerString = @"Reordena tus favoritos presionando y arrastrándolos donde quieras."; 
     }
     return self;
 }
