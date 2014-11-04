@@ -80,7 +80,7 @@ CALayer *_leftGripper;
     self.view.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     
     self.overlay = [[UIView alloc] initWithFrame:self.view.bounds];
-    self.overlay.backgroundColor = [UIColor colorWithWhite:0 alpha:.3];
+    self.overlay.backgroundColor = [UIColor colorWithWhite:0 alpha:.42];
     [self.view addSubview:self.overlay];
     
     if (NSClassFromString(@"UIVisualEffectView")) {
@@ -116,14 +116,17 @@ CALayer *_leftGripper;
     self.titleView = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, self.stopResultsView.bounds.size.width, 54.0)];
     self.titleView.barStyle = UIBarStyleBlack;
     
-    self.stopInfoView = [[CFStopSignView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.titleView.bounds.size.width - 33.0, 52.0)];
+    self.stopInfoView = [[CFStopSignView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.titleView.bounds.size.width - 33.0, self.titleView.bounds.size.height)];
     self.stopInfoView.delegate = self;
     self.stopInfoView.stopCodeLabel.hidden = YES;
+#ifdef DEV_VERSION
+    self.stopInfoView.stopCodeLabel.hidden = NO;
+#endif
     self.stopInfoView.favoriteContentView.userInteractionEnabled = YES;
     
     CGSize starImageSize = CGSizeMake(27.0, 27.0);
     self.favoriteButton = [OLShapeTintedButton buttonWithType:UIButtonTypeCustom];
-    self.favoriteButton.frame = CGRectMake(self.titleView.bounds.size.width - 38.0, 5.0, 42.0, 42.0);
+    self.favoriteButton.frame = CGRectMake(self.titleView.bounds.size.width - 38.0, (self.titleView.bounds.size.height - 42.0) / 2, 42.0, 42.0);
     self.favoriteButton.enabled = NO;
     [self.favoriteButton setImage:[UIImage starImageWithSize:starImageSize filled:NO] forState:UIControlStateNormal];
     [self.favoriteButton setImage:[UIImage starImageWithSize:starImageSize filled:YES] forState:UIControlStateSelected];

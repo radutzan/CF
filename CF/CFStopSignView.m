@@ -41,7 +41,7 @@
         _contentViewWidth = frame.size.width - HORIZONTAL_MARGIN * 2;
         
         _busPictogram = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bus"]];
-        _busPictogram.frame = CGRectMake(HORIZONTAL_MARGIN + 1.0, ceilf((frame.size.height - _busPictogram.bounds.size.height) / 2), _busPictogram.bounds.size.width, _busPictogram.bounds.size.height);
+        _busPictogram.frame = CGRectOffset(_busPictogram.bounds, HORIZONTAL_MARGIN + 1.0, (frame.size.height - _busPictogram.bounds.size.height) / 2);
         [self addSubview:_busPictogram];
         
         _horizontalMarginWithPictogram = _busPictogram.bounds.size.width + HORIZONTAL_MARGIN;
@@ -121,7 +121,7 @@
 
 - (void)layoutSubviews
 {
-    self.stopCodeLabel.frame = CGRectMake(self.bounds.size.width - 65.0 - HORIZONTAL_MARGIN, self.verticallyCenteredLabelY, 65.0, LABEL_HEIGHT);
+    self.stopCodeLabel.frame = CGRectMake(self.bounds.size.width - 65.0 - HORIZONTAL_MARGIN, 0.0, 65.0, self.bounds.size.height);
     
     if (self.busPictogram.hidden)
         self.contentViewWidth = self.bounds.size.width - HORIZONTAL_MARGIN * 2;
