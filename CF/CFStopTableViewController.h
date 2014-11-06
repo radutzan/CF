@@ -18,7 +18,7 @@
 
 @end
 
-@interface CFStopTableViewController : UITableViewController <CFDrawerScrollingDelegate>
+@interface CFStopTableViewController : UITableViewController
 
 @property (nonatomic, weak) id<CFStopTableViewDelegate> delegate;
 @property (nonatomic, weak) id<CFDrawerScrollingDelegate> scrollingDelegate;
@@ -26,5 +26,6 @@
 @property (nonatomic, strong) NSString *placeholderTitle;
 @property (nonatomic, strong) NSString *placeholderMessage;
 @property (nonatomic, assign) BOOL placeholderVisible;
+@property (nonatomic, strong) NSString *footerString;
 
 @end
