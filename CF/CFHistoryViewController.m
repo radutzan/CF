@@ -24,6 +24,7 @@
         self.placeholderImage = [[UIImage imageNamed:@"placeholder-history"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
         self.placeholderTitle = NSLocalizedString(@"HISTORY_PLACEHOLDER_TITLE", nil);
         self.placeholderMessage = NSLocalizedString(@"HISTORY_PLACEHOLDER_MESSAGE", nil);
+        self.footerString = @"Puedes borrar el historial presionado y manteniendo el botón de Historial.";
     }
     return self;
 }

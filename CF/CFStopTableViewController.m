@@ -134,7 +134,6 @@
                                              options:NSStringDrawingUsesLineFragmentOrigin
                                           attributes:@{NSFontAttributeName: self.footerLabel.font}
                                              context:nil];
-    NSLog(@"%f", ceilf(stringRect.size.height));
     return ceilf(stringRect.size.height);
 }
 
