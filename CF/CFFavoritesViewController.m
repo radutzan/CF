@@ -24,7 +24,7 @@
         self.placeholderImage = [UIImage starImageWithSize:CGSizeMake(145.0, 145.0) filled:NO];
         self.placeholderTitle = NSLocalizedString(@"FAVORITES_PLACEHOLDER_TITLE", nil);
         self.placeholderMessage = NSLocalizedString(@"FAVORITES_PLACEHOLDER_MESSAGE", nil);
-        self.footerString = @"Reordena un favorito presionando, manteniendo y arrastrándolo donde quieras."; 
+        self.footerString = NSLocalizedString(@"FAVORITES_TABLE_FOOTER_LABEL", nil); 
     }
     return self;
 }
@@ -89,8 +89,6 @@
     CGPoint location = [recognizer locationInView:self.view];
     NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:location];
     
-    [self.tableView deselectRowAtIndexPath:self.tableView.indexPathForSelectedRow animated:NO];
-    
     static UIView *snapshot = nil;
     static NSIndexPath *sourceIndexPath = nil;
     static NSMutableArray *mutableFavorites = nil;
@@ -144,15 +142,19 @@
             sourceIndexPath = indexPath;
         }
         
+        CGFloat locationYConsideringScroll = location.y - self.tableView.contentOffset.y;
+        
+        // auto-scroll down
         BOOL scrolledToBottom = (self.tableView.contentOffset.y >= (self.tableView.contentSize.height - self.tableView.bounds.size.height));
         
-        if (!scrolledToBottom && (location.y >= (self.tableView.bounds.size.height - 50))) {
+        if (!scrolledToBottom && (locationYConsideringScroll >= (self.tableView.bounds.size.height - 50))) {
             self.tableView.contentOffset = CGPointMake(0, self.tableView.contentOffset.y + 1.0);
         }
         
+        // auto-scroll up
         BOOL scrolledToTop = (self.tableView.contentOffset.y <= 0);
         
-        if (!scrolledToTop && (location.y <= 50)) {
+        if (!scrolledToTop && (locationYConsideringScroll <= 50)) {
             self.tableView.contentOffset = CGPointMake(0, self.tableView.contentOffset.y + 1.0);
         }
     } else {
@@ -171,6 +173,8 @@
         } completion:^(BOOL finished) {
             [snapshot removeFromSuperview];
             cell.hidden = NO;
+            
+            [self.tableView deselectRowAtIndexPath:self.tableView.indexPathForSelectedRow animated:YES];
             
             sourceIndexPath = nil;
             mutableFavorites = nil;
@@ -200,6 +204,12 @@
     
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     cell.backgroundColor = [UIColor colorWithWhite:1 alpha:0.6];
+    
+    UIView *selectedBackgroundView = [UIView new];
+    selectedBackgroundView.backgroundColor = [UIColor whiteColor];
+    selectedBackgroundView.layer.borderWidth = 0.5;
+    selectedBackgroundView.layer.borderColor = [UIColor colorWithWhite:0 alpha:0.15].CGColor;
+    cell.selectedBackgroundView = selectedBackgroundView;
     
     cell.codeLabel.text = [stopDictionary objectForKey:@"codigo"];
     cell.nameLabel.text = [stopDictionary objectForKey:@"nombre"];

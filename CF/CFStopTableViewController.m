@@ -47,9 +47,9 @@
         
         _placeholderViewWasLaidOut = NO;
         
-        _footerLabel = [[UILabel alloc] initWithFrame:CGRectMake(15.0, 10.0, self.tableView.bounds.size.width - 30.0, 0)];
+        _footerLabel = [[UILabel alloc] initWithFrame:CGRectMake(15.0, 100.0, self.tableView.bounds.size.width - 30.0, 0)];
         _footerLabel.font = [UIFont fontWithName:DEFAULT_FONT_NAME_REGULAR size:14.0];
-        _footerLabel.textColor = [UIColor colorWithWhite:0 alpha:.6];
+        _footerLabel.textColor = [UIColor colorWithWhite:0 alpha:.5];
         _footerLabel.textAlignment = NSTextAlignmentCenter;
         _footerLabel.numberOfLines = 0;
     }
@@ -61,8 +61,6 @@
     [super viewDidLoad];
     
     self.view.backgroundColor = [UIColor clearColor];
-    
-//    self.tableView.separatorEffect = [UIVibrancyEffect effectForBlurEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight]];
     self.tableView.separatorColor = [UIColor colorWithWhite:0 alpha:0.15];
     
     [self.tableView reloadData];
@@ -170,9 +168,13 @@
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
 {
     if (self.footerString) {
+        UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 0)];
+        
         self.footerLabel.text = self.footerString;
-        self.footerLabel.frame = CGRectMake(self.footerLabel.frame.origin.x, self.footerLabel.frame.origin.y, self.footerLabel.bounds.size.width, [self calculateHeightForString:self.footerString]);
-        return self.footerLabel;
+        self.footerLabel.frame = CGRectMake(15.0, 10.0, footerView.bounds.size.width - 30.0, [self calculateHeightForString:self.footerString]);
+        if (!self.footerLabel.superview) [footerView addSubview:self.footerLabel];
+        
+        return footerView;
     } else return nil;
 }
 
