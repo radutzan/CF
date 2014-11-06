@@ -180,7 +180,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
-    if (self.footerString) return [self calculateHeightForString:self.footerString]; else return 0;
+    if (self.footerString) return [self calculateHeightForString:self.footerString] + 15.0; else return 0;
 }
 
 @end

@@ -73,17 +73,6 @@
 #endif
 }
 
-- (void)saveFavoritesWithArray:(NSArray *)array
-{
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setObject:array forKey:@"favorites"];
-    [defaults synchronize];
-    
-    NSUserDefaults *sharedDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.ondalabs.cfbetagroup"];
-    [sharedDefaults setObject:array forKey:@"favorites"];
-    [sharedDefaults synchronize];
-}
-
 - (void)longPressRecognized:(UILongPressGestureRecognizer *)recognizer
 {
     CGPoint location = [recognizer locationInView:self.view];
@@ -138,29 +127,41 @@
             [mutableFavorites exchangeObjectAtIndex:index withObjectAtIndex:sourceIndex];
             NSLog(@"did it work? %ld (%@), %ld (%@)", (long)indexPath.row, mutableFavorites[index][@"favoriteName"], (long)sourceIndexPath.row, mutableFavorites[sourceIndex][@"favoriteName"]);
             
+            // update data source
+            self.favoritesArray = [mutableFavorites copy];
+            
             [self.tableView moveRowAtIndexPath:sourceIndexPath toIndexPath:indexPath];
             sourceIndexPath = indexPath;
         }
         
-        CGFloat locationYConsideringScroll = location.y - self.tableView.contentOffset.y;
-        
-        // auto-scroll down
-        BOOL scrolledToBottom = (self.tableView.contentOffset.y >= (self.tableView.contentSize.height - self.tableView.bounds.size.height));
-        
-        if (!scrolledToBottom && (locationYConsideringScroll >= (self.tableView.bounds.size.height - 50))) {
-            self.tableView.contentOffset = CGPointMake(0, self.tableView.contentOffset.y + 1.0);
+        if (self.tableView.contentSize.height > self.tableView.bounds.size.height) {
+            CGFloat locationYConsideringScroll = location.y - self.tableView.contentOffset.y;
+            CGFloat scrollArea = 70.0;
+            
+            // auto-scroll down
+            BOOL scrolledToBottom = (self.tableView.contentOffset.y >= (self.tableView.contentSize.height - self.tableView.bounds.size.height));
+            
+            if (!scrolledToBottom && (locationYConsideringScroll >= (self.tableView.bounds.size.height - scrollArea))) {
+                CGFloat relativeLocation = locationYConsideringScroll - self.tableView.bounds.size.height + scrollArea;
+                CGFloat scrollFactor = relativeLocation / 7;
+                scrollFactor = MAX(2.0, scrollFactor);
+                [UIView animateWithDuration:0.1 animations:^{
+                    self.tableView.contentOffset = CGPointMake(0, self.tableView.contentOffset.y + scrollFactor);
+                }];
+            }
+            
+            // auto-scroll up
+            BOOL scrolledToTop = (self.tableView.contentOffset.y <= 0);
+            
+            if (!scrolledToTop && (locationYConsideringScroll <= scrollArea)) {
+                CGFloat relativeLocation = scrollArea - locationYConsideringScroll;
+                CGFloat scrollFactor = relativeLocation / 7;
+                scrollFactor = MAX(2.0, scrollFactor);
+                self.tableView.contentOffset = CGPointMake(0, self.tableView.contentOffset.y - scrollFactor);
+            }
         }
         
-        // auto-scroll up
-        BOOL scrolledToTop = (self.tableView.contentOffset.y <= 0);
-        
-        if (!scrolledToTop && (locationYConsideringScroll <= 50)) {
-            self.tableView.contentOffset = CGPointMake(0, self.tableView.contentOffset.y + 1.0);
-        }
     } else {
-        // ... update data source.
-        self.favoritesArray = [mutableFavorites copy];
-        
         UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:sourceIndexPath];
         
         [UIView animateWithDuration:0.25 delay:0.0 usingSpringWithDamping:1.0 initialSpringVelocity:0.0 options:0 animations:^{

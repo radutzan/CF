@@ -129,21 +129,13 @@
     cell.backgroundColor = [UIColor colorWithWhite:1 alpha:0.6];
     cell.codeLabel.text = [stopDictionary objectForKey:@"codigo"];
     
+    UIView *selectedBackgroundView = [UIView new];
+    selectedBackgroundView.backgroundColor = [UIColor whiteColor];
+    selectedBackgroundView.layer.borderWidth = 0.5;
+    selectedBackgroundView.layer.borderColor = [UIColor colorWithWhite:0 alpha:0.15].CGColor;
+    cell.selectedBackgroundView = selectedBackgroundView;
+    
     return cell;
 }
-
-//- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-//{
-//    if (editingStyle == UITableViewCellEditingStyleDelete) {
-//        NSMutableArray *mutableHistoryArray = [self.historyArray mutableCopy];
-//        
-//        NSInteger index = [mutableHistoryArray count] - indexPath.row - 1;
-//        [mutableHistoryArray removeObjectAtIndex:index];
-//        [self saveHistoryWithArray:mutableHistoryArray];
-//        
-//        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-//    }
-//}
-
 
 @end
