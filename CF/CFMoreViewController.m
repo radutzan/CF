@@ -65,7 +65,7 @@
     if (section == 0) return 3;
     if (section == 1) return 1;
     
-    return 2;
+    return 3;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -96,10 +96,18 @@
         cell.textLabel.text = NSLocalizedString(@"STORE", nil);
     } else if (indexPath.row == 0 && indexPath.section == 2) {
         cell.textLabel.text = NSLocalizedString(@"SHARE_THIS_APP", nil);
+        cell.imageView.image = [[UIImage imageNamed:@"share"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     } else if (indexPath.row == 1 && indexPath.section == 2) {
-        cell.textLabel.text = NSLocalizedString(@"FOLLOW_US_TWITTER", nil);
+        cell.textLabel.text = @"@cuantofaltapp";
+        cell.imageView.image = [[UIImage imageNamed:@"twitter"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     } else if (indexPath.row == 2 && indexPath.section == 2) {
-        cell.textLabel.text = NSLocalizedString(@"RATE_ON_APP_STORE", nil);
+        cell.textLabel.text = @"Cuánto Falta";
+        cell.imageView.image = [[UIImage imageNamed:@"facebook"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    }
+    
+    if (indexPath.section == 2) {
+        cell.imageView.contentMode = UIViewContentModeCenter;
+        cell.imageView.tintColor = [UIColor colorWithWhite:0 alpha:.32];
     }
     
     UIView *selectedBackgroundView = [UIView new];
@@ -206,9 +214,14 @@
         
     } else if (indexPath.section == 2 && indexPath.row == 2) {
         
-        [mixpanel track:@"Opened Rate on the App Store"];
-        
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms-apps://itunes.apple.com/app/id431174703"]];
+        if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"fb://"]]) {
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"fb://profile/173134206109710"]];
+        } else {
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://facebook.com/cuantofaltapp"]];
+        }
+//        [mixpanel track:@"Opened Rate on the App Store"];
+//        
+//        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms-apps://itunes.apple.com/app/id431174703"]];
     }
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
