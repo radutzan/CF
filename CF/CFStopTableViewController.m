@@ -49,7 +49,7 @@
         
         _footerLabel = [[UILabel alloc] initWithFrame:CGRectMake(15.0, 100.0, self.tableView.bounds.size.width - 30.0, 0)];
         _footerLabel.font = [UIFont fontWithName:DEFAULT_FONT_NAME_REGULAR size:14.0];
-        _footerLabel.textColor = [UIColor colorWithWhite:0 alpha:.5];
+        _footerLabel.textColor = [UIColor colorWithWhite:0 alpha:0.42];
         _footerLabel.textAlignment = NSTextAlignmentCenter;
         _footerLabel.numberOfLines = 0;
     }

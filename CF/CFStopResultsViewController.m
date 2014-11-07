@@ -120,7 +120,7 @@ CALayer *_leftGripper;
     self.stopInfoView.delegate = self;
     self.stopInfoView.stopCodeLabel.hidden = YES;
 #ifdef DEV_VERSION
-    self.stopInfoView.stopCodeLabel.hidden = NO;
+//    self.stopInfoView.stopCodeLabel.hidden = NO;
 #endif
     self.stopInfoView.favoriteContentView.userInteractionEnabled = YES;
     

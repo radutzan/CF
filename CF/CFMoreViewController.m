@@ -102,6 +102,12 @@
         cell.textLabel.text = NSLocalizedString(@"RATE_ON_APP_STORE", nil);
     }
     
+    UIView *selectedBackgroundView = [UIView new];
+    selectedBackgroundView.backgroundColor = [UIColor whiteColor];
+    selectedBackgroundView.layer.borderWidth = 0.5;
+    selectedBackgroundView.layer.borderColor = [UIColor colorWithWhite:0 alpha:0.15].CGColor;
+    cell.selectedBackgroundView = selectedBackgroundView;
+    
     return cell;
 }
 
