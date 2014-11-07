@@ -18,12 +18,13 @@
 #import "CFStopSignView.h"
 #import "CFStopServicesButtonArrayView.h"
 
-@interface CFMapController () <CLLocationManagerDelegate, SMCalloutViewDelegate>
+@interface CFMapController () <CLLocationManagerDelegate, SMCalloutViewDelegate, UIActionSheetDelegate>
 
 @property (nonatomic, strong) CLLocationManager *locationManager;
 @property (nonatomic, strong) NSMutableSet *stops;
 @property (nonatomic, strong) NSMutableSet *bipSpots;
 @property (assign) CFStop *selectedStop;
+@property (assign) id<MKAnnotation> selectedSearchAnnotation;
 
 @property (nonatomic, strong) UILabel *zoomWarning;
 @property (nonatomic) BOOL showZoomWarning;
@@ -53,6 +54,7 @@ static MKMapRect santiagoBounds;
     if (self) {
         self.stops = [NSMutableSet new];
         self.bipSpots = [NSMutableSet new];
+        self.selectedSearchAnnotation = nil;
         
         CGFloat motionEffectHorizontalOffset = MOTION_EFFECTS_HORIZONTAL_OFFSET;
         CGFloat motionEffectVerticalOffset = MOTION_EFFECTS_VERTICAL_OFFSET;
@@ -167,6 +169,8 @@ static MKMapRect santiagoBounds;
 
 - (void)clearSearchAnnotations
 {
+    self.selectedSearchAnnotation = nil;
+    
     id userLocation = [self.mapView userLocation];
     
     NSMutableArray *pins = [[NSMutableArray alloc] initWithArray:[self.mapView annotations]];
@@ -406,10 +410,21 @@ static MKMapRect santiagoBounds;
     if (distances.count == 0) return;
     
     NSArray *sortedKeys = [[distances allKeys] sortedArrayUsingSelector:@selector(compare:)];
-    NSArray *nearestKeys = [sortedKeys subarrayWithRange:NSMakeRange(0, MIN(3, sortedKeys.count))];
+    NSArray *nearestKeys = [sortedKeys subarrayWithRange:NSMakeRange(0, MIN(5, sortedKeys.count))];
     
     NSArray *nearestAnnotations = [distances objectsForKeys:nearestKeys notFoundMarker:[NSNull null]];
-    [self.mapView selectAnnotation:nearestAnnotations[0] animated:YES];
+    
+    id<MKAnnotation> annotationToSelect = nearestAnnotations[0];
+    
+    for (id<MKAnnotation> annotation in nearestAnnotations) {
+        CFStop *stopAnnotation = (CFStop *)annotation;
+        if (stopAnnotation.isFavorite) {
+            annotationToSelect = stopAnnotation;
+            break;
+        }
+    }
+    
+    [self.mapView selectAnnotation:annotationToSelect animated:YES];
     
     self.hasPresentedNearestStop = YES;
 }
@@ -694,6 +709,20 @@ static MKMapRect santiagoBounds;
         return spotPin;
     }
     
+    if (![annotation isKindOfClass:[MKUserLocation class]]) {
+        MKPinAnnotationView *searchPin = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"SearchPin"];
+        searchPin.animatesDrop = YES;
+        searchPin.canShowCallout = YES;
+        
+        if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"comgooglemaps-x-callback://"]]) {
+            UIButton *calloutInfoButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+            [calloutInfoButton addTarget:self action:@selector(displayOptionsForSelectedAnnotation) forControlEvents:UIControlEventTouchUpInside];
+            searchPin.rightCalloutAccessoryView = calloutInfoButton;
+        }
+        
+        return searchPin;
+    }
+    
     return nil;
 }
 
@@ -706,7 +735,9 @@ static MKMapRect santiagoBounds;
             [self.stopCalloutView dismissCalloutAnimated:NO];
         
         [self popupStopCalloutViewFromPin:view];
-	}
+    } else {
+        self.selectedSearchAnnotation = view.annotation;
+    }
 }
 
 - (void)mapView:(MKMapView *)mapView didDeselectAnnotationView:(MKAnnotationView *)view
@@ -759,6 +790,8 @@ static MKMapRect santiagoBounds;
     return renderer;
 }
 
+#pragma mark - Search
+
 - (void)performSearchWithString:(NSString *)searchString
 {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
@@ -792,6 +825,29 @@ static MKMapRect santiagoBounds;
             }
         }
     }];
+}
+
+- (void)displayOptionsForSelectedAnnotation
+{
+    UIActionSheet *optionsSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:NSLocalizedString(@"CANCEL", nil) destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"DIRECTIONS_WITH_GOOGLE_MAPS", nil), nil];
+    [optionsSheet showInView:self];
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 0) {
+        [self launchGoogleMapsForDirections];
+    }
+}
+
+- (void)launchGoogleMapsForDirections
+{
+    NSString *locationCoordinateString = [NSString stringWithFormat:@"%f,%f", self.mapView.userLocation.coordinate.latitude, self.mapView.userLocation.coordinate.longitude];
+    MKPointAnnotation *searchAnnotation = (MKPointAnnotation *)self.selectedSearchAnnotation;
+    NSString *calloutAddressString = [searchAnnotation.subtitle stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSString *urlString = [NSString stringWithFormat:@"comgooglemaps-x-callback://?saddr=%@&daddr=%@&directionsmode=transit&x-success=cuantofalta://gmaps/&x-source=%@", locationCoordinateString, calloutAddressString, [@"Cuánto Falta" stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlString]];
 }
 
 @end

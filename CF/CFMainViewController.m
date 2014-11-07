@@ -369,6 +369,64 @@
     [self.searchController.searchField clear];
 }
 
+- (void)showGoogleMapsBar
+{
+    UIView *googleMapsBar = [self.view viewWithTag:6006];
+    if (googleMapsBar) return;
+    
+    googleMapsBar = [[UIView alloc] initWithFrame:CGRectMake(0, self.topContentMargin, self.view.bounds.size.width, 44.0)];
+    googleMapsBar.tag = 6006;
+    
+    UIView *googleMapsBarBackground = [[UINavigationBar alloc] initWithFrame:googleMapsBar.bounds];
+    [googleMapsBar insertSubview:googleMapsBarBackground atIndex:0];
+    
+    UIButton *dismissButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    dismissButton.frame = CGRectMake(0, 0, 36.0, googleMapsBar.bounds.size.height);
+    [dismissButton setImage:[UIImage imageNamed:@"button-close"] forState:UIControlStateNormal];
+    [dismissButton addTarget:self action:@selector(hideGoogleMapsBar) forControlEvents:UIControlEventTouchUpInside];
+    [googleMapsBar addSubview:dismissButton];
+    
+    UIButton *returnToGoogleMapsButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    returnToGoogleMapsButton.frame = CGRectMake(dismissButton.bounds.size.width + 4.0, 0, googleMapsBar.bounds.size.width - dismissButton.bounds.size.width - 14.0, googleMapsBar.bounds.size.height);
+    returnToGoogleMapsButton.titleLabel.font = [UIFont fontWithName:DEFAULT_FONT_NAME_MEDIUM size:16.0];
+    returnToGoogleMapsButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+    [returnToGoogleMapsButton setTitle:NSLocalizedString(@"RETURN_TO_GOOGLE_MAPS", nil) forState:UIControlStateNormal];
+    [returnToGoogleMapsButton addTarget:self action:@selector(returnToGoogleMaps) forControlEvents:UIControlEventTouchUpInside];
+    [googleMapsBar addSubview:returnToGoogleMapsButton];
+    
+    UIPanGestureRecognizer *dismissRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleHorizontalDismissPanGesture:)];
+    [googleMapsBar addGestureRecognizer:dismissRecognizer];
+    
+    [self.view insertSubview:googleMapsBar belowSubview:self.localNavigationBar];
+    
+    self.topContentMargin += googleMapsBar.bounds.size.height;
+}
+
+- (void)hideGoogleMapsBar
+{
+    UIView *googleMapsBar = [self.view viewWithTag:6006];
+    self.topContentMargin -= googleMapsBar.bounds.size.height;
+    
+    [UIView animateWithDuration:0.25 delay:0 usingSpringWithDamping:1 initialSpringVelocity:1 options:0 animations:^{
+        googleMapsBar.alpha = 0;
+        googleMapsBar.center = CGPointMake(googleMapsBar.center.x, googleMapsBar.center.y - googleMapsBar.bounds.size.height);
+    } completion:^(BOOL finished) {
+        [googleMapsBar removeFromSuperview];
+    }];
+}
+
+- (void)returnToGoogleMaps
+{
+    if (![[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"comgooglemaps-x-callback://"]]) {
+        [self hideGoogleMapsBar];
+        return;
+    }
+    
+    NSString *urlString = [NSString stringWithFormat:@"comgooglemaps-x-callback://?x-success=cuantofalta://gmaps/&x-source=%@", [@"Cuánto Falta" stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlString]];
+    [self hideGoogleMapsBar];
+}
+
 #pragma mark - Push stop results
 
 - (void)pushStopResultsWithStopCode:(NSString *)stopCode
@@ -396,13 +454,18 @@
 - (void)processExternalURL:(NSURL *)url
 {
     NSLog(@"%@", [url absoluteString]);
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
     
     if ([url.host isEqualToString:@"stop"]) {
         NSString *stopCode = url.lastPathComponent;
         [self pushStopResultsWithStopCode:stopCode];
         
-        Mixpanel *mixpanel = [Mixpanel sharedInstance];
         [mixpanel track:@"Stop Requested" properties:@{@"Code": stopCode, @"From": @"External URL"}];
+    }
+    
+    if ([url.host isEqualToString:@"gmaps"]) {
+//        [self showGoogleMapsBar];
+        [mixpanel track:@"Returned from Google Maps"];
     }
 }
 
@@ -489,7 +552,7 @@
     }
     
     if (!didFindABar) {
-        serviceBar = [[CFServiceRouteBar alloc] initWithFrame:CGRectMake(0, self.localNavigationBar.bounds.size.height, self.view.bounds.size.width, 44.0)];
+        serviceBar = [[CFServiceRouteBar alloc] initWithFrame:CGRectMake(0, self.topContentMargin, self.view.bounds.size.width, 44.0)];
         serviceBar.service = service;
         serviceBar.dismissible = YES;
         serviceBar.delegate = self;
@@ -576,7 +639,12 @@
             [UIView animateWithDuration:animationDuration delay:0 usingSpringWithDamping:1 initialSpringVelocity:velocityFactor options:0 animations:^{
                 recognizer.view.center = CGPointMake(recognizer.view.center.x + self.view.bounds.size.width, recognizer.view.center.y);
             } completion:^(BOOL finished) {
-                [self clearServiceRouteAnimated:NO];
+                if ([recognizer.view isKindOfClass:[CFServiceRouteBar class]]) {
+                    [self clearServiceRouteAnimated:NO];
+                } else {
+                    self.topContentMargin -= recognizer.view.bounds.size.height;
+                    [recognizer.view removeFromSuperview];
+                }
                 
                 Mixpanel *mixpanel = [Mixpanel sharedInstance];
                 [mixpanel track:@"Used Service Bar Dismiss Gesture"];

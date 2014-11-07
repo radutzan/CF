@@ -1029,6 +1029,7 @@
 				7C2EECF1188345F500AE78C2 /* Resources */,
 				7C2EED0D188345F500AE78C2 /* Copy Pods Resources */,
 				7CDC85D119746DE3008106FC /* Embed App Extensions */,
+				7CBAFABC1A0D3341001F61E7 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -1087,6 +1088,7 @@
 				7CFF7E3D18381645006230CE /* Sources */,
 				7CFF7E3E18381645006230CE /* Frameworks */,
 				7CFF7E3F18381645006230CE /* Resources */,
+				7CBAFABB1A0D3329001F61E7 /* ShellScript */,
 				D71244BFE50B46799ACED80E /* Copy Pods Resources */,
 				7CDC85FD19747F32008106FC /* Embed App Extensions */,
 			);
@@ -1335,6 +1337,32 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Pods-resources.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		7CBAFABB1A0D3329001F61E7 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -o errexit\nset -o nounset\n\nBUNDLE_VERSION=$(git --git-dir=\"${PROJECT_DIR}/.git\" --work-tree=\"${PROJECT_DIR}\" rev-list master | wc -l)\n\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $BUNDLE_VERSION\" \"${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}/Info.plist\"";
+		};
+		7CBAFABC1A0D3341001F61E7 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -o errexit\nset -o nounset\n\nBUNDLE_VERSION=$(git --git-dir=\"${PROJECT_DIR}/.git\" --work-tree=\"${PROJECT_DIR}\" rev-list master | wc -l)\n\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $BUNDLE_VERSION\" \"${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}/Info.plist\"";
 		};
 		B946332E5D4C40EF8C1E5853 /* Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;

@@ -55,6 +55,8 @@
 "SEARCH_ERROR_GENERIC_TITLE" = "Imposible buscar";
 "SEARCH_ERROR_GENERIC_MESSAGE" = "En este momento, no es posible buscar lugares. Inténtalo después, o busca directamente en el mapa.";
 "SERVICE_ROUTE_ERROR_ALERT_TITLE" = "No se pudo encontrar la ruta de este servicio";
+"DIRECTIONS_WITH_GOOGLE_MAPS" = "Cómo llegar (Google Maps)";
+"RETURN_TO_GOOGLE_MAPS" = "Volver a Google Maps";
 
 // favs and history
 "FAVORITES_PLACEHOLDER_TITLE" = "No tienes favoritos";
