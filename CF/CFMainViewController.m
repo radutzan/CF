@@ -152,6 +152,8 @@
         
         [self importUserData];
     }
+    
+    [self.navigationController.navigationBar setTitleTextAttributes:@{NSFontAttributeName: [UIFont fontWithName:DEFAULT_FONT_NAME_MEDIUM size:17.0]}];
 }
 
 - (void)viewWillAppear:(BOOL)animated
