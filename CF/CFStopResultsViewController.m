@@ -662,7 +662,7 @@ CALayer *_leftGripper;
         [self.tableView reloadData];
         
         if (self.displayMode == CFStopResultsDisplayModeContained) {
-            [self performSelector:@selector(performStopRequestQuietly:) withObject:NO afterDelay:1.0];
+            [self performSelector:@selector(performStopRequestQuietly:) withObject:nil afterDelay:1.0];
         } else {
             [self updateHistory];
             [self performStopRequestQuietly:NO];
@@ -831,7 +831,7 @@ CALayer *_leftGripper;
     [self.refreshControl endRefreshing];
     [self refreshTimerLabel];
     
-    [self performSelector:@selector(performStopRequestQuietly:) withObject:NO afterDelay:16.0];
+    [self performSelector:@selector(performStopRequestQuietly:) withObject:nil afterDelay:16.0];
     
     if (!self.timer.isValid) {
         NSTimer *newTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(refreshTimerLabel) userInfo:nil repeats:YES];

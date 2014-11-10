@@ -11,7 +11,7 @@
 static NSString *OLTransactionRestorationKey = @"OLTransactionRestorationKey";
 
 static inline NSString * OLPaymentKey(SKPayment *payment) {
-    return [NSString stringWithFormat:@"%d - %@", payment.quantity, payment.productIdentifier];
+    return [NSString stringWithFormat:@"%ld - %@", (long)payment.quantity, payment.productIdentifier];
 }
 
 @interface OLPaymentQueueDispatchObserver ()

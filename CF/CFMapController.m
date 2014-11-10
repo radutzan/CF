@@ -32,6 +32,7 @@
 @property (nonatomic) BOOL showOutOfSantiagoWarning;
 @property (nonatomic, strong) OLGhostAlertView *connectivityWarning;
 @property (nonatomic) BOOL showConnectivityWarning;
+@property (nonatomic) BOOL shouldRetryConnection;
 
 @property (nonatomic, assign, readwrite) CFMapMode mapMode;
 
@@ -264,6 +265,18 @@ static MKMapRect santiagoBounds;
     }
 }
 
+- (void)setShouldRetryConnection:(BOOL)shouldRetryConnection
+{
+    if (_shouldRetryConnection == shouldRetryConnection) return;
+    _shouldRetryConnection = shouldRetryConnection;
+    
+    if (shouldRetryConnection) {
+        [self performSelector:@selector(loadStopAnnotations) withObject:nil afterDelay:3.0];
+    } else {
+        [self.class cancelPreviousPerformRequestsWithTarget:self];
+    }
+}
+
 - (void)zoomWarningTapped
 {
     CGFloat distance = 600;
@@ -328,6 +341,8 @@ static MKMapRect santiagoBounds;
 
 - (void)loadStopAnnotations
 {
+    self.shouldRetryConnection = NO;
+    
     MKCoordinateRegion region = self.mapView.region;
     
     float radio = floorf(MIN(region.span.longitudeDelta, region.span.latitudeDelta) * 111000) - 50;
@@ -362,6 +377,7 @@ static MKMapRect santiagoBounds;
                 self.connectivityWarning.message = NSLocalizedString(@"API_ISSUE_WARNING_MESSAGE", nil);
             }
             self.showConnectivityWarning = YES;
+            self.shouldRetryConnection = YES;
             
             return;
         }
@@ -387,12 +403,37 @@ static MKMapRect santiagoBounds;
         });
         
         self.showConnectivityWarning = NO;
+        self.shouldRetryConnection = NO;
+    }];
+}
+
+- (void)placeBipAnnotationsInRegion:(MKCoordinateRegion)region withRadius:(float)radius
+{
+    if (!self.mapMode == CFMapModeStops) return;
+    
+    [[CFSapoClient sharedClient] bipSpotsAroundCoordinate:region.center radius:radius handler:^(NSError *error, id result) {
+        if (error) {
+            NSLog(@"bip spots error: %@", error);
+            return;
+        }
+        
+        for (NSDictionary *spotDictionary in result) {
+            CFBipSpot *spot = [self bipSpotFromDictionary:spotDictionary];
+            [self.bipSpots addObject:spot];
+        }
+        
+        NSArray *spotsArray = [self.bipSpots allObjects];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (!self.mapMode == CFMapModeStops) return;
+            [self.mapView addAnnotations:spotsArray];
+        });
     }];
 }
 
 - (void)selectNearestStop
 {
-//    NSLog(@"selectNearestStop");
+    //    NSLog(@"selectNearestStop");
     if (self.hasPresentedNearestStop) return;
     if (!self.locationManager.location) return;
     
@@ -427,30 +468,6 @@ static MKMapRect santiagoBounds;
     [self.mapView selectAnnotation:annotationToSelect animated:YES];
     
     self.hasPresentedNearestStop = YES;
-}
-
-- (void)placeBipAnnotationsInRegion:(MKCoordinateRegion)region withRadius:(float)radius
-{
-    if (!self.mapMode == CFMapModeStops) return;
-    
-    [[CFSapoClient sharedClient] bipSpotsAroundCoordinate:region.center radius:radius handler:^(NSError *error, id result) {
-        if (error) {
-            NSLog(@"bip spots error: %@", error);
-            return;
-        }
-        
-        for (NSDictionary *spotDictionary in result) {
-            CFBipSpot *spot = [self bipSpotFromDictionary:spotDictionary];
-            [self.bipSpots addObject:spot];
-        }
-        
-        NSArray *spotsArray = [self.bipSpots allObjects];
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (!self.mapMode == CFMapModeStops) return;
-            [self.mapView addAnnotations:spotsArray];
-        });
-    }];
 }
 
 - (void)goToNearestBipSpot
