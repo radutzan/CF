@@ -295,8 +295,8 @@ static MKMapRect santiagoBounds;
     if (_mapMode == mapMode) return;
     
     if (mapMode == CFMapModeStops) {
-        [self setInitialRegionAnimated:YES];
-        [self loadStopAnnotations];
+        [self performSelector:@selector(loadStopAnnotations) withObject:nil afterDelay:0.1];
+        if (_mapMode != CFMapModeServiceRoute) [self setInitialRegionAnimated:YES];
     } else {
         [self clearStopAnnotations];
     }
