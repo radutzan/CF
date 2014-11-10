@@ -377,8 +377,8 @@ CALayer *_leftGripper;
         self.stopResultsView.alpha = 1;
         self.stopResultsView.frame = self.stopResultsViewPresentedFrame;
     } completion:^(BOOL finished) {
-        Mixpanel *mixpanel = [Mixpanel sharedInstance];
-        [mixpanel track:@"Expanded Stop"];
+//        Mixpanel *mixpanel = [Mixpanel sharedInstance];
+//        [mixpanel track:@"Expanded Stop"];
     }];
 }
 

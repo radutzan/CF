@@ -374,9 +374,6 @@
         [searchField clear];
     } else if (![searchField.text isEqualToString:@""]) {
         [self.delegate searchControllerRequestedLocalSearch:searchField.text];
-        
-        Mixpanel *mixpanel = [Mixpanel sharedInstance];
-        [mixpanel track:@"Searched in Map" properties:nil];
     }
     
     [self hide];
