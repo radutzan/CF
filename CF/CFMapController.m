@@ -33,6 +33,7 @@
 @property (nonatomic, strong) OLGhostAlertView *connectivityWarning;
 @property (nonatomic) BOOL showConnectivityWarning;
 @property (nonatomic) BOOL shouldRetryConnection;
+@property (nonatomic, strong) UIView *activityIndicator;
 
 @property (nonatomic, assign, readwrite) CFMapMode mapMode;
 
@@ -127,6 +128,32 @@ static MKMapRect santiagoBounds;
         self.connectivityWarning.style = OLGhostAlertViewStyleDark;
         self.connectivityWarning.position = OLGhostAlertViewPositionCenter;
         self.connectivityWarning.userInteractionEnabled = NO;
+        
+        UIActivityIndicatorView *actualActivityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+        actualActivityIndicator.color = [UIColor colorWithWhite:0 alpha:.7];
+        
+        CGFloat activityIndicatorSize = 84.0;
+        
+        if (NSClassFromString(@"UIVisualEffectView")) {
+            self.activityIndicator = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleLight]];
+            
+            UIVisualEffectView *visualEffectView = (UIVisualEffectView *)self.activityIndicator;
+            [visualEffectView.contentView addSubview:actualActivityIndicator];
+        } else {
+            self.activityIndicator = [[UIView alloc] initWithFrame:CGRectZero];
+            [self.activityIndicator addSubview:actualActivityIndicator];
+        }
+        self.activityIndicator.userInteractionEnabled = NO;
+        self.activityIndicator.frame = CGRectMake(0, 0, activityIndicatorSize, activityIndicatorSize);
+        self.activityIndicator.center = self.mapView.center;
+        actualActivityIndicator.center = CGPointMake(self.activityIndicator.bounds.size.width / 2, self.activityIndicator.bounds.size.height / 2);
+        self.activityIndicator.layer.cornerRadius = 14.0;
+        self.activityIndicator.layer.masksToBounds = YES;
+        self.activityIndicator.layer.borderColor = [UIColor colorWithWhite:0 alpha:.35].CGColor;
+        self.activityIndicator.layer.borderWidth = 0.5;
+        self.activityIndicator.alpha = 0;
+        [self addSubview:self.activityIndicator];
+        [actualActivityIndicator startAnimating];
         
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
@@ -254,6 +281,13 @@ static MKMapRect santiagoBounds;
     }
 }
 
+- (void)zoomWarningTapped
+{
+    CGFloat distance = 600;
+    if (self.phoneIsCrap) distance = 250;
+    [self.mapView setRegion:[self.mapView regionThatFits:MKCoordinateRegionMakeWithDistance(self.mapView.centerCoordinate, distance, distance)] animated:YES];
+}
+
 - (void)setShowConnectivityWarning:(BOOL)showConnectivityWarning
 {
     _showConnectivityWarning = showConnectivityWarning;
@@ -277,11 +311,20 @@ static MKMapRect santiagoBounds;
     }
 }
 
-- (void)zoomWarningTapped
+- (void)setShowActivityIndicator:(BOOL)showActivityIndicator
 {
-    CGFloat distance = 600;
-    if (self.phoneIsCrap) distance = 250;
-    [self.mapView setRegion:[self.mapView regionThatFits:MKCoordinateRegionMakeWithDistance(self.mapView.centerCoordinate, distance, distance)] animated:YES];
+    if (_showActivityIndicator == showActivityIndicator) return;
+    _showActivityIndicator = showActivityIndicator;
+    NSLog(@"setShowActivityIndicator:%d", showActivityIndicator);
+    
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = showActivityIndicator;
+    
+    self.activityIndicator.alpha = 1 - showActivityIndicator;
+    
+    [UIView animateWithDuration:0.45 delay:showActivityIndicator*0.85 usingSpringWithDamping:0.5 initialSpringVelocity:showActivityIndicator options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+        self.activityIndicator.alpha = showActivityIndicator;
+    } completion:^(BOOL finished) {
+    }];
 }
 
 - (BOOL)phoneIsCrap
@@ -309,6 +352,7 @@ static MKMapRect santiagoBounds;
     
     if (mapMode == CFMapModeStops) {
         [self performSelector:@selector(loadStopAnnotations) withObject:nil afterDelay:0.1];
+        if (_mapMode == CFMapModeServiceRoute) self.showActivityIndicator = YES;
         if (_mapMode != CFMapModeServiceRoute) [self setInitialRegionAnimated:YES];
     } else {
         [self clearStopAnnotations];
@@ -352,6 +396,7 @@ static MKMapRect santiagoBounds;
     if ((self.phoneIsCrap && radio > 420) || (!self.phoneIsCrap && radio > 1450)) {
         [self clearStopAnnotations];
         self.showZoomWarning = YES;
+        self.showActivityIndicator = NO;
         return;
     } else {
         self.showZoomWarning = NO;
@@ -378,6 +423,7 @@ static MKMapRect santiagoBounds;
             }
             self.showConnectivityWarning = YES;
             self.shouldRetryConnection = YES;
+            self.showActivityIndicator = NO;
             
             return;
         }
@@ -399,6 +445,7 @@ static MKMapRect santiagoBounds;
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.mapView addAnnotations:stopsArray];
+            self.showActivityIndicator = NO;
             [self selectNearestStop];
         });
         
@@ -536,10 +583,14 @@ static MKMapRect santiagoBounds;
     
     self.currentServiceName = serviceName;
     self.currentDirection = direction;
+    
+    self.showActivityIndicator = YES;
 }
 
 - (void)displayServiceRoute:(NSString *)serviceName directionString:(NSString *)directionString
 {
+    self.showActivityIndicator = YES;
+    
     [[CFSapoClient sharedClient] serviceInfoForService:serviceName handler:^(NSError *error, NSArray *result) {
         if (result) {
             CFDirection finalDirection;
@@ -569,6 +620,8 @@ static MKMapRect santiagoBounds;
     
     [[CFSapoClient sharedClient] routeForBusService:service direction:direction handler:^(NSError *error, NSArray *result) {
         if (error || [result count] == 0) {
+            self.showActivityIndicator = NO;
+            
             UIAlertView *nope = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"SERVICE_ROUTE_ERROR_ALERT_TITLE", nil) message:NSLocalizedString(@"ERROR_MESSAGE_TRY_AGAIN", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"ERROR_DISMISS", nil) otherButtonTitles:nil];
             [nope show];
             return;
@@ -598,6 +651,7 @@ static MKMapRect santiagoBounds;
         
         dispatch_async(dispatch_get_main_queue(), ^{
             if (!self.mapMode == CFMapModeServiceRoute) return;
+            self.showActivityIndicator = NO;
             
             [self.mapView removeOverlays:self.mapView.overlays];
             [self clearStopAnnotations];

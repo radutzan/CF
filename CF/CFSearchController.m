@@ -130,6 +130,7 @@
         
     }
     
+    // servicio
     BOOL possibleServiceMatch = NO;
     if (searchString.length >= 2 && searchString.length <= 4) {
         NSRegularExpression *expression = [NSRegularExpression regularExpressionWithPattern:serviceRegex options:(NSRegularExpressionCaseInsensitive) error:NULL];
@@ -175,7 +176,7 @@
         possibleStopMatch = NO;
     }
     
-    if (!possibleStopMatch) [self clearStopSuggestions];
+    if (!possibleStopMatch && !possibleServiceMatch) [self clearStopSuggestions];
     
     // suggest map search
     BOOL possibleMatch = (possibleServiceMatch || possibleStopMatch);
@@ -294,6 +295,8 @@
 {
     _thinking = thinking;
     
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = thinking;
+    NSLog(@"thinking: %d", thinking);
     if (thinking) {
         [self.searchField.activityIndicator startAnimating];
         if (!self.suggestedStop) self.currentCard = nil;

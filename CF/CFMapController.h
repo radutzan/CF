@@ -49,5 +49,6 @@ typedef NS_ENUM(NSInteger, CFMapMode) {
 @property (nonatomic, assign, readonly) CFMapMode mapMode;
 @property (nonatomic, strong, readonly) NSString *currentServiceName;
 @property (nonatomic, assign, readonly) CFDirection currentDirection;
+@property (nonatomic) BOOL showActivityIndicator;
 
 @end

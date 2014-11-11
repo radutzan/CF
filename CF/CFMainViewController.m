@@ -505,6 +505,8 @@
 
 - (void)showServiceRoute:(NSString *)serviceName directionString:(NSString *)directionString
 {
+    self.mapController.showActivityIndicator = YES;
+    
     [[CFSapoClient sharedClient] serviceInfoForService:serviceName handler:^(NSError *error, NSArray *result) {
         if (result) {
             CFDirection finalDirection;
