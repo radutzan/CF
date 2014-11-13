@@ -333,7 +333,7 @@ static MKMapRect santiagoBounds;
     uname(&systemInfo);
     
     NSString *machineName = [NSString stringWithCString:systemInfo.machine encoding:NSUTF8StringEncoding];
-    if ([machineName isEqualToString:@"iPhone3,1"]) return YES;
+    if ([machineName hasPrefix:@"iPhone3"]) return YES;
     
     return NO;
 }
