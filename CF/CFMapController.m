@@ -142,6 +142,7 @@ static MKMapRect santiagoBounds;
         } else {
             self.activityIndicator = [[UIView alloc] initWithFrame:CGRectZero];
             [self.activityIndicator addSubview:actualActivityIndicator];
+            self.activityIndicator.backgroundColor = [UIColor colorWithWhite:1 alpha:.8];
         }
         self.activityIndicator.userInteractionEnabled = NO;
         self.activityIndicator.frame = CGRectMake(0, 0, activityIndicatorSize, activityIndicatorSize);
@@ -149,7 +150,7 @@ static MKMapRect santiagoBounds;
         actualActivityIndicator.center = CGPointMake(self.activityIndicator.bounds.size.width / 2, self.activityIndicator.bounds.size.height / 2);
         self.activityIndicator.layer.cornerRadius = 14.0;
         self.activityIndicator.layer.masksToBounds = YES;
-        self.activityIndicator.layer.borderColor = [UIColor colorWithWhite:0 alpha:.35].CGColor;
+        self.activityIndicator.layer.borderColor = [UIColor colorWithWhite:0 alpha:.15].CGColor;
         self.activityIndicator.layer.borderWidth = 0.5;
         self.activityIndicator.alpha = 0;
         [self addSubview:self.activityIndicator];
