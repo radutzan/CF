@@ -259,11 +259,13 @@ static NSRegularExpression *regexMetroSinNumero;
 
 #pragma mark - Equality and hashing
 
-- (BOOL)isEqual:(CFStop *)object {
+- (BOOL)isEqual:(CFStop *)object
+{    
+    if (![object isKindOfClass:[self class]]) return NO;
     
-    if (![object isKindOfClass:[self class]]) {
-        return NO;
-    }
+    if (![object.code isEqualToString:self.code]) return NO;
+    
+    if (![object.services isEqualToArray:self.services]) return NO;
     
     if (fabs(object.coordinate.latitude - self.coordinate.latitude) > DBL_EPSILON) {
         return NO;
@@ -272,8 +274,6 @@ static NSRegularExpression *regexMetroSinNumero;
     if (fabs(object.coordinate.longitude - self.coordinate.longitude) > DBL_EPSILON) {
         return NO;
     }
-    
-    if (![object.services isEqualToArray:self.services]) return NO;
     
     return YES;
 }

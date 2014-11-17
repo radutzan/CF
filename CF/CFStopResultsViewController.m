@@ -706,13 +706,15 @@ CALayer *_leftGripper;
     NSLog(@"performStopRequestQuietly:%d", quietly);
     if (!self.stop || self.refreshing) return;
     self.refreshing = YES;
+    CFStop *requestedStop = self.stop;
     
     [self resetEstimationData];
     [self resetTimer];
     
-    [[CFSapoClient sharedClient] estimateAtBusStop:self.stop.code
+    [[CFSapoClient sharedClient] estimateAtBusStop:requestedStop.code
                                           services:nil
                                            handler:^(NSError *error, id result) {
+                                               if (!self.stop || ![self.stop isEqual:requestedStop]) return;
                                                if (result) {
                                                    NSArray *estimation = result[@"estimation"];
                                                    NSArray *buses = estimation[0];
