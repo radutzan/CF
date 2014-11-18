@@ -172,7 +172,7 @@
         
         self.footerLabel.text = self.footerString;
         self.footerLabel.frame = CGRectMake(15.0, 10.0, footerView.bounds.size.width - 30.0, [self calculateHeightForString:self.footerString]);
-        if (!self.footerLabel.superview) [footerView addSubview:self.footerLabel];
+        if (footerView.subviews.count == 0) [footerView addSubview:self.footerLabel];
         
         return footerView;
     } else return nil;
