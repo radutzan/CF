@@ -108,6 +108,8 @@
     if (indexPath.section == 2) {
         cell.imageView.contentMode = UIViewContentModeCenter;
         cell.imageView.tintColor = [UIColor colorWithWhite:0 alpha:.32];
+    } else {
+        cell.imageView.image = nil;
     }
     
     UIView *selectedBackgroundView = [UIView new];
