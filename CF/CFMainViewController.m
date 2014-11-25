@@ -109,15 +109,13 @@
     [self.localNavigationBar pushNavigationItem:navItem animated:NO];
     
 #if TARGET_IPHONE_SIMULATOR
-    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"CFEnableMapWithAds"];
-    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"CF01"];
-    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"CF02"];
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"CF01"];
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"CF02"];
 #endif
     
 #ifdef DEV_VERSION
-    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"CFEnableMapWithAds"];
-    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"CF01"];
-    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"CF02"];
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"CF01"];
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"CF02"];
 #endif
     
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
@@ -167,18 +165,6 @@
     [super viewWillAppear:animated];
     [self.navigationController setNavigationBarHidden:YES animated:YES];
     [self reloadUserData];
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-    
-    BOOL shouldEnableAds = (![[NSUserDefaults standardUserDefaults] boolForKey:@"CFEnableMapWithAds"] && ![OLCashier hasProduct:@"CF01"]);
-    
-    if (shouldEnableAds) {
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"CFEnableMapWithAds"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-    }
 }
 
 - (void)importUserData

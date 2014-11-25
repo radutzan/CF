@@ -23,7 +23,7 @@
 
 #import "GADBannerView.h"
 
-@interface CFStopResultsViewController () <CFStopSignViewDelegate, UIAlertViewDelegate, CFResultCellDelegate, UITableViewDelegate, UITableViewDataSource, UIGestureRecognizerDelegate>
+@interface CFStopResultsViewController () <CFStopSignViewDelegate, UIAlertViewDelegate, CFResultCellDelegate, UITableViewDelegate, UITableViewDataSource, UIGestureRecognizerDelegate, GADBannerViewDelegate>
 
 @property (nonatomic, strong) UIView *stopResultsView;
 @property (nonatomic, assign, readwrite) CFStopResultsDisplayMode displayMode;
@@ -65,15 +65,22 @@ UIPanGestureRecognizer *_titleBarPan;
 CALayer *_topGripper;
 CALayer *_leftGripper;
 
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _responseEstimation = [NSMutableArray new];
+        _responseWithoutEstimation = [NSMutableArray new];
+        _finalData = [NSMutableArray new];
+        
+        _removedAds = ([OLCashier hasProduct:@"CF01"] || [OLCashier hasProduct:@"CF02"]);
+        _displayMode = CFStopResultsDisplayModeNone;
+    }
+    return self;
+}
+
 - (void)loadView
 {
-    self.responseEstimation = [NSMutableArray new];
-    self.responseWithoutEstimation = [NSMutableArray new];
-    self.finalData = [NSMutableArray new];
-    
-    self.removedAds = ([OLCashier hasProduct:@"CF01"] || [OLCashier hasProduct:@"CF02"]);
-    self.displayMode = CFStopResultsDisplayModeNone;
-    
     CGRect screenBounds = [UIScreen mainScreen].bounds;
     screenBounds.size.height -= [UIApplication sharedApplication].statusBarFrame.size.height - 20.0;
     self.view = [[CFTransparentView alloc] initWithFrame:screenBounds];
@@ -144,6 +151,12 @@ CALayer *_leftGripper;
     self.tableView.backgroundColor = [UIColor clearColor];
     self.tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
     [self.stopResultsView insertSubview:self.tableView belowSubview:self.titleView];
+    
+    self.bannerView = [[GADBannerView alloc] initWithAdSize:kGADAdSizeSmartBannerPortrait];
+    self.bannerView.rootViewController = self;
+    self.bannerView.adUnitID = @"ca-app-pub-6226087428684107/3340545274";
+    self.bannerView.delegate = self;
+    [self requestAds];
 }
 
 - (void)viewDidLoad
@@ -166,10 +179,6 @@ CALayer *_leftGripper;
     self.timerLabel.alpha = 0.5;
     self.timerLabel.textAlignment = NSTextAlignmentRight;
     self.timerLabel.text = NSLocalizedString(@"REFRESHING", nil);
-    
-    self.bannerView = [[GADBannerView alloc] initWithAdSize:kGADAdSizeSmartBannerPortrait];
-    self.bannerView.rootViewController = self;
-    self.bannerView.adUnitID = @"ca-app-pub-6226087428684107/3340545274";
     
     [self initGestures];
 }
@@ -225,13 +234,6 @@ CALayer *_leftGripper;
     
     [self setUpTitleView];
     if (self.stop && !self.refreshing) [self performStopRequestQuietly:NO];
-    
-    if (!self.removedAds) {
-        GADRequest *adRequest = [GADRequest request];
-        adRequest.testDevices = @[GAD_SIMULATOR_ID];
-        if (self.stop) [adRequest setLocationWithLatitude:self.stop.coordinate.latitude longitude:self.stop.coordinate.longitude accuracy:0];
-        [self.bannerView loadRequest:adRequest];
-    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -660,6 +662,7 @@ CALayer *_leftGripper;
     
     if (stop) {
         [self.tableView reloadData];
+        [self requestAds];
         
         if (self.displayMode == CFStopResultsDisplayModeContained) {
             [self performSelector:@selector(performStopRequestQuietly:) withObject:nil afterDelay:1.0];
@@ -1013,11 +1016,33 @@ CALayer *_leftGripper;
     }
 }
 
-#pragma mark - Store
+#pragma mark - Ads
+
+- (void)requestAds
+{
+    if (self.removedAds) return;
+    if (!self.bannerView) return;
+    NSLog(@"requestAds: passed all checks, requesting ad");
+    
+    GADRequest *adRequest = [GADRequest request];
+    adRequest.testDevices = @[GAD_SIMULATOR_ID];
+    if (self.stop) [adRequest setLocationWithLatitude:self.stop.coordinate.latitude longitude:self.stop.coordinate.longitude accuracy:0];
+    [self.bannerView loadRequest:adRequest];
+}
 
 - (BOOL)removedAds
 {
     return ([OLCashier hasProduct:@"CF01"] || [OLCashier hasProduct:@"CF02"]);
+}
+
+- (void)adViewDidReceiveAd:(GADBannerView *)view
+{
+    NSLog(@"adViewDidReceiveAd");
+}
+
+- (void)adView:(GADBannerView *)view didFailToReceiveAdWithError:(GADRequestError *)error
+{
+    NSLog(@"adView:didFailToReceiveAdWithError:%@", error);
 }
 
 @end
