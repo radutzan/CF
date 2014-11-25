@@ -12,14 +12,14 @@
 
 - (void)drawPlaceholderInRect:(CGRect)rect
 {
-    if (self.placeholderTextColor) {
-        [self.placeholderTextColor setFill];
-    } else {
+    if (!self.placeholderTextColor) {
         [super drawPlaceholderInRect:rect];
         return;
     }
     
-    [[self placeholder] drawInRect:rect withAttributes:@{NSFontAttributeName: self.font, NSForegroundColorAttributeName: self.placeholderTextColor}];
+    NSDictionary *attributes = @{NSForegroundColorAttributeName: self.placeholderTextColor, NSFontAttributeName: self.font};
+    CGRect boundingRect = [self.placeholder boundingRectWithSize:rect.size options:0 attributes:attributes context:nil];
+    [self.placeholder drawAtPoint:CGPointMake(0, (rect.size.height / 2) - boundingRect.size.height / 2) withAttributes:attributes];
 }
 
 @end

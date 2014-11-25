@@ -92,7 +92,8 @@
     [self.drawer addSubview:self.gripper];
     
     self.tabBar = [[UIView alloc] initWithFrame:CGRectMake(self.drawer.frame.origin.x, self.view.bounds.size.height - TAB_BAR_HEIGHT, self.drawer.bounds.size.width, TAB_BAR_HEIGHT)];
-    self.tabBar.tintColor = [UIColor colorWithWhite:0.42 alpha:1];
+    self.tabBar.tintColor = [UIColor colorWithWhite:0 alpha:.42];
+//    self.tabBar.tintColor = [UIColor colorWithWhite:1 alpha:.42];
     [self.view addSubview:self.tabBar];
     
     self.closeDrawerButton = [UIButton buttonWithType:UIButtonTypeCustom];

@@ -82,6 +82,7 @@
     
     self.localNavigationBar = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 64.0)];
     self.localNavigationBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+//    self.localNavigationBar.barStyle = UIBarStyleBlack;
     [self.view addSubview:self.localNavigationBar];
     
     CFSearchField *searchField = [[CFSearchField alloc] initWithFrame:CGRectMake(8.0, 20.0, self.localNavigationBar.bounds.size.width - 70.0, 44.0)];
@@ -154,6 +155,11 @@
     }
     
     [self.navigationController.navigationBar setTitleTextAttributes:@{NSFontAttributeName: [UIFont fontWithName:DEFAULT_FONT_NAME_MEDIUM size:17.0]}];
+}
+
+- (UIStatusBarStyle)preferredStatusBarStyle
+{
+    return UIStatusBarStyleDefault;
 }
 
 - (void)viewWillAppear:(BOOL)animated

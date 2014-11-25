@@ -7,11 +7,12 @@
 //
 
 #import "CFSearchField.h"
+#import "OLTextField.h"
 
 @interface CFSearchField () <UITextFieldDelegate>
 
 @property (nonatomic, strong) UIImageView *glyphView;
-@property (nonatomic, strong) UITextField *textField;
+@property (nonatomic, strong) OLTextField *textField;
 @property (nonatomic, copy, readwrite) NSString *text;
 
 @end
@@ -31,7 +32,7 @@
         UITapGestureRecognizer *glyphTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(glyphTapped)];
         [_glyphView addGestureRecognizer:glyphTap];
         
-        _textField = [[UITextField alloc] initWithFrame:CGRectMake(_glyphView.bounds.size.width + 2.0, -1.0, frame.size.width - 1.0 - _glyphView.bounds.size.width, frame.size.height)];
+        _textField = [[OLTextField alloc] initWithFrame:CGRectMake(_glyphView.bounds.size.width + 2.0, -1.0, frame.size.width - 1.0 - _glyphView.bounds.size.width, frame.size.height)];
         _textField.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
         _textField.returnKeyType = UIReturnKeySearch;
         _textField.clearButtonMode = UITextFieldViewModeWhileEditing;
@@ -39,6 +40,7 @@
         _textField.autocorrectionType = UITextAutocorrectionTypeNo;
         _textField.delegate = self;
         _textField.font = [UIFont fontWithName:DEFAULT_FONT_NAME_MEDIUM size:17.0];
+//        _textField.placeholderTextColor = [UIColor colorWithWhite:1 alpha:.4];
         [self addSubview:_textField];
         
         _activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
