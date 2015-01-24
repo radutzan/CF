@@ -189,8 +189,6 @@
     
     cell.contentInsets = UIEdgeInsetsMake(0, self.marginInsets.left, 0, self.marginInsets.right);
     
-    //    cell.backgroundColor = [UIColor clearColor];
-    
     UIVisualEffectView *cellBackgroundView = [[UIVisualEffectView alloc] initWithEffect:[UIVibrancyEffect notificationCenterVibrancyEffect]];
     cellBackgroundView.frame = cell.contentView.bounds;
     

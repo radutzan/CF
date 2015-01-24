@@ -220,15 +220,23 @@
         self.thinking = NO;
         
         if (result) {
-//            NSLog(@"stop exists");
-            self.suggesting = YES;
+            NSLog(@"stop result: %@", result);
             
             NSDictionary *stopData = [result firstObject];
+            
+            if (!stopData) {
+                [self clearStopSuggestions];
+                return;
+            }
+            
+            self.suggesting = YES;
+            
             CLLocationCoordinate2D coordinate;
             coordinate.latitude = [[stopData objectForKey:@"latitude"] doubleValue];
             coordinate.longitude = [[stopData objectForKey:@"longitude"] doubleValue];
             
             CFStop *stop = [CFStop stopWithCoordinate:coordinate code:[stopData objectForKey:@"codigo"] name:[stopData objectForKey:@"nombre"] services:[stopData objectForKey:@"recorridos"]];
+            
             [self showStopSuggestionWithStop:stop];
             
         } else {
