@@ -28,7 +28,7 @@
 @property (nonatomic, strong) UIView *stopResultsView;
 @property (nonatomic, assign, readwrite) CFStopResultsDisplayMode displayMode;
 @property (nonatomic, strong) UIView *overlay;
-@property (nonatomic, strong) UINavigationBar *titleView;
+@property (nonatomic, strong) UIView *titleView;
 @property (nonatomic, strong) CFStopSignView *stopInfoView;
 @property (nonatomic, strong) OLShapeTintedButton *favoriteButton;
 @property (nonatomic, strong) UIActivityIndicatorView *titleActivityIndicatorView;
@@ -51,12 +51,14 @@
 
 @property (nonatomic, strong) GADBannerView *bannerView;
 @property (nonatomic, assign) BOOL removedAds;
+@property (nonatomic, assign) BOOL showingAds;
 
 @end
 
 @implementation CFStopResultsViewController
 
 UIPanGestureRecognizer *_horizontalPanRecognizer;
+UIScreenEdgePanGestureRecognizer *_edgePanRecognizer;
 UITapGestureRecognizer *_overlayTap;
 UIPanGestureRecognizer *_overlayPan;
 UITapGestureRecognizer *_titleBarTap;
@@ -120,10 +122,18 @@ CALayer *_leftGripper;
     
     self.stopResultsViewPresentedCenter = self.stopResultsView.center;
     
-    self.titleView = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, self.stopResultsView.bounds.size.width, 54.0)];
-    self.titleView.barStyle = UIBarStyleBlack;
+    CGRect titleViewFrame = CGRectMake(0, 0, self.stopResultsView.bounds.size.width, 54.0);
     
-    self.stopInfoView = [[CFStopSignView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.titleView.bounds.size.width - 33.0, self.titleView.bounds.size.height)];
+    if (NSClassFromString(@"UIVisualEffectView")) {
+        self.titleView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleDark]];
+        self.titleView.frame = titleViewFrame;
+    } else {
+        self.titleView = [[UINavigationBar alloc] initWithFrame:titleViewFrame];
+        UINavigationBar *titleViewAsNavBar = (UINavigationBar *)self.titleView;
+        titleViewAsNavBar.barStyle = UIBarStyleBlack;
+    }
+    
+    self.stopInfoView = [[CFStopSignView alloc] initWithFrame:CGRectMake(0.0, 0.0, titleViewFrame.size.width - 33.0, titleViewFrame.size.height)];
     self.stopInfoView.delegate = self;
     self.stopInfoView.stopCodeLabel.hidden = YES;
 #ifdef DEV_VERSION
@@ -156,6 +166,8 @@ CALayer *_leftGripper;
     self.bannerView.rootViewController = self;
     self.bannerView.adUnitID = @"ca-app-pub-6226087428684107/3340545274";
     self.bannerView.delegate = self;
+    self.bannerView.frame = CGRectMake(0, self.view.bounds.size.height, self.view.bounds.size.width, 50);
+    [self.view insertSubview:self.bannerView aboveSubview:self.overlay];
     [self requestAds];
 }
 
@@ -189,6 +201,10 @@ CALayer *_leftGripper;
     [_horizontalPanRecognizer requireGestureRecognizerToFail:self.tableView.panGestureRecognizer];
     _horizontalPanRecognizer.delegate = self;
     [self.stopResultsView addGestureRecognizer:_horizontalPanRecognizer];
+    
+    _edgePanRecognizer = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(handleHorizontalPanGesture:)];
+    _edgePanRecognizer.edges = UIRectEdgeLeft|UIRectEdgeRight;
+    [self.view addGestureRecognizer:_edgePanRecognizer];
     
     _overlayTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismiss)];
     [self.overlay addGestureRecognizer:_overlayTap];
@@ -378,6 +394,7 @@ CALayer *_leftGripper;
         self.overlay.alpha = 1;
         self.stopResultsView.alpha = 1;
         self.stopResultsView.frame = self.stopResultsViewPresentedFrame;
+        if (!self.removedAds && self.showingAds) [self showAds];
     } completion:^(BOOL finished) {
 //        Mixpanel *mixpanel = [Mixpanel sharedInstance];
 //        [mixpanel track:@"Expanded Stop"];
@@ -393,6 +410,7 @@ CALayer *_leftGripper;
     [UIView animateWithDuration:0.45 delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:1 options:0 animations:^{
         self.overlay.alpha = 0;
         self.stopResultsView.frame = self.stopResultsViewMinimizedFrame;
+        [self hideAds];
     } completion:^(BOOL finished) {
         Mixpanel *mixpanel = [Mixpanel sharedInstance];
         [mixpanel track:@"Minimized Stop"];
@@ -411,6 +429,7 @@ CALayer *_leftGripper;
     
     [UIView animateWithDuration:animationDuration delay:0 usingSpringWithDamping:1 initialSpringVelocity:velocityFactor options:0 animations:^{
         self.overlay.alpha = 0;
+        [self hideAds];
         if (self.displayMode == CFStopResultsDisplayModeContained) {
             self.stopResultsView.center = CGPointMake(self.stopResultsView.center.x, self.stopResultsView.center.y - SEARCH_CARD_ANIMATION_OFFSET);
             self.stopResultsView.alpha = 0;
@@ -446,7 +465,11 @@ CALayer *_leftGripper;
         if (moveDiff >= 0) {
             // moving to the right
             self.stopResultsView.center = CGPointMake(self.stopResultsViewPresentedCenter.x + moveDiff, self.stopResultsView.center.y);
-            if (self.displayMode == CFStopResultsDisplayModePresented) self.overlay.alpha = 1.0 - fabs(dragFactor);
+            if (self.displayMode == CFStopResultsDisplayModePresented) {
+                self.overlay.alpha = 1.0 - fabs(dragFactor);
+                self.bannerView.alpha = self.overlay.alpha;
+                [self positionAd:self.overlay.alpha];
+            }
         } else {
             self.stopResultsView.center = CGPointMake(self.stopResultsViewPresentedCenter.x + moveDiff * 0.25, self.stopResultsView.center.y);
         }
@@ -462,7 +485,10 @@ CALayer *_leftGripper;
         } else {
             [UIView animateWithDuration:0.45 delay:0 usingSpringWithDamping:0.6 initialSpringVelocity:velocityFactor options:0 animations:^{
                 self.stopResultsView.center = CGPointMake(self.stopResultsViewPresentedCenter.x, self.stopResultsView.center.y);
-                if (self.displayMode == CFStopResultsDisplayModePresented) self.overlay.alpha = 1;
+                if (self.displayMode == CFStopResultsDisplayModePresented) {
+                    self.overlay.alpha = 1;
+                    [self showAds];
+                }
             } completion:nil];
         }
     }
@@ -486,6 +512,7 @@ CALayer *_leftGripper;
         } else {
             self.overlay.alpha = fabs(dragFactor);
         }
+        [self positionAd:self.overlay.alpha];
         
     } else {
         CGFloat terminalVelocity = MIN([recognizer velocityInView:self.view].y, 3500);
@@ -513,12 +540,14 @@ CALayer *_leftGripper;
 
 - (CGRect)stopResultsViewPresentedFrame
 {
+    CGFloat adOffset = (self.showingAds) ? 50.0 : 0;
+    
     CGFloat stopResultsViewWidth = self.view.bounds.size.width - 20.0;
     stopResultsViewWidth = MIN(MAX_OVERLAY_WIDTH, stopResultsViewWidth);
-    CGFloat stopResultsViewHeight = self.view.bounds.size.height - 35.0;
-    stopResultsViewHeight = MIN(610.0, stopResultsViewHeight);
+    CGFloat stopResultsViewHeight = self.view.bounds.size.height - 35.0 - adOffset;
+    stopResultsViewHeight = MIN(610.0 - adOffset, stopResultsViewHeight);
     
-    CGRect stopResultsViewFrame = CGRectMake(self.view.center.x - stopResultsViewWidth / 2, self.view.center.y + 7.5 - stopResultsViewHeight / 2, stopResultsViewWidth, stopResultsViewHeight);
+    CGRect stopResultsViewFrame = CGRectMake(self.view.center.x - stopResultsViewWidth / 2, self.view.center.y + 7.5 - stopResultsViewHeight / 2 - adOffset / 2, stopResultsViewWidth, stopResultsViewHeight);
     return stopResultsViewFrame;
 }
 
@@ -960,14 +989,6 @@ CALayer *_leftGripper;
     return 60.0;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
-{
-    if (self.removedAds)
-        return 0;
-    else
-        return 50.0;
-}
-
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
     UIView *headerView = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, self.stopResultsView.bounds.size.width, 20.0)];
@@ -986,14 +1007,6 @@ CALayer *_leftGripper;
     [headerView addSubview:self.timerLabel];
     
     return headerView;
-}
-
-- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
-{
-    if (self.removedAds) return nil;
-    if (!self.stop) return nil;
-    
-    return self.bannerView;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -1038,6 +1051,35 @@ CALayer *_leftGripper;
 - (void)adViewDidReceiveAd:(GADBannerView *)view
 {
     NSLog(@"adViewDidReceiveAd");
+    if (self.removedAds) return;
+    if (self.showingAds) return;
+    if (self.displayMode != CFStopResultsDisplayModePresented) return;
+    
+    self.showingAds = YES;
+    
+    [UIView animateWithDuration:4.2 delay:1 usingSpringWithDamping:1 initialSpringVelocity:0 options:0 animations:^{
+        self.stopResultsView.frame = self.stopResultsViewPresentedFrame;
+        [self showAds];
+    } completion:nil];
+}
+
+- (void)hideAds
+{
+    self.bannerView.frame = CGRectMake(0, self.view.bounds.size.height, self.view.bounds.size.width, 50);
+}
+
+- (void)showAds
+{
+    self.bannerView.frame = CGRectMake(0, self.view.bounds.size.height - 50, self.view.bounds.size.width, 50);
+}
+
+- (void)positionAd:(CGFloat)positionFactor
+{
+    if (!self.showingAds) return;
+    positionFactor = MAX(0, positionFactor);
+    positionFactor = MIN(1.0, positionFactor);
+    CGFloat adOffset = 50 * positionFactor;
+    self.bannerView.frame = CGRectMake(0, self.view.bounds.size.height - adOffset, self.view.bounds.size.width, 50);
 }
 
 - (void)adView:(GADBannerView *)view didFailToReceiveAdWithError:(GADRequestError *)error
