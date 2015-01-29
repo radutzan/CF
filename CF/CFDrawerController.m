@@ -250,7 +250,6 @@
     [self selectTabButton:button];
     
     NSUInteger index = [[self.tabBar subviews] indexOfObject:button];
-    
     [self switchToTab:index];
 }
 
@@ -260,7 +259,6 @@
     self.drawerOpen = YES;
     
     NSUInteger index = [[self.tabBar subviews] indexOfObject:button];
-    
     [self switchToTab:index];
 }
 
@@ -356,6 +354,11 @@
         self.activePanGestureRecognizer = recognizer;
         self.drawerCurrentDragCenterY = self.drawer.center.y;
         self.drawer.userInteractionEnabled = NO;
+        
+        if ([recognizer.view isEqual:self.tabBar]) {
+            UIButton *pressedTabBarButton = (UIButton *)[self.tabBar hitTest:[recognizer locationInView:self.tabBar] withEvent:nil];
+            if (pressedTabBarButton) [self tabButtonPressed:pressedTabBarButton];
+        }
         
     } else if (recognizer.state == UIGestureRecognizerStateChanged) {
         CGFloat rawCenterY = self.drawerCurrentDragCenterY + yTranslation;

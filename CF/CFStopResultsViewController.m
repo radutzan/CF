@@ -250,6 +250,8 @@ CALayer *_leftGripper;
     
     [self setUpTitleView];
     if (self.stop && !self.refreshing) [self performStopRequestQuietly:NO];
+    
+    if (!self.removedAds) [self.view insertSubview:self.bannerView aboveSubview:self.overlay];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -259,6 +261,13 @@ CALayer *_leftGripper;
     [self resetTimer];
     [self.view endEditing:YES];
     self.refreshing = NO;
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    
+    [self.bannerView removeFromSuperview];
 }
 
 - (void)viewWillLayoutSubviews
