@@ -115,6 +115,8 @@
 		7C6CE7FB1877B7D000DDEF54 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C6CE7FA1877B7D000DDEF54 /* MessageUI.framework */; };
 		7C6CE7FD1877B7DD00DDEF54 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C6CE7FC1877B7DD00DDEF54 /* StoreKit.framework */; };
 		7C6CE8001877D04A00DDEF54 /* CFStoreViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C6CE7FF1877D04A00DDEF54 /* CFStoreViewController.m */; };
+		7C74700C1A7AA4F900E01947 /* badge-pro@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7C74700B1A7AA4F900E01947 /* badge-pro@2x.png */; };
+		7C74700D1A7AA4FA00E01947 /* badge-pro@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7C74700B1A7AA4F900E01947 /* badge-pro@2x.png */; };
 		7C7A15D61853EBF0002EE4C5 /* OLTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C7A15D51853EBF0002EE4C5 /* OLTextField.m */; };
 		7C7A15D818540966002EE4C5 /* pin-favorite@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7C7A15D718540966002EE4C5 /* pin-favorite@2x.png */; };
 		7C7A15DB18540E08002EE4C5 /* CFMoreContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C7A15DA18540E08002EE4C5 /* CFMoreContentViewController.m */; };
@@ -380,6 +382,7 @@
 		7C6CE7FC1877B7DD00DDEF54 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		7C6CE7FE1877D04A00DDEF54 /* CFStoreViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFStoreViewController.h; sourceTree = "<group>"; };
 		7C6CE7FF1877D04A00DDEF54 /* CFStoreViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFStoreViewController.m; sourceTree = "<group>"; };
+		7C74700B1A7AA4F900E01947 /* badge-pro@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "badge-pro@2x.png"; sourceTree = "<group>"; };
 		7C7A15D41853EBF0002EE4C5 /* OLTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLTextField.h; sourceTree = "<group>"; };
 		7C7A15D51853EBF0002EE4C5 /* OLTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLTextField.m; sourceTree = "<group>"; };
 		7C7A15D718540966002EE4C5 /* pin-favorite@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pin-favorite@2x.png"; sourceTree = "<group>"; };
@@ -860,6 +863,7 @@
 				7CB64D7918550695006422E0 /* help.html */,
 				7CFF7E5018381645006230CE /* main.m */,
 				7CFF7E5218381645006230CE /* CF-Prefix.pch */,
+				7C74700B1A7AA4F900E01947 /* badge-pro@2x.png */,
 				7CFF7EC2183871F7006230CE /* bus@2x.png */,
 				7CB64D7B18551C9C006422E0 /* button-bip@2x.png */,
 				7CF12E5619BD14B300772DC7 /* button-close@2x.png */,
@@ -1239,6 +1243,7 @@
 				7C2EECF5188345F500AE78C2 /* InfoPlist.strings in Resources */,
 				7C2EECF6188345F500AE78C2 /* gripper@2x.png in Resources */,
 				7C2EECF7188345F500AE78C2 /* Localizable.strings in Resources */,
+				7C74700D1A7AA4FA00E01947 /* badge-pro@2x.png in Resources */,
 				7CBAFAC21A0D471F001F61E7 /* twitter@2x.png in Resources */,
 				7C900D8719D3064C00E1E971 /* icon-outline@2x.png in Resources */,
 				7C2EECF8188345F500AE78C2 /* button-more-selected@2x.png in Resources */,
@@ -1289,6 +1294,7 @@
 				7CFF7E4F18381645006230CE /* InfoPlist.strings in Resources */,
 				7CAFA33B1842C359005A06BC /* gripper@2x.png in Resources */,
 				7C5FD9CE184F8B140099FEE2 /* Localizable.strings in Resources */,
+				7C74700C1A7AA4F900E01947 /* badge-pro@2x.png in Resources */,
 				7CBAFAC11A0D471F001F61E7 /* twitter@2x.png in Resources */,
 				7C900D8619D3064C00E1E971 /* icon-outline@2x.png in Resources */,
 				7CFF7EC9183A639C006230CE /* button-more-selected@2x.png in Resources */,

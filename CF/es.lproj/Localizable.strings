@@ -74,6 +74,9 @@
 "ABOUT" = "Acerca";
 "SEND_FEEDBACK" = "Envíanos comentarios";
 "STORE" = "Tienda";
+"REMOVE_ADS" = "Elimina la Publicidad";
+"BUY_PRO" = "Compra Cuánto Falta Pro";
+"ALREADY_PURCHASED_QUESTION" = "¿Ya compraste Pro?";
 "SHARE_THIS_APP" = "Comparte Cuánto Falta";
 "FOLLOW_US_TWITTER" = "Síguenos en Twitter";
 "RATE_ON_APP_STORE" = "Evalúa en la App Store";
@@ -95,11 +98,12 @@
 "CANCEL" = "Cancelar";
 "BUY" = "Comprar";
 "PURCHASED" = "Comprado";
-"STORE_RESTORE" = "Restaurar Compras Anteriores";
+"PRO_DESCRIPTION" = "Elimina toda la publicidad de Cuánto Falta para siempre comprando Cuánto Falta Pro, por $@.";
+"STORE_RESTORE" = "Restaurar Compras";
 "STORE_RESTORE_DESCRIPTION" = "Si ya has comprado Pro y no te aparece, restaura tus compras anteriores.";
 "STORE_ERROR_TITLE" = "Hubo un error con la compra";
 "STORE_WAIT_TITLE" = "Espera un poco…";
 "STORE_WAIT_MESSAGE" = "Seguro se demora menos que la micro.";
 "STORE_THANK_YOU_TITLE" = "Gracias por activar Pro.";
-"STORE_THANK_YOU_MESSAGE_MAP" = "El Mapa se activó y se desactivó toda la publicidad. Que tengas un día bacán.";
+"STORE_THANK_YOU_MESSAGE_MAP" = "Se eliminó toda la publicidad. Que lo disfrutes, y que tengas un día bacán.";
 "STORE_THANK_YOU_MESSAGE_ADS" = "Dato: solo los más bacanes eliminan la publicidad.";

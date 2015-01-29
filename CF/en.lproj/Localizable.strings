@@ -73,8 +73,11 @@
 // more
 "HELP" = "Help";
 "ABOUT" = "About";
-"SEND_FEEDBACK" = "Send Feedback";
+"SEND_FEEDBACK" = "Send us Feedback";
 "STORE" = "Store";
+"REMOVE_ADS" = "Remove Ads";
+"BUY_PRO" = "Buy Cuánto Falta Pro";
+"ALREADY_PURCHASED_QUESTION" = "Already purchased Pro?";
 "SHARE_THIS_APP" = "Share Cuánto Falta";
 "FOLLOW_US_TWITTER" = "@cuantofaltapp";
 "LIKE_US_FACEBOOK" = "Cuánto Falta";
@@ -97,11 +100,12 @@
 "CANCEL" = "Cancel";
 "BUY" = "Buy";
 "PURCHASED" = "Purchased";
-"STORE_RESTORE" = "Restore Previous Purchases";
+"PRO_DESCRIPTION" = "Remove all ads forever by purchasing Cuánto Falta Pro. Only $@.";
+"STORE_RESTORE" = "Restore Purchases";
 "STORE_RESTORE_DESCRIPTION" = "If you've already purchased Pro and it doesn't appear as Purchased, restore it using this option.";
 "STORE_ERROR_TITLE" = "There was an error with your purchase";
 "STORE_WAIT_TITLE" = "Please wait…";
-"STORE_WAIT_MESSAGE" = "Give it a second. It's going to space!";
+"STORE_WAIT_MESSAGE" = "Give it a second, it's going to space!";
 "STORE_THANK_YOU_TITLE" = "Welcome to Pro.";
-"STORE_THANK_YOU_MESSAGE_MAP" = "Thank you, you are awesome. The Map has been enabled and all ads have been disabled forever. Enjoy the quiet.";
+"STORE_THANK_YOU_MESSAGE_MAP" = "Thank you, you are awesome. All ads have been disabled forever. Enjoy the quiet.";
 "STORE_THANK_YOU_MESSAGE_ADS" = "Doesn't it feel great to get rid of those pesky ads?";
