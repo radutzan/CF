@@ -19,8 +19,8 @@
         self.favoriteNameLabel.textColor = [UIColor colorWithWhite:0 alpha:0.8];
         [self.containerView addSubview:self.favoriteNameLabel];
         
-        self.nameLabel.font = [UIFont fontWithName:@"AvenirNext-DemiBold" size:11.0];
-        self.nameLabel.alpha = 0.6;
+        self.nameLabel.font = [UIFont fontWithName:@"AvenirNext-Medium" size:11.0];
+        self.nameLabel.alpha = 0.5;
         self.nameLabel.numberOfLines = 1;
         
         self.favoriteBadge = [[UIImageView alloc] initWithImage:[UIImage starImageWithSize:CGSizeMake(20.0, 20.0) filled:YES]];

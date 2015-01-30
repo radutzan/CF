@@ -79,10 +79,11 @@
 "BUY_PRO" = "Buy Cuánto Falta Pro";
 "ALREADY_PURCHASED_QUESTION" = "Already purchased Pro?";
 "SHARE_THIS_APP" = "Share Cuánto Falta";
-"FOLLOW_US_TWITTER" = "@cuantofaltapp";
-"LIKE_US_FACEBOOK" = "Cuánto Falta";
+"SHARE_SECOND_LINE" = "With your friends and family";
+"FOLLOW_US_TWITTER" = "Follow us";
+"LIKE_US_FACEBOOK" = "Give us a Like";
 "RATE_ON_APP_STORE" = "Rate on the App Store";
-"SHARE_TWEET_TEXT" = "Check out @cuantofaltapp, a great app for Transantiago";
+"SHARE_TWEET_TEXT" = "Check out Cuánto Falta, a cool app for Transantiago";
 
 // whats new
 "WHATS_NEW" = "What's New";

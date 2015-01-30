@@ -88,6 +88,8 @@
     
     cell.backgroundColor = [UIColor colorWithWhite:1 alpha:0.6];
     cell.textLabel.font = [UIFont fontWithName:DEFAULT_FONT_NAME_MEDIUM size:17.0];
+    cell.detailTextLabel.font = [UIFont fontWithName:DEFAULT_FONT_NAME_REGULAR size:12.0];
+    cell.detailTextLabel.textColor = [UIColor colorWithWhite:0 alpha:.5];
     cell.detailTextLabel.text = nil;
     cell.accessoryType = UITableViewCellAccessoryNone;
     cell.accessoryView = nil;
@@ -109,8 +111,6 @@
         cell.textLabel.text = NSLocalizedString(@"REMOVE_ADS", nil);
         cell.textLabel.textAlignment = NSTextAlignmentCenter;
         cell.detailTextLabel.text = NSLocalizedString(@"BUY_PRO", nil);
-        cell.detailTextLabel.font = [UIFont fontWithName:DEFAULT_FONT_NAME_REGULAR size:12.0];
-        cell.detailTextLabel.textColor = [UIColor colorWithWhite:0 alpha:.5];
         
         SKProduct *currentProduct = [[[OLCashier defaultCashier] products] productForIdentifier:@"CF01"];
         NSLog(@"product: %@", currentProduct);
@@ -132,12 +132,15 @@
         
     } else if (indexPath.row == 0 && indexPath.section == lastSectionIndex) {
         cell.textLabel.text = NSLocalizedString(@"SHARE_THIS_APP", nil);
+        cell.detailTextLabel.text = NSLocalizedString(@"SHARE_SECOND_LINE", nil);
         cell.imageView.image = [[UIImage imageNamed:@"share"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     } else if (indexPath.row == 1 && indexPath.section == lastSectionIndex) {
         cell.textLabel.text = @"@cuantofaltapp";
+        cell.detailTextLabel.text = NSLocalizedString(@"FOLLOW_US_TWITTER", nil);
         cell.imageView.image = [[UIImage imageNamed:@"twitter"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     } else if (indexPath.row == 2 && indexPath.section == lastSectionIndex) {
         cell.textLabel.text = @"Cuánto Falta";
+        cell.detailTextLabel.text = NSLocalizedString(@"LIKE_US_FACEBOOK", nil);
         cell.imageView.image = [[UIImage imageNamed:@"facebook"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     }
     
@@ -321,7 +324,9 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    NSInteger sharingSectionIndex = (self.isPro) ? 1 : 2;
     if (!self.isPro && indexPath.section == 1) return 64;
+    if (indexPath.section == sharingSectionIndex) return 54;
     return 48;
 }
 
@@ -428,7 +433,7 @@
         [mixpanel track:@"Purchased Pro"];
         [mixpanel registerSuperProperties:@{@"Has Pro": @"Yes"}];
         
-        [self.tableView reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, self.tableView.numberOfSections - 1)] withRowAnimation:UITableViewRowAnimationAutomatic];
+        [self.tableView reloadData];
     }];
 }
 
@@ -459,7 +464,7 @@
         
         [mixpanel track:@"Successfully Restored Purchases"];
         
-        [self.tableView reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, self.tableView.numberOfSections - 1)] withRowAnimation:UITableViewRowAnimationAutomatic];
+        [self.tableView reloadData];
     }];
 }
 

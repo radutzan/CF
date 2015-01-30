@@ -64,7 +64,7 @@
 "HISTORY_PLACEHOLDER_TITLE" = "Sin historial";
 "HISTORY_PLACEHOLDER_MESSAGE" = "Tu historial se guardará aquí cuando consultes un paradero.";
 "FAVORITES_TABLE_FOOTER_LABEL" = "Reordena un favorito presionando, manteniendo y arrastrándolo donde quieras.";
-"HISTORY_TABLE_FOOTER_LABEL" = "Puedes borrar el historial presionado y manteniendo el botón de Historial.";
+"HISTORY_TABLE_FOOTER_LABEL" = "Puedes borrar el historial presionando y manteniendo el botón de Historial.";
 "CLEAR_ALL_HISTORY" = "Borrar Historial";
 "NAME_YOUR_FAVORITE" = "Ponle nombre al favorito";
 "NAMELESS_FAVORITE" = "Favorito sin nombre";
@@ -78,9 +78,11 @@
 "BUY_PRO" = "Compra Cuánto Falta Pro";
 "ALREADY_PURCHASED_QUESTION" = "¿Ya compraste Pro?";
 "SHARE_THIS_APP" = "Comparte Cuánto Falta";
-"FOLLOW_US_TWITTER" = "Síguenos en Twitter";
+"SHARE_SECOND_LINE" = "Con tus amigos y familia";
+"FOLLOW_US_TWITTER" = "Síguenos";
+"LIKE_US_FACEBOOK" = "Te gusta? Ponle \'Me Gusta\'";
 "RATE_ON_APP_STORE" = "Evalúa en la App Store";
-"SHARE_TWEET_TEXT" = "Mira @cuantofaltapp, una pulenta app para el Transantiago";
+"SHARE_TWEET_TEXT" = "Baja Cuánto Falta, una aplicación pulenta para el Transantiago";
 
 // whats new
 "WHATS_NEW" = "Lo nuevo";
