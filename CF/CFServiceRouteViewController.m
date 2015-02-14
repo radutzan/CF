@@ -14,7 +14,6 @@
 #import "CustomPinAnnotationView.h"
 #import "CFStopResultsViewController.h"
 
-#import "GADBannerView.h"
 #import "OLCashier.h"
 
 @import MapKit;
@@ -34,8 +33,6 @@
 @property (nonatomic, assign) CFDirection currentDirection;
 @property (nonatomic, strong) NSString *directionString;
 @property (nonatomic, strong) CFRoute *route;
-
-@property (nonatomic, strong) GADBannerView *mapBannerAd;
 
 @end
 
@@ -142,11 +139,6 @@ static MKMapRect santiagoBounds;
     
     UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
     [self.navigationItem setBackBarButtonItem:backButtonItem];
-    
-    if (![OLCashier hasProduct:@"CF01"] && ![OLCashier hasProduct:@"CF02"]) {
-        [self loadMapBannerAd];
-        [self.view addSubview:self.mapBannerAd];
-    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -200,18 +192,6 @@ static MKMapRect santiagoBounds;
     } else {
         [self setDefaultRegion];
     }
-}
-
-- (void)loadMapBannerAd
-{
-    GADRequest *request = [GADRequest request];
-    request.testDevices = @[@"61abccb6c029497b02bef4224933c76b", GAD_SIMULATOR_ID];
-    
-    self.mapBannerAd = [[GADBannerView alloc] initWithAdSize:kGADAdSizeBanner];
-    self.mapBannerAd.adUnitID = @"ca-app-pub-6226087428684107/7036992874";
-    self.mapBannerAd.rootViewController = self;
-    self.mapBannerAd.frame = CGRectMake(0, self.view.bounds.size.height - self.navigationController.toolbar.bounds.size.height - self.mapBannerAd.bounds.size.height, self.mapBannerAd.bounds.size.width, self.mapBannerAd.bounds.size.height);
-    [self.mapBannerAd loadRequest:request];
 }
 
 #pragma mark - Search

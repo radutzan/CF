@@ -21,7 +21,7 @@
 #import "CFTransparentView.h"
 #import "UIImage+Star.h"
 
-#import "GADBannerView.h"
+#import <GoogleMobileAds/GADBannerView.h>
 
 @interface CFStopResultsViewController () <CFStopSignViewDelegate, UIAlertViewDelegate, CFResultCellDelegate, UITableViewDelegate, UITableViewDataSource, UIGestureRecognizerDelegate, GADBannerViewDelegate>
 
@@ -1047,7 +1047,6 @@ CALayer *_leftGripper;
     NSLog(@"requestAds: passed all checks, requesting ad");
     
     GADRequest *adRequest = [GADRequest request];
-    adRequest.testDevices = @[GAD_SIMULATOR_ID];
     if (self.stop) [adRequest setLocationWithLatitude:self.stop.coordinate.latitude longitude:self.stop.coordinate.longitude accuracy:0];
     [self.bannerView loadRequest:adRequest];
 }
@@ -1066,7 +1065,7 @@ CALayer *_leftGripper;
     
     self.showingAds = YES;
     
-    [UIView animateWithDuration:4.2 delay:1 usingSpringWithDamping:1 initialSpringVelocity:0 options:0 animations:^{
+    [UIView animateWithDuration:3.5 delay:1 usingSpringWithDamping:1 initialSpringVelocity:0 options:0 animations:^{
         self.stopResultsView.frame = self.stopResultsViewPresentedFrame;
         [self showAds];
     } completion:nil];

@@ -25,7 +25,6 @@
 #import "CFServiceRouteBar.h"
 
 #import "OLShapeTintedButton.h"
-#import "GADBannerView.h"
 
 @interface CFMainViewController () <CFMapControllerDelegate, CFDrawerControllerDelegate, CFSearchControllerDelegate, CFStopResultsViewControllerDelegate, CFServiceRouteBarDelegate, UIAlertViewDelegate>
 
@@ -44,7 +43,6 @@
 @property (nonatomic, assign) CGPoint storedDismissingViewCenter;
 
 @property (nonatomic, assign) BOOL shouldDisplayAds;
-@property (nonatomic, strong) GADBannerView *mapBannerAd;
 
 @end
 
