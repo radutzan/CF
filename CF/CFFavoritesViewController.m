@@ -71,6 +71,8 @@
     [sharedDefaults setObject:favoritesArray forKey:@"favorites"];
     [sharedDefaults synchronize];
 #endif
+    
+    [[NSUbiquitousKeyValueStore defaultStore] setArray:favoritesArray forKey:@"favorites"];
 }
 
 - (void)longPressRecognized:(UILongPressGestureRecognizer *)recognizer

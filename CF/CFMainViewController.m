@@ -142,14 +142,26 @@
 
 - (void)viewDidLoad
 {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
-    BOOL runBefore = [[NSUserDefaults standardUserDefaults] boolForKey:@"OLHasRunBefore"];
+    BOOL runBefore = [defaults boolForKey:@"OLHasRunBefore"];
     
     if (!runBefore) {
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"OLHasRunBefore"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
+        [defaults setBool:YES forKey:@"OLHasRunBefore"];
+        [defaults synchronize];
         
         [self importUserData];
+    }
+    
+    BOOL performedInitialCloudSync = [defaults boolForKey:@"OLHasPerformedInitialCloudSync"];
+    
+    if (!performedInitialCloudSync) {
+        [defaults setBool:YES forKey:@"OLHasPerformedInitialCloudSync"];
+        
+        NSArray *favoritesArray = [defaults arrayForKey:@"favorites"];
+        if (!favoritesArray) return;
+        
+        [[NSUbiquitousKeyValueStore defaultStore] setArray:favoritesArray forKey:@"favorites"];
     }
     
     [self.navigationController.navigationBar setTitleTextAttributes:@{NSFontAttributeName: [UIFont fontWithName:DEFAULT_FONT_NAME_MEDIUM size:17.0]}];

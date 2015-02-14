@@ -45,16 +45,35 @@
     self.window.tintColor = [UIColor colorWithHue:135.0/360.0 saturation:0.70 brightness:0.80 alpha:1];
     [self.window makeKeyAndVisible];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(cloudKeyValueStoreDidChange:)
+                                                 name:NSUbiquitousKeyValueStoreDidChangeExternallyNotification
+                                               object:[NSUbiquitousKeyValueStore defaultStore]];
+    
+    [[NSUbiquitousKeyValueStore defaultStore] synchronize];
+    
     return YES;
 }
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
-    
     if (url) {
         [self.mainViewController processExternalURL:url];
     }
     return YES;
+}
+
+- (void)cloudKeyValueStoreDidChange:(NSNotification *)notification
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
+//    NSArray *localFavorites = [defaults objectForKey:@"favorites"];
+    NSArray *updatedFavorites = [[NSUbiquitousKeyValueStore defaultStore] objectForKey:@"favorites"];
+    
+    [defaults setObject:updatedFavorites forKey:@"favorites"];
+    [defaults synchronize];
+    
+    [self.mainViewController reloadUserData];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

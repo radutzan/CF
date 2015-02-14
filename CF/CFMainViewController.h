@@ -11,5 +11,6 @@
 @interface CFMainViewController : UIViewController
 
 - (void)processExternalURL:(NSURL *)url;
+- (void)reloadUserData;
 
 @end
