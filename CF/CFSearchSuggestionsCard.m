@@ -14,6 +14,8 @@
 
 @interface CFSearchSuggestionsCard ()
 
+@property (nonatomic, strong) UIView *backgroundView;
+
 @end
 
 @implementation CFSearchSuggestionsCard
@@ -22,21 +24,12 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        UIView *backgroundView;
-        if (NSClassFromString(@"UIVisualEffectView")) {
-            UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
-
-            backgroundView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
-            backgroundView.frame = self.bounds;
-            [self addSubview:backgroundView];
-        } else {
-            backgroundView = [[UINavigationBar alloc] initWithFrame:self.bounds];
-//            backgroundView.backgroundColor = [UIColor colorWithWhite:.97 alpha:.9];
-            [self addSubview:backgroundView];
-        }
+        _backgroundView = [[UIView alloc] initWithFrame:self.bounds];
+        _backgroundView.backgroundColor = [UIApplication sharedApplication].keyWindow.tintColor;
+        [self addSubview:_backgroundView];
         
         UIView *containerView = [[UIView alloc] initWithFrame:CGRectMake(HORIZONTAL_MARGIN, TOP_MARGIN, 320 - HORIZONTAL_MARGIN * 2, self.bounds.size.height - TOP_MARGIN * 2)];
-        containerView.center = backgroundView.center;
+        containerView.center = _backgroundView.center;
         [self addSubview:containerView];
         
         NSArray *contentArray = @[
@@ -47,13 +40,15 @@
   @{@"name": NSLocalizedString(@"SEARCH_SUGGESTION_CARD_PLACE_TITLE", nil),
     @"example": @"“Plaza de Armas”, \n“Los Navegantes 1919”…"}];
         
-        CGFloat topGuide = VERTICAL_SPACING;
+        CGFloat topGuide = VERTICAL_SPACING - 2;
         CGFloat titleWidth = 70.0;
+        BOOL hasExtraRoom = (self.bounds.size.width > 320);
+        NSString *suggestionTitleLabelFontName = (hasExtraRoom) ? DEFAULT_FONT_NAME_MEDIUM : @"AvenirNextCondensed-Medium";
         
         for (NSDictionary *suggestion in contentArray) {
             UILabel *suggestionTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, topGuide, titleWidth, 20.0)];
-            suggestionTitleLabel.font = [UIFont fontWithName:@"AvenirNextCondensed-Medium" size:17.0];
-            suggestionTitleLabel.textColor = [UIColor colorWithWhite:0 alpha:.8];
+            suggestionTitleLabel.font = [UIFont fontWithName:suggestionTitleLabelFontName size:17.0];
+            suggestionTitleLabel.textColor = [UIColor colorWithWhite:1 alpha:1];
             suggestionTitleLabel.text = suggestion[@"name"];
             suggestionTitleLabel.textAlignment = NSTextAlignmentRight;
             [containerView addSubview:suggestionTitleLabel];
@@ -63,13 +58,19 @@
             suggestionExampleLabel.text = suggestion[@"example"];
             suggestionExampleLabel.numberOfLines = 0;
             [suggestionExampleLabel sizeToFit];
-            suggestionExampleLabel.textColor = [UIColor colorWithWhite:0 alpha:.45];
+            suggestionExampleLabel.textColor = [UIColor colorWithWhite:1 alpha:.75];
             [containerView addSubview:suggestionExampleLabel];
             
             topGuide += ceilf(suggestionExampleLabel.bounds.size.height) + VERTICAL_SPACING;
         }
         
-        backgroundView.frame = CGRectMake(0, 0, self.bounds.size.width, topGuide + TOP_MARGIN * 2);
+        _backgroundView.frame = CGRectMake(0, 0, self.bounds.size.width, topGuide + TOP_MARGIN * 2 - 6);
+        
+        CALayer *borderLayer = [CALayer layer];
+        borderLayer.frame = CGRectInset(_backgroundView.frame, -0.5, -0.5);
+        borderLayer.borderWidth = 0.5;
+        borderLayer.borderColor = [UIColor colorWithWhite:0 alpha:0.3].CGColor;
+        [self.layer addSublayer:borderLayer];
     }
     return self;
 }

@@ -1059,7 +1059,7 @@ CALayer *_leftGripper;
     
     self.showingAds = YES;
     
-    [UIView animateWithDuration:3.5 delay:1 usingSpringWithDamping:1 initialSpringVelocity:0 options:0 animations:^{
+    [UIView animateWithDuration:2.2 delay:1 usingSpringWithDamping:1 initialSpringVelocity:0 options:0 animations:^{
         self.stopResultsView.frame = self.stopResultsViewPresentedFrame;
         [self showAds];
     } completion:nil];

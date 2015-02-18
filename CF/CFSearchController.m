@@ -99,6 +99,7 @@
 
 - (void)hide
 {
+    if (self.hiding) return;
     self.hiding = YES;
     self.hidden = NO;
     [self.delegate searchControllerWillHide];

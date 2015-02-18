@@ -43,7 +43,7 @@
 
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:self.mainViewController];
-    self.window.tintColor = [UIColor colorWithHue:135.0/360.0 saturation:0.70 brightness:0.80 alpha:1];
+    self.window.tintColor = [UIColor colorWithHue:136.0/360.0 saturation:0.75 brightness:0.80 alpha:1];
     [self.window makeKeyAndVisible];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
