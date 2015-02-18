@@ -248,6 +248,16 @@ CALayer *_leftGripper;
 {
     [super viewWillAppear:animated];
     
+    CGRect statusBarFrame = [[UIApplication sharedApplication] statusBarFrame];
+    CGRect windowBounds = [UIScreen mainScreen].bounds;
+    windowBounds.size.height -= statusBarFrame.size.height - 20.0;
+    self.view.frame = windowBounds;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(statusBarFrameChanged:)
+                                                 name:UIApplicationWillChangeStatusBarFrameNotification
+                                               object:nil];
+    
     [self setUpTitleView];
     if (self.stop && !self.refreshing) [self performStopRequestQuietly:NO];
     
@@ -268,13 +278,8 @@ CALayer *_leftGripper;
     [super viewDidDisappear:animated];
     
     [self.bannerView removeFromSuperview];
-}
-
-- (void)viewWillLayoutSubviews
-{
-    if (self.displayMode == CFStopResultsDisplayModePresented) self.stopResultsView.frame = self.stopResultsViewPresentedFrame;
     
-    if (self.displayMode == CFStopResultsDisplayModeMinimized) self.stopResultsView.frame = self.stopResultsViewMinimizedFrame;
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)statusBarFrameChanged:(NSNotification*)notification
@@ -284,7 +289,21 @@ CALayer *_leftGripper;
     windowBounds.size.height -= statusBarFrame.size.height - 20.0;
     self.view.frame = windowBounds;
     
-    [self.view setNeedsLayout];
+    [UIView animateWithDuration:0.35 animations:^{
+        [self adaptForBoundsChange];
+    }];
+}
+
+- (void)adaptForBoundsChange
+{
+    self.overlay.frame = self.view.bounds;
+    
+    if (self.displayMode == CFStopResultsDisplayModePresented) {
+        self.stopResultsView.frame = self.stopResultsViewPresentedFrame;
+        if (!self.removedAds) [self showAds];
+    }
+    
+    if (self.displayMode == CFStopResultsDisplayModeMinimized) self.stopResultsView.frame = self.stopResultsViewMinimizedFrame;
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
@@ -1059,7 +1078,7 @@ CALayer *_leftGripper;
     
     self.showingAds = YES;
     
-    [UIView animateWithDuration:2.2 delay:1 usingSpringWithDamping:1 initialSpringVelocity:0 options:0 animations:^{
+    [UIView animateWithDuration:1.2 delay:1 usingSpringWithDamping:1 initialSpringVelocity:0 options:0 animations:^{
         self.stopResultsView.frame = self.stopResultsViewPresentedFrame;
         [self showAds];
     } completion:nil];
