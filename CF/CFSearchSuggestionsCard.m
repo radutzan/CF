@@ -58,7 +58,7 @@
             suggestionExampleLabel.text = suggestion[@"example"];
             suggestionExampleLabel.numberOfLines = 0;
             [suggestionExampleLabel sizeToFit];
-            suggestionExampleLabel.textColor = [UIColor colorWithWhite:1 alpha:.75];
+            suggestionExampleLabel.textColor = [UIColor colorWithWhite:1 alpha:.7];
             [containerView addSubview:suggestionExampleLabel];
             
             topGuide += ceilf(suggestionExampleLabel.bounds.size.height) + VERTICAL_SPACING;

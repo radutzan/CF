@@ -565,19 +565,28 @@
         serviceBar.alpha = 0;
         [self.view insertSubview:serviceBar aboveSubview:self.searchController];
         
-        UINavigationBar *serviceBarBackground = [[UINavigationBar alloc] initWithFrame:serviceBar.bounds];
+        UIView *serviceBarBackground;
+        if (NSClassFromString(@"UIVisualEffectView")) {
+            UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
+            
+            serviceBarBackground = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+            serviceBarBackground.frame = serviceBar.bounds;
+        } else {
+            serviceBarBackground = [[UINavigationBar alloc] initWithFrame:serviceBar.bounds];
+            serviceBarBackground.clipsToBounds = YES;
+        }
         [serviceBar insertSubview:serviceBarBackground atIndex:0];
         
 //        serviceBar.center = CGPointMake(serviceBar.center.x, serviceBar.center.y - serviceBar.bounds.size.height);
         [UIView animateWithDuration:0.25 delay:0 usingSpringWithDamping:1 initialSpringVelocity:1 options:0 animations:^{
             serviceBar.alpha = 1;
 //            serviceBar.center = CGPointMake(serviceBar.center.x, serviceBar.center.y + serviceBar.bounds.size.height);
-        } completion:nil];
+        } completion:^(BOOL finished) {
+            self.topContentMargin += serviceBar.bounds.size.height;
+        }];
         
         UIPanGestureRecognizer *dismissRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleHorizontalDismissPanGesture:)];
         [serviceBar addGestureRecognizer:dismissRecognizer];
-        
-        self.topContentMargin += serviceBar.bounds.size.height;
     }
     
     serviceBar.selectedDirection = direction;

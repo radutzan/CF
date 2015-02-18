@@ -53,7 +53,7 @@
         _serviceSuggestionView.delegate = self;
         _serviceSuggestionView.hidden = YES;
         _serviceSuggestionView.clipsToBounds = NO;
-        _serviceSuggestionView.layer.backgroundColor = [UIColor colorWithWhite:1 alpha:.96].CGColor;
+        _serviceSuggestionView.backgroundColor = [UIColor colorWithWhite:1 alpha:.97];
         [_containerView addSubview:_serviceSuggestionView];
         
         _searchSuggestionsCard = [[CFSearchSuggestionsCard alloc] initWithFrame:CGRectMake(HORIZONTAL_MARGIN, VERTICAL_MARGIN, frame.size.width - HORIZONTAL_MARGIN * 2, 150.0)];
@@ -180,13 +180,16 @@
     if (!possibleStopMatch && !possibleServiceMatch) [self clearStopSuggestions];
     
     // suggest map search
+    if (searchString.length <= 2 || [searchString isEqualToString:@""]) {
+        self.suggesting = NO;
+        return;
+    }
+    
     BOOL possibleMatch = (possibleServiceMatch || possibleStopMatch);
     
     if (!possibleMatch && (!self.suggesting || !self.thinking) && ![searchString isEqualToString:@""]) {
         [self showMapSearchSuggestionWithString:searchString];
     }
-    
-    if ([searchString isEqualToString:@""]) self.suggesting = NO;
 }
 
 - (void)checkService:(NSString *)service
@@ -409,8 +412,8 @@
     serviceRouteBar.selectedDirection = 3;
     CFDirection direction = (index == 0) ? CFDirectionOutward : CFDirectionInward;
     [self.delegate searchControllerDidSelectService:service direction:direction];
-    [self.searchField clear];
     [self hide];
+    [self.searchField performSelector:@selector(clear) withObject:nil afterDelay:0.25];
 }
 
 - (void)mapSearchSuggestionViewTapped

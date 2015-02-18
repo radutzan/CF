@@ -33,7 +33,7 @@
         UITapGestureRecognizer *serviceTapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(nameTapped)];
         [_serviceLabel addGestureRecognizer:serviceTapRecognizer];
         
-        CGFloat buttonWidth = floorf((self.frame.size.width - _serviceLabel.bounds.size.width - _serviceLabel.frame.origin.x) / 2);
+        CGFloat buttonWidth = ((self.frame.size.width - _serviceLabel.bounds.size.width - _serviceLabel.frame.origin.x) / 2);
         
         _outwardButton = [UIButton buttonWithType:UIButtonTypeSystem];
         _outwardButton.frame = CGRectMake(_serviceLabel.frame.origin.x + _serviceLabel.bounds.size.width, 0, buttonWidth, frame.size.height);
@@ -74,6 +74,12 @@
         divider2.backgroundColor = divider1.backgroundColor;
         divider2.opacity = divider1.opacity;
         [self.layer addSublayer:divider2];
+        
+        CALayer *borderLayer = [CALayer layer];
+        borderLayer.frame = CGRectInset(self.bounds, -0.5, -0.5);
+        borderLayer.borderWidth = 0.5;
+        borderLayer.borderColor = [UIColor colorWithWhite:0 alpha:0.3].CGColor;
+        [self.layer addSublayer:borderLayer];
     }
     return self;
 }
