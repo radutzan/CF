@@ -110,6 +110,7 @@
     } completion:^(BOOL finished) {
         self.hiding = NO;
         self.hidden = YES;
+        self.currentCard = nil;
     }];
 }
 
@@ -270,6 +271,7 @@
 //    NSLog(@"new: %@", newCard);
     
     if (hasOldCardButNoNewCard || hasNewCardAndIsDifferentFromOldCard) {
+        // hide old card
         [UIView animateWithDuration:0.25 delay:0 usingSpringWithDamping:1 initialSpringVelocity:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
             oldCard.frame = CGRectMake(0, -animationOffset, oldCard.bounds.size.width, oldCard.bounds.size.height);
             oldCard.alpha = 0;
@@ -280,6 +282,7 @@
     }
     
     if (hasNewCardAndIsDifferentFromOldCard) {
+        // show new card
         newCard.frame = CGRectMake(0, -animationOffset, newCard.bounds.size.width, newCard.bounds.size.height);
         newCard.alpha = 0;
         newCard.hidden = NO;

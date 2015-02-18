@@ -250,26 +250,6 @@ static MKMapRect santiagoBounds;
     self.defaultCenterCoordinate = startCoordinate;
 }
 
-- (void)setShowZoomWarning:(BOOL)showZoomWarning
-{
-    if (_showZoomWarning == showZoomWarning) return;
-    _showZoomWarning = showZoomWarning;
-    
-    CGFloat offset = TAB_BAR_HEIGHT + 10.0;
-    if (showZoomWarning) offset = -offset;
-    if (showZoomWarning) [self setNeedsLayout];
-    
-    self.zoomWarning.alpha = 1 - showZoomWarning;
-    self.zoomWarning.center = CGPointMake(self.zoomWarning.center.x, self.zoomWarning.center.y - offset * showZoomWarning);
-    
-    [UIView animateWithDuration:0.45 delay:0 usingSpringWithDamping:0.5 initialSpringVelocity:showZoomWarning options:0 animations:^{
-        self.zoomWarning.alpha = showZoomWarning;
-        self.zoomWarning.center = CGPointMake(self.zoomWarning.center.x, self.zoomWarning.center.y + offset);
-    } completion:^(BOOL finished) {
-        self.zoomWarning.center = CGPointMake(self.zoomWarning.center.x, self.zoomWarning.center.y - offset * !showZoomWarning);
-    }];
-}
-
 - (void)setShowOutOfSantiagoWarning:(BOOL)showOutOfSantiagoWarning
 {
     if (_showOutOfSantiagoWarning == showOutOfSantiagoWarning) return;
@@ -280,13 +260,6 @@ static MKMapRect santiagoBounds;
     } else if (!showOutOfSantiagoWarning) {
         [self.outOfSantiagoWarning hide];
     }
-}
-
-- (void)zoomWarningTapped
-{
-    CGFloat distance = 600;
-    if (self.phoneIsCrap) distance = 250;
-    [self.mapView setRegion:[self.mapView regionThatFits:MKCoordinateRegionMakeWithDistance(self.mapView.centerCoordinate, distance, distance)] animated:YES];
 }
 
 - (void)setShowConnectivityWarning:(BOOL)showConnectivityWarning
@@ -357,6 +330,7 @@ static MKMapRect santiagoBounds;
         if (_mapMode != CFMapModeServiceRoute) [self setInitialRegionAnimated:YES];
     } else {
         [self clearStopAnnotations];
+        self.showZoomWarning = NO;
     }
     
     if (mapMode == CFMapModeServiceRoute) {
@@ -405,6 +379,33 @@ static MKMapRect santiagoBounds;
     
     [self placeBipAnnotationsInRegion:region withRadius:radio];
     [self placeStopAnnotationsInRegion:region withRadius:radio];
+}
+
+- (void)setShowZoomWarning:(BOOL)showZoomWarning
+{
+    if (_showZoomWarning == showZoomWarning) return;
+    _showZoomWarning = showZoomWarning;
+    
+    CGFloat offset = TAB_BAR_HEIGHT + 10.0;
+    if (showZoomWarning) offset = -offset;
+    if (showZoomWarning) [self setNeedsLayout];
+    
+    self.zoomWarning.alpha = 1 - showZoomWarning;
+    self.zoomWarning.center = CGPointMake(self.zoomWarning.center.x, self.zoomWarning.center.y - offset * showZoomWarning);
+    
+    [UIView animateWithDuration:0.45 delay:0 usingSpringWithDamping:0.5 initialSpringVelocity:showZoomWarning options:0 animations:^{
+        self.zoomWarning.alpha = showZoomWarning;
+        self.zoomWarning.center = CGPointMake(self.zoomWarning.center.x, self.zoomWarning.center.y + offset);
+    } completion:^(BOOL finished) {
+        self.zoomWarning.center = CGPointMake(self.zoomWarning.center.x, self.zoomWarning.center.y - offset * !showZoomWarning);
+    }];
+}
+
+- (void)zoomWarningTapped
+{
+    CGFloat distance = 600;
+    if (self.phoneIsCrap) distance = 250;
+    [self.mapView setRegion:[self.mapView regionThatFits:MKCoordinateRegionMakeWithDistance(self.mapView.centerCoordinate, distance, distance)] animated:YES];
 }
 
 - (void)placeStopAnnotationsInRegion:(MKCoordinateRegion)region withRadius:(float)radius
