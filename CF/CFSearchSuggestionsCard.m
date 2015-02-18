@@ -46,7 +46,7 @@
         NSString *suggestionTitleLabelFontName = (hasExtraRoom) ? DEFAULT_FONT_NAME_MEDIUM : @"AvenirNextCondensed-Medium";
         
         for (NSDictionary *suggestion in contentArray) {
-            UILabel *suggestionTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, topGuide, titleWidth, 20.0)];
+            UILabel *suggestionTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(-20.0, topGuide, titleWidth + 20.0, 20.0)];
             suggestionTitleLabel.font = [UIFont fontWithName:suggestionTitleLabelFontName size:17.0];
             suggestionTitleLabel.textColor = [UIColor colorWithWhite:1 alpha:1];
             suggestionTitleLabel.text = suggestion[@"name"];
