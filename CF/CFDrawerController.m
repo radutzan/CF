@@ -118,6 +118,7 @@
 
 - (void)viewDidLoad
 {
+    [super viewDidLoad];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(statusBarFrameChanged:)
                                                  name:UIApplicationWillChangeStatusBarFrameNotification

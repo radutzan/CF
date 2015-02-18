@@ -140,6 +140,8 @@
 
 - (void)viewDidLoad
 {
+    [super viewDidLoad];
+    
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
     BOOL runBefore = [defaults boolForKey:@"OLHasRunBefore"];
