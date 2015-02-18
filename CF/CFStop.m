@@ -8,6 +8,7 @@
 
 //#import <Mixpanel/Mixpanel.h>
 #import "CFStop.h"
+#import "CFFavoriteManager.h"
 #import "math.h"
 
 static NSRegularExpression *regexParadaConNumero;
@@ -133,98 +134,42 @@ static NSRegularExpression *regexMetroSinNumero;
 
 + (NSArray *)favoritesArray
 {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSArray *favorites = [defaults arrayForKey:@"favorites"];
-    
-    if (!favorites) {
-        favorites = [NSArray new];
-    }
-    
+    NSArray *favorites = [[CFFavoriteManager sharedManager] favoritesArray];
     return favorites;
 }
 
 + (void)saveFavoritesWithArray:(NSArray *)array
 {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setObject:array forKey:@"favorites"];
-    [defaults synchronize];
+    [[CFFavoriteManager sharedManager] saveFavoritesArray:array];
 }
 
 - (void)setFavoriteWithName:(NSString *)favoriteName
 {
-    self.favorite = YES;
-    self.favoriteName = favoriteName;
+    [[CFFavoriteManager sharedManager] addFavorite:self withName:favoriteName];
 }
 
 - (void)setFavoriteName:(NSString *)favoriteName
 {
-    NSMutableArray *mutableFavoritesArray = [[CFStop favoritesArray] mutableCopy];
-    
-    if (self.isFavorite) {
-        for (NSDictionary *stop in [CFStop favoritesArray]) {
-            if ([[stop objectForKey:@"codigo"] isEqualToString:self.code]) {
-                NSMutableDictionary *mutableStop = [stop mutableCopy];
-                [mutableFavoritesArray removeObject:stop];
-                [mutableStop setValue:favoriteName forKey:@"favoriteName"];
-                [mutableFavoritesArray addObject:mutableStop];
-            }
-        }
-        
-        [CFStop saveFavoritesWithArray:mutableFavoritesArray];
-    }
+    [[CFFavoriteManager sharedManager] setName:favoriteName forFavorite:self];
 }
 
 - (NSString *)favoriteName
 {
-    if (self.isFavorite) {
-        for (NSDictionary *stop in [CFStop favoritesArray]) {
-            if ([[stop objectForKey:@"codigo"] isEqualToString:self.code])
-                return [stop objectForKey:@"favoriteName"];
-        }
-    }
-    return nil;
+    return [[CFFavoriteManager sharedManager] nameForFavorite:self];
 }
 
 - (void)setFavorite:(BOOL)favorite
 {
-    NSMutableArray *mutableFavoritesArray = [[CFStop favoritesArray] mutableCopy];
-    
     if (favorite) {
-        BOOL added = NO;
-        
-        for (NSDictionary *stop in [CFStop favoritesArray]) {
-            NSString *checkedStopCode = [stop objectForKey:@"codigo"];
-            
-            if ([checkedStopCode isEqualToString:self.code]) added = YES;
-        }
-        
-        if (!added) {
-            [mutableFavoritesArray addObject:[self asDictionary]];
-            
-//            Mixpanel *mixpanel = [Mixpanel sharedInstance];
-//            [mixpanel track:@"Added Favorite" properties:@{@"Code": self.code}];
-        }
+        [[CFFavoriteManager sharedManager] addFavorite:self];
     } else {
-        for (NSDictionary *stop in [CFStop favoritesArray]) {
-            NSString *checkedStopCode = [stop objectForKey:@"codigo"];
-            
-            if ([checkedStopCode isEqualToString:self.code]) [mutableFavoritesArray removeObject:stop];
-        }
+        [[CFFavoriteManager sharedManager] removeFavorite:self];
     }
-    
-    NSArray *favoritesToWrite = [mutableFavoritesArray copy];
-    [CFStop saveFavoritesWithArray:favoritesToWrite];
 }
 
 - (BOOL)isFavorite
 {
-    for (NSDictionary *stop in [CFStop favoritesArray]) {
-        NSString *checkedStopCode = [stop objectForKey:@"codigo"];
-        
-        if ([checkedStopCode isEqualToString:self.code]) return YES;
-    }
-    
-    return NO;
+    return [[CFFavoriteManager sharedManager] isStopFavorite:self];
 }
 
 #pragma mark - Coding

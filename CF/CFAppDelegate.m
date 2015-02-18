@@ -10,6 +10,7 @@
 #import <Mixpanel/Mixpanel.h>
 #import "Crittercism.h"
 #import "OLCashier.h"
+#import "CFFavoriteManager.h"
 
 @interface CFAppDelegate ()
 
@@ -65,13 +66,8 @@
 
 - (void)cloudKeyValueStoreDidChange:(NSNotification *)notification
 {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    
-//    NSArray *localFavorites = [defaults objectForKey:@"favorites"];
     NSArray *updatedFavorites = [[NSUbiquitousKeyValueStore defaultStore] objectForKey:@"favorites"];
-    
-    [defaults setObject:updatedFavorites forKey:@"favorites"];
-    [defaults synchronize];
+    [[CFFavoriteManager sharedManager] saveFavoritesArray:updatedFavorites];
     
     [self.mainViewController reloadUserData];
 }

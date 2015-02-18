@@ -6,6 +6,7 @@
 //  Copyright (c) 2013 Onda. All rights reserved.
 //
 
+#import "CFFavoriteManager.h"
 #import "CFFavoritesViewController.h"
 #import "CFFavoriteCell.h"
 
@@ -39,40 +40,12 @@
 
 - (NSArray *)favoritesArray
 {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSArray *favsArray = [defaults arrayForKey:@"favorites"];
-    [defaults synchronize];
-    
-#ifdef DEV_VERSION
-    NSUserDefaults *sharedDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.ondalabs.cfbetagroup"];
-    [sharedDefaults setObject:favsArray forKey:@"favorites"];
-    [sharedDefaults synchronize];
-#else
-    NSUserDefaults *sharedDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.ondalabs.cfgroup"];
-    [sharedDefaults setObject:favsArray forKey:@"favorites"];
-    [sharedDefaults synchronize];
-#endif
-    
-    return favsArray;
+    return [[CFFavoriteManager sharedManager] favoritesArray];
 }
 
 - (void)setFavoritesArray:(NSArray *)favoritesArray
 {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setObject:favoritesArray forKey:@"favorites"];
-    [defaults synchronize];
-    
-#ifdef DEV_VERSION
-    NSUserDefaults *sharedDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.ondalabs.cfbetagroup"];
-    [sharedDefaults setObject:favoritesArray forKey:@"favorites"];
-    [sharedDefaults synchronize];
-#else
-    NSUserDefaults *sharedDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.ondalabs.cfgroup"];
-    [sharedDefaults setObject:favoritesArray forKey:@"favorites"];
-    [sharedDefaults synchronize];
-#endif
-    
-    [[NSUbiquitousKeyValueStore defaultStore] setArray:favoritesArray forKey:@"favorites"];
+    [[CFFavoriteManager sharedManager] saveFavoritesArray:favoritesArray];
 }
 
 - (void)longPressRecognized:(UILongPressGestureRecognizer *)recognizer

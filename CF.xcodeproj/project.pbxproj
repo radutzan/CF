@@ -29,6 +29,8 @@
 		7C130C5A1A8FE8880015A81A /* Cuánto Falta.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 7C130C591A8FE8880015A81A /* Cuánto Falta.entitlements */; };
 		7C130C5C1A8FEA960015A81A /* GoogleMobileAds.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C130C5B1A8FEA960015A81A /* GoogleMobileAds.framework */; };
 		7C130C5D1A8FEA970015A81A /* GoogleMobileAds.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C130C5B1A8FEA960015A81A /* GoogleMobileAds.framework */; };
+		7C130C601A93A2BF0015A81A /* CFFavoriteManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C130C5F1A93A2BF0015A81A /* CFFavoriteManager.m */; };
+		7C130C611A93A2BF0015A81A /* CFFavoriteManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C130C5F1A93A2BF0015A81A /* CFFavoriteManager.m */; };
 		7C14644A193288C0009B0C94 /* CFWhatsNewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C5ACA5C1932856E00E20FD9 /* CFWhatsNewViewController.m */; };
 		7C2B8AB619C4D34F0021AEA3 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7C2B8AB819C4D34F0021AEA3 /* InfoPlist.strings */; };
 		7C2EECC1188345F500AE78C2 /* OLCashier.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A11D7701877A2BA001118F6 /* OLCashier.m */; };
@@ -335,6 +337,8 @@
 		7C10B974183ADD320086B650 /* CFMoreViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFMoreViewController.m; sourceTree = "<group>"; };
 		7C130C591A8FE8880015A81A /* Cuánto Falta.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "Cuánto Falta.entitlements"; sourceTree = "<group>"; };
 		7C130C5B1A8FEA960015A81A /* GoogleMobileAds.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleMobileAds.framework; sourceTree = "<group>"; };
+		7C130C5E1A93A2BF0015A81A /* CFFavoriteManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFFavoriteManager.h; sourceTree = "<group>"; };
+		7C130C5F1A93A2BF0015A81A /* CFFavoriteManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFFavoriteManager.m; sourceTree = "<group>"; };
 		7C2B8AB719C4D34F0021AEA3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		7C2B8AB919C4D3650021AEA3 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		7C2EED11188345F500AE78C2 /* Cuánta Beta.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Cuánta Beta.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -930,6 +934,8 @@
 				7CC7EC431929B74B002160E5 /* CFRoute.m */,
 				7CF7EE4D1852D790009B3F46 /* CFBipSpot.h */,
 				7CF7EE4E1852D790009B3F46 /* CFBipSpot.m */,
+				7C130C5E1A93A2BF0015A81A /* CFFavoriteManager.h */,
+				7C130C5F1A93A2BF0015A81A /* CFFavoriteManager.m */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -1456,6 +1462,7 @@
 				7CD35CAD194AE580007C36CA /* CFStopSuggestionView.m in Sources */,
 				7C2EECD4188345F500AE78C2 /* CFStopResultsViewController.m in Sources */,
 				7C66C54F19A1C6AF00DDA6DF /* CFStopTransitionAnimator.m in Sources */,
+				7C130C611A93A2BF0015A81A /* CFFavoriteManager.m in Sources */,
 				7C2EECD5188345F500AE78C2 /* CFClipView.m in Sources */,
 				7C66C55319A2809300DDA6DF /* CFDrawerController.m in Sources */,
 				7C062F331933BC9200342E4A /* CFServiceRouteBar.m in Sources */,
@@ -1527,6 +1534,7 @@
 				7C5ACA5D1932856E00E20FD9 /* CFWhatsNewViewController.m in Sources */,
 				7C915927193AA4AE004CFCFA /* CFStopSuggestionView.m in Sources */,
 				7C66C54E19A1C6AF00DDA6DF /* CFStopTransitionAnimator.m in Sources */,
+				7C130C601A93A2BF0015A81A /* CFFavoriteManager.m in Sources */,
 				7CFF7E5518381645006230CE /* CFAppDelegate.m in Sources */,
 				7C66C55219A2809300DDA6DF /* CFDrawerController.m in Sources */,
 				7C7A15D61853EBF0002EE4C5 /* OLTextField.m in Sources */,

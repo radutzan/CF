@@ -910,12 +910,6 @@ CALayer *_leftGripper;
     [self.class cancelPreviousPerformRequestsWithTarget:self];
 }
 
-- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
-{
-    if (alertView.tag == 6009) {
-    }
-}
-
 #pragma mark - Table view data source
 
 - (void)setRefreshing:(BOOL)refreshing
