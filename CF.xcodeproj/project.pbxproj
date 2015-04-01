@@ -191,6 +191,8 @@
 		7CEADD6C194C200A00428ADE /* CFSearchSuggestionsCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CEADD6A194C1E9500428ADE /* CFSearchSuggestionsCard.m */; };
 		7CF12E5719BD14B400772DC7 /* button-close@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CF12E5619BD14B300772DC7 /* button-close@2x.png */; };
 		7CF12E5819BD174700772DC7 /* button-close@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CF12E5619BD14B300772DC7 /* button-close@2x.png */; };
+		7CF47ACB1ACC4EA500B9F410 /* CFSearchOptionBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CF47ACA1ACC4EA500B9F410 /* CFSearchOptionBar.m */; };
+		7CF47ACC1ACC60C100B9F410 /* CFSearchOptionBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CF47ACA1ACC4EA500B9F410 /* CFSearchOptionBar.m */; };
 		7CF7EE4F1852D790009B3F46 /* CFBipSpot.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CF7EE4E1852D790009B3F46 /* CFBipSpot.m */; };
 		7CFF7E4518381645006230CE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CFF7E4418381645006230CE /* Foundation.framework */; };
 		7CFF7E4718381645006230CE /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CFF7E4618381645006230CE /* CoreGraphics.framework */; };
@@ -448,6 +450,8 @@
 		7CEADD69194C1E9500428ADE /* CFSearchSuggestionsCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFSearchSuggestionsCard.h; sourceTree = "<group>"; };
 		7CEADD6A194C1E9500428ADE /* CFSearchSuggestionsCard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFSearchSuggestionsCard.m; sourceTree = "<group>"; };
 		7CF12E5619BD14B300772DC7 /* button-close@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-close@2x.png"; sourceTree = "<group>"; };
+		7CF47AC91ACC4EA500B9F410 /* CFSearchOptionBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFSearchOptionBar.h; sourceTree = "<group>"; };
+		7CF47ACA1ACC4EA500B9F410 /* CFSearchOptionBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFSearchOptionBar.m; sourceTree = "<group>"; };
 		7CF7EE4D1852D790009B3F46 /* CFBipSpot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFBipSpot.h; sourceTree = "<group>"; };
 		7CF7EE4E1852D790009B3F46 /* CFBipSpot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFBipSpot.m; sourceTree = "<group>"; };
 		7CFF7E4118381645006230CE /* Cuánto Falta.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Cuánto Falta.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -621,6 +625,8 @@
 				7CEADD6A194C1E9500428ADE /* CFSearchSuggestionsCard.m */,
 				7C062F301933BC9200342E4A /* CFServiceRouteBar.h */,
 				7C062F311933BC9200342E4A /* CFServiceRouteBar.m */,
+				7CF47AC91ACC4EA500B9F410 /* CFSearchOptionBar.h */,
+				7CF47ACA1ACC4EA500B9F410 /* CFSearchOptionBar.m */,
 				7C8F065319CB6B8300FCC707 /* CFMapSearchSuggestionView.h */,
 				7C8F065419CB6B8300FCC707 /* CFMapSearchSuggestionView.m */,
 				7C915925193AA4AE004CFCFA /* CFStopSuggestionView.h */,
@@ -1471,6 +1477,7 @@
 				7C2EECD8188345F500AE78C2 /* CFMainViewController.m in Sources */,
 				7CBEF1B719C925CA00567C07 /* UIImage+Star.m in Sources */,
 				7C9BD16B1926B1FF003E9F8E /* OLShapeTintedButton.m in Sources */,
+				7CF47ACC1ACC60C100B9F410 /* CFSearchOptionBar.m in Sources */,
 				7C2EECD9188345F500AE78C2 /* CFColorBadgeView.m in Sources */,
 				7C2EECDA188345F500AE78C2 /* CFStopCell.m in Sources */,
 				7CEADD6C194C200A00428ADE /* CFSearchSuggestionsCard.m in Sources */,
@@ -1543,6 +1550,7 @@
 				7C7A15DB18540E08002EE4C5 /* CFMoreContentViewController.m in Sources */,
 				7CBEF1B619C9216A00567C07 /* UIImage+Star.m in Sources */,
 				7C062F2E1933B07600342E4A /* CFSearchController.m in Sources */,
+				7CF47ACB1ACC4EA500B9F410 /* CFSearchOptionBar.m in Sources */,
 				7C10B96F183ADD200086B650 /* CFFavoritesViewController.m in Sources */,
 				7CFF7E7818381D6E006230CE /* CFMainViewController.m in Sources */,
 				7CEADD6B194C1E9500428ADE /* CFSearchSuggestionsCard.m in Sources */,

@@ -9,20 +9,29 @@
 #import "CFSearchController.h"
 #import "CFSearchSuggestionsCard.h"
 #import "CFServiceRouteBar.h"
-#import "CFMapSearchSuggestionView.h"
+#import "CFSearchOptionBar.h"
 #import <Mixpanel/Mixpanel.h>
 
-#define VERTICAL_MARGIN 0.0
-#define HORIZONTAL_MARGIN 0.0
+// need a different class name for each card or everything goes to shit
+@interface CFPlaceSearchOptionsCard : UIView
+@end
+@implementation CFPlaceSearchOptionsCard
+@end
 
-@interface CFSearchController () <CFServiceRouteBarDelegate, CFSearchFieldDelegate, CFMapSearchSuggestionViewDelegate>
+#define VERTICAL_MARGIN 10.0
+#define HORIZONTAL_MARGIN 10.0
+
+@interface CFSearchController () <CFServiceRouteBarDelegate, CFSearchFieldDelegate, CFSearchOptionBarDelegate>
 
 @property (nonatomic, strong) UIView *overlay;
 @property (nonatomic, strong) CFSearchSuggestionsCard *searchSuggestionsCard;
 @property (nonatomic, strong) CFServiceRouteBar *serviceSuggestionView;
-@property (nonatomic, strong) CFMapSearchSuggestionView *mapSearchSuggestionView;
+@property (nonatomic, strong) CFPlaceSearchOptionsCard *placeSearchOptionsCard;
+@property (nonatomic, strong) CFSearchOptionBar *searchInMapOptionBar;
+@property (nonatomic, strong) CFSearchOptionBar *getDirectionsOptionBar;
 
 @property (nonatomic, strong) UIView *currentCard;
+@property (nonatomic, strong) UIView *currentCardBeforeHiding;
 @property (nonatomic, assign) BOOL hiding;
 @property (nonatomic, assign) BOOL thinking;
 @property (nonatomic, readwrite) BOOL suggesting;
@@ -32,40 +41,57 @@
 
 @implementation CFSearchController
 
+NSString *const kSearchInMapOptionIdentifier = @"searchInMap";
+NSString *const kGetDirectionsOptionIdentifier = @"getDirections";
+
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
         self.hidden = YES;
+        self.alpha = 0;
         
         _overlay = [[UIView alloc] initWithFrame:self.bounds];
-        _overlay.backgroundColor = [UIColor colorWithWhite:0 alpha:0.2];
+        _overlay.backgroundColor = [UIColor colorWithWhite:0 alpha:0.4];
         _overlay.autoresizingMask = (UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth);
         [self addSubview:_overlay];
         
         UITapGestureRecognizer *overlayTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hide)];
         [_overlay addGestureRecognizer:overlayTap];
         
-        _containerView = [[UIView alloc] initWithFrame:self.bounds];
+        _containerView = [[UIView alloc] initWithFrame:CGRectMake(HORIZONTAL_MARGIN, VERTICAL_MARGIN, frame.size.width - HORIZONTAL_MARGIN * 2, frame.size.height - VERTICAL_MARGIN)];
         [self addSubview:_containerView];
         
-        _serviceSuggestionView = [[CFServiceRouteBar alloc] initWithFrame:CGRectMake(HORIZONTAL_MARGIN, VERTICAL_MARGIN, frame.size.width - HORIZONTAL_MARGIN * 2, 44.0)];
+        _searchSuggestionsCard = [[CFSearchSuggestionsCard alloc] initWithFrame:CGRectMake(0, 0, _containerView.bounds.size.width, 150.0)];
+        _searchSuggestionsCard.clipsToBounds = NO;
+        _searchSuggestionsCard.hidden = YES;
+        _searchSuggestionsCard.alpha = 0;
+        [_containerView addSubview:_searchSuggestionsCard];
+        
+        _serviceSuggestionView = [[CFServiceRouteBar alloc] initWithFrame:CGRectMake(0, 0, _containerView.bounds.size.width, 44.0)];
         _serviceSuggestionView.delegate = self;
         _serviceSuggestionView.hidden = YES;
         _serviceSuggestionView.clipsToBounds = NO;
         _serviceSuggestionView.backgroundColor = [UIColor colorWithWhite:1 alpha:.97];
         [_containerView addSubview:_serviceSuggestionView];
         
-        _searchSuggestionsCard = [[CFSearchSuggestionsCard alloc] initWithFrame:CGRectMake(HORIZONTAL_MARGIN, VERTICAL_MARGIN, frame.size.width - HORIZONTAL_MARGIN * 2, 150.0)];
-        _searchSuggestionsCard.clipsToBounds = NO;
-        _searchSuggestionsCard.hidden = YES;
-        [_containerView addSubview:_searchSuggestionsCard];
+        _placeSearchOptionsCard = [[CFPlaceSearchOptionsCard alloc] initWithFrame:CGRectMake(0, 0, _containerView.bounds.size.width, 88.0)];
+        _placeSearchOptionsCard.hidden = YES;
+        [_containerView addSubview:_placeSearchOptionsCard];
         
-        _mapSearchSuggestionView = [[CFMapSearchSuggestionView alloc] initWithFrame:CGRectMake(HORIZONTAL_MARGIN, VERTICAL_MARGIN, frame.size.width - HORIZONTAL_MARGIN * 2, 50.0)];
-        _mapSearchSuggestionView.delegate = self;
-        _mapSearchSuggestionView.hidden = YES;
-        _mapSearchSuggestionView.clipsToBounds = NO;
-        [_containerView addSubview:_mapSearchSuggestionView];
+        _searchInMapOptionBar = [[CFSearchOptionBar alloc] initWithFrame:CGRectMake(0, 0, _placeSearchOptionsCard.frame.size.width, 44.0)];
+        _searchInMapOptionBar.delegate = self;
+        _searchInMapOptionBar.identifier = kSearchInMapOptionIdentifier;
+        _searchInMapOptionBar.optionTitle = NSLocalizedString(@"MAP_SEARCH_SUGGESTION_CARD_TEXT", nil);
+        _searchInMapOptionBar.optionImage = [UIImage imageNamed:@"search"];
+        [_placeSearchOptionsCard addSubview:_searchInMapOptionBar];
+        
+        _getDirectionsOptionBar = [[CFSearchOptionBar alloc] initWithFrame:CGRectMake(0, _searchInMapOptionBar.bounds.size.height, _placeSearchOptionsCard.frame.size.width, _searchInMapOptionBar.bounds.size.height)];
+        _getDirectionsOptionBar.delegate = self;
+        _getDirectionsOptionBar.identifier = kGetDirectionsOptionIdentifier;
+        _getDirectionsOptionBar.optionTitle = NSLocalizedString(@"GET_DIRECTIONS_TO_HERE", nil);
+        _getDirectionsOptionBar.optionImage = [UIImage imageNamed:@"directions"];
+        [_placeSearchOptionsCard addSubview:_getDirectionsOptionBar];
         
         _suggesting = NO;
     }
@@ -78,7 +104,7 @@
 {
     if (UIEdgeInsetsEqualToEdgeInsets(_contentInset, contentInset)) return;
     _contentInset = contentInset;
-    self.containerView.frame = CGRectMake(0, contentInset.top, self.bounds.size.width, self.bounds.size.height - contentInset.top - contentInset.bottom);
+    self.containerView.frame = CGRectMake(HORIZONTAL_MARGIN, contentInset.top + VERTICAL_MARGIN, self.bounds.size.width - HORIZONTAL_MARGIN * 2, self.bounds.size.height - contentInset.top - contentInset.bottom - VERTICAL_MARGIN);
     
     if (self.suggestedStop && !(self.hidden || self.hiding)) [self showStopSuggestionWithStop:self.suggestedStop];
 }
@@ -89,6 +115,7 @@
     self.hidden = NO;
     
     if (!self.suggesting) self.currentCard = self.searchSuggestionsCard;
+    if (self.suggesting && !self.suggestedStop) self.currentCard = self.currentCardBeforeHiding;
     if (self.suggestedStop) [self showStopSuggestionWithStop:self.suggestedStop];
     
     [UIView animateWithDuration:0.25 delay:0.0 usingSpringWithDamping:1 initialSpringVelocity:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
@@ -110,6 +137,7 @@
     } completion:^(BOOL finished) {
         self.hiding = NO;
         self.hidden = YES;
+        self.currentCardBeforeHiding = self.currentCard;
         self.currentCard = nil;
     }];
 }
@@ -180,7 +208,7 @@
     
     if (!possibleStopMatch && !possibleServiceMatch) [self clearStopSuggestions];
     
-    // suggest map search
+    // not suggesting shit
     if (searchString.length <= 2 || [searchString isEqualToString:@""]) {
         self.suggesting = NO;
         return;
@@ -188,6 +216,7 @@
     
     BOOL possibleMatch = (possibleServiceMatch || possibleStopMatch);
     
+    // suggest map search
     if (!possibleMatch && (!self.suggesting || !self.thinking) && ![searchString isEqualToString:@""]) {
         [self showMapSearchSuggestionWithString:searchString];
     }
@@ -255,8 +284,9 @@
 
 - (void)setCurrentCard:(UIView *)currentCard
 {
-//    NSLog(@"setCurrentCard:");
+//    NSLog(@"setCurrentCard:%@", [currentCard class]);
     if ([currentCard isKindOfClass:[_currentCard class]]) return;
+//    NSLog(@"setCurrentCard:%@ — passed", [currentCard class]);
     
     CGFloat animationOffset = SEARCH_CARD_ANIMATION_OFFSET;
     
@@ -302,7 +332,7 @@
 {
     if (_suggesting == suggesting) return;
     _suggesting = suggesting;
-    
+    NSLog(@"suggesting: %d", suggesting);
     if (!suggesting) self.currentCard = self.searchSuggestionsCard;
 }
 
@@ -311,10 +341,10 @@
     _thinking = thinking;
     
     [UIApplication sharedApplication].networkActivityIndicatorVisible = thinking;
-    NSLog(@"thinking: %d", thinking);
+    
     if (thinking) {
         [self.searchField.activityIndicator startAnimating];
-        if (!self.suggestedStop) self.currentCard = nil;
+//        if (!self.suggestedStop) self.currentCard = nil;
     } else {
         [self.searchField.activityIndicator stopAnimating];
     }
@@ -338,8 +368,7 @@
 - (void)showMapSearchSuggestionWithString:(NSString *)searchString
 {
     self.suggesting = YES;
-    self.mapSearchSuggestionView.searchText = searchString;
-    self.currentCard = self.mapSearchSuggestionView;
+    self.currentCard = self.placeSearchOptionsCard;
 }
 
 - (void)clearServiceSuggestions
@@ -419,9 +448,11 @@
     [self.searchField performSelector:@selector(clear) withObject:nil afterDelay:0.25];
 }
 
-- (void)mapSearchSuggestionViewTapped
+- (void)searchOptionBarTapped:(CFSearchOptionBar *)optionBar
 {
-    [self searchFieldSearchButtonClicked:self.searchField];
+    if ([optionBar.identifier isEqualToString:kSearchInMapOptionIdentifier]) {
+        [self searchFieldSearchButtonClicked:self.searchField];
+    }
 }
 
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event

@@ -44,6 +44,7 @@
 "SEARCH_SUGGESTION_CARD_SERVICE_TITLE" = "Service";
 "SEARCH_SUGGESTION_CARD_PLACE_TITLE" = "Place";
 "MAP_SEARCH_SUGGESTION_CARD_TEXT" = "Search place or address";
+"GET_DIRECTIONS_TO_HERE" = "Get directions to here";
 "LOCATION_DENIED_ALERT_TITLE" = "Location Disabled";
 "LOCATION_DENIED_ALERT_MESSAGE" = "Cuánto Falta needs your permission to use Location Services in order to show you the nearest stops and Bip! spots. Your location is kept private at all times, it never leaves your device, and it never will.\n\nTo allow Cuánto Falta to use your Location, go to the Settings app > Privacy > Location Services and turn on Cuánto Falta.";
 "OUT_OF_SANTIAGO_WARNING_TITLE" = "You're not in Santiago";
