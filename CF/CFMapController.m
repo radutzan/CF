@@ -218,15 +218,8 @@ static MKMapRect santiagoBounds;
 
 - (void)clearRouteOverlays
 {
-    NSMutableArray *pins = [NSMutableArray new];
-    
-    for (id annotation in [self.mapView annotations]) {
-        if ([annotation isKindOfClass:[CFStop class]] || [annotation isKindOfClass:[CFBipSpot class]])
-            [pins addObject:annotation];
-    }
-    
-    [self.mapView removeAnnotations:pins];
-    pins = nil;
+    [self clearStopAnnotations];
+    [self.mapView removeOverlays:self.mapView.overlays];
 }
 
 - (void)setInitialRegionAnimated:(BOOL)animated
@@ -324,6 +317,7 @@ static MKMapRect santiagoBounds;
 {
     if (_mapMode == mapMode) return;
     
+    // entering Stops
     if (mapMode == CFMapModeStops) {
         [self performSelector:@selector(loadStopAnnotations) withObject:nil afterDelay:0.1];
         if (_mapMode == CFMapModeServiceRoute) self.showActivityIndicator = YES;
@@ -333,16 +327,33 @@ static MKMapRect santiagoBounds;
         self.showZoomWarning = NO;
     }
     
-    if (mapMode == CFMapModeServiceRoute) {
-        
-    } else if (_mapMode == CFMapModeServiceRoute && mapMode != CFMapModeServiceRoute) {
-        [self.mapView removeOverlays:self.mapView.overlays];
-        [self clearStopAnnotations];
+    // leaving Service Route
+    if (_mapMode == CFMapModeServiceRoute) {
+        [self clearRouteOverlays];
         self.routeRegionSet = NO;
         self.currentServiceName = nil;
     }
     
+    // entering Directions — remove everything and cede control
+    if (mapMode == CFMapModeDirections) {
+        [self clearRouteOverlays];
+        [self clearStopAnnotations];
+        [self clearSearchAnnotations];
+    }
+    
+    // entering Directions or Service Route
+    if (mapMode == CFMapModeDirections || mapMode == CFMapModeServiceRoute) {
+        self.mapView.tintColor = [UIColor orangeColor];
+    } else {
+        self.mapView.tintColor = nil;
+    }
+    
     _mapMode = mapMode;
+}
+
+- (void)submitToNavigator
+{
+    self.mapMode = CFMapModeDirections;
 }
 
 #pragma mark - CFMapModeStops
@@ -617,8 +628,7 @@ static MKMapRect santiagoBounds;
 {
     if (!self.mapMode == CFMapModeServiceRoute) return;
     
-    [self.mapView removeOverlays:self.mapView.overlays];
-    [self clearStopAnnotations];
+    [self clearRouteOverlays];
     
     [[CFSapoClient sharedClient] routeForBusService:service direction:direction handler:^(NSError *error, NSArray *result) {
         if (error || [result count] == 0) {
@@ -655,8 +665,7 @@ static MKMapRect santiagoBounds;
             if (!self.mapMode == CFMapModeServiceRoute) return;
             self.showActivityIndicator = NO;
             
-            [self.mapView removeOverlays:self.mapView.overlays];
-            [self clearStopAnnotations];
+            [self clearRouteOverlays];
             
             [self.mapView addOverlay:[route polyline] level:MKOverlayLevelAboveRoads];
             [self.mapView addAnnotations:stops];

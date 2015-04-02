@@ -193,6 +193,8 @@
 		7CF12E5819BD174700772DC7 /* button-close@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CF12E5619BD14B300772DC7 /* button-close@2x.png */; };
 		7CF47ACB1ACC4EA500B9F410 /* CFSearchOptionBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CF47ACA1ACC4EA500B9F410 /* CFSearchOptionBar.m */; };
 		7CF47ACC1ACC60C100B9F410 /* CFSearchOptionBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CF47ACA1ACC4EA500B9F410 /* CFSearchOptionBar.m */; };
+		7CF47AD21ACD000D00B9F410 /* CFNavigatorController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CF47AD11ACD000D00B9F410 /* CFNavigatorController.m */; };
+		7CF47AD31ACD075200B9F410 /* CFNavigatorController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CF47AD11ACD000D00B9F410 /* CFNavigatorController.m */; };
 		7CF7EE4F1852D790009B3F46 /* CFBipSpot.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CF7EE4E1852D790009B3F46 /* CFBipSpot.m */; };
 		7CFF7E4518381645006230CE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CFF7E4418381645006230CE /* Foundation.framework */; };
 		7CFF7E4718381645006230CE /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CFF7E4618381645006230CE /* CoreGraphics.framework */; };
@@ -452,6 +454,8 @@
 		7CF12E5619BD14B300772DC7 /* button-close@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-close@2x.png"; sourceTree = "<group>"; };
 		7CF47AC91ACC4EA500B9F410 /* CFSearchOptionBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFSearchOptionBar.h; sourceTree = "<group>"; };
 		7CF47ACA1ACC4EA500B9F410 /* CFSearchOptionBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFSearchOptionBar.m; sourceTree = "<group>"; };
+		7CF47AD01ACD000D00B9F410 /* CFNavigatorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFNavigatorController.h; sourceTree = "<group>"; };
+		7CF47AD11ACD000D00B9F410 /* CFNavigatorController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFNavigatorController.m; sourceTree = "<group>"; };
 		7CF7EE4D1852D790009B3F46 /* CFBipSpot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFBipSpot.h; sourceTree = "<group>"; };
 		7CF7EE4E1852D790009B3F46 /* CFBipSpot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFBipSpot.m; sourceTree = "<group>"; };
 		7CFF7E4118381645006230CE /* Cuánto Falta.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Cuánto Falta.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -915,10 +919,12 @@
 				7CFF7E7718381D6E006230CE /* CFMainViewController.m */,
 				7C66C55019A2809300DDA6DF /* CFDrawerController.h */,
 				7C66C55119A2809300DDA6DF /* CFDrawerController.m */,
-				7CFF7E7B18382448006230CE /* CFMapController.h */,
-				7CFF7E7C18382448006230CE /* CFMapController.m */,
 				7C062F2C1933B07600342E4A /* CFSearchController.h */,
 				7C062F2D1933B07600342E4A /* CFSearchController.m */,
+				7CF47AD01ACD000D00B9F410 /* CFNavigatorController.h */,
+				7CF47AD11ACD000D00B9F410 /* CFNavigatorController.m */,
+				7CFF7E7B18382448006230CE /* CFMapController.h */,
+				7CFF7E7C18382448006230CE /* CFMapController.m */,
 				7CFF7EC418387735006230CE /* CFStopResultsViewController.h */,
 				7CFF7EC518387735006230CE /* CFStopResultsViewController.m */,
 				7C3B27C5183B1A6300818A3B /* Tabs */,
@@ -1484,6 +1490,7 @@
 				7CCA746A19325C9D00ADB397 /* CFForwardingTouchScrollView.m in Sources */,
 				7C062F2F1933B07600342E4A /* CFSearchController.m in Sources */,
 				7CC7EC4C1929BBA2002160E5 /* CFServiceRouteViewController.m in Sources */,
+				7CF47AD31ACD075200B9F410 /* CFNavigatorController.m in Sources */,
 				7C2EECDB188345F500AE78C2 /* CFMapController.m in Sources */,
 				7C2EECDC188345F500AE78C2 /* CFSapoClient.m in Sources */,
 				7C36D72819ABB32600CBFDBA /* CFService.m in Sources */,
@@ -1557,6 +1564,7 @@
 				7CE0D9D8189DB34F00D9782E /* OLShapeTintedButton.m in Sources */,
 				7C6CE7CF187751FB00DDEF54 /* CFColorBadgeView.m in Sources */,
 				7CB337FE192AB27500234792 /* CFStopServicesButtonArrayView.m in Sources */,
+				7CF47AD21ACD000D00B9F410 /* CFNavigatorController.m in Sources */,
 				7C426414184AE87300A8968F /* CFStopCell.m in Sources */,
 				7CFF7E7D18382448006230CE /* CFMapController.m in Sources */,
 				7C36D72719ABA6C600CBFDBA /* CFService.m in Sources */,

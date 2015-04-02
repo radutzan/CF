@@ -25,6 +25,8 @@
 @interface CFDrawerController : UIViewController
 
 - (void)reloadUserData;
+- (void)hideDrawer;
+- (void)showDrawer;
 
 @property (nonatomic, assign) BOOL drawerOpen;
 @property (nonatomic, weak) id<CFDrawerControllerDelegate> delegate;

@@ -15,10 +15,10 @@
 
 #import "CFMapController.h"
 #import "CFDrawerController.h"
-#import "CFSearchField.h"
+#import "CFNavigatorController.h"
 #import "CFSearchController.h"
+#import "CFSearchField.h"
 #import "CFStopResultsViewController.h"
-#import "CFServiceRouteViewController.h"
 #import "CFWhatsNewViewController.h"
 
 #import "CFService.h"
@@ -26,11 +26,12 @@
 
 #import "OLShapeTintedButton.h"
 
-@interface CFMainViewController () <CFMapControllerDelegate, CFDrawerControllerDelegate, CFSearchControllerDelegate, CFStopResultsViewControllerDelegate, CFServiceRouteBarDelegate, UIAlertViewDelegate>
+@interface CFMainViewController () <CFMapControllerDelegate, CFDrawerControllerDelegate, CFSearchControllerDelegate, CFStopResultsViewControllerDelegate, CFNavigatorDelegate, CFServiceRouteBarDelegate, UIAlertViewDelegate>
 
 @property (nonatomic, strong) CFMapController *mapController;
 @property (nonatomic, strong) CFDrawerController *drawerController;
 @property (nonatomic, strong) CFSearchController *searchController;
+@property (nonatomic, strong) CFNavigatorController *navigator;
 @property (nonatomic, strong) CFStopResultsViewController *stopResultsController;
 @property (nonatomic, strong) NSMutableArray *serviceRouteBars;
 
@@ -73,6 +74,12 @@
     [self addChildViewController:self.drawerController];
     [self.view addSubview:self.drawerController.view];
     
+    self.navigator = [CFNavigatorController new];
+    self.navigator.delegate = self;
+    self.navigator.mapView = self.mapController.mapView;
+    [self addChildViewController:self.navigator];
+    [self.view addSubview:self.navigator.view];
+    
     self.searchController = [[CFSearchController alloc] initWithFrame:self.view.bounds];
     self.searchController.delegate = self;
     self.searchController.contentInset = UIEdgeInsetsMake(64.0, 0, TAB_BAR_HEIGHT, 0);
@@ -81,7 +88,7 @@
     self.localNavigationBar = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 64.0)];
     self.localNavigationBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 //    self.localNavigationBar.barStyle = UIBarStyleBlack;
-    [self.view addSubview:self.localNavigationBar];
+    [self.view insertSubview:self.localNavigationBar belowSubview:self.navigator.view];
     
     CFSearchField *searchField = [[CFSearchField alloc] initWithFrame:CGRectMake(8.0, 20.0, self.localNavigationBar.bounds.size.width - 70.0, 44.0)];
     searchField.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
@@ -99,8 +106,10 @@
     [self.locationButton sizeToFit];
     UIBarButtonItem *locationButtonItem = [[UIBarButtonItem alloc] initWithCustomView:self.locationButton];
     
+    UIBarButtonItem *navigationButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFastForward target:self.navigator action:@selector(enterNavigation)];
+    
     UINavigationItem *navItem = [UINavigationItem new];
-    navItem.rightBarButtonItems = @[locationButtonItem];
+    navItem.rightBarButtonItems = @[locationButtonItem, navigationButtonItem];
     
     self.rightBarButtonItems = navItem.rightBarButtonItems;
     
@@ -338,6 +347,16 @@
     
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     [mixpanel track:@"Local Search Requested"];
+}
+
+- (void)searchControllerRequestedDirections:(NSString *)searchString
+{
+    // present large bar on top with from and to fields, button to invert, etc
+    // then something like [directionsManager getDirectionsTo:searchString from:currentLocation];
+    // directionsManager would be in charge of controlling the map and direction cards
+    
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    [mixpanel track:@"Directions Requested"];
 }
 
 - (void)searchControllerDidSelectService:(CFService *)service direction:(CFDirection)direction
@@ -672,6 +691,30 @@
             } completion:nil];
         }
     }
+}
+
+#pragma mark - Navigator
+
+- (void)navigatorWillTakeOver
+{
+    // hide navbar and drawer
+    [UIView animateWithDuration:0.42 delay:0 usingSpringWithDamping:1 initialSpringVelocity:1 options:0 animations:^{
+        self.localNavigationBar.center = CGPointMake(self.localNavigationBar.center.x, self.localNavigationBar.center.y - self.localNavigationBar.bounds.size.height);
+        [self.drawerController hideDrawer];
+    } completion:nil];
+    
+    [self.mapController submitToNavigator];
+}
+
+- (void)navigatorWillRetreat
+{
+    // show navbar and drawer
+    [UIView animateWithDuration:0.42 delay:0 usingSpringWithDamping:1 initialSpringVelocity:1 options:0 animations:^{
+        self.localNavigationBar.center = CGPointMake(self.localNavigationBar.center.x, self.localNavigationBar.center.y + self.localNavigationBar.bounds.size.height);
+        [self.drawerController showDrawer];
+    } completion:nil];
+    
+    [self.mapController displayStops];
 }
 
 @end

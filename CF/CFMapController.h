@@ -40,6 +40,7 @@ typedef NS_ENUM(NSInteger, CFMapMode) {
 - (void)displayStops;
 - (void)displayServiceRoute:(NSString *)serviceName direction:(CFDirection)direction;
 - (void)displayServiceRoute:(NSString *)serviceName directionString:(NSString *)directionString;
+- (void)submitToNavigator;
 
 @property (nonatomic, strong) SMCalloutView *stopCalloutView;
 @property (nonatomic, strong) MKMapView *mapView;

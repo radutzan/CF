@@ -521,6 +521,16 @@
     }];
 }
 
+- (void)hideDrawer
+{
+    
+}
+
+- (void)showDrawer
+{
+    
+}
+
 #pragma mark - Other
 
 - (void)stopTableView:(UITableView *)tableView didSelectCellWithStop:(NSString *)stopCode
