@@ -12,6 +12,7 @@
 @interface CFNavigatorController ()
 
 @property (nonatomic, strong) UINavigationBar *localNavigationBar;
+@property (nonatomic, strong) UIToolbar *localToolbar;
 @property (nonatomic) BOOL navigating;
 
 @end
@@ -26,11 +27,21 @@
     self.localNavigationBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     [self.view addSubview:self.localNavigationBar];
     
-    UIBarButtonItem *exitButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Cancel" style:UIBarButtonItemStyleDone target:self action:@selector(exitNavigation)];
+    self.localToolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height, self.view.bounds.size.width, 44)];
+    [self.view addSubview:self.localToolbar];
     
-    UINavigationItem *navItem = [UINavigationItem new];
-    navItem.rightBarButtonItems = @[exitButtonItem];
-    [self.localNavigationBar pushNavigationItem:navItem animated:NO];
+    UIBarButtonItem *exitButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Exit Navigation" style:UIBarButtonItemStyleDone target:self action:@selector(exitNavigation)];
+    
+    UIBarButtonItem *flexSpace1Item = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    
+    self.locationButton = [OLShapeTintedButton buttonWithType:UIButtonTypeCustom];
+    [self.locationButton setImage:[[UIImage imageNamed:@"location"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
+    [self.locationButton setImage:[[UIImage imageNamed:@"location-selected"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateSelected];
+    [self.locationButton addTarget:self action:@selector(goToUserLocation) forControlEvents:UIControlEventTouchUpInside];
+    [self.locationButton sizeToFit];
+    UIBarButtonItem *locationButtonItem = [[UIBarButtonItem alloc] initWithCustomView:self.locationButton];
+    
+    self.localToolbar.items = @[exitButtonItem, flexSpace1Item, locationButtonItem];
 }
 
 - (void)enterNavigation
@@ -45,6 +56,7 @@
     // display bottom buttons (exit navigation, current location)
     [UIView animateWithDuration:0.42 delay:0 usingSpringWithDamping:1 initialSpringVelocity:1 options:0 animations:^{
         self.localNavigationBar.center = CGPointMake(self.localNavigationBar.center.x, self.localNavigationBar.center.y + self.localNavigationBar.bounds.size.height);
+        self.localToolbar.center = CGPointMake(self.localToolbar.center.x, self.localToolbar.center.y - self.localToolbar.bounds.size.height);
     } completion:nil];
 }
 
@@ -60,9 +72,16 @@
     // hide all currently displayed navigator UI
     [UIView animateWithDuration:0.42 delay:0 usingSpringWithDamping:1 initialSpringVelocity:1 options:0 animations:^{
         self.localNavigationBar.center = CGPointMake(self.localNavigationBar.center.x, self.localNavigationBar.center.y - self.localNavigationBar.bounds.size.height);
+        self.localToolbar.center = CGPointMake(self.localToolbar.center.x, self.localToolbar.center.y + self.localToolbar.bounds.size.height);
     } completion:^(BOOL finished) {
         self.navigating = NO;
     }];
+}
+
+- (void)goToUserLocation
+{
+    [self.mapController setInitialRegionAnimated:YES];
+    self.locationButton.selected = YES;
 }
 
 - (void)findDirectionsFromCurrentLocationToSearchablePlace:(NSString *)placeSearchString

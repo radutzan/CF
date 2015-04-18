@@ -27,11 +27,11 @@
         UITapGestureRecognizer *barTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(barTapped)];
         [self addGestureRecognizer:barTap];
         
-        _optionImageView = [[UIImageView alloc] initWithFrame:CGRectMake(13.0, VERTICAL_MARGIN, 17.0, 17.0)];
+        _optionImageView = [[UIImageView alloc] initWithFrame:CGRectMake(13.0, 0, 17.0, frame.size.height)];
         _optionImageView.contentMode = UIViewContentModeCenter;
         [self addSubview:_optionImageView];
         
-        _optionTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(35.0, VERTICAL_MARGIN, frame.size.width - 35.0 - 10.0, 20.0)];
+        _optionTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(35.0, VERTICAL_MARGIN, frame.size.width - 35.0 - 10.0, frame.size.height - VERTICAL_MARGIN * 2)];
         _optionTitleLabel.numberOfLines = 1;
         _optionTitleLabel.font = [UIFont fontWithName:DEFAULT_FONT_NAME_MEDIUM size:17.0];
         [self addSubview:_optionTitleLabel];

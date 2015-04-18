@@ -523,12 +523,15 @@
 
 - (void)hideDrawer
 {
-    
+    if (self.drawerOpen) [self closeDrawer];
+    self.drawer.frame = CGRectMake(self.drawer.frame.origin.x, self.view.bounds.size.height, self.drawer.bounds.size.width, self.drawer.bounds.size.height);
+    self.tabBar.frame = CGRectMake(self.tabBar.frame.origin.x, self.view.bounds.size.height, self.tabBar.bounds.size.width, self.tabBar.bounds.size.height);
 }
 
 - (void)showDrawer
 {
-    
+    self.drawer.frame = CGRectMake(self.drawer.frame.origin.x, self.view.bounds.size.height - TAB_BAR_HEIGHT, self.drawer.bounds.size.width, self.drawer.bounds.size.height);
+    self.tabBar.frame = CGRectMake(self.tabBar.frame.origin.x, self.view.bounds.size.height - TAB_BAR_HEIGHT, self.tabBar.bounds.size.width, self.tabBar.bounds.size.height);
 }
 
 #pragma mark - Other

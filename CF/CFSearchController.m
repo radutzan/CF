@@ -20,6 +20,7 @@
 
 #define VERTICAL_MARGIN 10.0
 #define HORIZONTAL_MARGIN 10.0
+#define CORNER_RADIUS 6.0
 
 @interface CFSearchController () <CFServiceRouteBarDelegate, CFSearchFieldDelegate, CFSearchOptionBarDelegate>
 
@@ -77,6 +78,8 @@ NSString *const kGetDirectionsOptionIdentifier = @"getDirections";
         
         _placeSearchOptionsCard = [[CFPlaceSearchOptionsCard alloc] initWithFrame:CGRectMake(0, 0, _containerView.bounds.size.width, 88.0)];
         _placeSearchOptionsCard.hidden = YES;
+        _placeSearchOptionsCard.layer.masksToBounds = YES;
+        _placeSearchOptionsCard.layer.cornerRadius = CORNER_RADIUS;
         [_containerView addSubview:_placeSearchOptionsCard];
         
         _searchInMapOptionBar = [[CFSearchOptionBar alloc] initWithFrame:CGRectMake(0, 0, _placeSearchOptionsCard.frame.size.width, 44.0)];

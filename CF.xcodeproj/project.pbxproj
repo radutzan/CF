@@ -103,6 +103,8 @@
 		7C5ACA5D1932856E00E20FD9 /* CFWhatsNewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C5ACA5C1932856E00E20FD9 /* CFWhatsNewViewController.m */; };
 		7C5DD34118791F6900FE5CFB /* dsym_upload.sh in Resources */ = {isa = PBXBuildFile; fileRef = 7C5DD33F18791F6900FE5CFB /* dsym_upload.sh */; };
 		7C5DD3441879234F00FE5CFB /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C5DD3431879234F00FE5CFB /* SystemConfiguration.framework */; };
+		7C5F0DC61AE3196D0039601B /* directions@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7C5F0DC51AE3196D0039601B /* directions@2x.png */; };
+		7C5F0DC71AE3196D0039601B /* directions@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7C5F0DC51AE3196D0039601B /* directions@2x.png */; };
 		7C5FD9CE184F8B140099FEE2 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7C5FD9CC184F8B140099FEE2 /* Localizable.strings */; };
 		7C65BDFE19C9EFA5003DE405 /* UIImage+Star.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CBEF1B519C9216A00567C07 /* UIImage+Star.m */; };
 		7C65BDFF19C9EFA5003DE405 /* UIImage+Star.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CBEF1B519C9216A00567C07 /* UIImage+Star.m */; };
@@ -364,6 +366,7 @@
 		7C5DD33E18791F6900FE5CFB /* CrittercismDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CrittercismDelegate.h; sourceTree = "<group>"; };
 		7C5DD33F18791F6900FE5CFB /* dsym_upload.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = dsym_upload.sh; sourceTree = "<group>"; };
 		7C5DD3431879234F00FE5CFB /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		7C5F0DC51AE3196D0039601B /* directions@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "directions@2x.png"; sourceTree = "<group>"; };
 		7C5FD9CD184F8B140099FEE2 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		7C5FD9CF184F8B5F0099FEE2 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		7C5FD9D0184F8B5F0099FEE2 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -856,6 +859,7 @@
 				7CFF7EAF18384106006230CE /* button-history@2x.png */,
 				7CFF7EC7183A639C006230CE /* button-more-selected@2x.png */,
 				7CFF7EC8183A639C006230CE /* button-more@2x.png */,
+				7C5F0DC51AE3196D0039601B /* directions@2x.png */,
 				7CBAFABD1A0D44E3001F61E7 /* facebook@2x.png */,
 				7CAFA33A1842C359005A06BC /* gripper@2x.png */,
 				7CB64D7D18552648006422E0 /* icon-about@2x.png */,
@@ -1259,6 +1263,7 @@
 				7C2EECFE188345F500AE78C2 /* about.css in Resources */,
 				7CBAFAC51A0D4B59001F61E7 /* share@2x.png in Resources */,
 				7C2EECFF188345F500AE78C2 /* help.html in Resources */,
+				7C5F0DC71AE3196D0039601B /* directions@2x.png in Resources */,
 				7C2EED02188345F500AE78C2 /* Images.xcassets in Resources */,
 				7C2EED04188345F500AE78C2 /* dsym_upload.sh in Resources */,
 				7C2EED06188345F500AE78C2 /* bus@2x.png in Resources */,
@@ -1290,6 +1295,7 @@
 			files = (
 				7C8F065819CB8D7600FCC707 /* search@2x.png in Resources */,
 				7CFF7EC1183871E8006230CE /* metro@2x.png in Resources */,
+				7C5F0DC61AE3196D0039601B /* directions@2x.png in Resources */,
 				7CFF7EB418384106006230CE /* button-history-selected@2x.png in Resources */,
 				7CFF7E4F18381645006230CE /* InfoPlist.strings in Resources */,
 				7CAFA33B1842C359005A06BC /* gripper@2x.png in Resources */,
@@ -1797,6 +1803,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "Cuánta Beta.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -1814,6 +1821,7 @@
 				);
 				INFOPLIST_FILE = "Cuánto Falta copy-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					../CF/CF,
@@ -1823,6 +1831,8 @@
 				);
 				PRODUCT_NAME = "Cuánta Beta";
 				PROVISIONING_PROFILE = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "CF/Cuánto Falta Dev-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				VALID_ARCHS = "armv7 armv7s arm64";
 				WRAPPER_EXTENSION = app;
 			};
@@ -1834,6 +1844,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "Cuánta Beta.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -1846,6 +1857,7 @@
 				GCC_PREFIX_HEADER = "CF/CF-Prefix.pch";
 				INFOPLIST_FILE = "Cuánto Falta copy-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					../CF/CF,
@@ -1855,6 +1867,7 @@
 				);
 				PRODUCT_NAME = "Cuánta Beta";
 				PROVISIONING_PROFILE = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "CF/Cuánto Falta Dev-Bridging-Header.h";
 				VALID_ARCHS = "armv7 armv7s arm64";
 				WRAPPER_EXTENSION = app;
 			};
@@ -2028,6 +2041,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "Cuánto Falta.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -2049,6 +2063,8 @@
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "CF/Cuánto Falta-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				VALID_ARCHS = "armv7 armv7s arm64";
 				WRAPPER_EXTENSION = app;
 			};
@@ -2060,6 +2076,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "Cuánto Falta.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -2081,6 +2098,7 @@
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "CF/Cuánto Falta-Bridging-Header.h";
 				VALID_ARCHS = "armv7 armv7s arm64";
 				WRAPPER_EXTENSION = app;
 			};

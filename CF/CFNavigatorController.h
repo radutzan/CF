@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 @import MapKit;
+#import "CFMapController.h"
+#import "OLShapeTintedButton.h"
 
 @protocol CFNavigatorDelegate <NSObject>
 
@@ -23,7 +25,8 @@
 - (void)findDirectionsFrom:(CLLocationCoordinate2D)originCoordinate to:(CLLocationCoordinate2D)destinationCoordinate;
 - (void)findDirectionsFromCurrentLocationToSearchablePlace:(NSString *)placeSearchString;
 
-@property (nonatomic, strong) MKMapView *mapView;
+@property (nonatomic, strong) CFMapController *mapController;
+@property (nonatomic, strong) OLShapeTintedButton *locationButton;
 @property (nonatomic, weak) id<CFNavigatorDelegate>delegate;
 
 @end

@@ -43,7 +43,6 @@
 "SEARCH_SUGGESTION_CARD_SERVICE_TITLE" = "Servicio";
 "SEARCH_SUGGESTION_CARD_PLACE_TITLE" = "Lugar";
 "MAP_SEARCH_SUGGESTION_CARD_TEXT" = "Buscar lugar o dirección";
-"GET_DIRECTIONS_TO_HERE" = "Calcular ruta hasta aquí";
 "LOCATION_DENIED_ALERT_TITLE" = "Ubicación Desactivada";
 "LOCATION_DENIED_ALERT_MESSAGE" = "Cuánto Falta necesita tu ubicación para mostrarte los paraderos y puntos Bip! más cercanos. Tu ubicación se mantendrá completamente privada, nunca se enviará a ningún servidor, y sólo se usará dentro de tu dispositivo.\n\nPara permitir el uso de la ubicación, anda a la app de Ajustes > Privacidad > Ubicación y activa Cuánto Falta.";
 "OUT_OF_SANTIAGO_WARNING_TITLE" = "Estás fuera de Santiago";
@@ -58,6 +57,14 @@
 "SERVICE_ROUTE_ERROR_ALERT_TITLE" = "No se pudo encontrar la ruta de este servicio";
 "DIRECTIONS_WITH_GOOGLE_MAPS" = "Cómo llegar (Google Maps)";
 "RETURN_TO_GOOGLE_MAPS" = "Volver a Google Maps";
+
+// navigation
+"EXIT_NAVIGATION" = "Cerrar Navegación";
+"FROM" = "Desde";
+"TO" = "Hasta";
+"FIND_ROUTE" = "Calcular Ruta";
+"GET_DIRECTIONS_TO_HERE" = "Calcular ruta hasta aquí";
+"CURRENT_LOCATION" = "Ubicación actual";
 
 // favs and history
 "FAVORITES_PLACEHOLDER_TITLE" = "No tienes favoritos";

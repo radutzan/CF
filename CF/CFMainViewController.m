@@ -74,23 +74,23 @@
     [self addChildViewController:self.drawerController];
     [self.view addSubview:self.drawerController.view];
     
-    self.navigator = [CFNavigatorController new];
-    self.navigator.delegate = self;
-    self.navigator.mapView = self.mapController.mapView;
-    [self addChildViewController:self.navigator];
-    [self.view addSubview:self.navigator.view];
-    
     self.searchController = [[CFSearchController alloc] initWithFrame:self.view.bounds];
     self.searchController.delegate = self;
     self.searchController.contentInset = UIEdgeInsetsMake(64.0, 0, TAB_BAR_HEIGHT, 0);
     [self.view addSubview:self.searchController];
     
+    self.navigator = [CFNavigatorController new];
+    self.navigator.delegate = self;
+    self.navigator.mapController = self.mapController;
+    [self addChildViewController:self.navigator];
+    [self.view addSubview:self.navigator.view];
+    
     self.localNavigationBar = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 64.0)];
     self.localNavigationBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 //    self.localNavigationBar.barStyle = UIBarStyleBlack;
-    [self.view insertSubview:self.localNavigationBar belowSubview:self.navigator.view];
+    [self.view addSubview:self.localNavigationBar];
     
-    CFSearchField *searchField = [[CFSearchField alloc] initWithFrame:CGRectMake(8.0, 20.0, self.localNavigationBar.bounds.size.width - 70.0, 44.0)];
+    CFSearchField *searchField = [[CFSearchField alloc] initWithFrame:CGRectMake(8.0, 20.0, self.localNavigationBar.bounds.size.width - 90.0, 44.0)];
     searchField.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     searchField.placeholder = NSLocalizedString(@"MAP_SEARCHFIELD_PLACEHOLDER", nil);
     self.searchController.searchField = searchField;
@@ -106,7 +106,7 @@
     [self.locationButton sizeToFit];
     UIBarButtonItem *locationButtonItem = [[UIBarButtonItem alloc] initWithCustomView:self.locationButton];
     
-    UIBarButtonItem *navigationButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFastForward target:self.navigator action:@selector(enterNavigation)];
+    UIBarButtonItem *navigationButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"directions"] style:UIBarButtonItemStylePlain target:self.navigator action:@selector(enterNavigation)];
     
     UINavigationItem *navItem = [UINavigationItem new];
     navItem.rightBarButtonItems = @[locationButtonItem, navigationButtonItem];
@@ -294,8 +294,10 @@
     
     if (fabs(self.mapController.mapView.centerCoordinate.latitude - self.mapController.mapView.userLocation.coordinate.latitude) <= epsilon && fabs(self.mapController.mapView.centerCoordinate.longitude - self.mapController.mapView.userLocation.coordinate.longitude) <= epsilon) {
         self.locationButton.selected = YES;
+        self.navigator.locationButton.selected = YES;
     } else {
         self.locationButton.selected = NO;
+        self.navigator.locationButton.selected = NO;
     }
 }
 
@@ -354,6 +356,9 @@
     // present large bar on top with from and to fields, button to invert, etc
     // then something like [directionsManager getDirectionsTo:searchString from:currentLocation];
     // directionsManager would be in charge of controlling the map and direction cards
+    
+    // temp
+    [self.navigator enterNavigation];
     
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     [mixpanel track:@"Directions Requested"];
