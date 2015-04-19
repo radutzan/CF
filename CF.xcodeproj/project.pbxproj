@@ -26,6 +26,10 @@
 		7C10B96F183ADD200086B650 /* CFFavoritesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C10B96E183ADD200086B650 /* CFFavoritesViewController.m */; };
 		7C10B972183ADD2A0086B650 /* CFHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C10B971183ADD2A0086B650 /* CFHistoryViewController.m */; };
 		7C10B975183ADD320086B650 /* CFMoreViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C10B974183ADD320086B650 /* CFMoreViewController.m */; };
+		7C11BD3E1AE36D1800015F72 /* CFNavigatorTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C11BD3D1AE36D1800015F72 /* CFNavigatorTextField.m */; };
+		7C11BD3F1AE36DDA00015F72 /* CFNavigatorTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C11BD3D1AE36D1800015F72 /* CFNavigatorTextField.m */; };
+		7C11BD421AE3FB1300015F72 /* button-switch@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7C11BD411AE3FB1300015F72 /* button-switch@2x.png */; };
+		7C11BD431AE3FB1300015F72 /* button-switch@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7C11BD411AE3FB1300015F72 /* button-switch@2x.png */; };
 		7C130C5A1A8FE8880015A81A /* Cuánto Falta.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 7C130C591A8FE8880015A81A /* Cuánto Falta.entitlements */; };
 		7C130C5C1A8FEA960015A81A /* GoogleMobileAds.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C130C5B1A8FEA960015A81A /* GoogleMobileAds.framework */; };
 		7C130C5D1A8FEA970015A81A /* GoogleMobileAds.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C130C5B1A8FEA960015A81A /* GoogleMobileAds.framework */; };
@@ -341,6 +345,9 @@
 		7C10B971183ADD2A0086B650 /* CFHistoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFHistoryViewController.m; sourceTree = "<group>"; };
 		7C10B973183ADD320086B650 /* CFMoreViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFMoreViewController.h; sourceTree = "<group>"; };
 		7C10B974183ADD320086B650 /* CFMoreViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFMoreViewController.m; sourceTree = "<group>"; };
+		7C11BD3C1AE36D1800015F72 /* CFNavigatorTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFNavigatorTextField.h; sourceTree = "<group>"; };
+		7C11BD3D1AE36D1800015F72 /* CFNavigatorTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFNavigatorTextField.m; sourceTree = "<group>"; };
+		7C11BD411AE3FB1300015F72 /* button-switch@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-switch@2x.png"; sourceTree = "<group>"; };
 		7C130C591A8FE8880015A81A /* Cuánto Falta.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "Cuánto Falta.entitlements"; sourceTree = "<group>"; };
 		7C130C5B1A8FEA960015A81A /* GoogleMobileAds.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleMobileAds.framework; sourceTree = "<group>"; };
 		7C130C5E1A93A2BF0015A81A /* CFFavoriteManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFFavoriteManager.h; sourceTree = "<group>"; };
@@ -859,6 +866,7 @@
 				7CFF7EAF18384106006230CE /* button-history@2x.png */,
 				7CFF7EC7183A639C006230CE /* button-more-selected@2x.png */,
 				7CFF7EC8183A639C006230CE /* button-more@2x.png */,
+				7C11BD411AE3FB1300015F72 /* button-switch@2x.png */,
 				7C5F0DC51AE3196D0039601B /* directions@2x.png */,
 				7CBAFABD1A0D44E3001F61E7 /* facebook@2x.png */,
 				7CAFA33A1842C359005A06BC /* gripper@2x.png */,
@@ -905,6 +913,8 @@
 				7C6CE7D018775DE000DDEF54 /* Result Cell */,
 				7CD35CA6194955EF007C36CA /* CFSearchField.h */,
 				7CD35CA7194955EF007C36CA /* CFSearchField.m */,
+				7C11BD3C1AE36D1800015F72 /* CFNavigatorTextField.h */,
+				7C11BD3D1AE36D1800015F72 /* CFNavigatorTextField.m */,
 				7CFF7EBD1838700F006230CE /* CFStopSignView.h */,
 				7CFF7EBE1838700F006230CE /* CFStopSignView.m */,
 				7CFF7E7F1838288C006230CE /* SMCalloutView.h */,
@@ -1253,6 +1263,7 @@
 				7C2EECF8188345F500AE78C2 /* button-more-selected@2x.png in Resources */,
 				7CB9AA3319E457A00086B88A /* location-selected@2x.png in Resources */,
 				7C2EECF9188345F500AE78C2 /* pin-favorite@2x.png in Resources */,
+				7C11BD431AE3FB1300015F72 /* button-switch@2x.png in Resources */,
 				7C2EECFA188345F500AE78C2 /* about.html in Resources */,
 				7C2EECFB188345F500AE78C2 /* pin-bip@2x.png in Resources */,
 				7C2EECFC188345F500AE78C2 /* placeholder-history@2x.png in Resources */,
@@ -1325,6 +1336,7 @@
 				7CFF7EB518384106006230CE /* button-history@2x.png in Resources */,
 				7CB64D7C18551C9C006422E0 /* button-bip@2x.png in Resources */,
 				7CFF7EA71838362E006230CE /* pin-stop@2x.png in Resources */,
+				7C11BD421AE3FB1300015F72 /* button-switch@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1494,6 +1506,7 @@
 				7C2EECDA188345F500AE78C2 /* CFStopCell.m in Sources */,
 				7CEADD6C194C200A00428ADE /* CFSearchSuggestionsCard.m in Sources */,
 				7CCA746A19325C9D00ADB397 /* CFForwardingTouchScrollView.m in Sources */,
+				7C11BD3F1AE36DDA00015F72 /* CFNavigatorTextField.m in Sources */,
 				7C062F2F1933B07600342E4A /* CFSearchController.m in Sources */,
 				7CC7EC4C1929BBA2002160E5 /* CFServiceRouteViewController.m in Sources */,
 				7CF47AD31ACD075200B9F410 /* CFNavigatorController.m in Sources */,
@@ -1568,6 +1581,7 @@
 				7CFF7E7818381D6E006230CE /* CFMainViewController.m in Sources */,
 				7CEADD6B194C1E9500428ADE /* CFSearchSuggestionsCard.m in Sources */,
 				7CE0D9D8189DB34F00D9782E /* OLShapeTintedButton.m in Sources */,
+				7C11BD3E1AE36D1800015F72 /* CFNavigatorTextField.m in Sources */,
 				7C6CE7CF187751FB00DDEF54 /* CFColorBadgeView.m in Sources */,
 				7CB337FE192AB27500234792 /* CFStopServicesButtonArrayView.m in Sources */,
 				7CF47AD21ACD000D00B9F410 /* CFNavigatorController.m in Sources */,

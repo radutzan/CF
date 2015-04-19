@@ -704,7 +704,7 @@
 {
     // hide navbar and drawer
     [UIView animateWithDuration:0.42 delay:0 usingSpringWithDamping:1 initialSpringVelocity:1 options:0 animations:^{
-        self.localNavigationBar.center = CGPointMake(self.localNavigationBar.center.x, self.localNavigationBar.center.y - self.localNavigationBar.bounds.size.height);
+        self.localNavigationBar.center = CGPointMake(self.localNavigationBar.center.x, self.localNavigationBar.center.y - self.localNavigationBar.bounds.size.height - 1);
         [self.drawerController hideDrawer];
     } completion:nil];
     
@@ -715,7 +715,7 @@
 {
     // show navbar and drawer
     [UIView animateWithDuration:0.42 delay:0 usingSpringWithDamping:1 initialSpringVelocity:1 options:0 animations:^{
-        self.localNavigationBar.center = CGPointMake(self.localNavigationBar.center.x, self.localNavigationBar.center.y + self.localNavigationBar.bounds.size.height);
+        self.localNavigationBar.center = CGPointMake(self.localNavigationBar.center.x, self.localNavigationBar.center.y + self.localNavigationBar.bounds.size.height + 1);
         [self.drawerController showDrawer];
     } completion:nil];
     

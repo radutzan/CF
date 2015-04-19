@@ -433,7 +433,9 @@ NSString *const kGetDirectionsOptionIdentifier = @"getDirections";
 {
     [self.delegate searchControllerDidEndSearching];
     
-    searchField.frame = CGRectMake(searchField.frame.origin.x, searchField.frame.origin.y, searchField.superview.bounds.size.width - 70.0, searchField.bounds.size.height);
+    [UIView animateWithDuration:.2 delay:0 usingSpringWithDamping:1 initialSpringVelocity:0 options:0 animations:^{
+        searchField.frame = CGRectMake(searchField.frame.origin.x, searchField.frame.origin.y, searchField.superview.bounds.size.width - 90.0, searchField.bounds.size.height);
+    } completion:nil];
     
     if (!self.suggesting) {
         [self hide];
