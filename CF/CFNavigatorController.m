@@ -20,7 +20,8 @@
 @property (nonatomic, strong) OLShapeTintedButton *switchTextFieldsButton;
 @property (nonatomic, strong) OLShapeTintedButton *submitButton;
 
-@property (nonatomic) BOOL navigating;
+@property (nonatomic) BOOL navigating; // why?
+// maybe a state enum instead: active, paused, off
 
 @end
 
@@ -64,7 +65,7 @@
     self.submitButton = [OLShapeTintedButton buttonWithType:UIButtonTypeCustom];
     self.submitButton.frame = CGRectMake(0, 0, 44, 44);
     self.submitButton.center = CGPointMake(self.topTextField.frame.origin.x + self.topTextField.bounds.size.width + 28, (self.localNavigationBar.bounds.size.height / 2) + 10);
-    [self.submitButton setImage:[[UIImage imageNamed:@"searchfield-glyph"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate
+    [self.submitButton setImage:[[UIImage imageNamed:@"button-submit"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate
                                  ] forState:UIControlStateNormal];
     [self.localNavigationBar addSubview:self.submitButton];
     
