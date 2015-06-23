@@ -43,6 +43,10 @@
 	<string>Your location is used to show you the nearest stops and Bip! spots on the Map. Your location never leaves your device.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Your location is used to show you the nearest stops and Bip! spots on the Map. Your location never leaves your device.</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>location</string>
+	</array>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>

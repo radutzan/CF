@@ -38,6 +38,8 @@
 @property (nonatomic, strong) NSMutableArray *responseEstimation;
 @property (nonatomic, strong) NSMutableArray *responseWithoutEstimation;
 @property (nonatomic, strong) NSMutableArray *finalData;
+@property (nonatomic) NSIndexPath *selectedCellIndexPath;
+@property (nonatomic) NSArray *sortedServiceNames;
 
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic, strong) UILabel *timerLabel;
@@ -813,6 +815,7 @@ CALayer *_leftGripper;
 {
     NSLog(@"processEstimationData");
     NSMutableArray *servicesWithoutAnyData = [NSMutableArray new];
+    NSMutableArray *newSortedServiceNames = [NSMutableArray new];
     
     for (NSDictionary *service in self.stop.services) {
         NSMutableDictionary *moddedService = [service mutableCopy];
@@ -888,8 +891,32 @@ CALayer *_leftGripper;
     
     [self.finalData addObjectsFromArray:servicesWithoutAnyData];
     
+    for (NSDictionary *serviceDict in self.finalData) {
+        [newSortedServiceNames addObject:serviceDict[@"name"]];
+    }
+    
+    [self.tableView beginUpdates];
+    if (self.sortedServiceNames) {
+        NSUInteger iterationCount = 0;
+        for (NSString *serviceName in self.sortedServiceNames) {
+            NSIndexPath *currentIndexPath = [NSIndexPath indexPathForRow:iterationCount inSection:0];
+            NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:[newSortedServiceNames indexOfObject:serviceName] inSection:0];
+            if ([currentIndexPath compare:self.selectedCellIndexPath] == NSOrderedSame) {
+                self.selectedCellIndexPath = newIndexPath;
+            }
+            [self.tableView moveRowAtIndexPath:currentIndexPath toIndexPath:newIndexPath];
+            iterationCount++;
+        }
+    }
+    [self.tableView endUpdates];
+    
+    for (NSIndexPath *indexPath in self.tableView.indexPathsForVisibleRows) {
+        [self configureResultCell:(CFResultCell *)[self.tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
+    }
+    
+    self.sortedServiceNames = newSortedServiceNames;
+    
     self.refreshing = NO;
-    [self.tableView reloadRowsAtIndexPaths:[self.tableView indexPathsForVisibleRows] withRowAnimation:UITableViewRowAnimationAutomatic];
     [self.refreshControl endRefreshing];
     [self refreshTimerLabel];
     
@@ -956,6 +983,13 @@ CALayer *_leftGripper;
     if (cell == nil)
         cell = [[CFResultCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
     
+    [self configureResultCell:cell atIndexPath:indexPath];
+    
+    return cell;
+}
+
+- (void)configureResultCell:(CFResultCell *)cell atIndexPath:(NSIndexPath *)indexPath
+{
     NSDictionary *serviceDictionary;
     
     if ([self.finalData lastObject]) {
@@ -965,7 +999,6 @@ CALayer *_leftGripper;
     }
     
     cell.backgroundColor = [UIColor blackColor];
-    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     
     cell.serviceLabel.text = [serviceDictionary objectForKey:@"name"];
     cell.directionLabel.text = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"TO_DIRECTION", nil), [[serviceDictionary objectForKey:@"destino"] capitalizedString]];
@@ -992,8 +1025,6 @@ CALayer *_leftGripper;
         badgeColor = [UIColor colorWithRed:255.0/255.0 green:212.0/255.0 blue:0 alpha:1];
     
     cell.badgeColor = badgeColor;
-    
-    return cell;
 }
 
 - (BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath
@@ -1008,6 +1039,7 @@ CALayer *_leftGripper;
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if ([indexPath compare:self.selectedCellIndexPath] == NSOrderedSame) return 94;
     return 60.0;
 }
 
@@ -1033,8 +1065,13 @@ CALayer *_leftGripper;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    CFResultCell *cell = (CFResultCell *)[self.tableView cellForRowAtIndexPath:indexPath];
-    
+    self.selectedCellIndexPath = ([indexPath compare:self.selectedCellIndexPath] == NSOrderedSame)? nil : indexPath;
+    [self.tableView beginUpdates];
+    [self.tableView endUpdates];
+}
+
+- (void)resultCell:(CFResultCell *)cell displayServiceRouteButtonTapped:(UIButton *)button
+{
     [self.delegate stopResultsViewControllerDidRequestServiceRoute:cell.serviceLabel.text directionString:cell.directionLabel.text];
     [self minimize];
     
@@ -1042,13 +1079,33 @@ CALayer *_leftGripper;
     [mixpanel track:@"Service Route Requested" properties:@{@"Service": cell.serviceLabel.text, @"From": @"Stop Results"}];
 }
 
-- (void)sendComplaintTweetForService:(NSString *)service
+- (void)resultCell:(CFResultCell *)cell reportServiceButtonTapped:(UIButton *)button
 {
+    [self reportService:cell.serviceLabel.text];
+}
+
+- (void)resultCell:(CFResultCell *)cell notifyButtonTapped:(UIButton *)button
+{
+    
+}
+
+- (void)resultCell:(CFResultCell *)cell pinButtonTapped:(UIButton *)button
+{
+    
+}
+
+- (void)reportService:(NSString *)service
+{
+    // TO-DO
+    
     if ([SLComposeViewController isAvailableForServiceType:SLServiceTypeTwitter]) {
-        SLComposeViewController *complaintTweet = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeTwitter];
-        [complaintTweet setInitialText:[NSString stringWithFormat:NSLocalizedString(@"NO_INFO_COMPLAINT_TWEET", nil), service, self.stop.code]];
-        [self presentViewController:complaintTweet animated:YES completion:nil];
+        SLComposeViewController *reportTweet = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeTwitter];
+        [reportTweet setInitialText:[NSString stringWithFormat:NSLocalizedString(@"NO_INFO_COMPLAINT_TWEET", nil), service, self.stop.code]];
+        [self presentViewController:reportTweet animated:YES completion:nil];
     }
+    
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    [mixpanel track:@"Service Reported" properties:@{@"Service": service}];
 }
 
 #pragma mark - Ads
@@ -1078,7 +1135,7 @@ CALayer *_leftGripper;
     
     self.showingAds = YES;
     
-    [UIView animateWithDuration:1.2 delay:1 usingSpringWithDamping:1 initialSpringVelocity:0 options:0 animations:^{
+    [UIView animateWithDuration:0.8 delay:1 usingSpringWithDamping:1 initialSpringVelocity:0 options:UIViewAnimationOptionAllowUserInteraction animations:^{
         self.stopResultsView.frame = self.stopResultsViewPresentedFrame;
         [self showAds];
     } completion:nil];

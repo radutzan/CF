@@ -10,7 +10,7 @@
 
 @protocol CFResultCellDelegate <NSObject>
 
-- (void)sendComplaintTweetForService:(NSString *)service;
+- (void)reportService:(NSString *)service;
 
 @end
 

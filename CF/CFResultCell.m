@@ -239,7 +239,7 @@
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (buttonIndex == 1) {
-        [self.delegate sendComplaintTweetForService:self.serviceLabel.text];
+        [self.delegate reportService:self.serviceLabel.text];
     }
 }
 
