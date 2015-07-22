@@ -337,6 +337,11 @@ CALayer *_leftGripper;
         _leftGripper.opacity = 1;
         _topGripper.opacity = 0;
     } else {
+        if (self.selectedCellIndexPath) {
+            self.selectedCellIndexPath = nil;
+            [self.tableView beginUpdates];
+            [self.tableView endUpdates];
+        }
         self.favoriteButton.enabled = NO;
         self.stopInfoView.userInteractionEnabled = NO;
         _titleBarDoubleTap.enabled = NO;
@@ -1000,6 +1005,11 @@ CALayer *_leftGripper;
     
     cell.backgroundColor = [UIColor blackColor];
     
+    cell.selected = NO;
+    if ([indexPath compare:self.selectedCellIndexPath] == NSOrderedSame) {
+        cell.selected = YES;
+    }
+    
     cell.serviceLabel.text = [serviceDictionary objectForKey:@"name"];
     cell.directionLabel.text = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"TO_DIRECTION", nil), [[serviceDictionary objectForKey:@"destino"] capitalizedString]];
     cell.estimations = [serviceDictionary objectForKey:@"estimations"];
@@ -1025,11 +1035,6 @@ CALayer *_leftGripper;
         badgeColor = [UIColor colorWithRed:255.0/255.0 green:212.0/255.0 blue:0 alpha:1];
     
     cell.badgeColor = badgeColor;
-}
-
-- (BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return YES;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -1066,6 +1071,8 @@ CALayer *_leftGripper;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     self.selectedCellIndexPath = ([indexPath compare:self.selectedCellIndexPath] == NSOrderedSame)? nil : indexPath;
+    CFResultCell *selectedCell = (CFResultCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+    [selectedCell setSelected:(self.selectedCellIndexPath) animated:YES];
     [self.tableView beginUpdates];
     [self.tableView endUpdates];
 }
@@ -1100,7 +1107,7 @@ CALayer *_leftGripper;
     
     if ([SLComposeViewController isAvailableForServiceType:SLServiceTypeTwitter]) {
         SLComposeViewController *reportTweet = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeTwitter];
-        [reportTweet setInitialText:[NSString stringWithFormat:NSLocalizedString(@"NO_INFO_COMPLAINT_TWEET", nil), service, self.stop.code]];
+        [reportTweet setInitialText:[NSString stringWithFormat:NSLocalizedString(@"NO_INFO_REPORT_TWEET", nil), service, self.stop.code]];
         [self presentViewController:reportTweet animated:YES completion:nil];
     }
     

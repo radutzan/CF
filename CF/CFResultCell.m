@@ -24,7 +24,7 @@
 @property (nonatomic, strong) UIView *noInfoView;
 @property (nonatomic, strong) UIButton *noInfoButton;
 @property (nonatomic, strong) UILabel *noInfoLabel;
-@property (nonatomic, strong) CALayer *selectionVeilLayer;
+@property (nonatomic, strong) CALayer *veilLayer;
 @property (nonatomic, strong) CALayer *separatorLayer;
 
 @end
@@ -35,12 +35,13 @@
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
+        self.clipsToBounds = YES;
         self.contentView.frame = CGRectMake(self.contentView.frame.origin.x, self.contentView.frame.origin.y, self.contentView.bounds.size.width, 60.0);
         self.selectionStyle = UITableViewCellSelectionStyleNone;
         
         self.separatorLayer = [CALayer new];
-        self.separatorLayer.frame = CGRectMake(0, self.contentView.bounds.size.height - 0.5, self.contentView.bounds.size.width, 0.5);
-        self.separatorLayer.backgroundColor = [UIColor colorWithWhite:0.25 alpha:1].CGColor;
+        self.separatorLayer.frame = CGRectMake(0, 0, self.contentView.bounds.size.width, 0.5);
+        self.separatorLayer.backgroundColor = [UIColor colorWithWhite:1 alpha:0.2].CGColor;
         [self.layer insertSublayer:self.separatorLayer above:self.contentView.layer];
         
         _colorBadge = [[CFColorBadgeView alloc] initWithFrame:CGRectMake(0, 0, 10.0, 10.0)];
@@ -114,11 +115,9 @@
         _noInfoLabel.backgroundColor = [UIColor blackColor];
         [_noInfoView addSubview:_noInfoLabel];
         
-        _selectionVeilLayer = [CALayer layer];
-        _selectionVeilLayer.frame = self.contentView.bounds;
-        _selectionVeilLayer.backgroundColor = [UIColor colorWithWhite:1 alpha:0.12].CGColor;
-        _selectionVeilLayer.hidden = YES;
-        [self.layer addSublayer:_selectionVeilLayer];
+        _veilLayer = [CALayer layer];
+        _veilLayer.backgroundColor = [UIColor colorWithWhite:1 alpha:0.2].CGColor;
+        [self.layer addSublayer:_veilLayer];
     }
     return self;
 }
@@ -126,16 +125,16 @@
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    self.separatorLayer.frame = CGRectMake(0, self.bounds.size.height - 0.5, self.bounds.size.width, 0.5);
-    self.selectionVeilLayer.frame = self.bounds;
-    self.estimationContainer.frame = CGRectMake(90.0, 0, self.bounds.size.width - 115.0, self.contentView.bounds.size.height);
+    self.separatorLayer.frame = CGRectMake(0, 0, self.contentView.bounds.size.width, 0.5);
+    self.veilLayer.frame = CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height + 100);
+    self.estimationContainer.frame = CGRectMake(90.0, 0, self.bounds.size.width - 115.0, self.estimationContainer.bounds.size.height);
     
     BOOL bigAssPhone = self.bounds.size.width > 305.0;
     
     if (bigAssPhone) {
         self.estimationContainer.gradientLayer.hidden = YES;
         self.estimationContainer.scrollView.scrollEnabled = NO;
-        self.estimationContainer.scrollView.frame = CGRectMake(50.0, 0, self.estimationContainer.bounds.size.width - 50.0, self.contentView.bounds.size.height);
+        self.estimationContainer.scrollView.frame = CGRectMake(50.0, 0, self.estimationContainer.bounds.size.width - 50.0, self.estimationContainer.bounds.size.height);
         self.secondDistanceLabel.alpha = SECOND_ESTIMATION_ALPHA * 1.8;
         self.secondTimeLabel.alpha = SECOND_ESTIMATION_ALPHA * 1.8;
     }
@@ -177,11 +176,11 @@
     
     if (noEstimationReason) {
         self.noInfoLabel.text = noEstimationReason;
-        self.noInfoLabel.frame = CGRectMake(0, 0, 120.0, self.contentView.bounds.size.height);
+        self.noInfoLabel.frame = CGRectMake(0, 0, 120.0, self.estimationContainer.bounds.size.height);
         self.noInfoButton.hidden = YES;
     } else {
         self.noInfoLabel.text = NSLocalizedString(@"NO_INFO", nil);
-        self.noInfoLabel.frame = CGRectMake(30.0, 0, 90.0, self.contentView.bounds.size.height);
+        self.noInfoLabel.frame = CGRectMake(30.0, 0, 90.0, self.estimationContainer.bounds.size.height);
         self.noInfoButton.hidden = NO;
     }
 }
@@ -209,30 +208,32 @@
 - (void)setBadgeColor:(UIColor *)badgeColor
 {
     _badgeColor = badgeColor;
-    
     self.colorBadge.badgeColor = badgeColor;
 }
 
 - (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated
 {
     [super setHighlighted:highlighted animated:animated];
+    self.veilLayer.opacity = (highlighted) ? 0.8 : 0.4;
+}
+
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated
+{
+    [super setSelected:selected animated:animated];
+    self.veilLayer.opacity = (selected) ? 0 : 0.4;
     
-    if (highlighted) {
-        self.selectionVeilLayer.hidden = NO;
-    } else {
-        self.selectionVeilLayer.hidden = YES;
-    }
+    // show buttons and patentes
 }
 
 - (void)noInfoButtonTapped
 {
-    NSString *complainButtonTitle = nil;
+    NSString *reportButtonTitle = nil;
     
     if ([SLComposeViewController isAvailableForServiceType:SLServiceTypeTwitter]) {
-        complainButtonTitle = NSLocalizedString(@"NO_INFO_BUTTON_COMPLAIN", nil);
+        reportButtonTitle = NSLocalizedString(@"NO_INFO_BUTTON_REPORT", nil);
     }
     
-    UIAlertView *noData = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"NO_INFO_TITLE", nil) message:NSLocalizedString(@"NO_INFO_MESSAGE", nil) delegate:self cancelButtonTitle:NSLocalizedString(@"DISMISS", nil) otherButtonTitles:complainButtonTitle, nil];
+    UIAlertView *noData = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"NO_INFO_TITLE", nil) message:NSLocalizedString(@"NO_INFO_MESSAGE", nil) delegate:self cancelButtonTitle:NSLocalizedString(@"DISMISS", nil) otherButtonTitles:reportButtonTitle, nil];
     [noData show];
 }
 

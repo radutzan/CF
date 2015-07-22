@@ -34,8 +34,8 @@
 "INVALID_STOP_CODE_MESSAGE" = "Asegúrate de que lo ingresaste correctamente. Tiene que incluir la P, la letra de zona y un número de hasta 4 dígitos. No puede contener espacios.";
 "NO_INFO_TITLE" = "No hay información sobre este servicio";
 "NO_INFO_MESSAGE" = "Puede que haya problemas en el servidor de origen o que la empresa operadora no esté enviando la información.";
-"NO_INFO_BUTTON_COMPLAIN" = "Reportar";
-"NO_INFO_COMPLAINT_TWEET" = "@transantiago No hay información para el servicio %@ en el paradero %@. ¿Qué sucede?";
+"NO_INFO_BUTTON_REPORT" = "Reportar";
+"NO_INFO_REPORT_TWEET" = "@transantiago No hay información para el servicio %@ en el paradero %@. ¿Qué sucede?";
 
 // map
 "MAP_SEARCHFIELD_PLACEHOLDER" = "Busca código, servicio o lugar";

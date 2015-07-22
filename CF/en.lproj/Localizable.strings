@@ -35,8 +35,8 @@
 "INVALID_STOP_CODE_MESSAGE" = "Please make sure you entered it correctly. It needs to include the P, a letter and a number with up to 4 digits, without spaces.";
 "NO_INFO_TITLE" = "There's no data about this service";
 "NO_INFO_MESSAGE" = "There could be a problem with the origin data server, or the operator may be failing to provide the information.";
-"NO_INFO_BUTTON_COMPLAIN" = "Report";
-"NO_INFO_COMPLAINT_TWEET" = "@transantiago No hay información para el servicio %@ en el paradero %@. ¿Qué sucede?";
+"NO_INFO_BUTTON_REPORT" = "Report";
+"NO_INFO_REPORT_TWEET" = "@transantiago No hay información para el servicio %@ en el paradero %@. ¿Qué sucede?";
 
 // map
 "MAP_SEARCHFIELD_PLACEHOLDER" = "Stop code, service or place";
