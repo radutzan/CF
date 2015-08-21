@@ -39,6 +39,11 @@
 	<string></string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 	<key>NSLocationUsageDescription</key>
 	<string>Your location is used to show you the nearest stops and Bip! spots on the Map. Your location never leaves your device.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
