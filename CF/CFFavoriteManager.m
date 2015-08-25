@@ -7,6 +7,13 @@
 //
 
 #import "CFFavoriteManager.h"
+#import <WatchConnectivity/WatchConnectivity.h>
+
+@interface CFFavoriteManager () <WCSessionDelegate>
+
+@property (nonatomic) WCSession *session;
+
+@end
 
 @implementation CFFavoriteManager
 
@@ -16,6 +23,13 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         favoriteManager = [self new];
+        if (NSClassFromString(@"WCSession")) {
+            if ([WCSession isSupported]) {
+                favoriteManager.session = [WCSession defaultSession];
+                favoriteManager.session.delegate = favoriteManager;
+                [favoriteManager.session activateSession];
+            }
+        }
     });
     return favoriteManager;
 }
@@ -129,6 +143,23 @@
 #endif
     
     [[NSUbiquitousKeyValueStore defaultStore] setArray:favoritesArray forKey:@"favorites"];
+    
+    if (NSClassFromString(@"WCSession")) {
+        if ([WCSession isSupported]) {
+            if (self.session.paired) {
+                if (self.session.watchAppInstalled) {
+                    NSDictionary *favContext = @{@"favorites": favoritesArray};
+                    [self.session updateApplicationContext:favContext error:nil];
+                }
+            }
+        }
+    }
+}
+
+- (void)session:(WCSession *)session didReceiveMessage:(NSDictionary<NSString *,id> *)message replyHandler:(void (^)(NSDictionary<NSString *,id> * _Nonnull))replyHandler
+{
+    NSLog(@"got message");
+    replyHandler(@{@"favorites": [self favoritesArray]});
 }
 
 @end

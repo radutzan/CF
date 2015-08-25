@@ -97,6 +97,16 @@
 		7C36D72719ABA6C600CBFDBA /* CFService.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C36D72619ABA6C600CBFDBA /* CFService.m */; };
 		7C36D72819ABB32600CBFDBA /* CFService.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C36D72619ABA6C600CBFDBA /* CFService.m */; };
 		7C3B27C4183B194A00818A3B /* CFStopTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C3B27C3183B194A00818A3B /* CFStopTableViewController.m */; };
+		7C3FFE201B8A1CBC002F11D3 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7C3FFE1E1B8A1CBC002F11D3 /* Interface.storyboard */; };
+		7C3FFE221B8A1CBC002F11D3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7C3FFE211B8A1CBC002F11D3 /* Assets.xcassets */; };
+		7C3FFE291B8A1CBC002F11D3 /* CFWatchDev Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 7C3FFE281B8A1CBC002F11D3 /* CFWatchDev Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		7C3FFE2E1B8A1CBC002F11D3 /* InterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C3FFE2D1B8A1CBC002F11D3 /* InterfaceController.swift */; };
+		7C3FFE301B8A1CBC002F11D3 /* ExtensionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C3FFE2F1B8A1CBC002F11D3 /* ExtensionDelegate.swift */; };
+		7C3FFE321B8A1CBC002F11D3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7C3FFE311B8A1CBC002F11D3 /* Assets.xcassets */; };
+		7C3FFE361B8A1CBC002F11D3 /* CFWatchDev.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 7C3FFE1C1B8A1CBB002F11D3 /* CFWatchDev.app */; };
+		7C3FFE411B8A1D0D002F11D3 /* FavoriteRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C3FFE401B8A1D0D002F11D3 /* FavoriteRow.swift */; };
+		7C3FFE431B8AAEE0002F11D3 /* FavoriteClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C3FFE421B8AAEE0002F11D3 /* FavoriteClient.swift */; };
+		7C3FFE451B8CCF70002F11D3 /* StopRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C3FFE441B8CCF70002F11D3 /* StopRow.swift */; };
 		7C426414184AE87300A8968F /* CFStopCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C426413184AE87300A8968F /* CFStopCell.m */; };
 		7C426417184AE88000A8968F /* CFResultCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C426416184AE88000A8968F /* CFResultCell.m */; };
 		7C42641A184AF3E300A8968F /* CFFavoriteCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C426419184AF3E300A8968F /* CFFavoriteCell.m */; };
@@ -254,6 +264,20 @@
 			remoteGlobalIDString = 7C0A9A8E19C4CC730007FAA1;
 			remoteInfo = "Today Favorites Dev";
 		};
+		7C3FFE2A1B8A1CBC002F11D3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7CFF7E3918381645006230CE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7C3FFE271B8A1CBC002F11D3;
+			remoteInfo = "CFWatchDev Extension";
+		};
+		7C3FFE341B8A1CBC002F11D3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7CFF7E3918381645006230CE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7C3FFE1B1B8A1CBB002F11D3;
+			remoteInfo = CFWatchDev;
+		};
 		7CC343CC19772AD8003E8555 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 7CFF7E3918381645006230CE /* Project object */;
@@ -285,12 +309,24 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		7C3FFE3A1B8A1CBC002F11D3 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				7C3FFE291B8A1CBC002F11D3 /* CFWatchDev Extension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		7C7276621B5F40EE009E452E /* Embed Watch Content */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
 			dstSubfolderSpec = 16;
 			files = (
+				7C3FFE361B8A1CBC002F11D3 /* CFWatchDev.app in Embed Watch Content */,
 			);
 			name = "Embed Watch Content";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -357,6 +393,20 @@
 		7C36D72619ABA6C600CBFDBA /* CFService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFService.m; sourceTree = "<group>"; };
 		7C3B27C2183B194A00818A3B /* CFStopTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFStopTableViewController.h; sourceTree = "<group>"; };
 		7C3B27C3183B194A00818A3B /* CFStopTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFStopTableViewController.m; sourceTree = "<group>"; };
+		7C3FFE1C1B8A1CBB002F11D3 /* CFWatchDev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CFWatchDev.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7C3FFE1F1B8A1CBC002F11D3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Interface.storyboard; sourceTree = "<group>"; };
+		7C3FFE211B8A1CBC002F11D3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		7C3FFE231B8A1CBC002F11D3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7C3FFE281B8A1CBC002F11D3 /* CFWatchDev Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "CFWatchDev Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7C3FFE2D1B8A1CBC002F11D3 /* InterfaceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterfaceController.swift; sourceTree = "<group>"; };
+		7C3FFE2F1B8A1CBC002F11D3 /* ExtensionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionDelegate.swift; sourceTree = "<group>"; };
+		7C3FFE311B8A1CBC002F11D3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		7C3FFE331B8A1CBC002F11D3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7C3FFE3E1B8A1CCF002F11D3 /* CFWatchDev Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "CFWatchDev Extension.entitlements"; sourceTree = "<group>"; };
+		7C3FFE3F1B8A1CDA002F11D3 /* CFWatchDev.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = CFWatchDev.entitlements; sourceTree = "<group>"; };
+		7C3FFE401B8A1D0D002F11D3 /* FavoriteRow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoriteRow.swift; sourceTree = "<group>"; };
+		7C3FFE421B8AAEE0002F11D3 /* FavoriteClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoriteClient.swift; sourceTree = "<group>"; };
+		7C3FFE441B8CCF70002F11D3 /* StopRow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StopRow.swift; sourceTree = "<group>"; };
 		7C426412184AE87300A8968F /* CFStopCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFStopCell.h; sourceTree = "<group>"; };
 		7C426413184AE87300A8968F /* CFStopCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFStopCell.m; sourceTree = "<group>"; };
 		7C426415184AE88000A8968F /* CFResultCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFResultCell.h; sourceTree = "<group>"; };
@@ -547,6 +597,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7C3FFE251B8A1CBC002F11D3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		7CC343BC19772AD7003E8555 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -679,6 +736,32 @@
 			name = Tabs;
 			sourceTree = "<group>";
 		};
+		7C3FFE1D1B8A1CBC002F11D3 /* CFWatchDev */ = {
+			isa = PBXGroup;
+			children = (
+				7C3FFE3F1B8A1CDA002F11D3 /* CFWatchDev.entitlements */,
+				7C3FFE1E1B8A1CBC002F11D3 /* Interface.storyboard */,
+				7C3FFE211B8A1CBC002F11D3 /* Assets.xcassets */,
+				7C3FFE231B8A1CBC002F11D3 /* Info.plist */,
+			);
+			path = CFWatchDev;
+			sourceTree = "<group>";
+		};
+		7C3FFE2C1B8A1CBC002F11D3 /* CFWatchDev Extension */ = {
+			isa = PBXGroup;
+			children = (
+				7C3FFE3E1B8A1CCF002F11D3 /* CFWatchDev Extension.entitlements */,
+				7C3FFE2F1B8A1CBC002F11D3 /* ExtensionDelegate.swift */,
+				7C3FFE2D1B8A1CBC002F11D3 /* InterfaceController.swift */,
+				7C3FFE421B8AAEE0002F11D3 /* FavoriteClient.swift */,
+				7C3FFE401B8A1D0D002F11D3 /* FavoriteRow.swift */,
+				7C3FFE441B8CCF70002F11D3 /* StopRow.swift */,
+				7C3FFE311B8A1CBC002F11D3 /* Assets.xcassets */,
+				7C3FFE331B8A1CBC002F11D3 /* Info.plist */,
+			);
+			path = "CFWatchDev Extension";
+			sourceTree = "<group>";
+		};
 		7C42642A184AF50900A8968F /* Stop Cells */ = {
 			isa = PBXGroup;
 			children = (
@@ -776,6 +859,8 @@
 				7CFF7E4A18381645006230CE /* CF */,
 				7C01EDB01974938E00DE7EAB /* Today Favorites */,
 				7C0A9A9119C4CC730007FAA1 /* Today Favorites Dev */,
+				7C3FFE1D1B8A1CBC002F11D3 /* CFWatchDev */,
+				7C3FFE2C1B8A1CBC002F11D3 /* CFWatchDev Extension */,
 				7CFF7E4318381645006230CE /* Frameworks */,
 				7CFF7E4218381645006230CE /* Products */,
 				7CFF7E6318381645006230CE /* CFTests */,
@@ -793,6 +878,8 @@
 				7CC343C019772AD7003E8555 /* CuantoFaltaKit.framework */,
 				7CC343CA19772AD7003E8555 /* CuantoFaltaKitTests.xctest */,
 				7C0A9A8F19C4CC730007FAA1 /* Today Favorites Dev.appex */,
+				7C3FFE1C1B8A1CBB002F11D3 /* CFWatchDev.app */,
+				7C3FFE281B8A1CBC002F11D3 /* CFWatchDev Extension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1041,11 +1128,46 @@
 				7C01EDBC1974938E00DE7EAB /* PBXTargetDependency */,
 				7C0A9A9A19C4CC730007FAA1 /* PBXTargetDependency */,
 				7C0A9A9D19C4CC730007FAA1 /* PBXTargetDependency */,
+				7C3FFE351B8A1CBC002F11D3 /* PBXTargetDependency */,
 			);
 			name = "Cuánto Falta Dev";
 			productName = CF;
 			productReference = 7C2EED11188345F500AE78C2 /* Cuánta Beta.app */;
 			productType = "com.apple.product-type.application";
+		};
+		7C3FFE1B1B8A1CBB002F11D3 /* CFWatchDev */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7C3FFE3B1B8A1CBC002F11D3 /* Build configuration list for PBXNativeTarget "CFWatchDev" */;
+			buildPhases = (
+				7C3FFE1A1B8A1CBB002F11D3 /* Resources */,
+				7C3FFE3A1B8A1CBC002F11D3 /* Embed App Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7C3FFE2B1B8A1CBC002F11D3 /* PBXTargetDependency */,
+			);
+			name = CFWatchDev;
+			productName = CFWatchDev;
+			productReference = 7C3FFE1C1B8A1CBB002F11D3 /* CFWatchDev.app */;
+			productType = "com.apple.product-type.application.watchapp2";
+		};
+		7C3FFE271B8A1CBC002F11D3 /* CFWatchDev Extension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7C3FFE371B8A1CBC002F11D3 /* Build configuration list for PBXNativeTarget "CFWatchDev Extension" */;
+			buildPhases = (
+				7C3FFE241B8A1CBC002F11D3 /* Sources */,
+				7C3FFE251B8A1CBC002F11D3 /* Frameworks */,
+				7C3FFE261B8A1CBC002F11D3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "CFWatchDev Extension";
+			productName = "CFWatchDev Extension";
+			productReference = 7C3FFE281B8A1CBC002F11D3 /* CFWatchDev Extension.appex */;
+			productType = "com.apple.product-type.watchkit2-extension";
 		};
 		7CC343BF19772AD7003E8555 /* CuantoFaltaKit */ = {
 			isa = PBXNativeTarget;
@@ -1165,6 +1287,24 @@
 							};
 						};
 					};
+					7C3FFE1B1B8A1CBB002F11D3 = {
+						CreatedOnToolsVersion = 7.0;
+						DevelopmentTeam = CTBFW5535W;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
+						};
+					};
+					7C3FFE271B8A1CBC002F11D3 = {
+						CreatedOnToolsVersion = 7.0;
+						DevelopmentTeam = CTBFW5535W;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
+						};
+					};
 					7CC343BF19772AD7003E8555 = {
 						CreatedOnToolsVersion = 6.0;
 					};
@@ -1212,6 +1352,8 @@
 				7CFF7E5B18381645006230CE /* CFTests */,
 				7CC343BF19772AD7003E8555 /* CuantoFaltaKit */,
 				7CC343C919772AD7003E8555 /* CuantoFaltaKitTests */,
+				7C3FFE1B1B8A1CBB002F11D3 /* CFWatchDev */,
+				7C3FFE271B8A1CBC002F11D3 /* CFWatchDev Extension */,
 			);
 		};
 /* End PBXProject section */
@@ -1271,6 +1413,23 @@
 				7C2EED09188345F500AE78C2 /* button-history@2x.png in Resources */,
 				7C2EED0A188345F500AE78C2 /* button-bip@2x.png in Resources */,
 				7C2EED0C188345F500AE78C2 /* pin-stop@2x.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7C3FFE1A1B8A1CBB002F11D3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7C3FFE221B8A1CBC002F11D3 /* Assets.xcassets in Resources */,
+				7C3FFE201B8A1CBC002F11D3 /* Interface.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7C3FFE261B8A1CBC002F11D3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7C3FFE321B8A1CBC002F11D3 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1505,6 +1664,18 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7C3FFE241B8A1CBC002F11D3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7C3FFE301B8A1CBC002F11D3 /* ExtensionDelegate.swift in Sources */,
+				7C3FFE2E1B8A1CBC002F11D3 /* InterfaceController.swift in Sources */,
+				7C3FFE451B8CCF70002F11D3 /* StopRow.swift in Sources */,
+				7C3FFE431B8AAEE0002F11D3 /* FavoriteClient.swift in Sources */,
+				7C3FFE411B8A1D0D002F11D3 /* FavoriteRow.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		7CC343BB19772AD7003E8555 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1608,6 +1779,16 @@
 			target = 7C0A9A8E19C4CC730007FAA1 /* Today Favorites Dev */;
 			targetProxy = 7C0A9A9C19C4CC730007FAA1 /* PBXContainerItemProxy */;
 		};
+		7C3FFE2B1B8A1CBC002F11D3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7C3FFE271B8A1CBC002F11D3 /* CFWatchDev Extension */;
+			targetProxy = 7C3FFE2A1B8A1CBC002F11D3 /* PBXContainerItemProxy */;
+		};
+		7C3FFE351B8A1CBC002F11D3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7C3FFE1B1B8A1CBB002F11D3 /* CFWatchDev */;
+			targetProxy = 7C3FFE341B8A1CBC002F11D3 /* PBXContainerItemProxy */;
+		};
 		7CC343CD19772AD8003E8555 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 7CC343BF19772AD7003E8555 /* CuantoFaltaKit */;
@@ -1638,6 +1819,14 @@
 				7C2B8AB919C4D3650021AEA3 /* es */,
 			);
 			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		7C3FFE1E1B8A1CBC002F11D3 /* Interface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7C3FFE1F1B8A1CBC002F11D3 /* Base */,
+			);
+			name = Interface.storyboard;
 			sourceTree = "<group>";
 		};
 		7C5FD9CC184F8B140099FEE2 /* Localizable.strings */ = {
@@ -1859,6 +2048,104 @@
 				PROVISIONING_PROFILE = "";
 				VALID_ARCHS = "armv7 armv7s arm64";
 				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		7C3FFE381B8A1CBC002F11D3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_ENTITLEMENTS = "CFWatchDev Extension/CFWatchDev Extension.entitlements";
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = "CFWatchDev Extension/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ondalabs.cfbeta.watchkitapp.watchkitextension;
+				PRODUCT_NAME = "${TARGET_NAME}";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 2.0;
+			};
+			name = Debug;
+		};
+		7C3FFE391B8A1CBC002F11D3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_ENTITLEMENTS = "CFWatchDev Extension/CFWatchDev Extension.entitlements";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = "CFWatchDev Extension/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ondalabs.cfbeta.watchkitapp.watchkitextension;
+				PRODUCT_NAME = "${TARGET_NAME}";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 2.0;
+			};
+			name = Release;
+		};
+		7C3FFE3C1B8A1CBC002F11D3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_ENTITLEMENTS = CFWatchDev/CFWatchDev.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				IBSC_MODULE = CFWatchDev_Extension;
+				INFOPLIST_FILE = CFWatchDev/Info.plist;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ondalabs.cfbeta.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 2.0;
+			};
+			name = Debug;
+		};
+		7C3FFE3D1B8A1CBC002F11D3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_ENTITLEMENTS = CFWatchDev/CFWatchDev.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				IBSC_MODULE = CFWatchDev_Extension;
+				INFOPLIST_FILE = CFWatchDev/Info.plist;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ondalabs.cfbeta.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 2.0;
 			};
 			name = Release;
 		};
@@ -2157,6 +2444,22 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		7C3FFE371B8A1CBC002F11D3 /* Build configuration list for PBXNativeTarget "CFWatchDev Extension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7C3FFE381B8A1CBC002F11D3 /* Debug */,
+				7C3FFE391B8A1CBC002F11D3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		7C3FFE3B1B8A1CBC002F11D3 /* Build configuration list for PBXNativeTarget "CFWatchDev" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7C3FFE3C1B8A1CBC002F11D3 /* Debug */,
+				7C3FFE3D1B8A1CBC002F11D3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 		7CC343DD19772AD8003E8555 /* Build configuration list for PBXNativeTarget "CuantoFaltaKit" */ = {
 			isa = XCConfigurationList;
