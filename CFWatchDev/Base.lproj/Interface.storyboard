@@ -8,7 +8,7 @@
         <!--Favorites-->
         <scene sceneID="aou-V4-d1y">
             <objects>
-                <controller title="Favorites" id="AgC-eL-Hgc" customClass="InterfaceController" customModule="CFWatchDev" customModuleProvider="target">
+                <controller identifier="FavList" title="Favorites" id="AgC-eL-Hgc" customClass="InterfaceController" customModule="CFWatchDev" customModuleProvider="target">
                     <items>
                         <group width="1" alignment="center" verticalAlignment="center" layout="vertical" id="e78-V7-ROu">
                             <items>
@@ -21,12 +21,12 @@
                         <table alignment="left" id="QHN-za-HUh">
                             <items>
                                 <tableRow identifier="FavoriteRow" id="27b-ft-jCr" customClass="FavoriteRow" customModule="CFWatchDev_Extension">
-                                    <group key="rootItem" width="1" height="0.0" alignment="left" layout="vertical" spacing="0.0" id="rYb-x8-J0p">
+                                    <group key="rootItem" width="1" height="44" alignment="left" layout="vertical" spacing="0.0" id="rYb-x8-J0p">
                                         <items>
-                                            <label width="1" height="19.5" alignment="left" text="Stop name" textAlignment="left" id="cfN-Nn-L12">
+                                            <label width="1" height="19.5" alignment="left" verticalAlignment="center" text="Stop name" textAlignment="left" id="cfN-Nn-L12">
                                                 <fontDescription key="font" style="UICTFontTextStyleBody"/>
                                             </label>
-                                            <label width="1" alignment="left" text="Label" textAlignment="left" id="Wfi-aY-XFk">
+                                            <label width="1" alignment="left" verticalAlignment="center" text="Label" textAlignment="left" id="Wfi-aY-XFk">
                                                 <color key="textColor" red="1" green="1" blue="1" alpha="0.59999999999999998" colorSpace="calibratedRGB"/>
                                                 <fontDescription key="font" style="UICTFontTextStyleCaption2"/>
                                             </label>
@@ -35,15 +35,15 @@
                                     <connections>
                                         <outlet property="detailLabel" destination="Wfi-aY-XFk" id="hV5-Sc-6m4"/>
                                         <outlet property="titleLabel" destination="cfN-Nn-L12" id="c15-fV-ThW"/>
-                                        <segue destination="NRC-zN-mZm" kind="push" id="feT-kh-Pak"/>
+                                        <segue destination="NRC-zN-mZm" kind="push" identifier="FavoriteTap" id="feT-kh-Pak"/>
                                     </connections>
                                 </tableRow>
                             </items>
                         </table>
                     </items>
                     <connections>
+                        <outlet property="favoritesTableView" destination="QHN-za-HUh" id="NSr-yg-hbh"/>
                         <outlet property="noFavoritesView" destination="e78-V7-ROu" id="anp-gU-9Ta"/>
-                        <outlet property="tableView" destination="QHN-za-HUh" id="FNR-xl-wY6"/>
                     </connections>
                 </controller>
             </objects>
@@ -52,36 +52,61 @@
         <!--Stop-->
         <scene sceneID="dI7-bi-YC3">
             <objects>
-                <controller title="Stop" hidesWhenLoading="NO" id="NRC-zN-mZm">
+                <controller identifier="StopResults" title="Stop" hidesWhenLoading="NO" id="NRC-zN-mZm" customClass="StopInterfaceController" customModule="CFWatchDev_Extension">
                     <items>
                         <table alignment="left" id="F9y-Od-5g2">
                             <items>
                                 <tableRow id="IUC-hX-Yf1" customClass="StopRow" customModule="CFWatchDev_Extension">
-                                    <group key="rootItem" width="1" alignment="left" id="IxB-5H-HRV">
+                                    <group key="rootItem" width="1" alignment="left" layout="vertical" spacing="0.0" id="IxB-5H-HRV">
                                         <items>
-                                            <label width="44" alignment="left" verticalAlignment="center" text="503c" id="fKk-AI-lWt">
-                                                <fontDescription key="font" style="UICTFontTextStyleHeadline"/>
-                                            </label>
-                                            <group alignment="left" verticalAlignment="center" layout="vertical" spacing="0.0" id="DH9-yK-eYn">
+                                            <group width="1" alignment="left" id="AmO-IF-chv">
                                                 <items>
-                                                    <label alignment="left" text="2.65 km" id="JuC-01-52m"/>
-                                                    <label alignment="left" text="~5 min" id="1dr-Kt-Yz0">
+                                                    <label width="52" alignment="left" verticalAlignment="center" text="503c" id="fKk-AI-lWt">
+                                                        <fontDescription key="font" type="system" pointSize="22"/>
+                                                    </label>
+                                                    <label alignment="left" verticalAlignment="center" hidden="YES" text="No estimation" id="WYO-4A-Ltd">
                                                         <color key="textColor" red="1" green="1" blue="1" alpha="0.59999999999999998" colorSpace="calibratedRGB"/>
                                                         <fontDescription key="font" style="UICTFontTextStyleFootnote"/>
                                                     </label>
+                                                    <group width="74" alignment="right" verticalAlignment="center" layout="vertical" spacing="0.0" id="DH9-yK-eYn">
+                                                        <items>
+                                                            <label alignment="left" text="12.65 km" id="JuC-01-52m"/>
+                                                            <label alignment="left" text="~5 min" id="1dr-Kt-Yz0">
+                                                                <color key="textColor" red="1" green="1" blue="1" alpha="0.59999999999999998" colorSpace="calibratedRGB"/>
+                                                                <fontDescription key="font" style="UICTFontTextStyleFootnote"/>
+                                                            </label>
+                                                        </items>
+                                                    </group>
                                                 </items>
+                                                <edgeInsets key="margins" left="0.0" right="0.0" top="0.0" bottom="1"/>
                                             </group>
+                                            <separator alignment="left" alpha="0.5" id="zfl-5C-zUL"/>
                                         </items>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <edgeInsets key="margins" left="0.0" right="0.0" top="0.0" bottom="0.0"/>
                                     </group>
                                     <connections>
                                         <outlet property="distanceLabel" destination="JuC-01-52m" id="ztM-4Q-WqS"/>
+                                        <outlet property="estimationGroup" destination="DH9-yK-eYn" id="CgX-3d-UJj"/>
+                                        <outlet property="noEstimationLabel" destination="WYO-4A-Ltd" id="nCD-t4-4q9"/>
                                         <outlet property="stopNameLabel" destination="fKk-AI-lWt" id="mR4-ID-jJv"/>
                                         <outlet property="timeLabel" destination="1dr-Kt-Yz0" id="IAH-F2-6Kw"/>
                                     </connections>
                                 </tableRow>
                             </items>
                         </table>
+                        <imageView alignment="center" verticalAlignment="center" image="Activity0" initiallyAnimated="NO" animationDuration="1" id="P6w-J6-KxE"/>
+                        <label height="55" alignment="center" verticalAlignment="center" text=" " id="U0j-oW-Hpm"/>
                     </items>
+                    <menu key="menu" id="Edy-I6-EnQ">
+                        <items>
+                            <menuItem title="Reload" id="RXj-IM-dr6"/>
+                        </items>
+                    </menu>
+                    <connections>
+                        <outlet property="activityIndicator" destination="P6w-J6-KxE" id="X7p-sf-Fpu"/>
+                        <outlet property="stopTableView" destination="F9y-Od-5g2" id="D19-oO-x6Z"/>
+                    </connections>
                 </controller>
             </objects>
             <point key="canvasLocation" x="475" y="347"/>

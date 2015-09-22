@@ -10,6 +10,8 @@ import WatchKit
 
 class StopRow: NSObject {
     @IBOutlet weak var stopNameLabel: WKInterfaceLabel!
+    @IBOutlet weak var estimationGroup: WKInterfaceGroup!
     @IBOutlet weak var distanceLabel: WKInterfaceLabel!
     @IBOutlet weak var timeLabel: WKInterfaceLabel!
+    @IBOutlet weak var noEstimationLabel: WKInterfaceLabel!
 }

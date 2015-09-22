@@ -107,6 +107,7 @@
 		7C3FFE411B8A1D0D002F11D3 /* FavoriteRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C3FFE401B8A1D0D002F11D3 /* FavoriteRow.swift */; };
 		7C3FFE431B8AAEE0002F11D3 /* FavoriteClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C3FFE421B8AAEE0002F11D3 /* FavoriteClient.swift */; };
 		7C3FFE451B8CCF70002F11D3 /* StopRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C3FFE441B8CCF70002F11D3 /* StopRow.swift */; };
+		7C3FFE471B8CD24F002F11D3 /* StopInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C3FFE461B8CD24F002F11D3 /* StopInterfaceController.swift */; };
 		7C426414184AE87300A8968F /* CFStopCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C426413184AE87300A8968F /* CFStopCell.m */; };
 		7C426417184AE88000A8968F /* CFResultCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C426416184AE88000A8968F /* CFResultCell.m */; };
 		7C42641A184AF3E300A8968F /* CFFavoriteCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C426419184AF3E300A8968F /* CFFavoriteCell.m */; };
@@ -407,6 +408,7 @@
 		7C3FFE401B8A1D0D002F11D3 /* FavoriteRow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoriteRow.swift; sourceTree = "<group>"; };
 		7C3FFE421B8AAEE0002F11D3 /* FavoriteClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoriteClient.swift; sourceTree = "<group>"; };
 		7C3FFE441B8CCF70002F11D3 /* StopRow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StopRow.swift; sourceTree = "<group>"; };
+		7C3FFE461B8CD24F002F11D3 /* StopInterfaceController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StopInterfaceController.swift; sourceTree = "<group>"; };
 		7C426412184AE87300A8968F /* CFStopCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFStopCell.h; sourceTree = "<group>"; };
 		7C426413184AE87300A8968F /* CFStopCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFStopCell.m; sourceTree = "<group>"; };
 		7C426415184AE88000A8968F /* CFResultCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFResultCell.h; sourceTree = "<group>"; };
@@ -752,9 +754,10 @@
 			children = (
 				7C3FFE3E1B8A1CCF002F11D3 /* CFWatchDev Extension.entitlements */,
 				7C3FFE2F1B8A1CBC002F11D3 /* ExtensionDelegate.swift */,
-				7C3FFE2D1B8A1CBC002F11D3 /* InterfaceController.swift */,
 				7C3FFE421B8AAEE0002F11D3 /* FavoriteClient.swift */,
+				7C3FFE2D1B8A1CBC002F11D3 /* InterfaceController.swift */,
 				7C3FFE401B8A1D0D002F11D3 /* FavoriteRow.swift */,
+				7C3FFE461B8CD24F002F11D3 /* StopInterfaceController.swift */,
 				7C3FFE441B8CCF70002F11D3 /* StopRow.swift */,
 				7C3FFE311B8A1CBC002F11D3 /* Assets.xcassets */,
 				7C3FFE331B8A1CBC002F11D3 /* Info.plist */,
@@ -1669,6 +1672,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7C3FFE301B8A1CBC002F11D3 /* ExtensionDelegate.swift in Sources */,
+				7C3FFE471B8CD24F002F11D3 /* StopInterfaceController.swift in Sources */,
 				7C3FFE2E1B8A1CBC002F11D3 /* InterfaceController.swift in Sources */,
 				7C3FFE451B8CCF70002F11D3 /* StopRow.swift in Sources */,
 				7C3FFE431B8AAEE0002F11D3 /* FavoriteClient.swift in Sources */,
@@ -2452,6 +2456,7 @@
 				7C3FFE391B8A1CBC002F11D3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		7C3FFE3B1B8A1CBC002F11D3 /* Build configuration list for PBXNativeTarget "CFWatchDev" */ = {
 			isa = XCConfigurationList;
@@ -2460,6 +2465,7 @@
 				7C3FFE3D1B8A1CBC002F11D3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		7CC343DD19772AD8003E8555 /* Build configuration list for PBXNativeTarget "CuantoFaltaKit" */ = {
 			isa = XCConfigurationList;

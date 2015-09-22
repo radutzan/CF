@@ -10,7 +10,7 @@ import WatchKit
 import Foundation
 
 class InterfaceController: WKInterfaceController, FavoriteClientDelegate {
-    @IBOutlet weak var tableView: WKInterfaceTable!
+    @IBOutlet weak var favoritesTableView: WKInterfaceTable!
     @IBOutlet weak var noFavoritesView: WKInterfaceGroup!
     
     private var defaults = NSUserDefaults(suiteName: "group.ondalabs.cfbetagroup")
@@ -32,17 +32,17 @@ class InterfaceController: WKInterfaceController, FavoriteClientDelegate {
     func reloadData() {
         if favorites.count == 0 {
             noFavoritesView.setHidden(false)
-            tableView.setHidden(true)
+            favoritesTableView.setHidden(true)
             print("no favs")
         } else {
             noFavoritesView.setHidden(true)
-            tableView.setHidden(false)
+            favoritesTableView.setHidden(false)
             
-            tableView.setNumberOfRows(favorites.count, withRowType: "FavoriteRow")
+            favoritesTableView.setNumberOfRows(favorites.count, withRowType: "FavoriteRow")
             
             var index = 0
             for favorite in favorites {
-                if let row = tableView.rowControllerAtIndex(index) as? FavoriteRow {
+                if let row = favoritesTableView.rowControllerAtIndex(index) as? FavoriteRow {
                     row.titleLabel.setText(favorite["favoriteName"] as? String)
                     row.detailLabel.setText(favorite["nombre"] as? String)
                 }
@@ -54,6 +54,13 @@ class InterfaceController: WKInterfaceController, FavoriteClientDelegate {
     func clientDidUpdateFavorites(updatedFavorites: [[String : AnyObject]]) {
         favorites = updatedFavorites
         reloadData()
+    }
+    
+    override func contextForSegueWithIdentifier(segueIdentifier: String, inTable table: WKInterfaceTable, rowIndex: Int) -> AnyObject? {
+        if segueIdentifier == "FavoriteTap" {
+            return favorites[rowIndex]
+        }
+        return nil
     }
 
     override func didDeactivate() {
