@@ -517,7 +517,8 @@
 		7CFF7EC7183A639C006230CE /* button-more-selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-more-selected@2x.png"; sourceTree = "<group>"; };
 		7CFF7EC8183A639C006230CE /* button-more@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-more@2x.png"; sourceTree = "<group>"; };
 		87FD0B9EF07342C68E7A06CC /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		F62BD801ED374EB1AD8B82CE /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
+		AE307E348B3968BD9ECA3BD0 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		E00B7A63F9AC5EA8B45A7508 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -792,7 +793,7 @@
 				7CFF7E4318381645006230CE /* Frameworks */,
 				7CFF7E4218381645006230CE /* Products */,
 				7CFF7E6318381645006230CE /* CFTests */,
-				F62BD801ED374EB1AD8B82CE /* Pods.xcconfig */,
+				FADD1E07AF7332D60DC443B9 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -994,6 +995,15 @@
 			name = Libraries;
 			sourceTree = "<group>";
 		};
+		FADD1E07AF7332D60DC443B9 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				AE307E348B3968BD9ECA3BD0 /* Pods.debug.xcconfig */,
+				E00B7A63F9AC5EA8B45A7508 /* Pods.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -1151,7 +1161,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = CF;
-				LastUpgradeCheck = 0600;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = Onda;
 				TargetAttributes = {
 					7C01EDAD1974938E00DE7EAB = {
@@ -1384,7 +1394,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Pods-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		7CBAFABB1A0D3329001F61E7 /* ShellScript */ = {
@@ -1440,7 +1450,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Pods-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -1749,6 +1759,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ondalabs.cuantofalta.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
@@ -1768,6 +1779,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ondalabs.cuantofalta.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
@@ -1792,6 +1804,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ondalabs.cfbeta.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
@@ -1811,6 +1824,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ondalabs.cfbeta.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
@@ -1819,7 +1833,7 @@
 		};
 		7C2EED0F188345F500AE78C2 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F62BD801ED374EB1AD8B82CE /* Pods.xcconfig */;
+			baseConfigurationReference = AE307E348B3968BD9ECA3BD0 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -1828,6 +1842,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = YES;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/CF",
@@ -1849,6 +1864,7 @@
 					"$(PROJECT_DIR)/CF/CrittercismSDK",
 					"$(PROJECT_DIR)/CF",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.ondalabs.cfbeta;
 				PRODUCT_NAME = "Cuánta Beta";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "CF/Cuánto Falta Dev-Bridging-Header.h";
@@ -1860,7 +1876,7 @@
 		};
 		7C2EED10188345F500AE78C2 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F62BD801ED374EB1AD8B82CE /* Pods.xcconfig */;
+			baseConfigurationReference = AE307E348B3968BD9ECA3BD0 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -1869,6 +1885,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = YES;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/CF",
@@ -1885,6 +1902,7 @@
 					"$(PROJECT_DIR)/CF/CrittercismSDK",
 					"$(PROJECT_DIR)/CF",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.ondalabs.cfbeta;
 				PRODUCT_NAME = "Cuánta Beta";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "CF/Cuánto Falta Dev-Bridging-Header.h";
@@ -1913,6 +1931,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ondalabs.cuantofalta.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1937,6 +1956,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ondalabs.cuantofalta.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1963,6 +1983,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ondalabs.cuantofalta.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -1981,6 +2002,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ondalabs.cuantofalta.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -2003,6 +2025,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -2057,7 +2080,7 @@
 		};
 		7CFF7E6E18381645006230CE /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F62BD801ED374EB1AD8B82CE /* Pods.xcconfig */;
+			baseConfigurationReference = AE307E348B3968BD9ECA3BD0 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -2065,6 +2088,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Cuánto Falta.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/CF",
@@ -2081,6 +2105,7 @@
 					"$(PROJECT_DIR)/CF/CrittercismSDK",
 					"$(PROJECT_DIR)/CF",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.ondalabs.cuantofalta;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "CF/Cuánto Falta-Bridging-Header.h";
@@ -2092,7 +2117,7 @@
 		};
 		7CFF7E6F18381645006230CE /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F62BD801ED374EB1AD8B82CE /* Pods.xcconfig */;
+			baseConfigurationReference = E00B7A63F9AC5EA8B45A7508 /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -2100,6 +2125,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Cuánto Falta.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/CF",
@@ -2116,6 +2142,7 @@
 					"$(PROJECT_DIR)/CF/CrittercismSDK",
 					"$(PROJECT_DIR)/CF",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.ondalabs.cuantofalta;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "CF/Cuánto Falta-Bridging-Header.h";
@@ -2140,6 +2167,7 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = "CFTests/CFTests-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ondalabs.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
@@ -2158,6 +2186,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "CF/CF-Prefix.pch";
 				INFOPLIST_FILE = "CFTests/CFTests-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ondalabs.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
