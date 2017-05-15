@@ -410,7 +410,7 @@ static MKMapRect santiagoBounds;
 
 - (void)placeStopAnnotationsInRegion:(MKCoordinateRegion)region withRadius:(float)radius
 {
-    if (!self.mapMode == CFMapModeStops) return;
+    if (self.mapMode != CFMapModeStops) return;
     
     [[CFSapoClient sharedClient] busStopsAroundCoordinate:region.center radius:radius handler:^(NSError *error, id result) {
         if (error) {
@@ -433,7 +433,7 @@ static MKMapRect santiagoBounds;
         if ([result count] == 0) return;
         
         for (NSDictionary *stopData in result) {
-            if (!self.mapMode == CFMapModeStops) return;
+            if (self.mapMode != CFMapModeStops) return;
             
             CLLocationCoordinate2D coordinate;
             coordinate.latitude = [[stopData objectForKey:@"latitude"] doubleValue];
@@ -458,7 +458,7 @@ static MKMapRect santiagoBounds;
 
 - (void)placeBipAnnotationsInRegion:(MKCoordinateRegion)region withRadius:(float)radius
 {
-    if (!self.mapMode == CFMapModeStops) return;
+    if (self.mapMode != CFMapModeStops) return;
     
     [[CFSapoClient sharedClient] bipSpotsAroundCoordinate:region.center radius:radius handler:^(NSError *error, id result) {
         if (error) {
@@ -474,7 +474,7 @@ static MKMapRect santiagoBounds;
         NSArray *spotsArray = [self.bipSpots allObjects];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            if (!self.mapMode == CFMapModeStops) return;
+            if (self.mapMode != CFMapModeStops) return;
             [self.mapView addAnnotations:spotsArray];
         });
     }];
@@ -615,7 +615,7 @@ static MKMapRect santiagoBounds;
 
 - (void)drawPolylineForService:(NSString *)service direction:(CFDirection)direction
 {
-    if (!self.mapMode == CFMapModeServiceRoute) return;
+    if (self.mapMode != CFMapModeServiceRoute) return;
     
     [self.mapView removeOverlays:self.mapView.overlays];
     [self clearStopAnnotations];
@@ -652,7 +652,7 @@ static MKMapRect santiagoBounds;
         CFRoute *route = [CFRoute routeWithServiceName:service stops:stops routeCoordinates:coordinates count:result.count];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            if (!self.mapMode == CFMapModeServiceRoute) return;
+            if (self.mapMode != CFMapModeServiceRoute) return;
             self.showActivityIndicator = NO;
             
             [self.mapView removeOverlays:self.mapView.overlays];

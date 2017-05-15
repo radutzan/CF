@@ -10,7 +10,6 @@
 #import "CFSearchSuggestionsCard.h"
 #import "CFServiceRouteBar.h"
 #import "CFMapSearchSuggestionView.h"
-#import <Mixpanel/Mixpanel.h>
 
 #define VERTICAL_MARGIN 0.0
 #define HORIZONTAL_MARGIN 0.0

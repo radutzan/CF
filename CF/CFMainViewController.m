@@ -6,7 +6,6 @@
 //  Copyright (c) 2013 Onda. All rights reserved.
 //
 
-#import <Mixpanel/Mixpanel.h>
 #import <OLGhostAlertView/OLGhostAlertView.h>
 
 #import "CFMainViewController.h"
@@ -115,11 +114,6 @@
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"CF01"];
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"CF02"];
 #endif
-    
-    Mixpanel *mixpanel = [Mixpanel sharedInstance];
-    
-    NSString *freeMap = ([[NSUserDefaults standardUserDefaults] boolForKey:@"CF01"] || [[NSUserDefaults standardUserDefaults] boolForKey:@"CF02"])? @"No" : @"Yes";
-    [mixpanel registerSuperProperties:@{@"Has Ads": freeMap}];
     
     self.stopResultsController = [CFStopResultsViewController new];
     self.stopResultsController.delegate = self;
@@ -327,25 +321,16 @@
 {
     self.stopResultsController.stop = stop;
     [self.stopResultsController presentOnViewController:self];
-    
-    Mixpanel *mixpanel = [Mixpanel sharedInstance];
-    [mixpanel track:@"Stop Requested" properties:@{@"Code": stop.code, @"From": @"Search Results"}];
 }
 
 - (void)searchControllerRequestedLocalSearch:(NSString *)searchString
 {
     [self.mapController performSearchWithString:searchString];
-    
-    Mixpanel *mixpanel = [Mixpanel sharedInstance];
-    [mixpanel track:@"Local Search Requested"];
 }
 
 - (void)searchControllerDidSelectService:(CFService *)service direction:(CFDirection)direction
 {
     [self showServiceRouteForService:service direction:direction];
-    
-    Mixpanel *mixpanel = [Mixpanel sharedInstance];
-    [mixpanel track:@"Service Route Requested" properties:@{@"Service": service.name, @"From": @"Search Results"}];
 }
 
 - (void)keyboardWasShown:(NSNotification*)aNotification
@@ -369,8 +354,6 @@
 
 - (void)stopResultsViewWasPromotedFromContainment
 {
-    Mixpanel *mixpanel = [Mixpanel sharedInstance];
-    [mixpanel track:@"Stop Promoted From Containment"];
     [self.searchController hide];
     [self.searchController.searchField clear];
 }
@@ -460,27 +443,20 @@
 - (void)processExternalURL:(NSURL *)url
 {
     NSLog(@"%@", [url absoluteString]);
-    Mixpanel *mixpanel = [Mixpanel sharedInstance];
     
     if ([url.host isEqualToString:@"stop"]) {
         NSString *stopCode = url.lastPathComponent;
         [self pushStopResultsWithStopCode:stopCode];
-        
-        [mixpanel track:@"Stop Requested" properties:@{@"Code": stopCode, @"From": @"External URL"}];
     }
     
     if ([url.host isEqualToString:@"gmaps"]) {
 //        [self showGoogleMapsBar];
-        [mixpanel track:@"Returned from Google Maps"];
     }
 }
 
 - (void)drawerDidSelectCellWithStop:(NSString *)stopCode
 {
     [self pushStopResultsWithStopCode:stopCode];
-    
-    Mixpanel *mixpanel = [Mixpanel sharedInstance];
-    [mixpanel track:@"Stop Requested" properties:@{@"Code": stopCode, @"From": @"History or Favorites"}];
 }
 
 - (void)mapControllerDidSelectStop:(CFStop *)stop
@@ -489,9 +465,6 @@
     self.stopResultsController.stop = stop;
     [self.stopResultsController presentFromRect:originRect onViewController:self];
     self.drawerController.drawerOpen = NO;
-    
-    Mixpanel *mixpanel = [Mixpanel sharedInstance];
-    [mixpanel track:@"Stop Requested" properties:@{@"Code": stop.code, @"From": @"Map"}];
 }
 
 - (void)stopResultsViewControllerDidUpdateUserData
@@ -536,9 +509,6 @@
     
     [self.mapController displayServiceRoute:service.name direction:direction];
     [self showServiceRouteBarWithService:service selectedDirection:direction];
-    
-    Mixpanel *mixpanel = [Mixpanel sharedInstance];
-    [mixpanel track:@"Service Route Requested" properties:@{@"Service": service.name}];
 }
 
 - (void)showServiceRouteBarWithService:(CFService *)service selectedDirection:(CFDirection)direction
@@ -662,9 +632,6 @@
                     self.topContentMargin -= recognizer.view.bounds.size.height;
                     [recognizer.view removeFromSuperview];
                 }
-                
-                Mixpanel *mixpanel = [Mixpanel sharedInstance];
-                [mixpanel track:@"Used Service Bar Dismiss Gesture"];
             }];
         } else {
             [UIView animateWithDuration:0.45 delay:0 usingSpringWithDamping:0.6 initialSpringVelocity:velocityFactor options:0 animations:^{

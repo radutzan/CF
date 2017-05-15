@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 Onda. All rights reserved.
 //
 
-#import "UIDevice+Hardware.h"
+#import "UIDevice+hardware.h"
 #include <sys/types.h>
 #include <sys/sysctl.h>
 

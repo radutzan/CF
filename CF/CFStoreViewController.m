@@ -6,7 +6,6 @@
 //  Copyright (c) 2014 Onda. All rights reserved.
 //
 
-#import <Mixpanel/Mixpanel.h>
 #import <OLGhostAlertView/OLGhostAlertView.h>
 #import "CFStoreViewController.h"
 #import "OLCashier.h"
@@ -119,8 +118,6 @@
     wait.position = OLGhostAlertViewPositionCenter;
     [wait show];
     
-    Mixpanel *mixpanel = [Mixpanel sharedInstance];
-    
     if (indexPath.section == 0) {
         NSString *thisIdentifier;
         
@@ -129,8 +126,6 @@
         
         if ([OLCashier hasProduct:thisIdentifier]) return;
         
-        [mixpanel track:@"Triggered Purchase in Store"];
-        
         [[OLCashier defaultCashier] buyProduct:thisIdentifier handler:^(NSError *error, NSArray *transactions, NSDictionary *userInfo) {
             SKPaymentTransaction *transaction = transactions.firstObject;
             [wait hide];
@@ -138,12 +133,6 @@
             if (error) {
                 UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"STORE_ERROR_TITLE", nil) message:[NSString stringWithFormat:@"%@. %@", error.localizedDescription, NSLocalizedString(@"ERROR_MESSAGE_TRY_AGAIN", nil)] delegate:self cancelButtonTitle:NSLocalizedString(@"ERROR_DISMISS", nil) otherButtonTitles:nil];
                 [errorAlert show];
-                
-                if (indexPath.section == 0) {
-                    [mixpanel track:@"Failed to Purchase Map"];
-                } else {
-                    [mixpanel track:@"Failed to Purchase Ad Removal"];
-                }
                 return;
             }
             [[NSUserDefaults standardUserDefaults] setBool:YES forKey:thisIdentifier];
@@ -154,25 +143,14 @@
             OLGhostAlertView *thanks = [[OLGhostAlertView alloc] initWithTitle:NSLocalizedString(@"STORE_THANK_YOU_TITLE", nil) message:NSLocalizedString(@"STORE_THANK_YOU_MESSAGE_MAP", nil)];
             thanks.position = OLGhostAlertViewPositionCenter;
             [thanks show];
-            
-            if (indexPath.section == 0) {
-                [mixpanel track:@"Purchased Map"];
-                [mixpanel registerSuperProperties:@{@"Has Map": @"Yes"}];
-            } else {
-                [mixpanel track:@"Removed Ads"];
-            }
         }];
     } else {
-        [mixpanel track:@"Triggered Restore Purchases"];
-        
         [[OLCashier defaultCashier] restoreCompletedTransactions:^(NSError *error, NSArray *transactions, NSDictionary *userInfo) {
             [wait hide];
             
             if (error) {
                 UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"STORE_ERROR_TITLE", nil) message:[NSString stringWithFormat:@"%@. %@", error.localizedDescription, NSLocalizedString(@"ERROR_MESSAGE_TRY_AGAIN", nil)] delegate:self cancelButtonTitle:NSLocalizedString(@"ERROR_DISMISS", nil) otherButtonTitles:nil];
                 [errorAlert show];
-                
-                [mixpanel track:@"Failed to Restore Purchases"];
                 
                 return;
             }
@@ -183,8 +161,6 @@
             }
             
             [self.tableView reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0,2)] withRowAnimation:UITableViewRowAnimationAutomatic];
-            
-            [mixpanel track:@"Successfully Restored Purchases"];
         }];
     }
 }

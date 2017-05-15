@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <Mixpanel/Mixpanel.h>
 
 //! Project version number for CuantoFaltaKit.
 FOUNDATION_EXPORT double CuantoFaltaKitVersionNumber;

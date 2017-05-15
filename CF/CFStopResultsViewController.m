@@ -8,7 +8,6 @@
 
 #import <Social/Social.h>
 
-#import <Mixpanel/Mixpanel.h>
 #import <OLGhostAlertView/OLGhostAlertView.h>
 
 #import "CFStopResultsViewController.h"
@@ -424,8 +423,6 @@ CALayer *_leftGripper;
         self.stopResultsView.frame = self.stopResultsViewPresentedFrame;
         if (!self.removedAds && self.showingAds) [self showAds];
     } completion:^(BOOL finished) {
-//        Mixpanel *mixpanel = [Mixpanel sharedInstance];
-//        [mixpanel track:@"Expanded Stop"];
     }];
 }
 
@@ -440,8 +437,6 @@ CALayer *_leftGripper;
         self.stopResultsView.frame = self.stopResultsViewMinimizedFrame;
         [self hideAds];
     } completion:^(BOOL finished) {
-        Mixpanel *mixpanel = [Mixpanel sharedInstance];
-        [mixpanel track:@"Minimized Stop"];
     }];
 }
 
@@ -508,8 +503,6 @@ CALayer *_leftGripper;
         
         if (terminalVelocity > 250 || moveDiff > 80) {
             [self dismissFromCenter:self.stopResultsView.center withVelocityFactor:velocityFactor];
-            Mixpanel *mixpanel = [Mixpanel sharedInstance];
-            [mixpanel track:@"Used Stop Dismiss Gesture"];
         } else {
             [UIView animateWithDuration:0.45 delay:0 usingSpringWithDamping:0.6 initialSpringVelocity:velocityFactor options:0 animations:^{
                 self.stopResultsView.center = CGPointMake(self.stopResultsViewPresentedCenter.x, self.stopResultsView.center.y);
@@ -693,9 +686,6 @@ CALayer *_leftGripper;
                                                   errorAlert.tag = 6009;
                                                   [errorAlert show];
                                               }
-                                              
-                                              Mixpanel *mixpanel = [Mixpanel sharedInstance];
-                                              [mixpanel track:@"Failed Stop Data Request" properties:@{@"Code": stopCode, @"Error": error.debugDescription}];
                                           }
                                       }];
 }
@@ -802,9 +792,6 @@ CALayer *_leftGripper;
                                                    self.refreshing = NO;
                                                    [self.refreshControl endRefreshing];
                                                    [self refreshTimerLabel];
-                                                   
-                                                   Mixpanel *mixpanel = [Mixpanel sharedInstance];
-                                                   [mixpanel track:@"Failed Estimation Request" properties:@{@"Code": self.stop.code, @"Error": error.debugDescription}];
                                                }
                                            }];
 }
@@ -1037,9 +1024,6 @@ CALayer *_leftGripper;
     
     [self.delegate stopResultsViewControllerDidRequestServiceRoute:cell.serviceLabel.text directionString:cell.directionLabel.text];
     [self minimize];
-    
-    Mixpanel *mixpanel = [Mixpanel sharedInstance];
-    [mixpanel track:@"Service Route Requested" properties:@{@"Service": cell.serviceLabel.text, @"From": @"Stop Results"}];
 }
 
 - (void)sendComplaintTweetForService:(NSString *)service

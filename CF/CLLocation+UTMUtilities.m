@@ -46,7 +46,7 @@ int UTMZoneForCLLocationCoordinate2D(CLLocationCoordinate2D coordinate)
     
     // Recast from [-180,180) to [0,360).
     // The w<->w is then divided into 60 zones from 1-60.
-    int zone = abs(floor((coordinate.longitude + 180.0) / 6) + 1);
+    int zone = fabs(floor((coordinate.longitude + 180.0) / 6) + 1);
     if (coordinate.latitude < 0) {
         zone = zone*-1;
     }

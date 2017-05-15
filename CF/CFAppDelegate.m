@@ -7,8 +7,6 @@
 //
 
 #import "CFAppDelegate.h"
-#import <Mixpanel/Mixpanel.h>
-#import "Crittercism.h"
 #import "OLCashier.h"
 #import "CFFavoriteManager.h"
 
@@ -22,10 +20,6 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    [Mixpanel sharedInstanceWithToken:@"9fda86f01e8e8821542524d96b1f7cfb"];
-    
-    [Crittercism enableWithAppID: @"52c8e7844002052b9f000004"];
-    
     OLCashier *cashier = [OLCashier defaultCashier];
     
     [cashier setDefaultTransactionHandler:^(NSError *error, NSArray *transactions, NSDictionary *userInfo){

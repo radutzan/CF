@@ -6,8 +6,6 @@
 //  Copyright (c) 2014 Onda. All rights reserved.
 //
 
-#import <Mixpanel/Mixpanel.h>
-
 #import "CFDrawerController.h"
 #import "CFFavoritesViewController.h"
 #import "CFHistoryViewController.h"
@@ -546,9 +544,6 @@
         [defaults synchronize];
         
         [self.historyController.tableView reloadData];
-        
-        Mixpanel *mixpanel = [Mixpanel sharedInstance];
-        [mixpanel track:@"Cleared History" properties:nil];
     }
 }
 

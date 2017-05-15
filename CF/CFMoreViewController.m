@@ -6,7 +6,6 @@
 //  Copyright (c) 2013 Onda. All rights reserved.
 //
 
-#import <Mixpanel/Mixpanel.h>
 #import "CFMoreViewController.h"
 #import "CFMoreContentViewController.h"
 #import "CFWhatsNewViewController.h"
@@ -164,8 +163,6 @@
     
     NSInteger lastSectionIndex = (self.isPro) ? 1 : 2;
     
-    Mixpanel *mixpanel = [Mixpanel sharedInstance];
-    
     NSURL *baseURL = [[NSBundle mainBundle] resourceURL];
     UIWebView *webView = nil;
     
@@ -189,8 +186,6 @@
         controller.title = NSLocalizedString(@"HELP", nil);
         [self.navigationController pushViewController:controller animated:YES];
         
-        [mixpanel track:@"Opened Help"];
-        
     } else if (indexPath.section == 0 && indexPath.row == 1) {
         NSString *aboutPath = [[NSBundle mainBundle] pathForResource:@"about" ofType:@"html"];
         NSString *aboutString = [NSString stringWithContentsOfFile:aboutPath encoding:NSStringEncodingConversionAllowLossy error:nil];
@@ -201,13 +196,9 @@
         controller.title = NSLocalizedString(@"ABOUT", nil);
         [self.navigationController pushViewController:controller animated:YES];
         
-        [mixpanel track:@"Opened About"];
-        
 //    } else if (indexPath.section == 0 && indexPath.row == 2) {
 //        CFWhatsNewViewController *whatsNew = [CFWhatsNewViewController new];
 //        [self presentViewController:whatsNew animated:YES completion:nil];
-//        
-//        [mixpanel track:@"Opened What's New"];
         
     } else if (indexPath.section == 0 && indexPath.row == 2) {
         NSString *appVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
@@ -218,8 +209,6 @@
         
         controller.title = NSLocalizedString(@"SEND_FEEDBACK", nil);
         [self.navigationController pushViewController:controller animated:YES];
-        
-        [mixpanel track:@"Opened Send Feedback"];
         
     } else if (!self.isPro && indexPath.section == 1 && indexPath.row == 0) {
         [self purchasePro];
@@ -232,8 +221,6 @@
         activityController.excludedActivityTypes = excludeActivities;
         
         [self presentViewController:activityController animated:YES completion:NULL];
-        
-        [mixpanel track:@"Opened Share CF"];
         
     } else if (indexPath.section == lastSectionIndex && indexPath.row == 1) {
         NSURL *URL = nil;
@@ -248,8 +235,6 @@
         
         [[UIApplication sharedApplication] openURL:URL];
         
-        [mixpanel track:@"Opened Follow Us link"];
-        
     } else if (indexPath.section == lastSectionIndex && indexPath.row == 2) {
         
         if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"fb://"]]) {
@@ -257,7 +242,6 @@
         } else {
             [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://facebook.com/cuantofaltapp"]];
         }
-//        [mixpanel track:@"Opened Rate on the App Store"];
 //        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms-apps://itunes.apple.com/app/id431174703"]];
     }
     
@@ -402,9 +386,6 @@
 
 - (void)purchasePro
 {
-    Mixpanel *mixpanel = [Mixpanel sharedInstance];
-    [mixpanel track:@"Triggered Pro Purchase"];
-    
     NSString *proIdentifier = @"CF01";
     
     OLGhostAlertView *wait = [[OLGhostAlertView alloc] initWithTitle:NSLocalizedString(@"STORE_WAIT_TITLE", nil) message:NSLocalizedString(@"STORE_WAIT_MESSAGE", nil) timeout:100.0 dismissible:NO];
@@ -418,8 +399,6 @@
         if (error) {
             UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"STORE_ERROR_TITLE", nil) message:[NSString stringWithFormat:@"%@. %@", error.localizedDescription, NSLocalizedString(@"ERROR_MESSAGE_TRY_AGAIN", nil)] delegate:self cancelButtonTitle:NSLocalizedString(@"ERROR_DISMISS", nil) otherButtonTitles:nil];
             [errorAlert show];
-            
-            [mixpanel track:@"Failed to Purchase Pro" properties:@{@"Error:": error.description}];
             return;
         }
         
@@ -430,18 +409,12 @@
         thanks.position = OLGhostAlertViewPositionCenter;
         [thanks show];
         
-        [mixpanel track:@"Purchased Pro"];
-        [mixpanel registerSuperProperties:@{@"Has Pro": @"Yes"}];
-        
         [self.tableView reloadData];
     }];
 }
 
 - (void)restorePurchases
 {
-    Mixpanel *mixpanel = [Mixpanel sharedInstance];
-    [mixpanel track:@"Triggered Restore Purchases"];
-    
     OLGhostAlertView *wait = [[OLGhostAlertView alloc] initWithTitle:NSLocalizedString(@"STORE_WAIT_TITLE", nil) message:NSLocalizedString(@"STORE_WAIT_MESSAGE", nil) timeout:100.0 dismissible:NO];
     wait.position = OLGhostAlertViewPositionCenter;
     [wait show];
@@ -452,8 +425,6 @@
         if (error) {
             UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"STORE_ERROR_TITLE", nil) message:[NSString stringWithFormat:@"%@. %@", error.localizedDescription, NSLocalizedString(@"ERROR_MESSAGE_TRY_AGAIN", nil)] delegate:self cancelButtonTitle:NSLocalizedString(@"ERROR_DISMISS", nil) otherButtonTitles:nil];
             [errorAlert show];
-            
-            [mixpanel track:@"Failed to Restore Purchases"];
             return;
         }
         
@@ -461,8 +432,6 @@
             [[NSUserDefaults standardUserDefaults] setBool:YES forKey:transaction.payment.productIdentifier];
             [transaction finish];
         }
-        
-        [mixpanel track:@"Successfully Restored Purchases"];
         
         [self.tableView reloadData];
     }];
