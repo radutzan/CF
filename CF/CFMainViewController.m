@@ -105,15 +105,17 @@
     
     [self.localNavigationBar pushNavigationItem:navItem animated:NO];
     
-#if TARGET_IPHONE_SIMULATOR
-    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"CF01"];
-    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"CF02"];
-#endif
-    
-#ifdef DEV_VERSION
-    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"CF01"];
-    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"CF02"];
-#endif
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"CF01"];
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"CF02"];
+//#if TARGET_IPHONE_SIMULATOR
+//    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"CF01"];
+//    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"CF02"];
+//#endif
+//    
+//#ifdef DEV_VERSION
+//    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"CF01"];
+//    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"CF02"];
+//#endif
     
     self.stopResultsController = [CFStopResultsViewController new];
     self.stopResultsController.delegate = self;

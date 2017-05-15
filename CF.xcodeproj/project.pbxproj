@@ -28,8 +28,6 @@
 		7C10B972183ADD2A0086B650 /* CFHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C10B971183ADD2A0086B650 /* CFHistoryViewController.m */; };
 		7C10B975183ADD320086B650 /* CFMoreViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C10B974183ADD320086B650 /* CFMoreViewController.m */; };
 		7C130C5A1A8FE8880015A81A /* Cuánto Falta.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 7C130C591A8FE8880015A81A /* Cuánto Falta.entitlements */; };
-		7C130C5C1A8FEA960015A81A /* GoogleMobileAds.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C130C5B1A8FEA960015A81A /* GoogleMobileAds.framework */; };
-		7C130C5D1A8FEA970015A81A /* GoogleMobileAds.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C130C5B1A8FEA960015A81A /* GoogleMobileAds.framework */; };
 		7C130C601A93A2BF0015A81A /* CFFavoriteManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C130C5F1A93A2BF0015A81A /* CFFavoriteManager.m */; };
 		7C130C611A93A2BF0015A81A /* CFFavoriteManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C130C5F1A93A2BF0015A81A /* CFFavoriteManager.m */; };
 		7C14644A193288C0009B0C94 /* CFWhatsNewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C5ACA5C1932856E00E20FD9 /* CFWhatsNewViewController.m */; };
@@ -343,7 +341,6 @@
 		7C10B973183ADD320086B650 /* CFMoreViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFMoreViewController.h; sourceTree = "<group>"; };
 		7C10B974183ADD320086B650 /* CFMoreViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFMoreViewController.m; sourceTree = "<group>"; };
 		7C130C591A8FE8880015A81A /* Cuánto Falta.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "Cuánto Falta.entitlements"; sourceTree = "<group>"; };
-		7C130C5B1A8FEA960015A81A /* GoogleMobileAds.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleMobileAds.framework; sourceTree = "<group>"; };
 		7C130C5E1A93A2BF0015A81A /* CFFavoriteManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFFavoriteManager.h; sourceTree = "<group>"; };
 		7C130C5F1A93A2BF0015A81A /* CFFavoriteManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFFavoriteManager.m; sourceTree = "<group>"; };
 		7C2B8AB719C4D34F0021AEA3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -544,7 +541,6 @@
 				7C2EECEB188345F500AE78C2 /* CoreGraphics.framework in Frameworks */,
 				7C2EECEC188345F500AE78C2 /* UIKit.framework in Frameworks */,
 				7C2EECEE188345F500AE78C2 /* Foundation.framework in Frameworks */,
-				7C130C5D1A8FEA970015A81A /* GoogleMobileAds.framework in Frameworks */,
 				9BC087ECF8EF8E074D6062CA /* libPods-Cuánto Falta Dev.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -572,7 +568,6 @@
 			files = (
 				7CE0D9DA189DD2D800D9782E /* Social.framework in Frameworks */,
 				7C5DD3441879234F00FE5CFB /* SystemConfiguration.framework in Frameworks */,
-				7C130C5C1A8FEA960015A81A /* GoogleMobileAds.framework in Frameworks */,
 				7C6CE7FD1877B7DD00DDEF54 /* StoreKit.framework in Frameworks */,
 				7C6CE7FB1877B7D000DDEF54 /* MessageUI.framework in Frameworks */,
 				7C6CE7F91877B7C700DDEF54 /* AVFoundation.framework in Frameworks */,
@@ -950,7 +945,6 @@
 			isa = PBXGroup;
 			children = (
 				5A11D7581877A278001118F6 /* Cashier */,
-				7C130C5B1A8FEA960015A81A /* GoogleMobileAds.framework */,
 				7CFF7EA018382B4D006230CE /* CFSapoClient.h */,
 				7CFF7EA118382B4D006230CE /* CFSapoClient.m */,
 				7CFF7E9318382B01006230CE /* CLLocation+UTMUtilities.h */,

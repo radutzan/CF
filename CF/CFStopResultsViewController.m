@@ -20,9 +20,7 @@
 #import "CFTransparentView.h"
 #import "UIImage+Star.h"
 
-#import <GoogleMobileAds/GADBannerView.h>
-
-@interface CFStopResultsViewController () <CFStopSignViewDelegate, UIAlertViewDelegate, CFResultCellDelegate, UITableViewDelegate, UITableViewDataSource, UIGestureRecognizerDelegate, GADBannerViewDelegate>
+@interface CFStopResultsViewController () <CFStopSignViewDelegate, UIAlertViewDelegate, CFResultCellDelegate, UITableViewDelegate, UITableViewDataSource, UIGestureRecognizerDelegate>
 
 @property (nonatomic, strong) UIView *stopResultsView;
 @property (nonatomic, assign, readwrite) CFStopResultsDisplayMode displayMode;
@@ -48,7 +46,6 @@
 @property (nonatomic, assign) CGRect stopResultsViewMinimizedFrame;
 @property (nonatomic, assign) CGPoint stopResultsViewStoredCenter;
 
-@property (nonatomic, strong) GADBannerView *bannerView;
 @property (nonatomic, assign) BOOL removedAds;
 @property (nonatomic, assign) BOOL showingAds;
 
@@ -160,14 +157,6 @@ CALayer *_leftGripper;
     self.tableView.backgroundColor = [UIColor clearColor];
     self.tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
     [self.stopResultsView insertSubview:self.tableView belowSubview:self.titleView];
-    
-    self.bannerView = [[GADBannerView alloc] initWithAdSize:kGADAdSizeSmartBannerPortrait];
-    self.bannerView.rootViewController = self;
-    self.bannerView.adUnitID = @"ca-app-pub-6226087428684107/3340545274";
-    self.bannerView.delegate = self;
-    self.bannerView.frame = CGRectMake(0, self.view.bounds.size.height, self.view.bounds.size.width, 50);
-    [self.view insertSubview:self.bannerView aboveSubview:self.overlay];
-    [self requestAds];
 }
 
 - (void)viewDidLoad
@@ -259,8 +248,6 @@ CALayer *_leftGripper;
     
     [self setUpTitleView];
     if (self.stop && !self.refreshing) [self performStopRequestQuietly:NO];
-    
-    if (!self.removedAds) [self.view insertSubview:self.bannerView aboveSubview:self.overlay];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -275,8 +262,6 @@ CALayer *_leftGripper;
 - (void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
-    
-    [self.bannerView removeFromSuperview];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
@@ -299,7 +284,6 @@ CALayer *_leftGripper;
     
     if (self.displayMode == CFStopResultsDisplayModePresented) {
         self.stopResultsView.frame = self.stopResultsViewPresentedFrame;
-        if (!self.removedAds) [self showAds];
     }
     
     if (self.displayMode == CFStopResultsDisplayModeMinimized) self.stopResultsView.frame = self.stopResultsViewMinimizedFrame;
@@ -421,7 +405,6 @@ CALayer *_leftGripper;
         self.overlay.alpha = 1;
         self.stopResultsView.alpha = 1;
         self.stopResultsView.frame = self.stopResultsViewPresentedFrame;
-        if (!self.removedAds && self.showingAds) [self showAds];
     } completion:^(BOOL finished) {
     }];
 }
@@ -435,7 +418,6 @@ CALayer *_leftGripper;
     [UIView animateWithDuration:0.45 delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:1 options:0 animations:^{
         self.overlay.alpha = 0;
         self.stopResultsView.frame = self.stopResultsViewMinimizedFrame;
-        [self hideAds];
     } completion:^(BOOL finished) {
     }];
 }
@@ -452,7 +434,6 @@ CALayer *_leftGripper;
     
     [UIView animateWithDuration:animationDuration delay:0 usingSpringWithDamping:1 initialSpringVelocity:velocityFactor options:0 animations:^{
         self.overlay.alpha = 0;
-        [self hideAds];
         if (self.displayMode == CFStopResultsDisplayModeContained) {
             self.stopResultsView.center = CGPointMake(self.stopResultsView.center.x, self.stopResultsView.center.y - SEARCH_CARD_ANIMATION_OFFSET);
             self.stopResultsView.alpha = 0;
@@ -490,8 +471,6 @@ CALayer *_leftGripper;
             self.stopResultsView.center = CGPointMake(self.stopResultsViewPresentedCenter.x + moveDiff, self.stopResultsView.center.y);
             if (self.displayMode == CFStopResultsDisplayModePresented) {
                 self.overlay.alpha = 1.0 - fabs(dragFactor);
-                self.bannerView.alpha = self.overlay.alpha;
-                [self positionAd:self.overlay.alpha];
             }
         } else {
             self.stopResultsView.center = CGPointMake(self.stopResultsViewPresentedCenter.x + moveDiff * 0.25, self.stopResultsView.center.y);
@@ -508,7 +487,6 @@ CALayer *_leftGripper;
                 self.stopResultsView.center = CGPointMake(self.stopResultsViewPresentedCenter.x, self.stopResultsView.center.y);
                 if (self.displayMode == CFStopResultsDisplayModePresented) {
                     self.overlay.alpha = 1;
-                    [self showAds];
                 }
             } completion:nil];
         }
@@ -533,7 +511,6 @@ CALayer *_leftGripper;
         } else {
             self.overlay.alpha = fabs(dragFactor);
         }
-        [self positionAd:self.overlay.alpha];
         
     } else {
         CGFloat terminalVelocity = MIN([recognizer velocityInView:self.view].y, 3500);
@@ -709,7 +686,6 @@ CALayer *_leftGripper;
     
     if (stop) {
         [self.tableView reloadData];
-        [self requestAds];
         
         if (self.displayMode == CFStopResultsDisplayModeContained) {
             [self performSelector:@selector(performStopRequestQuietly:) withObject:nil afterDelay:1.0];
@@ -1033,63 +1009,6 @@ CALayer *_leftGripper;
         [complaintTweet setInitialText:[NSString stringWithFormat:NSLocalizedString(@"NO_INFO_COMPLAINT_TWEET", nil), service, self.stop.code]];
         [self presentViewController:complaintTweet animated:YES completion:nil];
     }
-}
-
-#pragma mark - Ads
-
-- (void)requestAds
-{
-    if (self.removedAds) return;
-    if (!self.bannerView) return;
-    NSLog(@"requestAds: passed all checks, requesting ad");
-    
-    GADRequest *adRequest = [GADRequest request];
-    if (self.stop) [adRequest setLocationWithLatitude:self.stop.coordinate.latitude longitude:self.stop.coordinate.longitude accuracy:0];
-    [self.bannerView loadRequest:adRequest];
-}
-
-- (BOOL)removedAds
-{
-    return ([OLCashier hasProduct:@"CF01"] || [OLCashier hasProduct:@"CF02"]);
-}
-
-- (void)adViewDidReceiveAd:(GADBannerView *)view
-{
-    NSLog(@"adViewDidReceiveAd");
-    if (self.removedAds) return;
-    if (self.showingAds) return;
-    if (self.displayMode != CFStopResultsDisplayModePresented) return;
-    
-    self.showingAds = YES;
-    
-    [UIView animateWithDuration:1.2 delay:1 usingSpringWithDamping:1 initialSpringVelocity:0 options:0 animations:^{
-        self.stopResultsView.frame = self.stopResultsViewPresentedFrame;
-        [self showAds];
-    } completion:nil];
-}
-
-- (void)hideAds
-{
-    self.bannerView.frame = CGRectMake(0, self.view.bounds.size.height, self.view.bounds.size.width, 50);
-}
-
-- (void)showAds
-{
-    self.bannerView.frame = CGRectMake(0, self.view.bounds.size.height - 50, self.view.bounds.size.width, 50);
-}
-
-- (void)positionAd:(CGFloat)positionFactor
-{
-    if (!self.showingAds) return;
-    positionFactor = MAX(0, positionFactor);
-    positionFactor = MIN(1.0, positionFactor);
-    CGFloat adOffset = 50 * positionFactor;
-    self.bannerView.frame = CGRectMake(0, self.view.bounds.size.height - adOffset, self.view.bounds.size.width, 50);
-}
-
-- (void)adView:(GADBannerView *)view didFailToReceiveAdWithError:(GADRequestError *)error
-{
-    NSLog(@"adView:didFailToReceiveAdWithError:%@", error);
 }
 
 @end
