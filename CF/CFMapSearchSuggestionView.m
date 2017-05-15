@@ -41,13 +41,13 @@
         _searchTextLabel.numberOfLines = 0;
         _searchTextLabel.text = @"";
         _searchTextLabel.textColor = [UIColor whiteColor];
-        _searchTextLabel.font = [UIFont fontWithName:DEFAULT_FONT_NAME_MEDIUM size:17.0];
+        _searchTextLabel.font = [UIFont systemFontOfSize:17 weight:UIFontWeightMedium];//fontWithName:DEFAULT_FONT_NAME_MEDIUM size:17.0];
         [_backgroundView addSubview:_searchTextLabel];
         
         _actionDescriptionLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         _actionDescriptionLabel.text = [NSLocalizedString(@"MAP_SEARCH_SUGGESTION_CARD_TEXT", nil) uppercaseString];
         _actionDescriptionLabel.textColor = [UIColor colorWithWhite:1 alpha:.7];
-        _actionDescriptionLabel.font = [UIFont fontWithName:@"AvenirNextCondensed-Medium" size:12.0];
+        _actionDescriptionLabel.font = [UIFont systemFontOfSize:11 weight:UIFontWeightSemibold];//fontWithName:@"AvenirNextCondensed-Medium" size:12.0];
         [_backgroundView addSubview:_actionDescriptionLabel];
         
         _borderLayer = [CALayer layer];

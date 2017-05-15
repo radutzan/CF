@@ -14,11 +14,11 @@
 static dispatch_once_t onceToken;
 static CFSapoClient *_sharedSapoClient;
 NSString * const APIVersion = @"1.3.0";
-#ifdef DEV_VERSION
-NSString * const baseURLString = @"http://cfapi.dev.ondalabs.com";
-#else
+//#ifdef DEV_VERSION
+//NSString * const baseURLString = @"http://cfapi.dev.ondalabs.com";
+//#else
 NSString * const baseURLString = @"http://api.cuantofalta.mobi";
-#endif
+//#endif
 NSString * const queryKeySalt = @"4ESMLSVB_ONDA";
 
 @implementation CFSapoClient

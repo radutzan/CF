@@ -12,7 +12,6 @@
 #import "CFStoreViewController.h"
 #import "UIDevice+hardware.h"
 #import <OLGhostAlertView/OLGhostAlertView.h>
-#import "OLCashier.h"
 
 @interface CFMoreViewController () <UIWebViewDelegate>
 
@@ -37,14 +36,6 @@
     
     self.view.backgroundColor = [UIColor clearColor];
     self.tableView.separatorColor = [UIColor colorWithWhite:0 alpha:0.15];
-    
-    [[OLCashier defaultCashier] addObserver:self forKeyPath:NSStringFromSelector(@selector(products)) options:0 context:nil];
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
@@ -66,13 +57,13 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    if (self.isPro) return 2;
+    if (self.isPro) return 1;//2;
     return 3;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if (section == 0) return 3;
+    if (section == 0) return 2;//3;
     if (!self.isPro && section == 1) return 1;
     return 3;
 }
@@ -86,8 +77,8 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
     
     cell.backgroundColor = [UIColor colorWithWhite:1 alpha:0.6];
-    cell.textLabel.font = [UIFont fontWithName:DEFAULT_FONT_NAME_MEDIUM size:17.0];
-    cell.detailTextLabel.font = [UIFont fontWithName:DEFAULT_FONT_NAME_REGULAR size:12.0];
+    cell.textLabel.font = [UIFont systemFontOfSize:17 weight:UIFontWeightMedium];//fontWithName:DEFAULT_FONT_NAME_MEDIUM size:17.0];
+    cell.detailTextLabel.font = [UIFont systemFontOfSize:12];//fontWithName:DEFAULT_FONT_NAME_REGULAR size:12.0];
     cell.detailTextLabel.textColor = [UIColor colorWithWhite:0 alpha:.5];
     cell.detailTextLabel.text = nil;
     cell.accessoryType = UITableViewCellAccessoryNone;
@@ -110,25 +101,6 @@
         cell.textLabel.text = NSLocalizedString(@"REMOVE_ADS", nil);
         cell.textLabel.textAlignment = NSTextAlignmentCenter;
         cell.detailTextLabel.text = NSLocalizedString(@"BUY_PRO", nil);
-        
-        SKProduct *currentProduct = [[[OLCashier defaultCashier] products] productForIdentifier:@"CF01"];
-        NSLog(@"product: %@", currentProduct);
-        
-        NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
-        [numberFormatter setFormatterBehavior:NSNumberFormatterBehavior10_4];
-        [numberFormatter setNumberStyle:NSNumberFormatterCurrencyStyle];
-        [numberFormatter setLocale:currentProduct.priceLocale];
-        NSString *priceString = [numberFormatter stringFromNumber:currentProduct.price];
-        if (!priceString) priceString = @"nil";
-        NSLog(@"price: %@", priceString);
-        
-        UILabel *priceLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 80, 44.0)];
-        priceLabel.text = priceString;
-        priceLabel.font = [UIFont fontWithName:DEFAULT_FONT_NAME_REGULAR size:17.0];
-        priceLabel.textColor = self.view.tintColor;
-        priceLabel.textAlignment = NSTextAlignmentRight;
-        cell.accessoryView = priceLabel;
-        
     } else if (indexPath.row == 0 && indexPath.section == lastSectionIndex) {
         cell.textLabel.text = NSLocalizedString(@"SHARE_THIS_APP", nil);
         cell.detailTextLabel.text = NSLocalizedString(@"SHARE_SECOND_LINE", nil);
@@ -269,7 +241,7 @@
         [headerView addSubview:iconImageView];
         
         UILabel *nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(horizontalMargin + iconImageView.bounds.size.width + 10.0, topMargin, self.view.bounds.size.width - iconImageView.bounds.size.width - 10.0 - horizontalMargin, 42.0)];
-        nameLabel.font = [UIFont fontWithName:DEFAULT_FONT_NAME_REGULAR size:24.0];
+        nameLabel.font = [UIFont systemFontOfSize:24];//fontWithName:DEFAULT_FONT_NAME_REGULAR size:24.0];
         nameLabel.text = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"];
         nameLabel.textColor = theColor;
         [headerView addSubview:nameLabel];
@@ -277,25 +249,14 @@
         nameLabel.frame = CGRectMake(nameLabel.frame.origin.x, nameLabel.frame.origin.y, nameLabel.bounds.size.width, 42.0);
         
         if (self.isPro) {
-            UIImageView *proBadge = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"badge-pro"]];
-            proBadge.frame = CGRectOffset(proBadge.frame, nameLabel.frame.origin.x + nameLabel.bounds.size.width + 7.0, 41.0);
-            proBadge.alpha = 0.3;
-            [headerView addSubview:proBadge];
-            
-            UILabel *proLabel = [[UILabel alloc] initWithFrame:CGRectMake(nameLabel.frame.origin.x + nameLabel.bounds.size.width + 10.0, topMargin, 50.0, 42.0)];
-            proLabel.font = [UIFont fontWithName:@"AvenirNext-DemiBold" size:14.0];
-            proLabel.text = @"PRO";
-            proLabel.textColor = theColor;
-            proLabel.textAlignment = NSTextAlignmentCenter;
-            proLabel.layer.borderColor = theColor.CGColor;
-            proLabel.layer.borderWidth = 1.0;
-            proLabel.layer.cornerRadius = 5.0;
-            [proLabel sizeToFit];
-            proLabel.frame = CGRectMake(proLabel.frame.origin.x, proLabel.frame.origin.y + 10.0, proLabel.bounds.size.width + 14.0, proLabel.bounds.size.height + 0.0);
+//            UIImageView *proBadge = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"badge-pro"]];
+//            proBadge.frame = CGRectOffset(proBadge.frame, nameLabel.frame.origin.x + nameLabel.bounds.size.width + 7.0, 41.0);
+//            proBadge.alpha = 0.3;
+//            [headerView addSubview:proBadge];
         }
         
         UILabel *versionLabel = [[UILabel alloc] initWithFrame:CGRectMake(nameLabel.frame.origin.x + 2.0, topMargin + 35.0, nameLabel.bounds.size.width, 20.0)];
-        versionLabel.font = [UIFont fontWithName:DEFAULT_FONT_NAME_REGULAR size:12.0];
+        versionLabel.font = [UIFont systemFontOfSize:12];//fontWithName:DEFAULT_FONT_NAME_REGULAR size:12.0];
         versionLabel.text = [NSString stringWithFormat:@"%@ %@ (%@)", NSLocalizedString(@"VERSION", nil), [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"], [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]];
         versionLabel.textColor = theColor;
         [headerView addSubview:versionLabel];
@@ -318,38 +279,6 @@
 {
     if (!self.isPro && section == 1) return 44;
     return 0;
-}
-
-- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
-{
-    if (!self.isPro && section == 1) {
-        UIView *restoreFooterView = [[UIView alloc] initWithFrame:CGRectMake(10, 10, self.view.bounds.size.width - 20, 30)];
-        
-        UILabel *alreadyPurchasedLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, restoreFooterView.bounds.size.width, 30)];
-        alreadyPurchasedLabel.text = NSLocalizedString(@"ALREADY_PURCHASED_QUESTION", nil);
-        alreadyPurchasedLabel.font = [UIFont fontWithName:DEFAULT_FONT_NAME_REGULAR size:14.0];
-        alreadyPurchasedLabel.textColor = [UIColor colorWithWhite:0 alpha:.3];
-        [alreadyPurchasedLabel sizeToFit];
-        [restoreFooterView addSubview:alreadyPurchasedLabel];
-        
-        NSDictionary *buttonAttributes = @{NSUnderlineStyleAttributeName: @(NSUnderlineStyleSingle), NSFontAttributeName: [UIFont fontWithName:DEFAULT_FONT_NAME_MEDIUM size:14.0]};
-
-        UIButton *restorePurchasesButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        restorePurchasesButton.frame = CGRectMake(alreadyPurchasedLabel.bounds.size.width + 4, 0, 400, 30);
-        [restorePurchasesButton setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"STORE_RESTORE", nil) attributes:buttonAttributes] forState:UIControlStateNormal];
-        [restorePurchasesButton setTitleColor:[UIColor colorWithWhite:0 alpha:.3] forState:UIControlStateNormal];
-        [restorePurchasesButton addTarget:self action:@selector(restorePurchases) forControlEvents:UIControlEventTouchUpInside];
-        restorePurchasesButton.alpha = .3;
-        [restorePurchasesButton sizeToFit];
-        [restoreFooterView addSubview:restorePurchasesButton];
-        
-        alreadyPurchasedLabel.frame = CGRectMake(14, 0, alreadyPurchasedLabel.bounds.size.width, restorePurchasesButton.bounds.size.height);
-        restorePurchasesButton.frame = CGRectMake(alreadyPurchasedLabel.bounds.size.width + 18, 0, restorePurchasesButton.bounds.size.width, restorePurchasesButton.bounds.size.height);
-        
-        return restoreFooterView;
-    }
-    
-    return nil;
 }
 
 #pragma mark - WebView Delegate
@@ -386,31 +315,9 @@
 
 - (void)purchasePro
 {
-    NSString *proIdentifier = @"CF01";
-    
     OLGhostAlertView *wait = [[OLGhostAlertView alloc] initWithTitle:NSLocalizedString(@"STORE_WAIT_TITLE", nil) message:NSLocalizedString(@"STORE_WAIT_MESSAGE", nil) timeout:100.0 dismissible:NO];
     wait.position = OLGhostAlertViewPositionCenter;
     [wait show];
-    
-    [[OLCashier defaultCashier] buyProduct:proIdentifier handler:^(NSError *error, NSArray *transactions, NSDictionary *userInfo) {
-        SKPaymentTransaction *transaction = transactions.firstObject;
-        [wait hide];
-        
-        if (error) {
-            UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"STORE_ERROR_TITLE", nil) message:[NSString stringWithFormat:@"%@. %@", error.localizedDescription, NSLocalizedString(@"ERROR_MESSAGE_TRY_AGAIN", nil)] delegate:self cancelButtonTitle:NSLocalizedString(@"ERROR_DISMISS", nil) otherButtonTitles:nil];
-            [errorAlert show];
-            return;
-        }
-        
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:proIdentifier];
-        [transaction finish];
-        
-        OLGhostAlertView *thanks = [[OLGhostAlertView alloc] initWithTitle:NSLocalizedString(@"STORE_THANK_YOU_TITLE", nil) message:NSLocalizedString(@"STORE_THANK_YOU_MESSAGE_MAP", nil)];
-        thanks.position = OLGhostAlertViewPositionCenter;
-        [thanks show];
-        
-        [self.tableView reloadData];
-    }];
 }
 
 - (void)restorePurchases
@@ -419,22 +326,6 @@
     wait.position = OLGhostAlertViewPositionCenter;
     [wait show];
     
-    [[OLCashier defaultCashier] restoreCompletedTransactions:^(NSError *error, NSArray *transactions, NSDictionary *userInfo) {
-        [wait hide];
-        
-        if (error) {
-            UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"STORE_ERROR_TITLE", nil) message:[NSString stringWithFormat:@"%@. %@", error.localizedDescription, NSLocalizedString(@"ERROR_MESSAGE_TRY_AGAIN", nil)] delegate:self cancelButtonTitle:NSLocalizedString(@"ERROR_DISMISS", nil) otherButtonTitles:nil];
-            [errorAlert show];
-            return;
-        }
-        
-        for (SKPaymentTransaction *transaction in transactions) {
-            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:transaction.payment.productIdentifier];
-            [transaction finish];
-        }
-        
-        [self.tableView reloadData];
-    }];
 }
 
 - (BOOL)isPro

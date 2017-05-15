@@ -194,10 +194,10 @@
     
     if ([favoriteName isEqualToString:@""]) {
         cell.favoriteNameLabel.text = NSLocalizedString(@"NAMELESS_FAVORITE", nil);
-        cell.favoriteNameLabel.font = [UIFont fontWithName:@"AvenirNext-MediumItalic" size:18.0];
+//        cell.favoriteNameLabel.font = [UIFont fontWithName:@"AvenirNext-MediumItalic" size:18.0];
     } else {
         cell.favoriteNameLabel.text = favoriteName;
-        cell.favoriteNameLabel.font = [UIFont fontWithName:@"AvenirNext-Medium" size:18.0];
+//        cell.favoriteNameLabel.font = [UIFont fontWithName:@"AvenirNext-Medium" size:18.0];
     }
     
     return cell;

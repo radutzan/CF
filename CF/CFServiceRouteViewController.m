@@ -14,8 +14,6 @@
 #import "CustomPinAnnotationView.h"
 #import "CFStopResultsViewController.h"
 
-#import "OLCashier.h"
-
 @import MapKit;
 
 @interface CFServiceRouteViewController () <MKMapViewDelegate, SMCalloutViewDelegate, UISearchBarDelegate>

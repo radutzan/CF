@@ -8,6 +8,8 @@
 
 #import "CFStopCell.h"
 
+#define LABEL_FONT_SIZE 15.0f
+
 @interface CFStopCell ()
 
 
@@ -28,12 +30,12 @@
         self.nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.containerView.bounds.size.width - HORIZONTAL_MARGIN * 2, self.containerView.bounds.size.height)];
         self.nameLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         self.nameLabel.numberOfLines = 2;
-        self.nameLabel.font = [UIFont fontWithName:@"AvenirNext-DemiBold" size:15.0];
+        self.nameLabel.font = [UIFont boldSystemFontOfSize:LABEL_FONT_SIZE];//[UIFont fontWithName:@"AvenirNext-DemiBold" size:15.0];
         self.nameLabel.textColor = [UIColor colorWithWhite:0 alpha:0.8];
         [self.containerView addSubview:self.nameLabel];
         
         self.codeLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.containerView.bounds.size.width - 60.0, 0, 60.0, self.containerView.bounds.size.height)];
-        self.codeLabel.font = [UIFont fontWithName:@"AvenirNextCondensed-UltraLight" size:15.0];
+        self.codeLabel.font = [UIFont systemFontOfSize:LABEL_FONT_SIZE weight:UIFontWeightUltraLight];//[UIFont fontWithName:@"AvenirNextCondensed-UltraLight" size:15.0];
         self.codeLabel.textAlignment = NSTextAlignmentRight;
         self.codeLabel.textColor = [UIColor colorWithWhite:0 alpha:0.5];
         [self.containerView addSubview:self.codeLabel];
@@ -80,7 +82,7 @@
         CGFloat squareSize = 24.0;
         CGFloat originY = (self.containerView.bounds.size.height - squareSize) / 2;
         _numberLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, originY, squareSize, squareSize)];
-        _numberLabel.font = [UIFont fontWithName:@"AvenirNextCondensed-Medium" size:15.0];
+        _numberLabel.font = [UIFont systemFontOfSize:13 weight:UIFontWeightSemibold];//fontWithName:@"AvenirNextCondensed-Medium" size:15.0];
         _numberLabel.textAlignment = NSTextAlignmentCenter;
         _numberLabel.textColor = self.nameLabel.textColor;
         _numberLabel.layer.backgroundColor = [UIColor colorWithWhite:0 alpha:.07].CGColor;

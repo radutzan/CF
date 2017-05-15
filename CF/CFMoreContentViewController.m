@@ -37,10 +37,4 @@
     self.navigationController.navigationBar.barStyle = UIBarStyleDefault;
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
 @end

@@ -15,11 +15,11 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         self.favoriteNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 9.0, self.contentView.bounds.size.width, 22.0)];
-        self.favoriteNameLabel.font = [UIFont fontWithName:@"AvenirNext-Medium" size:19.0];
+        self.favoriteNameLabel.font = [UIFont systemFontOfSize:17 weight:UIFontWeightMedium];//fontWithName:@"AvenirNext-Medium" size:19.0];
         self.favoriteNameLabel.textColor = [UIColor colorWithWhite:0 alpha:0.8];
         [self.containerView addSubview:self.favoriteNameLabel];
         
-        self.nameLabel.font = [UIFont fontWithName:@"AvenirNext-Medium" size:11.0];
+        self.nameLabel.font = [UIFont boldSystemFontOfSize:11];//fontWithName:@"AvenirNext-Medium" size:11.0];
         self.nameLabel.alpha = 0.5;
         self.nameLabel.numberOfLines = 1;
         

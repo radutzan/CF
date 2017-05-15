@@ -39,7 +39,7 @@
         _textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
         _textField.autocorrectionType = UITextAutocorrectionTypeNo;
         _textField.delegate = self;
-        _textField.font = [UIFont fontWithName:DEFAULT_FONT_NAME_MEDIUM size:17.0];
+        _textField.font = [UIFont systemFontOfSize:17 weight:UIFontWeightMedium];//fontWithName:DEFAULT_FONT_NAME_MEDIUM size:17.0];
 //        _textField.placeholderTextColor = [UIColor colorWithWhite:1 alpha:.4];
         [self addSubview:_textField];
         

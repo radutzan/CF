@@ -48,11 +48,11 @@
         
         _serviceLabel = [[UILabel alloc] initWithFrame:CGRectMake(16.0, 10.0, 80.0, 25.0)];
         _serviceLabel.textColor = [UIColor whiteColor];
-        _serviceLabel.font = [UIFont fontWithName:@"AvenirNext-Regular" size:24.0];
+        _serviceLabel.font = [UIFont systemFontOfSize:22];//fontWithName:@"AvenirNext-Regular" size:24.0];
         _serviceLabel.backgroundColor = [UIColor blackColor];
         
         _directionLabel = [[UILabel alloc] initWithFrame:CGRectMake(15.0, 33.0, 100.0, 17.0)];
-        _directionLabel.font = [UIFont fontWithName:@"AvenirNextCondensed-Medium" size:12.0];
+        _directionLabel.font = [UIFont systemFontOfSize:11 weight:UIFontWeightMedium];//fontWithName:@"AvenirNextCondensed-Medium" size:12.0];
         _directionLabel.textColor = [UIColor colorWithWhite:0.6 alpha:1];
         _directionLabel.numberOfLines = 1;
         _directionLabel.backgroundColor = [UIColor blackColor];
@@ -73,14 +73,14 @@
         [self.contentView addSubview:_directionLabel];
         
         _distanceLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 11.0, _estimationContainer.scrollView.bounds.size.width, 20.0)];
-        _distanceLabel.font = [UIFont fontWithName:@"AvenirNext-Regular" size:20.0];
+        _distanceLabel.font = [UIFont systemFontOfSize:18 weight:UIFontWeightMedium];//fontWithName:@"AvenirNext-Regular" size:20.0];
         _distanceLabel.textColor = [UIColor whiteColor];
         _distanceLabel.backgroundColor = [UIColor blackColor];
         _distanceLabel.userInteractionEnabled = NO;
         [_estimationContainer.scrollView addSubview:_distanceLabel];
         
         _timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 34.0, _estimationContainer.scrollView.bounds.size.width, 14.0)];
-        _timeLabel.font = [UIFont fontWithName:@"AvenirNextCondensed-DemiBold" size:14.0];
+        _timeLabel.font = [UIFont systemFontOfSize:13 weight:UIFontWeightSemibold];//fontWithName:@"AvenirNextCondensed-DemiBold" size:14.0];
         _timeLabel.textColor = [UIColor colorWithWhite:0.4 alpha:1];
         _timeLabel.alpha = 1;
         _timeLabel.backgroundColor = [UIColor blackColor];
@@ -107,7 +107,7 @@
         [_noInfoView addSubview:_noInfoButton];
         
         _noInfoLabel = [[UILabel alloc] initWithFrame:CGRectMake(30.0, 0, 90.0, self.contentView.bounds.size.height)];
-        _noInfoLabel.font = [UIFont fontWithName:@"AvenirNextCondensed-Italic" size:15.0];
+        _noInfoLabel.font = [UIFont italicSystemFontOfSize:13];//fontWithName:@"AvenirNextCondensed-Italic" size:15.0];
         _noInfoLabel.textColor = [UIColor colorWithWhite:0.3 alpha:1];
         _noInfoLabel.text = NSLocalizedString(@"NO_INFO", nil);
         _noInfoLabel.numberOfLines = 0;

@@ -11,7 +11,7 @@
 #import <QuartzCore/QuartzCore.h>
 
 #define LABEL_HEIGHT 17.0f
-#define LABEL_FONT_SIZE 15.0f
+#define LABEL_FONT_SIZE 14.0f
 #define HORIZONTAL_MARGIN 9.0f
 
 @interface CFStopSignView () <UITextFieldDelegate>
@@ -57,7 +57,7 @@
         // código de parada
         _stopCodeLabel = [[UILabel alloc] initWithFrame:CGRectMake(_contentView.bounds.size.width - 65.0 - HORIZONTAL_MARGIN, _verticallyCenteredLabelY, 65.0, LABEL_HEIGHT)];
         _stopCodeLabel.backgroundColor    = [UIColor clearColor];
-        _stopCodeLabel.font               = [UIFont fontWithName:@"AvenirNextCondensed-UltraLight" size:LABEL_FONT_SIZE];
+        _stopCodeLabel.font               = [UIFont systemFontOfSize:LABEL_FONT_SIZE weight:UIFontWeightUltraLight];//fontWithName:@"AvenirNextCondensed-UltraLight" size:LABEL_FONT_SIZE];
         _stopCodeLabel.textAlignment      = NSTextAlignmentRight;
         _stopCodeLabel.textColor          = [UIColor colorWithWhite:1 alpha:1];
         _stopCodeLabel.alpha              = 0.5;
@@ -75,7 +75,7 @@
     _stopNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, _contentView.bounds.size.width, _contentView.bounds.size.height)];
     _stopNameLabel.backgroundColor    = [UIColor clearColor];
     _stopNameLabel.adjustsFontSizeToFitWidth = YES;
-    _stopNameLabel.font               = [UIFont fontWithName:DEFAULT_FONT_NAME_BOLD size:LABEL_FONT_SIZE];
+    _stopNameLabel.font               = [UIFont boldSystemFontOfSize:LABEL_FONT_SIZE];//fontWithName:DEFAULT_FONT_NAME_BOLD size:LABEL_FONT_SIZE];
     _stopNameLabel.textColor          = [UIColor whiteColor];
     _stopNameLabel.autoresizingMask   = UIViewAutoresizingFlexibleWidth;
     _stopNameLabel.hidden             = NO;
@@ -89,7 +89,7 @@
     _stopNumberLabel.adjustsFontSizeToFitWidth = YES;
     _stopNumberLabel.minimumScaleFactor = 0.5;
     _stopNumberLabel.contentMode      = UIViewContentModeCenter;
-    _stopNumberLabel.font             = [UIFont fontWithName:@"AvenirNextCondensed-Medium" size:23];
+    _stopNumberLabel.font             = [UIFont systemFontOfSize:18 weight:UIFontWeightSemibold];//fontWithName:@"AvenirNextCondensed-Medium" size:23];
     _stopNumberLabel.textColor        = [UIColor whiteColor];
     _stopNumberLabel.textAlignment    = NSTextAlignmentLeft;
     _stopNumberLabel.hidden           = YES;
@@ -107,14 +107,14 @@
     _favoriteNameField.placeholder    = NSLocalizedString(@"NAME_YOUR_FAVORITE", nil);
     _favoriteNameField.textColor      = [UIColor whiteColor];
     _favoriteNameField.placeholderTextColor = [UIColor colorWithWhite:1 alpha:0.3];
-    _favoriteNameField.font           = [UIFont fontWithName:DEFAULT_FONT_NAME_MEDIUM size:18.0];
+    _favoriteNameField.font           = [UIFont systemFontOfSize:17 weight:UIFontWeightMedium];//fontWithName:DEFAULT_FONT_NAME_MEDIUM size:18.0];
     _favoriteNameField.returnKeyType  = UIReturnKeyDone;
     _favoriteNameField.keyboardAppearance = UIKeyboardAppearanceDark;
     _favoriteNameField.delegate       = self;
     [_favoriteContentView addSubview:_favoriteNameField];
     
-    _stopFullNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 30.0, _favoriteContentView.bounds.size.width, 12.0)];
-    _stopFullNameLabel.font           = [UIFont fontWithName:DEFAULT_FONT_NAME_BOLD size:11.0];
+    _stopFullNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 29.0, _favoriteContentView.bounds.size.width, 12.0)];
+    _stopFullNameLabel.font           = [UIFont boldSystemFontOfSize:11];//fontWithName:DEFAULT_FONT_NAME_BOLD size:11.0];
     _stopFullNameLabel.textColor      = [UIColor colorWithWhite:1 alpha:0.6];
     [_favoriteContentView addSubview:_stopFullNameLabel];
 }
@@ -164,8 +164,8 @@
     if (stop.intersection) {
         NSRange firstLineRange = NSMakeRange(0, [stop.street length]);
         
-        UIFont *boldFont = [UIFont fontWithName:DEFAULT_FONT_NAME_BOLD size:LABEL_FONT_SIZE];
-        UIFont *regularFont = [UIFont fontWithName:DEFAULT_FONT_NAME_MEDIUM size:LABEL_FONT_SIZE];
+        UIFont *boldFont = [UIFont systemFontOfSize:LABEL_FONT_SIZE weight:UIFontWeightSemibold];//fontWithName:DEFAULT_FONT_NAME_BOLD size:LABEL_FONT_SIZE];
+        UIFont *regularFont = [UIFont systemFontOfSize:LABEL_FONT_SIZE weight:UIFontWeightRegular];//fontWithName:DEFAULT_FONT_NAME_MEDIUM size:LABEL_FONT_SIZE];
         
         NSDictionary *attrs = [NSDictionary dictionaryWithObjectsAndKeys:regularFont, NSFontAttributeName, nil];
         NSDictionary *subAttrs = [NSDictionary dictionaryWithObjectsAndKeys:boldFont, NSFontAttributeName, nil];
@@ -179,7 +179,7 @@
         [attributedText addAttribute:NSParagraphStyleAttributeName value:paragrahStyle range:NSMakeRange(0, fullString.length)];
         
         [self.stopNameLabel setAttributedText:attributedText];
-        newLabelFrame.origin.y += 2.0;
+//        newLabelFrame.origin.y += 2.0;
         
     } else {
         self.stopNameLabel.text = stop.street;

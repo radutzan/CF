@@ -7,7 +7,6 @@
 //
 
 #import "CFAppDelegate.h"
-#import "OLCashier.h"
 #import "CFFavoriteManager.h"
 
 @interface CFAppDelegate ()
@@ -20,19 +19,6 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    OLCashier *cashier = [OLCashier defaultCashier];
-    
-    [cashier setDefaultTransactionHandler:^(NSError *error, NSArray *transactions, NSDictionary *userInfo){
-        SKPaymentTransaction *transaction = transactions.firstObject;
-        if (error) {
-            return;
-        }
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:transaction.payment.productIdentifier];
-        [transaction finish];
-    }];
-    
-    [cashier setProductsWithIdentifiers:[NSSet setWithObjects:@"CF01", @"CF02", nil] handler:NULL];
-    
     self.mainViewController = [CFMainViewController new];
 
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];

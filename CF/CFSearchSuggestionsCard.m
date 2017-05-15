@@ -42,19 +42,19 @@
         
         CGFloat topGuide = VERTICAL_SPACING - 2;
         CGFloat titleWidth = 70.0;
-        BOOL hasExtraRoom = (self.bounds.size.width > 320);
-        NSString *suggestionTitleLabelFontName = (hasExtraRoom) ? DEFAULT_FONT_NAME_MEDIUM : @"AvenirNextCondensed-Medium";
+//        BOOL hasExtraRoom = (self.bounds.size.width > 320);
+//        NSString *suggestionTitleLabelFontName = (hasExtraRoom) ? DEFAULT_FONT_NAME_MEDIUM : @"AvenirNextCondensed-Medium";
         
         for (NSDictionary *suggestion in contentArray) {
             UILabel *suggestionTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(-20.0, topGuide, titleWidth + 20.0, 20.0)];
-            suggestionTitleLabel.font = [UIFont fontWithName:suggestionTitleLabelFontName size:17.0];
+            suggestionTitleLabel.font = [UIFont systemFontOfSize:17 weight:UIFontWeightMedium];//fontWithName:suggestionTitleLabelFontName size:17.0];
             suggestionTitleLabel.textColor = [UIColor colorWithWhite:1 alpha:1];
             suggestionTitleLabel.text = suggestion[@"name"];
             suggestionTitleLabel.textAlignment = NSTextAlignmentRight;
             [containerView addSubview:suggestionTitleLabel];
             
             UILabel *suggestionExampleLabel = [[UILabel alloc] initWithFrame:CGRectMake(HORIZONTAL_MARGIN + titleWidth, topGuide - 1.0, containerView.bounds.size.width - titleWidth + 10.0, 20.0)];
-            suggestionExampleLabel.font = [UIFont fontWithName:DEFAULT_FONT_NAME_REGULAR size:17.0];
+            suggestionExampleLabel.font = [UIFont systemFontOfSize:17];//fontWithName:DEFAULT_FONT_NAME_REGULAR size:17.0];
             suggestionExampleLabel.text = suggestion[@"example"];
             suggestionExampleLabel.numberOfLines = 0;
             [suggestionExampleLabel sizeToFit];

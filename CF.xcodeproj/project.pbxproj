@@ -3,12 +3,11 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 47;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		305C1227311316EBDB47663B /* libPods-Cuánto Falta.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 15C8C948716DBA373D3C0732 /* libPods-Cuánto Falta.a */; };
-		5A11D7751877A2BA001118F6 /* OLCashier.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A11D7701877A2BA001118F6 /* OLCashier.m */; };
 		5A11D7761877A2BA001118F6 /* OLPaymentQueueDispatchObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A11D7721877A2BA001118F6 /* OLPaymentQueueDispatchObserver.m */; };
 		5A11D7771877A2BA001118F6 /* OLProductRequestDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A11D7741877A2BA001118F6 /* OLProductRequestDelegate.m */; };
 		602402601641BBBBAAFD6CA9 /* libPods-Today Favorites.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 29778452EC1C934320094742 /* libPods-Today Favorites.a */; };
@@ -22,7 +21,6 @@
 		7C062F331933BC9200342E4A /* CFServiceRouteBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C062F311933BC9200342E4A /* CFServiceRouteBar.m */; };
 		7C0A9A8819C34CA20007FAA1 /* Today Favorites.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 7C01EDAE1974938E00DE7EAB /* Today Favorites.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		7C0A9A9019C4CC730007FAA1 /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CDC85C019746DE3008106FC /* NotificationCenter.framework */; };
-		7C0A9A9B19C4CC730007FAA1 /* Today Favorites Dev.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 7C0A9A8F19C4CC730007FAA1 /* Today Favorites Dev.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		7C0A9AA119C4CEE00007FAA1 /* TodayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C01EDB41974938E00DE7EAB /* TodayViewController.m */; };
 		7C10B96F183ADD200086B650 /* CFFavoritesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C10B96E183ADD200086B650 /* CFFavoritesViewController.m */; };
 		7C10B972183ADD2A0086B650 /* CFHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C10B971183ADD2A0086B650 /* CFHistoryViewController.m */; };
@@ -32,13 +30,11 @@
 		7C130C611A93A2BF0015A81A /* CFFavoriteManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C130C5F1A93A2BF0015A81A /* CFFavoriteManager.m */; };
 		7C14644A193288C0009B0C94 /* CFWhatsNewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C5ACA5C1932856E00E20FD9 /* CFWhatsNewViewController.m */; };
 		7C2B8AB619C4D34F0021AEA3 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7C2B8AB819C4D34F0021AEA3 /* InfoPlist.strings */; };
-		7C2EECC1188345F500AE78C2 /* OLCashier.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A11D7701877A2BA001118F6 /* OLCashier.m */; };
 		7C2EECC2188345F500AE78C2 /* CFBipSpot.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CF7EE4E1852D790009B3F46 /* CFBipSpot.m */; };
 		7C2EECC3188345F500AE78C2 /* CFMoreViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C10B974183ADD320086B650 /* CFMoreViewController.m */; };
 		7C2EECC4188345F500AE78C2 /* SMCalloutView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CFF7E801838288C006230CE /* SMCalloutView.m */; };
 		7C2EECC5188345F500AE78C2 /* CFStopTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C3B27C3183B194A00818A3B /* CFStopTableViewController.m */; };
 		7C2EECC7188345F500AE78C2 /* NSDictionary+NSNullUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C9A0F681852E9C60018ED1F /* NSDictionary+NSNullUtility.m */; };
-		7C2EECC9188345F500AE78C2 /* CFStoreViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C6CE7FF1877D04A00DDEF54 /* CFStoreViewController.m */; };
 		7C2EECCA188345F500AE78C2 /* UIDevice+hardware.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CFF7E9A18382B1B006230CE /* UIDevice+hardware.m */; };
 		7C2EECCB188345F500AE78C2 /* CFStopSignView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CFF7EBE1838700F006230CE /* CFStopSignView.m */; };
 		7C2EECCC188345F500AE78C2 /* CFStop.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CFF7EA318382D55006230CE /* CFStop.m */; };
@@ -113,7 +109,6 @@
 		7C6CE7F91877B7C700DDEF54 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C6CE7F81877B7C700DDEF54 /* AVFoundation.framework */; };
 		7C6CE7FB1877B7D000DDEF54 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C6CE7FA1877B7D000DDEF54 /* MessageUI.framework */; };
 		7C6CE7FD1877B7DD00DDEF54 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C6CE7FC1877B7DD00DDEF54 /* StoreKit.framework */; };
-		7C6CE8001877D04A00DDEF54 /* CFStoreViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C6CE7FF1877D04A00DDEF54 /* CFStoreViewController.m */; };
 		7C74700C1A7AA4F900E01947 /* badge-pro@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7C74700B1A7AA4F900E01947 /* badge-pro@2x.png */; };
 		7C74700D1A7AA4FA00E01947 /* badge-pro@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7C74700B1A7AA4F900E01947 /* badge-pro@2x.png */; };
 		7C7A15D61853EBF0002EE4C5 /* OLTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C7A15D51853EBF0002EE4C5 /* OLTextField.m */; };
@@ -185,6 +180,8 @@
 		7CEADD6C194C200A00428ADE /* CFSearchSuggestionsCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CEADD6A194C1E9500428ADE /* CFSearchSuggestionsCard.m */; };
 		7CF12E5719BD14B400772DC7 /* button-close@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CF12E5619BD14B300772DC7 /* button-close@2x.png */; };
 		7CF12E5819BD174700772DC7 /* button-close@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CF12E5619BD14B300772DC7 /* button-close@2x.png */; };
+		7CF44D251ECA3FC7008A39CC /* CFTransantiagoClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CF44D241ECA3FC7008A39CC /* CFTransantiagoClient.m */; };
+		7CF44D261ECA3FC7008A39CC /* CFTransantiagoClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CF44D241ECA3FC7008A39CC /* CFTransantiagoClient.m */; };
 		7CF7EE4F1852D790009B3F46 /* CFBipSpot.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CF7EE4E1852D790009B3F46 /* CFBipSpot.m */; };
 		7CFF7E4518381645006230CE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CFF7E4418381645006230CE /* Foundation.framework */; };
 		7CFF7E4718381645006230CE /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CFF7E4618381645006230CE /* CoreGraphics.framework */; };
@@ -238,13 +235,6 @@
 			remoteGlobalIDString = 7C01EDAD1974938E00DE7EAB;
 			remoteInfo = "Today Favorites";
 		};
-		7C0A9A9919C4CC730007FAA1 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 7CFF7E3918381645006230CE /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 7C0A9A8E19C4CC730007FAA1;
-			remoteInfo = "Today Favorites Dev";
-		};
 		7C0A9A9C19C4CC730007FAA1 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 7CFF7E3918381645006230CE /* Project object */;
@@ -283,17 +273,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		7CDC85D119746DE3008106FC /* Embed App Extensions */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 13;
-			files = (
-				7C0A9A9B19C4CC730007FAA1 /* Today Favorites Dev.appex in Embed App Extensions */,
-			);
-			name = "Embed App Extensions";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		7CDC85FD19747F32008106FC /* Embed App Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -447,6 +426,8 @@
 		7CEADD69194C1E9500428ADE /* CFSearchSuggestionsCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFSearchSuggestionsCard.h; sourceTree = "<group>"; };
 		7CEADD6A194C1E9500428ADE /* CFSearchSuggestionsCard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFSearchSuggestionsCard.m; sourceTree = "<group>"; };
 		7CF12E5619BD14B300772DC7 /* button-close@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-close@2x.png"; sourceTree = "<group>"; };
+		7CF44D231ECA3FC7008A39CC /* CFTransantiagoClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFTransantiagoClient.h; sourceTree = "<group>"; };
+		7CF44D241ECA3FC7008A39CC /* CFTransantiagoClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFTransantiagoClient.m; sourceTree = "<group>"; };
 		7CF7EE4D1852D790009B3F46 /* CFBipSpot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFBipSpot.h; sourceTree = "<group>"; };
 		7CF7EE4E1852D790009B3F46 /* CFBipSpot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFBipSpot.m; sourceTree = "<group>"; };
 		7CFF7E4118381645006230CE /* Cuánto Falta.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Cuánto Falta.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -947,6 +928,8 @@
 				5A11D7581877A278001118F6 /* Cashier */,
 				7CFF7EA018382B4D006230CE /* CFSapoClient.h */,
 				7CFF7EA118382B4D006230CE /* CFSapoClient.m */,
+				7CF44D231ECA3FC7008A39CC /* CFTransantiagoClient.h */,
+				7CF44D241ECA3FC7008A39CC /* CFTransantiagoClient.m */,
 				7CFF7E9318382B01006230CE /* CLLocation+UTMUtilities.h */,
 				7CFF7E9718382B1B006230CE /* CLLocation+UTMUtilities.m */,
 				7CFF7E9518382B01006230CE /* NSString+Digest.h */,
@@ -1042,7 +1025,6 @@
 				7C2EECC0188345F500AE78C2 /* Sources */,
 				7C2EECE2188345F500AE78C2 /* Frameworks */,
 				7C2EECF1188345F500AE78C2 /* Resources */,
-				7CDC85D119746DE3008106FC /* Embed App Extensions */,
 				7CBAFABC1A0D3341001F61E7 /* ShellScript */,
 				BBF02C76C1BA8B190D7D7C70 /* [CP] Embed Pods Frameworks */,
 				35A01F4D2242A6D0499F67F4 /* [CP] Copy Pods Resources */,
@@ -1051,7 +1033,6 @@
 			);
 			dependencies = (
 				7C01EDBC1974938E00DE7EAB /* PBXTargetDependency */,
-				7C0A9A9A19C4CC730007FAA1 /* PBXTargetDependency */,
 				7C0A9A9D19C4CC730007FAA1 /* PBXTargetDependency */,
 			);
 			name = "Cuánto Falta Dev";
@@ -1155,7 +1136,7 @@
 				TargetAttributes = {
 					7C01EDAD1974938E00DE7EAB = {
 						CreatedOnToolsVersion = 6.0;
-						DevelopmentTeam = CTBFW5535W;
+						DevelopmentTeam = 7VT456V4Y2;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
@@ -1164,7 +1145,7 @@
 					};
 					7C0A9A8E19C4CC730007FAA1 = {
 						CreatedOnToolsVersion = 6.0;
-						DevelopmentTeam = CTBFW5535W;
+						DevelopmentTeam = 7VT456V4Y2;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
@@ -1172,7 +1153,7 @@
 						};
 					};
 					7C2EECBE188345F500AE78C2 = {
-						DevelopmentTeam = CTBFW5535W;
+						DevelopmentTeam = 7VT456V4Y2;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
@@ -1190,7 +1171,7 @@
 						TestTargetID = 7CC343BF19772AD7003E8555;
 					};
 					7CFF7E4018381645006230CE = {
-						DevelopmentTeam = CTBFW5535W;
+						DevelopmentTeam = 7VT456V4Y2;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
@@ -1206,7 +1187,7 @@
 				};
 			};
 			buildConfigurationList = 7CFF7E3C18381645006230CE /* Build configuration list for PBXProject "CF" */;
-			compatibilityVersion = "Xcode 3.2";
+			compatibilityVersion = "Xcode 6.3";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -1628,7 +1609,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7C2EECC1188345F500AE78C2 /* OLCashier.m in Sources */,
+				7CF44D261ECA3FC7008A39CC /* CFTransantiagoClient.m in Sources */,
 				7CC7EC461929B74B002160E5 /* CFRoute.m in Sources */,
 				7CB337FB1929BFDB00234792 /* CustomPinAnnotationView.m in Sources */,
 				7C2EECC2188345F500AE78C2 /* CFBipSpot.m in Sources */,
@@ -1637,7 +1618,6 @@
 				7C2EECC5188345F500AE78C2 /* CFStopTableViewController.m in Sources */,
 				7C8F065619CB6F9900FCC707 /* CFMapSearchSuggestionView.m in Sources */,
 				7C2EECC7188345F500AE78C2 /* NSDictionary+NSNullUtility.m in Sources */,
-				7C2EECC9188345F500AE78C2 /* CFStoreViewController.m in Sources */,
 				7C2EECCA188345F500AE78C2 /* UIDevice+hardware.m in Sources */,
 				7C2EECCB188345F500AE78C2 /* CFStopSignView.m in Sources */,
 				7C2EECCC188345F500AE78C2 /* CFStop.m in Sources */,
@@ -1701,7 +1681,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7CC7EC491929B79C002160E5 /* HOFunctions.m in Sources */,
-				5A11D7751877A2BA001118F6 /* OLCashier.m in Sources */,
+				7CF44D251ECA3FC7008A39CC /* CFTransantiagoClient.m in Sources */,
 				7C062F2A19330DF000342E4A /* UIImage+ImageEffects.m in Sources */,
 				7CB337FA1929BF5C00234792 /* CustomPinAnnotationView.m in Sources */,
 				7CF7EE4F1852D790009B3F46 /* CFBipSpot.m in Sources */,
@@ -1712,7 +1692,6 @@
 				7C3B27C4183B194A00818A3B /* CFStopTableViewController.m in Sources */,
 				7C9A0F691852E9C60018ED1F /* NSDictionary+NSNullUtility.m in Sources */,
 				7CCA7469193248C200ADB397 /* CFForwardingTouchScrollView.m in Sources */,
-				7C6CE8001877D04A00DDEF54 /* CFStoreViewController.m in Sources */,
 				7CC7EC421929B5F6002160E5 /* CFServiceRouteViewController.m in Sources */,
 				7CFF7E9E18382B1B006230CE /* UIDevice+hardware.m in Sources */,
 				7CFF7EBF18387010006230CE /* CFStopSignView.m in Sources */,
@@ -1773,11 +1752,6 @@
 			isa = PBXTargetDependency;
 			target = 7C01EDAD1974938E00DE7EAB /* Today Favorites */;
 			targetProxy = 7C0A9A8919C34CA20007FAA1 /* PBXContainerItemProxy */;
-		};
-		7C0A9A9A19C4CC730007FAA1 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 7C0A9A8E19C4CC730007FAA1 /* Today Favorites Dev */;
-			targetProxy = 7C0A9A9919C4CC730007FAA1 /* PBXContainerItemProxy */;
 		};
 		7C0A9A9D19C4CC730007FAA1 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1890,6 +1864,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Today Favorites/Today Favorites.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = 7VT456V4Y2;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -1900,7 +1875,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.ondalabs.cuantofalta.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = "cl.radu.cuantofalta.Today-Favorites";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
@@ -1915,13 +1890,14 @@
 				CODE_SIGN_ENTITLEMENTS = "Today Favorites/Today Favorites.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = 7VT456V4Y2;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				INFOPLIST_FILE = "Today Favorites/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.ondalabs.cuantofalta.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = "cl.radu.cuantofalta.Today-Favorites";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
@@ -1936,6 +1912,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Today Favorites Dev/Today Favorites Dev.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = 7VT456V4Y2;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -1947,7 +1924,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.ondalabs.cfbeta.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = "cl.radu.cfbeta.Today-Favorites-Dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
@@ -1962,13 +1939,14 @@
 				CODE_SIGN_ENTITLEMENTS = "Today Favorites Dev/Today Favorites Dev.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = 7VT456V4Y2;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				INFOPLIST_FILE = "Today Favorites Dev/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.ondalabs.cfbeta.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = "cl.radu.cfbeta.Today-Favorites-Dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
@@ -1985,6 +1963,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 7VT456V4Y2;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/CF",
@@ -2003,7 +1982,7 @@
 					../CF/CF,
 					"$(PROJECT_DIR)/CF",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.ondalabs.cfbeta;
+				PRODUCT_BUNDLE_IDENTIFIER = cl.radu.cfbeta;
 				PRODUCT_NAME = "Cuánta Beta";
 				PROVISIONING_PROFILE = "";
 				VALID_ARCHS = "armv7 armv7s arm64";
@@ -2021,6 +2000,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 7VT456V4Y2;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/CF",
@@ -2034,7 +2014,7 @@
 					../CF/CF,
 					"$(PROJECT_DIR)/CF",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.ondalabs.cfbeta;
+				PRODUCT_BUNDLE_IDENTIFIER = cl.radu.cfbeta;
 				PRODUCT_NAME = "Cuánta Beta";
 				PROVISIONING_PROFILE = "";
 				VALID_ARCHS = "armv7 armv7s arm64";
@@ -2236,6 +2216,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Cuánto Falta.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = 7VT456V4Y2;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/CF",
@@ -2250,7 +2231,7 @@
 					../CF/CF,
 					"$(PROJECT_DIR)/CF",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.ondalabs.cuantofalta;
+				PRODUCT_BUNDLE_IDENTIFIER = cl.radu.cuantofalta;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				VALID_ARCHS = "armv7 armv7s arm64";
@@ -2267,6 +2248,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Cuánto Falta.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = 7VT456V4Y2;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/CF",
@@ -2281,7 +2263,7 @@
 					../CF/CF,
 					"$(PROJECT_DIR)/CF",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.ondalabs.cuantofalta;
+				PRODUCT_BUNDLE_IDENTIFIER = cl.radu.cuantofalta;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				VALID_ARCHS = "armv7 armv7s arm64";

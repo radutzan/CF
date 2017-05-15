@@ -12,7 +12,6 @@
 
 #import "CFStopResultsViewController.h"
 #import "CFSapoClient.h"
-#import "OLCashier.h"
 
 #import "CFStopSignView.h"
 #import "CFResultCell.h"
@@ -71,7 +70,7 @@ CALayer *_leftGripper;
         _responseWithoutEstimation = [NSMutableArray new];
         _finalData = [NSMutableArray new];
         
-        _removedAds = ([OLCashier hasProduct:@"CF01"] || [OLCashier hasProduct:@"CF02"]);
+        _removedAds = YES;
         _displayMode = CFStopResultsDisplayModeNone;
     }
     return self;
@@ -88,15 +87,8 @@ CALayer *_leftGripper;
     self.overlay.backgroundColor = [UIColor colorWithWhite:0 alpha:.42];
     [self.view addSubview:self.overlay];
     
-    if (NSClassFromString(@"UIVisualEffectView")) {
-        self.stopResultsView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleDark]];
-        self.stopResultsView.frame = self.stopResultsViewPresentedFrame;
-    } else {
-        self.stopResultsView = [[UIToolbar alloc] initWithFrame:self.stopResultsViewPresentedFrame];
-        UIToolbar *castedStopResultsView = (UIToolbar *)self.stopResultsView;
-        castedStopResultsView.barStyle = UIBarStyleBlack;
-        self.stopResultsView.backgroundColor = [UIColor colorWithWhite:0 alpha:.5];
-    }
+    self.stopResultsView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleDark]];
+    self.stopResultsView.frame = self.stopResultsViewPresentedFrame;
     self.stopResultsView.layer.cornerRadius = 6.0;
     self.stopResultsView.layer.masksToBounds = YES;
     self.stopResultsView.layer.borderWidth = 0.5;
@@ -120,21 +112,12 @@ CALayer *_leftGripper;
     
     CGRect titleViewFrame = CGRectMake(0, 0, self.stopResultsView.bounds.size.width, 54.0);
     
-    if (NSClassFromString(@"UIVisualEffectView")) {
-        self.titleView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleDark]];
-        self.titleView.frame = titleViewFrame;
-    } else {
-        self.titleView = [[UINavigationBar alloc] initWithFrame:titleViewFrame];
-        UINavigationBar *titleViewAsNavBar = (UINavigationBar *)self.titleView;
-        titleViewAsNavBar.barStyle = UIBarStyleBlack;
-    }
+    self.titleView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleDark]];
+    self.titleView.frame = titleViewFrame;
     
     self.stopInfoView = [[CFStopSignView alloc] initWithFrame:CGRectMake(0.0, 0.0, titleViewFrame.size.width - 33.0, titleViewFrame.size.height)];
     self.stopInfoView.delegate = self;
     self.stopInfoView.stopCodeLabel.hidden = YES;
-#ifdef DEV_VERSION
-//    self.stopInfoView.stopCodeLabel.hidden = NO;
-#endif
     self.stopInfoView.favoriteContentView.userInteractionEnabled = YES;
     
     CGSize starImageSize = CGSizeMake(27.0, 27.0);
@@ -175,7 +158,7 @@ CALayer *_leftGripper;
     [self.tableView addSubview:self.refreshControl];
     
     self.timerLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.stopResultsView.bounds.size.width - 100.0 - 15.0, 0, 100.0, 20.0)];
-    self.timerLabel.font = [UIFont fontWithName:@"AvenirNext-MediumItalic" size:13.0];
+    self.timerLabel.font = [UIFont italicSystemFontOfSize:12];//fontWithName:@"AvenirNext-MediumItalic" size:13.0];
     self.timerLabel.alpha = 0.5;
     self.timerLabel.textAlignment = NSTextAlignmentRight;
     self.timerLabel.text = NSLocalizedString(@"REFRESHING", nil);
@@ -979,14 +962,17 @@ CALayer *_leftGripper;
     UIView *headerView = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, self.stopResultsView.bounds.size.width, 20.0)];
 //    headerView.backgroundColor = [UIColor whiteColor];
     
+    UIFont *baseFont = [UIFont systemFontOfSize:12 weight:UIFontWeightSemibold];
+    UIFontDescriptor *descriptor = [baseFont.fontDescriptor fontDescriptorWithSymbolicTraits:UIFontDescriptorTraitItalic];
+    
     UILabel *service = [[UILabel alloc] initWithFrame:CGRectMake(15.0, 0, 90.0, 20.0)];
     service.text = NSLocalizedString(@"SERVICE", nil);
-    service.font = [UIFont fontWithName:@"AvenirNext-MediumItalic" size:13.0];
+    service.font = [UIFont fontWithDescriptor:descriptor size:12];
     [headerView addSubview:service];
     
     UILabel *estimate = [[UILabel alloc] initWithFrame:CGRectMake(140.0, 0, 100.0, 20.0)];
     estimate.text = NSLocalizedString(@"ESTIMATION", nil);
-    estimate.font = [UIFont fontWithName:@"AvenirNext-MediumItalic" size:13.0];
+    estimate.font = [UIFont fontWithDescriptor:descriptor size:12];//fontWithName:@"AvenirNext-MediumItalic" size:13.0];
     [headerView addSubview:estimate];
     
     [headerView addSubview:self.timerLabel];

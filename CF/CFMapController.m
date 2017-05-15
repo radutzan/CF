@@ -104,7 +104,7 @@ static MKMapRect santiagoBounds;
         self.zoomWarning.userInteractionEnabled = YES;
         self.zoomWarning.backgroundColor = [UIColor colorWithWhite:0 alpha:.75];
         self.zoomWarning.alpha = 0;
-        self.zoomWarning.font = [UIFont fontWithName:@"AvenirNextCondensed-Medium" size:17.0];
+        self.zoomWarning.font = [UIFont boldSystemFontOfSize:15];//fontWithName:@"AvenirNextCondensed-Medium" size:17.0];
         self.zoomWarning.text = NSLocalizedString(@"ZOOM_LEVEL_WARNING_MESSAGE", nil);
         self.zoomWarning.textColor = [UIColor whiteColor];
         self.zoomWarning.textAlignment = NSTextAlignmentCenter;
@@ -116,15 +116,15 @@ static MKMapRect santiagoBounds;
         [self.zoomWarning addGestureRecognizer:zoomWarningTap];
         
         self.outOfSantiagoWarning = [[OLGhostAlertView alloc] initWithTitle:NSLocalizedString(@"OUT_OF_SANTIAGO_WARNING_TITLE", nil) message:NSLocalizedString(@"OUT_OF_SANTIAGO_WARNING_MESSAGE", nil) timeout:200.0 dismissible:NO];
-        self.outOfSantiagoWarning.titleLabel.font = [UIFont fontWithName:DEFAULT_FONT_NAME_MEDIUM size:17.0];
-        self.outOfSantiagoWarning.messageLabel.font = [UIFont fontWithName:DEFAULT_FONT_NAME_REGULAR size:14.0];
+        self.outOfSantiagoWarning.titleLabel.font = [UIFont systemFontOfSize:17 weight:UIFontWeightMedium];//[UIFont fontWithName:DEFAULT_FONT_NAME_MEDIUM size:17.0];
+        self.outOfSantiagoWarning.messageLabel.font = [UIFont systemFontOfSize:14];//[UIFont fontWithName:DEFAULT_FONT_NAME_REGULAR size:14.0];
         self.outOfSantiagoWarning.position = OLGhostAlertViewPositionTop;
         self.outOfSantiagoWarning.topContentMargin = self.contentInset.top;
         self.outOfSantiagoWarning.userInteractionEnabled = NO;
         
         self.connectivityWarning = [[OLGhostAlertView alloc] initWithTitle:NSLocalizedString(@"NO_INTERNET_WARNING_TITLE", nil) message:NSLocalizedString(@"NO_INTERNET_WARNING_MESSAGE", nil) timeout:200.0 dismissible:NO];
-        self.connectivityWarning.titleLabel.font = [UIFont fontWithName:DEFAULT_FONT_NAME_MEDIUM size:17.0];
-        self.connectivityWarning.messageLabel.font = [UIFont fontWithName:DEFAULT_FONT_NAME_REGULAR size:14.0];
+        self.outOfSantiagoWarning.titleLabel.font = [UIFont systemFontOfSize:17 weight:UIFontWeightMedium];//[UIFont fontWithName:DEFAULT_FONT_NAME_MEDIUM size:17.0];
+        self.outOfSantiagoWarning.messageLabel.font = [UIFont systemFontOfSize:14];//[UIFont fontWithName:DEFAULT_FONT_NAME_REGULAR size:14.0];
         self.connectivityWarning.style = OLGhostAlertViewStyleDark;
         self.connectivityWarning.position = OLGhostAlertViewPositionCenter;
         self.connectivityWarning.userInteractionEnabled = NO;

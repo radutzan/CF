@@ -8,7 +8,7 @@
 	<string>$(TeamIdentifierPrefix)$(CFBundleIdentifier)</string>
 	<key>com.apple.security.application-groups</key>
 	<array>
-		<string>group.ondalabs.cfgroup</string>
+		<string>group.radu.cfgroup</string>
 	</array>
 </dict>
 </plist>

@@ -25,7 +25,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         _serviceLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0, 0, 80.0, frame.size.height)];
-        _serviceLabel.font = [UIFont fontWithName:@"AvenirNextCondensed-Medium" size:22.0];
+        _serviceLabel.font = [UIFont systemFontOfSize:17 weight:UIFontWeightMedium];//fontWithName:@"AvenirNextCondensed-Medium" size:22.0];
         _serviceLabel.textColor = [UIColor colorWithWhite:0 alpha:.8];
         _serviceLabel.userInteractionEnabled = YES;
         [self addSubview:_serviceLabel];
@@ -37,7 +37,7 @@
         
         _outwardButton = [UIButton buttonWithType:UIButtonTypeSystem];
         _outwardButton.frame = CGRectMake(_serviceLabel.frame.origin.x + _serviceLabel.bounds.size.width, 0, buttonWidth, frame.size.height);
-        _outwardButton.titleLabel.font = [UIFont fontWithName:@"AvenirNextCondensed-Medium" size:14.0];
+        _outwardButton.titleLabel.font = [UIFont systemFontOfSize:13 weight:UIFontWeightMedium];//fontWithName:@"AvenirNextCondensed-Medium" size:14.0];
         _outwardButton.titleLabel.numberOfLines = 2;
         _outwardButton.titleEdgeInsets = UIEdgeInsetsMake(0, 10.0, 0, 10.0);
         _outwardButton.clipsToBounds = YES;

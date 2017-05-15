@@ -81,10 +81,10 @@
         
         if ([favoriteName isEqualToString:@""]) {
             favoriteCell.favoriteNameLabel.text = NSLocalizedString(@"NAMELESS_FAVORITE", nil);
-            favoriteCell.favoriteNameLabel.font = [UIFont fontWithName:@"AvenirNext-MediumItalic" size:18.0];
+            favoriteCell.favoriteNameLabel.font = [UIFont italicSystemFontOfSize:17];//fontWithName:@"AvenirNext-MediumItalic" size:18.0];
         } else {
             favoriteCell.favoriteNameLabel.text = favoriteName;
-            favoriteCell.favoriteNameLabel.font = [UIFont fontWithName:@"AvenirNext-Medium" size:18.0];
+            favoriteCell.favoriteNameLabel.font = [UIFont systemFontOfSize:17 weight:UIFontWeightMedium];//[UIFont fontWithName:@"AvenirNext-Medium" size:18.0];
         }
     } else {
         static NSString *CellIdentifier = @"History Cell";
@@ -97,8 +97,8 @@
         if (intersection) {
             NSRange firstLineRange = NSMakeRange(0, [street length]);
             
-            UIFont *boldFont = [UIFont fontWithName:DEFAULT_FONT_NAME_BOLD size:15.0];
-            UIFont *regularFont = [UIFont fontWithName:DEFAULT_FONT_NAME_MEDIUM size:15.0];
+            UIFont *boldFont = [UIFont systemFontOfSize:15 weight:UIFontWeightSemibold];//fontWithName:DEFAULT_FONT_NAME_BOLD size:LABEL_FONT_SIZE];
+            UIFont *regularFont = [UIFont systemFontOfSize:15 weight:UIFontWeightRegular];//fontWithName:DEFAULT_FONT_NAME_MEDIUM size:LABEL_FONT_SIZE];
             
             NSDictionary *attrs = [NSDictionary dictionaryWithObjectsAndKeys:regularFont, NSFontAttributeName, nil];
             NSDictionary *subAttrs = [NSDictionary dictionaryWithObjectsAndKeys:boldFont, NSFontAttributeName, nil];
